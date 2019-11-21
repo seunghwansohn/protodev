@@ -7,9 +7,9 @@ import { useSelector, useDispatch } from 'react-redux';
 // import Todos from '../components/Todos';
 // import useActions from '../lib/useActions';
 
-const ItemList = () => {
-    const onSrchResult = () => {
-        console.log("지렁이")
+const ItemList = (searchKeyword) => {
+    const onSrchResult = (searchKeyword) => {
+        console.log(searchKeyword)
     }
     // const [onSrchResult] = useActions(
     //     [srchResult],
@@ -18,7 +18,7 @@ const ItemList = () => {
     
     return(
     <div>
-        <SearchAppBar onSrchResult = {onSrchResult}></SearchAppBar>
+        <SearchAppBar searchKeyword = {searchKeyword} onSrchResult = {onSrchResult}></SearchAppBar>
         <hr></hr>
         <br></br>
         <ItemListComponent/>
