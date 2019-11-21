@@ -7,10 +7,10 @@ import { connect } from 'react-redux';
 // import Todos from '../components/Todos';
 // import useActions from '../lib/useActions';
 
-const ItemList = (searchKeyword) => {
+const ItemList = ({searchKeyword, srchResult}) => {
     return(
         <div>
-            <SearchAppBar searchKeyword = {searchKeyword} onSrchResult = {onSrchResult}></SearchAppBar>
+            <SearchAppBar searchKeyword = {searchKeyword} onSrchResult = {srchResult}></SearchAppBar>
             <hr></hr>
             <br></br>
             <ItemListComponent/>
@@ -18,17 +18,14 @@ const ItemList = (searchKeyword) => {
     )
 }
 
-const onSrchResult = (searchKeyword) => {
-    console.log(searchKeyword)
-}
 
 const mapStateToProps = state => ({
     searchKeyword: state.searchKeyword
 })
 
 const mapDispatchToProps = dispatch => ({
-        onSrchResult: () => {
-            console.log()
+        srchResult: (searchKeyword) => {
+            console.log(searchKeyword)
         }
 })
 
