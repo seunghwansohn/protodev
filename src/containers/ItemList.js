@@ -13,7 +13,7 @@ const ItemList = ({searchKeyword, srchResult}) => {
             <SearchAppBar searchKeyword = {searchKeyword} onSrchResult = {srchResult}></SearchAppBar>
             <hr></hr>
             <br></br>
-            <ItemListComponent/>
+            <ItemListComponent searchKeyword = {searchKeyword}></ItemListComponent>
         </div>
     )
 }

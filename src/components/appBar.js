@@ -112,5 +112,4 @@ const SearchAppBar = (
     </div>
   );
 }
-
 export default SearchAppBar
