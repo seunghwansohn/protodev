@@ -1,12 +1,10 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import ItemList from './containers/ItemList'
+import ItemListContainer from './containers/ItemList'
 
 function App() {
   return (
     <div className="App">
-      <ItemList/>
+      <ItemListContainer/>
     </div>
   );
 }

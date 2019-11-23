@@ -62,18 +62,13 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-
-
-
-const SearchAppBar = (
-    {searchKeyword,
-    onSrchResult}) => {
+const SearchAppBar = 
+    ({searchKeyword,onSearch}) => {
   const classes = useStyles();
-  
-  const handleValueChange = (e) => {
+  const handleValueChange = e => {
     searchKeyword = e.target.value
     e.preventDefault();
-    onSrchResult(searchKeyword)
+    onSearch(searchKeyword)
     console.log(searchKeyword)
   }
   return (

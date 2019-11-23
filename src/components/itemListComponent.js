@@ -5,10 +5,8 @@ import Table from '@material-ui/core/Table'; //material-ui의 Table ui를 불러
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 
-
-
-
-const ItemListComponent = ({searchKeyword}) => {
+const ItemListComponent = ({code}) => {
+    console.log(code)
     return(
     <div>
          <Table>
@@ -22,7 +20,7 @@ const ItemListComponent = ({searchKeyword}) => {
             <TableBody>
                 <TableRow>
                 <TableCell>'no'</TableCell>
-                <TableCell>{searchKeyword}</TableCell>
+                <TableCell>{code}</TableCell>
                 <TableCell>Ball Valve 1</TableCell>
                 <TableCell> <button onClick = 'onIncrease'>+1</button></TableCell>
                 <TableCell> <button onClick = 'onDecrease'>-1</button></TableCell>

@@ -1,18 +1,27 @@
-import {createAction, handleActions} from 'redux-actions'
-
-const SEARCH = 'itemList/SEARCH'
-
-export const search = createAction(SEARCH, searchKeyword => searchKeyword)
+const SEARCHKEYWORD = 'itemList/SEARCHKEYWORD';
 
 const initialState = {
-    searchKeyword: '',
+    input:'sdfsdf',
+    itemList: [
+    ],
+    searchKeyword: 'dfefef',
 };
 
-const ItemLIstModule = handleActions (
-    {
-        [SEARCH]: (state, action) => ({searchKeyword : state.searchKeyword}),
-    },
-    initialState,
-)
+export const search = searchKeyword => ({
+  type: SEARCHKEYWORD, 
+  searchKeyword
+});
 
-export default ItemLIstModule
+function itemList (state = initialState, action) {
+    switch (action.type) {
+      case SEARCHKEYWORD:
+        return {
+          ...state,
+          searchKeyword: state.searchKeyword
+        };
+      default:
+        return state;
+    } 
+}
+
+export default itemList
