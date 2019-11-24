@@ -4,35 +4,35 @@ import SearchAppBar from '../components/appBar'
 import { connect } from 'react-redux';
 import {search}  from '../modules/itemList'
 
-const fff = () => {
-    console.log(typeof search)
-}
+// const fff = (searchKeyword) => {
+//     console.log(typeof search)
+//     console.log(searchKeyword)
+// }
 
-fff()
+// fff()
 
 const ItemListContainer = (
-    search, {input}
+    {searchKeyword}
 ) => {
-    console.log(search)
-    input = 'fdf'
+    console.log({searchKeyword})
+    // input = 'fdf'
     return(
         <div>
             <SearchAppBar 
                 onSearch = {search.increase}>
             </SearchAppBar>
-            <ItemListComponent code = {input}></ItemListComponent>
+            <ItemListComponent code = {searchKeyword}></ItemListComponent>
         </div>
     )
 }
 
 const mapStateToProps = state => ({ //state를 파라미터로 받아옴. 
-    searchResult : state.searchResult,
+    searchKeyword : 'flkdjlfk'
 })
 
 const mapDispatchToProps = dispatch => ({
     increase : (searchKeyword1) => {
         dispatch(search(searchKeyword1));
-        console.log(search(searchKeyword1))
     },
     decrease : () => {
         console.log('decrease');

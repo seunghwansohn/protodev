@@ -17,7 +17,7 @@ function itemList (state = initialState, action) {
       case SEARCHKEYWORD:
         return {
           ...state,
-          searchKeyword: state.searchKeyword
+          searchKeyword: 'dflkjdflkjsd'
         };
       default:
         return state;
