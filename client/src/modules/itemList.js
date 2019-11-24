@@ -11,7 +11,6 @@ const axios = require('axios');
 
 const SEARCHKEYWORD = 'itemList/SEARCHKEYWORD';
 const APILOAD = 'itemList/APILOAD';
-const ITEMCALL = 'itemList/ITEMCALL';
 
 const initialState = {
     input:'sdfsdf',
@@ -26,7 +25,8 @@ export const search = searchKeyword => ({
 });
 
 export const apiLoad = () => ({
-  type: APILOAD, 
+  type: APILOAD,
+  itemList
 });
 
 
@@ -45,14 +45,16 @@ function itemList (state = initialState, action) {
           searchKeyword: action.searchKeyword
         };
       case APILOAD:
-        console.log('adpi로드로드중')
-        return (callApi(function(body1) {
-          console.log(body1)
-          return {
-            ...state,
-            itemList: body1
-          }})
-        )
+        // let result = ''
+        // console.log('adpi로드로드중')
+        // result = callApi(function(body1) {
+        //   return body1
+        //  })
+        return {
+          ...state,
+          itemList: [{id: 'dfadsfe', itemName: 'asdflkjasdf'}]
+        }
+        
        
       default:
         return state;
