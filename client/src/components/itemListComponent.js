@@ -5,6 +5,14 @@ import Table from '@material-ui/core/Table'; //material-ui의 Table ui를 불러
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 
+const callApi = async () => {    //node.js api 서버를 호출하는 함수. async는 비동기 처리를 위한 것
+    const response = await fetch('/api/customers');
+    const body = await response.json();  //json 형식으로 받아 body라는 변수에 저장
+    console.log(body)
+    return body; //body를 return하여 callApi라는 메소드의 값으로 반환
+  }
+
+callApi()
 const ItemListComponent = ({code}) => {
     return(
     <div>
