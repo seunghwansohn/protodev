@@ -69,7 +69,6 @@ const SearchAppBar =
     searchKeyword = e.target.value
     e.preventDefault();
     onSearch(searchKeyword)
-    console.log(searchKeyword)
   }
   return (
     <div className={classes.root}>

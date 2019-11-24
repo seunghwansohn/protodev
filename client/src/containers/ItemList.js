@@ -24,7 +24,6 @@ const mapStateToProps = state => ({ //state를 파라미터로 받아옴.
 
 const mapDispatchToProps = dispatch => ({
     search : (f) => {
-        console.log('search실행중')
         dispatch(search(f));
     }
 })

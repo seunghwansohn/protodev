@@ -6,7 +6,6 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 
 const ItemListComponent = ({code}) => {
-    console.log(code)
     return(
     <div>
          <Table>
