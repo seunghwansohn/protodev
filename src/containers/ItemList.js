@@ -12,14 +12,12 @@ import {search}  from '../modules/itemList'
 // fff()
 
 const ItemListContainer = (
-    {searchKeyword}
+    {searchKeyword, increase}
 ) => {
-    console.log({searchKeyword})
-    // input = 'fdf'
     return(
         <div>
             <SearchAppBar 
-                onSearch = {search.increase}>
+                onSearch = {increase}>
             </SearchAppBar>
             <ItemListComponent code = {searchKeyword}></ItemListComponent>
         </div>
@@ -33,6 +31,9 @@ const mapStateToProps = state => ({ //state를 파라미터로 받아옴.
 
 const mapDispatchToProps = dispatch => ({
     increase : (searchKeyword1) => {
+
+        console.log('decrease');
+
         dispatch(search(searchKeyword1));
     },
     decrease : () => {
