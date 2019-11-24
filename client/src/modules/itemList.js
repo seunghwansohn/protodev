@@ -15,7 +15,7 @@ const ITEMCALL = 'itemList/ITEMCALL';
 
 const initialState = {
     input:'sdfsdf',
-    itemList: [
+    itemList: [{id : 1, itemName : 'BVV'}
     ],
     searchKeyword: 'initial state 값을 전달받는데 성공',
 };
@@ -36,12 +36,6 @@ const callApi = async (callback) => {    //node.js api 서버를 호출하는 �
   callback(body)
   return body; //body를 return하여 callApi라는 메소드의 값으로 반환
 }
-
-
-const apifjfj = () => {callApi(function(body1) {
-  console.log(body1)})}
-
-
 
 function itemList (state = initialState, action) {
     switch (action.type) {

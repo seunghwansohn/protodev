@@ -4,30 +4,15 @@ import SearchAppBar from '../components/appBar'
 import { connect } from 'react-redux';
 import {search, apiLoad}  from '../modules/itemList'
 
-
-
-// const callApi = async (callback) => {    //node.js api 서버를 호출하는 함수. async는 비동기 처리를 위한 것
-//     const response = await fetch('/api/customers');
-//     const body = await response.json();  //json 형식으로 받아 body라는 변수에 저장
-//     callback(body)
-//     return body; //body를 return하여 callApi라는 메소드의 값으로 반환
-//   }
-
-// const apiLoad = () => {
-//     callApi(function(body1) {
-//     console.log(body1)
-//     })
-// };
-
 const ItemListContainer = (
-    {searchKeyword, search, apiLoad}
+    {searchKeyword, search, apiLoad, itemList}
 ) => {
     return(
         <div>
             <SearchAppBar 
                 onSearch = {search}>
             </SearchAppBar>
-            <ItemListComponent code = {searchKeyword} apiLoad = {apiLoad}></ItemListComponent>
+            <ItemListComponent code = {searchKeyword} apiLoad = {apiLoad} itemList = {itemList}></ItemListComponent>
         </div>
     )
 }
@@ -50,9 +35,8 @@ const mapDispatchToProps = dispatch => ({
         dispatch(search(f));
     },
     apiLoad : () => {
-        console.log('ldlfkjlkj')
-        callApi(function(body1) {
-                console.log(body1)})
+        console.log(apiLoad())
+        dispatch(apiLoad())
     }
 })
 
