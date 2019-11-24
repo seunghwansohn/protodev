@@ -6,7 +6,10 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 
 
-const ItemListComponent = ({code}) => {
+const ItemListComponent = ({code, apiLoad}) => {
+    const fff = () => {
+        console.log(apiLoad)
+    }
     return(
     <div>
          <Table>
@@ -20,10 +23,10 @@ const ItemListComponent = ({code}) => {
             <TableBody>
                 <TableRow>
                 <TableCell>'no'</TableCell>
-                <TableCell>{code}</TableCell>
+                <TableCell></TableCell>
                 <TableCell>Ball Valve 1</TableCell>
-                <TableCell> <button onClick = 'onIncrease'>+1</button></TableCell>
-                <TableCell> <button onClick = 'onDecrease'>-1</button></TableCell>
+                <TableCell> <button onClick = {apiLoad}>+1</button></TableCell>
+                <TableCell> <button onClick = {fff}>-1</button></TableCell>
                 </TableRow>
             </TableBody>
         </Table>
