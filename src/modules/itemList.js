@@ -15,9 +15,10 @@ export const search = searchKeyword => ({
 function itemList (state = initialState, action) {
     switch (action.type) {
       case SEARCHKEYWORD:
+        console.log(action)
         return {
-          ...state,
-          searchKeyword: 'dflkjdflkjsd'
+          // ...state,
+          searchKeyword: action.searchKeyword
         };
       default:
         return state;
