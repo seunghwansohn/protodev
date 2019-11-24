@@ -4,7 +4,7 @@ const initialState = {
     input:'sdfsdf',
     itemList: [
     ],
-    searchKeyword: 'dfefef',
+    searchKeyword: 'initial state 값을 전달받는데 성공',
 };
 
 export const search = searchKeyword => ({
