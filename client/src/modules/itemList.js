@@ -20,6 +20,15 @@ export function apiLoad() {
   };
 }
 
+export function fetchAction() {
+  return function(dispatch) {
+    return axios.get("/api/customers")
+      .then(({ data }) => {
+        dispatch(apiLoad1(data));
+    });
+  };
+}
+
 const initialState = {
     input:'sdfsdf',
     itemList: [{id : '1', itemName : 'Bvv'}],
@@ -32,6 +41,7 @@ export const search = searchKeyword => ({
 });
 
 export const apiLoad1 = (itemList) => (
+  console.log(itemList),
   {
   type: APILOAD,
   itemList
