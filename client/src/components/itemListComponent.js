@@ -23,7 +23,7 @@ const ItemListComponent = ({code, onFetch, itemList}) => {
             </TableHead>
             <TableBody>
                 <TableRow>
-                <TableCell>{itemList[0].id}</TableCell>
+                <TableCell>{itemList[0].itemName}</TableCell>
                 <TableCell>{code}</TableCell>
                 <TableCell>Ball Valve 1</TableCell>
                 <TableCell> <button onClick = {onFetch}>+1</button></TableCell>
