@@ -8,7 +8,7 @@ import TableBody from '@material-ui/core/TableBody';
 
 const ItemListComponent = ({code, apiLoad, itemList}) => {
     const fff = () => {
-        console.log(itemList)
+        console.log(itemList[0].itemName)
     }
     return(
     <div>
@@ -22,7 +22,7 @@ const ItemListComponent = ({code, apiLoad, itemList}) => {
             </TableHead>
             <TableBody>
                 <TableRow>
-                <TableCell>{itemList[0].itemName}</TableCell>
+                <TableCell>{itemList[0].id}</TableCell>
                 <TableCell>{code}</TableCell>
                 <TableCell>Ball Valve 1</TableCell>
                 <TableCell> <button onClick = {apiLoad}>+1</button></TableCell>

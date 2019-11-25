@@ -2,7 +2,8 @@ import React from 'react'
 import ItemListComponent from '../components/itemListComponent'
 import SearchAppBar from '../components/appBar'
 import { connect } from 'react-redux';
-import {search, apiLoad}  from '../modules/itemList'
+import {search, apiLoad1}  from '../modules/itemList'
+const axios = require('axios');
 
 const ItemListContainer = (
     {searchKeyword, search, apiLoad, itemList}
@@ -16,6 +17,21 @@ const ItemListContainer = (
         </div>
     )
 }
+
+export function apiLoad(apiLoad2) {
+    return function(dispatch) {
+      return axios.get("/api/customers")
+        .then(({ data }) => {
+          apiLoad2(data)
+      });
+    };
+}
+
+const apiLoad2 = (data) => {
+    console.log(data)
+    console.log('콘솔로그중')
+}
+
 
 const callApi = async (callback) => {    //node.js api 서버를 호출하는 함수. async는 비동기 처리를 위한 것
     const response = await fetch('/api/customers');
@@ -32,11 +48,13 @@ const mapStateToProps = state => ({ //state를 파라미터로 받아옴.
 
 const mapDispatchToProps = dispatch => ({
     search : (f) => {
+        console.log(search(f))
         dispatch(search(f));
     },
     apiLoad : () => {
-        console.log(apiLoad())
-        dispatch(apiLoad())
+        console.log(apiLoad1())
+        console.log(dispatch(apiLoad1()))
+        dispatch()
     }
 })
 
