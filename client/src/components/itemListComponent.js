@@ -13,6 +13,8 @@ const ItemListComponent = ({code, onFetch, itemList}) => {
 
     return(
     <div>
+        <button onClick = {onFetch}>+1</button>
+        <hr></hr>
          <Table>
             <TableHead>
               <TableCell>No</TableCell>
@@ -23,9 +25,9 @@ const ItemListComponent = ({code, onFetch, itemList}) => {
             </TableHead>
             <TableBody>
                 <TableRow>
+                <TableCell>{itemList[0].id}</TableCell>
+                <TableCell>{itemList[0].itemCode}</TableCell>
                 <TableCell>{itemList[0].itemName}</TableCell>
-                <TableCell>{code}</TableCell>
-                <TableCell>Ball Valve 1</TableCell>
                 <TableCell> <button onClick = {onFetch}>+1</button></TableCell>
                 <TableCell> <button onClick = {fff}>-1</button></TableCell>
                 </TableRow>
