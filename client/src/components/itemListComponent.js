@@ -10,7 +10,18 @@ const ItemListComponent = ({code, onFetch, itemList}) => {
     const fff = () => {
         console.log(itemList[0].itemName)
     }
-
+    const itemListMap = () => {
+        return itemList.map(itemList => {
+            return(
+                <TableRow>
+                    <TableCell>{itemList.id}</TableCell>
+                    <TableCell>{itemList.itemCode}</TableCell>
+                    <TableCell>{itemList.itemName}</TableCell>
+                    <TableCell> <button onClick = {onFetch}>+1</button></TableCell>
+                    <TableCell> <button onClick = {fff}>-1</button></TableCell>
+                </TableRow>
+        )})
+    }
     return(
     <div>
         <button onClick = {onFetch}>+1</button>
@@ -24,13 +35,7 @@ const ItemListComponent = ({code, onFetch, itemList}) => {
               <TableCell>Minus</TableCell>
             </TableHead>
             <TableBody>
-                <TableRow>
-                <TableCell>{itemList[0].id}</TableCell>
-                <TableCell>{itemList[0].itemCode}</TableCell>
-                <TableCell>{itemList[0].itemName}</TableCell>
-                <TableCell> <button onClick = {onFetch}>+1</button></TableCell>
-                <TableCell> <button onClick = {fff}>-1</button></TableCell>
-                </TableRow>
+                {itemListMap()}
             </TableBody>
         </Table>
     </div>
