@@ -7,10 +7,51 @@ import TableBody from '@material-ui/core/TableBody';
 
 
 const ItemListComponent = ({code, onFetch, itemList}) => {
-    const fff = () => {
-        console.log(code)
+    var result = [];
+    const itemListFilteredMap = () => {
+            var matchedid = [];
+            itemList.map (function(num) {
+              var values = Object.values(num);
+              var joinedString = values.join(',');
+              var trueSearched = joinedString.indexOf(code) > - 1;
+              if (trueSearched === true) {
+                matchedid.push(num.id);   //matchedid라는 미리 선언된 배열변수에, 검색어를 포함한 아이템들의 id값만 담음.
+                }
+            console.log(matchedid)
+            var returnWords = function(){
+                var matchedData = [];
+                var findDataId = '';
+                    for (var i=0; i < matchedid.length; i++){
+                      findDataId = matchedid[i];
+                      function searchMatchedData(id, itemList) {
+                        for (var i = 0; i < itemList.length; i++) {
+                          if (itemList[i].id === id)  {
+                            return itemList[i];
+                          }
+                        }
+                      }
+                      result.push(searchMatchedData(findDataId, itemList))
+           
+                      matchedData.push(itemList[matchedid[i]])
+                    }
+                return result;
+              }
+              var temporary = returnWords();
+            })
     }
-    fff();
+    const itemListMap2 = () => {
+        itemListFilteredMap();
+        return result.map(c => {
+            return(
+                <TableRow>
+                    <TableCell>{c.id}</TableCell>
+                    <TableCell>{c.itemCode}</TableCell>
+                    <TableCell>{c.itemName}</TableCell>
+                    <TableCell> <button onClick = {onFetch}>+1</button></TableCell>
+                    <TableCell> <button onClick = {itemListFilteredMap}>-1</button></TableCell>
+                </TableRow>
+        )})
+    }
     const itemListMap = () => {
         return itemList.map(itemList => {
             return(
@@ -19,22 +60,11 @@ const ItemListComponent = ({code, onFetch, itemList}) => {
                     <TableCell>{itemList.itemCode}</TableCell>
                     <TableCell>{itemList.itemName}</TableCell>
                     <TableCell> <button onClick = {onFetch}>+1</button></TableCell>
-                    <TableCell> <button onClick = {fff}>-1</button></TableCell>
+                    <TableCell> <button onClick = {itemListFilteredMap}>-1</button></TableCell>
                 </TableRow>
         )})
     }
-    const itemListFilteredMap = () => {
-        return itemList.map(itemList => {
-            return(
-                <TableRow>
-                    <TableCell>{itemList.id}</TableCell>
-                    <TableCell>{itemList.itemCode}</TableCell>
-                    <TableCell>{itemList.itemName}</TableCell>
-                    <TableCell> <button onClick = {onFetch}>+1</button></TableCell>
-                    <TableCell> <button onClick = {fff}>-1</button></TableCell>
-                </TableRow>
-        )})
-    }
+
     return(
     <div>
         <button onClick = {onFetch}>Load</button>
@@ -46,9 +76,10 @@ const ItemListComponent = ({code, onFetch, itemList}) => {
               <TableCell>Item</TableCell>
               <TableCell>Plus</TableCell>
               <TableCell>Minus</TableCell>
+              <TableCell><button onClick = {itemListMap2}>-1</button></TableCell>
             </TableHead>
             <TableBody>
-                {code ? itemListMap() : itemListFilteredMap()}
+                {code ? itemListMap2() : itemListMap2()}
             </TableBody>
         </Table>
     </div>

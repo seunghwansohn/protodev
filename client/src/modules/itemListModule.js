@@ -42,11 +42,11 @@ function getUserData() {
 };
 
 const inner = getUserData().then(function(userData) {
-  console.log(userData)
+  // console.log(userData)
   initialState = {
     itemList: userData, // ' ' or axios result
   };
-  console.log(initialState.itemList)
+  // console.log(initialState.itemList)
   return initialState.itemList
 }); 
 
