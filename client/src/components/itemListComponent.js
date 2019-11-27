@@ -6,7 +6,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 
 
-const ItemListComponent = ({code, onFetch, itemList}) => {
+const ItemListComponent = ({code, onFetch, itemList, inputItem}) => {
     var result = [];
     const itemListFilteredMap = () => {
             var matchedid = [];
@@ -18,7 +18,6 @@ const ItemListComponent = ({code, onFetch, itemList}) => {
                 matchedid.push(num.id);   //matchedid라는 미리 선언된 배열변수에, 검색어를 포함한 아이템들의 id값만 담음.
                 }
             })
-            console.log(matchedid)
             var returnWords = function(){
                 var matchedData = [];
                 var findDataId = '';
@@ -49,6 +48,11 @@ const ItemListComponent = ({code, onFetch, itemList}) => {
                     <TableCell>{c.itemName}</TableCell>
                     <TableCell> <button onClick = {onFetch}>+1</button></TableCell>
                     <TableCell> <button onClick = {itemListFilteredMap}>-1</button></TableCell>
+                    <TableCell> <button onClick= {function(e){
+                              e.preventDefault();
+                              inputItem(c.id);
+                              console.log(c.id)
+                            }}>삽입</button></TableCell> 
                 </TableRow>
         )})
     }
@@ -59,8 +63,14 @@ const ItemListComponent = ({code, onFetch, itemList}) => {
                     <TableCell>{itemList.id}</TableCell>
                     <TableCell>{itemList.itemCode}</TableCell>
                     <TableCell>{itemList.itemName}</TableCell>
-                    <TableCell> <button onClick = {onFetch}>+1</button></TableCell>
-                    <TableCell> <button onClick = {itemListFilteredMap}>-1</button></TableCell>
+                    <TableCell> <button onClick = {onFetch}>Add</button></TableCell>
+                    <TableCell> <button onClick = {itemListFilteredMap}>test</button></TableCell>
+                    <TableCell> <button onClick= {function(e){
+                              e.preventDefault();
+                              this.inputItem(itemList.id);
+                              this.props.onChangePage(this.willInputItems);
+                            }}>삽입</button>
+                    </TableCell> 
                 </TableRow>
         )})
     }

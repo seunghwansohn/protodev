@@ -2,6 +2,7 @@ const axios = require('axios');
 
 const SEARCHKEYWORD = 'itemList/SEARCHKEYWORD';
 const APILOAD = 'itemList/APILOAD';
+const INPUTITEM = 'itemList/INPUTITEM'
 
 export function fetchAction() {
   return function(callback) {
@@ -12,12 +13,14 @@ export function fetchAction() {
   };
 }
 
+
 const jfj = [{id : '1', itemName : 'Bvv', itemCode : '코드입니다'}]
 
 let initialState = {
     input:'sdfsdf',
     itemList: jfj,
     searchKeyword: 'initial state 값을 전달받는데 성공',
+    pickedItem: '',
 };
 
 export const search = searchKeyword => ({
@@ -31,6 +34,15 @@ export const itemListAction = (itemList) => (
   type: APILOAD,
   itemList
 });
+
+
+export const inputItem = (pickedItem) => (
+  console.log(pickedItem),
+  {
+  type: INPUTITEM,
+  pickedItem
+});
+  
 
 function getUserData() {
   return new Promise((resolve, reject) => {
@@ -50,8 +62,6 @@ const inner = getUserData().then(function(userData) {
   return initialState.itemList
 }); 
 
-console.log(inner)
-
 function itemListModule (state = initialState, action) {
   switch (action.type) {
       case SEARCHKEYWORD:
@@ -60,10 +70,14 @@ function itemListModule (state = initialState, action) {
           searchKeyword: action.searchKeyword
         };
       case APILOAD:
-        console.log(action.type)
         return {
           ...state,
           itemList: action.itemList
+        };
+      case INPUTITEM:
+        return {
+          ...state,
+          pickedItem: action.pickedItem
         }
       default:
         return state;
