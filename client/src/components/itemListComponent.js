@@ -17,6 +17,7 @@ const ItemListComponent = ({code, onFetch, itemList}) => {
               if (trueSearched === true) {
                 matchedid.push(num.id);   //matchedid라는 미리 선언된 배열변수에, 검색어를 포함한 아이템들의 id값만 담음.
                 }
+            })
             console.log(matchedid)
             var returnWords = function(){
                 var matchedData = [];
@@ -37,7 +38,6 @@ const ItemListComponent = ({code, onFetch, itemList}) => {
                 return result;
               }
               var temporary = returnWords();
-            })
     }
     const itemListMap2 = () => {
         itemListFilteredMap();
