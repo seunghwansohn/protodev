@@ -8,9 +8,22 @@ import TableBody from '@material-ui/core/TableBody';
 
 const ItemListComponent = ({code, onFetch, itemList}) => {
     const fff = () => {
-        console.log(itemList[0].itemName)
+        console.log(code)
     }
+    fff();
     const itemListMap = () => {
+        return itemList.map(itemList => {
+            return(
+                <TableRow>
+                    <TableCell>{itemList.id}</TableCell>
+                    <TableCell>{itemList.itemCode}</TableCell>
+                    <TableCell>{itemList.itemName}</TableCell>
+                    <TableCell> <button onClick = {onFetch}>+1</button></TableCell>
+                    <TableCell> <button onClick = {fff}>-1</button></TableCell>
+                </TableRow>
+        )})
+    }
+    const itemListFilteredMap = () => {
         return itemList.map(itemList => {
             return(
                 <TableRow>
@@ -24,7 +37,7 @@ const ItemListComponent = ({code, onFetch, itemList}) => {
     }
     return(
     <div>
-        <button onClick = {onFetch}>+1</button>
+        <button onClick = {onFetch}>Load</button>
         <hr></hr>
          <Table>
             <TableHead>
@@ -35,7 +48,7 @@ const ItemListComponent = ({code, onFetch, itemList}) => {
               <TableCell>Minus</TableCell>
             </TableHead>
             <TableBody>
-                {itemListMap()}
+                {code ? itemListMap() : itemListFilteredMap()}
             </TableBody>
         </Table>
     </div>

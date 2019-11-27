@@ -41,7 +41,7 @@ function getUserData() {
   });
 };
 
-getUserData().then(function(userData) {
+const inner = getUserData().then(function(userData) {
   console.log(userData)
   initialState = {
     itemList: userData, // ' ' or axios result
@@ -49,6 +49,8 @@ getUserData().then(function(userData) {
   console.log(initialState.itemList)
   return initialState.itemList
 }); 
+
+console.log(inner)
 
 function itemListModule (state = initialState, action) {
   switch (action.type) {
