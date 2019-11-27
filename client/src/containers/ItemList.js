@@ -29,7 +29,8 @@ const mapDispatchToProps = dispatch => ({
     fetch : () => {
         console.log('asdfasdflkj')
         dispatch(fetchAction())
-    }
+
+    },
 })
 
 export default connect(

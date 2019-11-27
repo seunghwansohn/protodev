@@ -12,9 +12,11 @@ export function fetchAction() {
   };
 }
 
-const initialState = {
+const jfj = [{id : '1', itemName : 'Bvv', itemCode : '코드입니다'}]
+
+let initialState = {
     input:'sdfsdf',
-    itemList: [{id : '1', itemName : 'Bvv'}],
+    itemList: jfj,
     searchKeyword: 'initial state 값을 전달받는데 성공',
 };
 
@@ -24,11 +26,29 @@ export const search = searchKeyword => ({
 });
 
 export const itemListAction = (itemList) => (
+  console.log(itemList),
   {
   type: APILOAD,
   itemList
 });
 
+function getUserData() {
+  return new Promise((resolve, reject) => {
+      axios.get("/api/customers")
+        .then(res => resolve(res.data))
+        .catch(
+          err => reject(err));
+  });
+};
+
+getUserData().then(function(userData) {
+  console.log(userData)
+  initialState = {
+    itemList: userData, // ' ' or axios result
+  };
+  console.log(initialState.itemList)
+  return initialState.itemList
+}); 
 
 function itemListModule (state = initialState, action) {
   switch (action.type) {
