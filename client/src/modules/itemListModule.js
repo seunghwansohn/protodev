@@ -12,22 +12,6 @@ export function fetchAction() {
     });
   };
 }
-
-
-const jfj = [{id : '1', itemName : 'Bvv', itemCode : '코드입니다'}]
-
-let initialState = {
-    input:'sdfsdf',
-    itemList: jfj,
-    searchKeyword: 'initial state 값을 전달받는데 성공',
-    pickedItem: '',
-};
-
-export const search = searchKeyword => ({
-  type: SEARCHKEYWORD, 
-  searchKeyword
-});
-
 export const itemListAction = (itemList) => (
   console.log(itemList),
   {
@@ -36,7 +20,25 @@ export const itemListAction = (itemList) => (
 });
 
 
-export const inputItem = (pickedItem) => (
+
+const jfj = [{id : '1', itemName : 'Bvv', itemCode : '코드입니다'}]
+
+let initialState = {
+    input:'sdfsdf',
+    itemList: jfj,
+    searchKeyword: 'initial state 값을 전달받는데 성공',
+    pickedItem: '10',
+};
+
+export const search = searchKeyword => ({
+  type: SEARCHKEYWORD, 
+  searchKeyword
+});
+
+
+
+
+export const inputItemAction = (pickedItem) => (
   console.log(pickedItem),
   {
   type: INPUTITEM,

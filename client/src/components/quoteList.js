@@ -5,7 +5,8 @@ import Table from '@material-ui/core/Table'; //material-ui의 Table ui를 불러
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 
-const QuoteListComponent = () => {
+const QuoteListComponent = ({pickedItem}) => {
+    console.log(pickedItem)
     return(
         <div>
             <hr></hr>
@@ -18,7 +19,7 @@ const QuoteListComponent = () => {
                     <TableCell>Qty</TableCell>
                 </TableHead>
                 <TableBody>
-                    <TableCell>No</TableCell>
+                    <TableCell>{pickedItem}</TableCell>
                     <TableCell>Code</TableCell>
                     <TableCell>Name</TableCell>
                     <TableCell>Qty</TableCell>

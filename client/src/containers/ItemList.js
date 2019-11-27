@@ -2,12 +2,12 @@ import React from 'react'
 import ItemListComponent from '../components/itemListComponent'
 import SearchAppBar from '../components/appBar'
 import { connect } from 'react-redux';
-import {search, fetchAction, inputItem}  from '../modules/itemListModule'
+import {search, fetchAction, inputItemAction}  from '../modules/itemListModule'
 import QuoteListComponent from '../components/quoteList'
 
 
 const ItemListContainer = (
-    {fetch, searchKeyword, search, itemList, inputItem}
+    {fetch, searchKeyword, search, itemList, inputItem, pickedItem}
 ) => {
     return(
         <div>
@@ -15,7 +15,7 @@ const ItemListContainer = (
                 onSearch = {search}>
             </SearchAppBar>
             <ItemListComponent code = {searchKeyword} onFetch = {fetch} itemList = {itemList} inputItem = {inputItem}></ItemListComponent>
-            <QuoteListComponent></QuoteListComponent>
+            <QuoteListComponent pickedItem = {pickedItem}></QuoteListComponent>
 
         </div>
     )
@@ -37,8 +37,8 @@ const mapDispatchToProps = dispatch => ({
 
     },
     inputItem :(f) => {
-        console.log(f)
-        dispatch(inputItem(f))
+        // console.log(f)
+        dispatch(inputItemAction(f))
     }
 })
 
