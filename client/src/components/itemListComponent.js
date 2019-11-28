@@ -50,7 +50,7 @@ const ItemListComponent = ({code, onFetch, itemList, inputItem}) => {
                     <TableCell> <button onClick = {itemListFilteredMap}>-1</button></TableCell>
                     <TableCell> <button onClick= {function(e){
                               e.preventDefault();
-                              inputItem(c.id);
+                              inputItem(c);
                               console.log(c.id)
                             }}>삽입</button></TableCell> 
                 </TableRow>

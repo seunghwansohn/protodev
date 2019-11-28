@@ -19,9 +19,9 @@ const QuoteListComponent = ({pickedItem}) => {
                     <TableCell>Qty</TableCell>
                 </TableHead>
                 <TableBody>
-                    <TableCell>{pickedItem}</TableCell>
-                    <TableCell>Code</TableCell>
-                    <TableCell>Name</TableCell>
+                    <TableCell>{pickedItem.id}</TableCell>
+                    <TableCell>{pickedItem.itemCode}</TableCell>
+                    <TableCell>{pickedItem.itemName}</TableCell>
                     <TableCell>Qty</TableCell>
                 </TableBody>
             </Table>

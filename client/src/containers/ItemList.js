@@ -9,6 +9,7 @@ import QuoteListComponent from '../components/quoteList'
 const ItemListContainer = (
     {fetch, searchKeyword, search, itemList, inputItem, pickedItem}
 ) => {
+    console.log(pickedItem)
     return(
         <div>
             <SearchAppBar 
