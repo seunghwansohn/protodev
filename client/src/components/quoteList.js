@@ -7,6 +7,22 @@ import TableBody from '@material-ui/core/TableBody';
 
 const QuoteListComponent = ({pickedItem}) => {
     console.log(pickedItem)
+    const pickedItemMap = () => {
+        console.log(pickedItem)
+        return pickedItem.map(c => {
+            return (
+                <TableRow>
+                    <TableCell>{c.id}</TableCell>
+                    <TableCell>{c.itemCode}</TableCell>
+                    <TableCell>{c.itemName}</TableCell>
+                    <TableCell>Qty</TableCell>
+                </TableRow>
+            )
+        })
+    }
+    const blank = () => {
+        return ('')
+    }
     return(
         <div>
             <hr></hr>
@@ -19,10 +35,8 @@ const QuoteListComponent = ({pickedItem}) => {
                     <TableCell>Qty</TableCell>
                 </TableHead>
                 <TableBody>
-                    <TableCell>{pickedItem.id}</TableCell>
-                    <TableCell>{pickedItem.itemCode}</TableCell>
-                    <TableCell>{pickedItem.itemName}</TableCell>
-                    <TableCell>Qty</TableCell>
+                    {/* {pickedItem !== undefined ? pickedItemMap() : blank()} */}
+                    {pickedItemMap()}
                 </TableBody>
             </Table>
         </div>

@@ -13,21 +13,19 @@ export function fetchAction() {
   };
 }
 export const itemListAction = (itemList) => (
-  console.log(itemList),
   {
   type: APILOAD,
   itemList
 });
 
-
-
-const jfj = [{id : '1', itemName : 'Bvv', itemCode : '코드입니다'}]
+var pickedItemArray = []
+const jfj = [{id : 1, itemName : 'Bvv', itemCode : '코드입니다'}]
 
 let initialState = {
     input:'sdfsdf',
     itemList: jfj,
     searchKeyword: 'initial state 값을 전달받는데 성공',
-    pickedItem: '10',
+    pickedItem: [{id : 0, itemCode : 'asdf', itemName : 'eflkjef'}],
 };
 
 export const search = searchKeyword => ({
@@ -35,17 +33,13 @@ export const search = searchKeyword => ({
   searchKeyword
 });
 
-
-
-
 export const inputItemAction = (pickedItem) => (
-  console.log(pickedItem),
+  pickedItemArray.push(pickedItem),
   {
   type: INPUTITEM,
-  pickedItem
+  pickedItemArray
 });
   
-
 function getUserData() {
   return new Promise((resolve, reject) => {
       axios.get("/api/customers")
@@ -56,17 +50,16 @@ function getUserData() {
 };
 
 const inner = getUserData().then(function(userData) {
-  // console.log(userData)
   initialState = {
     itemList: userData, // ' ' or axios result
   };
-  // console.log(initialState.itemList)
   return initialState.itemList
 }); 
 
 function itemListModule (state = initialState, action) {
   switch (action.type) {
       case SEARCHKEYWORD:
+        console.log(action.searchKeyword)
         return {
           ...state,
           searchKeyword: action.searchKeyword
@@ -77,9 +70,10 @@ function itemListModule (state = initialState, action) {
           itemList: action.itemList
         };
       case INPUTITEM:
+        console.log(action.pickedItemArray)
         return {
           ...state,
-          pickedItem: action.pickedItem
+          pickedItem: action.pickedItemArray
         }
       default:
         return state;

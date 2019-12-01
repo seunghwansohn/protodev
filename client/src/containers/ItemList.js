@@ -1,26 +1,25 @@
 import React from 'react'
-import ItemListComponent from '../components/itemListComponent'
 import SearchAppBar from '../components/appBar'
-import { connect } from 'react-redux';
-import {search, fetchAction, inputItemAction}  from '../modules/itemListModule'
+import ItemListComponent from '../components/itemListComponent'
 import QuoteListComponent from '../components/quoteList'
-
+import { connect } from 'react-redux';
+import {search, fetchAction}  from '../modules/itemListModule'
+import {inputItemAction}  from '../modules/itemListModule'
 
 const ItemListContainer = (
     {fetch, searchKeyword, search, itemList, inputItem, pickedItem}
-) => {
-    console.log(pickedItem)
-    return(
-        <div>
-            <SearchAppBar 
-                onSearch = {search}>
-            </SearchAppBar>
-            <ItemListComponent code = {searchKeyword} onFetch = {fetch} itemList = {itemList} inputItem = {inputItem}></ItemListComponent>
-            <QuoteListComponent pickedItem = {pickedItem}></QuoteListComponent>
+    ) => {
+        return(
+            <div>
+                <SearchAppBar 
+                    onSearch = {search}>
+                </SearchAppBar>
+                <ItemListComponent code = {searchKeyword} onFetch = {fetch} itemList = {itemList} inputItem = {inputItem}></ItemListComponent>
+                <QuoteListComponent pickedItem = {pickedItem}></QuoteListComponent>
 
-        </div>
-    )
-}
+            </div>
+        )
+    }   
 const mapStateToProps = state => ({ //state를 파라미터로 받아옴. 
     searchKeyword : state.itemList.searchKeyword,
     itemList : state.itemList.itemList,
@@ -29,22 +28,18 @@ const mapStateToProps = state => ({ //state를 파라미터로 받아옴.
 })
 const mapDispatchToProps = dispatch => ({
     search : (f) => {
-        console.log(search(f))
         dispatch(search(f));
     },
     fetch : () => {
-        console.log('asdfasdflkj')
         dispatch(fetchAction())
-
     },
     inputItem :(f) => {
-        // console.log(f)
         dispatch(inputItemAction(f))
+        console.log(inputItemAction(f))
     }
 })
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps,
-  
 )   (ItemListContainer)
