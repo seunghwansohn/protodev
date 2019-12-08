@@ -35,6 +35,8 @@ export const search = searchKeyword => ({
 
 export const inputItemAction = (pickedItem) => (
   pickedItemArray.push(pickedItem),
+  
+  console.log(pickedItemArray),
   {
   type: INPUTITEM,
   pickedItemArray

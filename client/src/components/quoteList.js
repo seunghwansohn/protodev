@@ -20,9 +20,6 @@ const QuoteListComponent = ({pickedItem}) => {
             )
         })
     }
-    const blank = () => {
-        return ('')
-    }
     return(
         <div>
             <hr></hr>
