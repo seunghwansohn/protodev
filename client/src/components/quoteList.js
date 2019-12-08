@@ -5,13 +5,11 @@ import Table from '@material-ui/core/Table'; //material-ui의 Table ui를 불러
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 
-const QuoteListComponent = ({pickedItem}) => {
-    console.log(pickedItem)
+const QuoteListComponent = ({pickedItem, pickedCount}) => {
     const pickedItemMap = () => {
-        console.log(pickedItem)
-        return pickedItem.map(c => {
+        return pickedItem.map((c, index) => {
             return (
-                <TableRow>
+                <TableRow key = {index}>
                     <TableCell>{c.id}</TableCell>
                     <TableCell>{c.itemCode}</TableCell>
                     <TableCell>{c.itemName}</TableCell>
@@ -24,6 +22,7 @@ const QuoteListComponent = ({pickedItem}) => {
         <div>
             <hr></hr>
             <h1>Picked Item</h1>
+            Number of picked items : {pickedCount}
             <Table>
                 <TableHead>
                     <TableCell>No</TableCell>
@@ -32,7 +31,6 @@ const QuoteListComponent = ({pickedItem}) => {
                     <TableCell>Qty</TableCell>
                 </TableHead>
                 <TableBody>
-                    {/* {pickedItem !== undefined ? pickedItemMap() : blank()} */}
                     {pickedItemMap()}
                 </TableBody>
             </Table>

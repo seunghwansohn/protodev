@@ -25,7 +25,8 @@ let initialState = {
     input:'sdfsdf',
     itemList: jfj,
     searchKeyword: 'initial state 값을 전달받는데 성공',
-    pickedItem: [{id : 0, itemCode : 'asdf', itemName : 'eflkjef'}],
+    pickedCount: 0,
+    pickedItem: [],
 };
 
 export const search = searchKeyword => ({
@@ -36,32 +37,14 @@ export const search = searchKeyword => ({
 export const inputItemAction = (pickedItem) => (
   pickedItemArray.push(pickedItem),
   
-  console.log(pickedItemArray),
   {
   type: INPUTITEM,
   pickedItemArray
 });
   
-function getUserData() {
-  return new Promise((resolve, reject) => {
-      axios.get("/api/customers")
-        .then(res => resolve(res.data))
-        .catch(
-          err => reject(err));
-  });
-};
-
-const inner = getUserData().then(function(userData) {
-  initialState = {
-    itemList: userData, // ' ' or axios result
-  };
-  return initialState.itemList
-}); 
-
 function itemListModule (state = initialState, action) {
   switch (action.type) {
       case SEARCHKEYWORD:
-        console.log(action.searchKeyword)
         return {
           ...state,
           searchKeyword: action.searchKeyword
@@ -72,10 +55,10 @@ function itemListModule (state = initialState, action) {
           itemList: action.itemList
         };
       case INPUTITEM:
-        console.log(action.pickedItemArray)
         return {
           ...state,
-          pickedItem: action.pickedItemArray
+          pickedItem: action.pickedItemArray,
+          pickedCount: action.pickedItemArray.length
         }
       default:
         return state;
