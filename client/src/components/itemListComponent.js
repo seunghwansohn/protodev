@@ -40,9 +40,9 @@ const ItemListComponent = ({code, onFetch, itemList, inputItem}) => {
     }
     const itemListMap2 = () => {
         itemListFilteredMap();
-        return result.map(c => {
+        return result.map((c, index) => {
             return(
-                <TableRow>
+                <TableRow key = {index}>
                     <TableCell>{c.id}</TableCell>
                     <TableCell>{c.itemCode}</TableCell>
                     <TableCell>{c.itemName}</TableCell>
