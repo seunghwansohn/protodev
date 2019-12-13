@@ -3,10 +3,11 @@ import SearchAppBar from '../components/appBar'
 import ItemListComponent from '../components/itemListComponent'
 import QuoteListComponent from '../components/quoteList'
 import { connect } from 'react-redux';
-import {search, fetchAction, inputItemAction}  from '../modules/itemListModule'
+import {search, fetchAction, inputItemAction, inputQtyAction}  from '../modules/itemListModule'
+
 
 const ItemListContainer = (
-    {fetch, searchKeyword, search, itemList, inputItem, pickedItem, pickedCount}
+    {fetch, searchKeyword, search, itemList, inputItem, pickedItem, pickedCount, qtySubmit}
     ) => {
         return(
             <div>
@@ -14,7 +15,7 @@ const ItemListContainer = (
                     onSearch = {search}>
                 </SearchAppBar>
                 <ItemListComponent code = {searchKeyword} onFetch = {fetch} itemList = {itemList} inputItem = {inputItem}></ItemListComponent>
-                <QuoteListComponent pickedCount = {pickedCount} pickedItem = {pickedItem} inputItem = {inputItem}></QuoteListComponent>
+                <QuoteListComponent qtySubmit = {qtySubmit} pickedCount = {pickedCount} pickedItem = {pickedItem} inputItem = {inputItem}></QuoteListComponent>
             </div>
         )
     }   
@@ -28,13 +29,18 @@ const mapStateToProps = state => ({ //state를 파라미터로 받아옴.
 const mapDispatchToProps = dispatch => ({
     search : (searchKeyword) => {
         dispatch(search(searchKeyword));
+        dispatch(fetchAction());
     },
     fetch : () => {
         dispatch(fetchAction())
     },
     inputItem :(selectedItem) => {
         dispatch(inputItemAction(selectedItem))
-    }
+    },
+    qtySubmit : (inputQty) => {
+        console.log(inputQty);
+        dispatch(inputQtyAction(inputQty))
+    },
 })
 
 export default connect(

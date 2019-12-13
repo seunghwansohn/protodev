@@ -55,7 +55,6 @@ const ItemListComponent = ({code, onFetch, itemList, inputItem}) => {
                 </TableRow>
         )})
     }
-
     return(
     <div>
         <button onClick = {onFetch}>Load</button>
@@ -70,7 +69,7 @@ const ItemListComponent = ({code, onFetch, itemList, inputItem}) => {
               <TableCell>삽입</TableCell>
             </TableHead>
             <TableBody>
-                {code ? itemListMap2() : itemListMap2()}
+                {itemListMap2()}
             </TableBody>
         </Table>
     </div>

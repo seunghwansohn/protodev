@@ -3,6 +3,7 @@ const axios = require('axios');
 const SEARCHKEYWORD = 'itemList/SEARCHKEYWORD';
 const APILOAD = 'itemList/APILOAD';
 const INPUTITEM = 'itemList/INPUTITEM'
+const INPUTQTY = 'itemList/INPUTQTY'
 
 export function fetchAction() {
   return function(callback) {
@@ -35,12 +36,20 @@ export const search = searchKeyword => ({
 });
 
 export const inputItemAction = (pickedItem) => (
+  console.log(pickedItem),
+  pickedItem.qty = 0, 
   pickedItemArray.push(pickedItem),
   
   {
   type: INPUTITEM,
   pickedItemArray
 });
+
+export const inputQtyAction = (inputQty) => (
+  {type: INPUTQTY,
+  inputQty
+  }
+)
   
 function itemListModule (state = initialState, action) {
   switch (action.type) {
@@ -59,6 +68,14 @@ function itemListModule (state = initialState, action) {
           ...state,
           pickedItem: action.pickedItemArray,
           pickedCount: action.pickedItemArray.length
+        };
+      case INPUTQTY:
+        console.log(action.inputQty)
+        return {
+          ...state,
+          pickedItem : {
+            qty : action.inputQty
+          }
         }
       default:
         return state;
