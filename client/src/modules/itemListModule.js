@@ -13,6 +13,7 @@ export function fetchAction() {
     });
   };
 }
+
 export const itemListAction = (itemList) => (
   {
   type: APILOAD,
@@ -20,11 +21,10 @@ export const itemListAction = (itemList) => (
 });
 
 var pickedItemArray = []
-const jfj = [{id : 1, itemName : 'Bvv', itemCode : '코드입니다'}]
 
 let initialState = {
-    input:'sdfsdf',
-    itemList: jfj,
+    input:'',
+    itemList: [],
     searchKeyword: 'initial state 값을 전달받는데 성공',
     pickedCount: 0,
     pickedItem: [],
@@ -73,9 +73,7 @@ function itemListModule (state = initialState, action) {
         console.log(action.inputQty)
         return {
           ...state,
-          pickedItem : {
-            qty : action.inputQty
-          }
+          pickedItem : state.pickedItem.concat(action.inputQty)
         }
       default:
         return state;

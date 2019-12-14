@@ -4,25 +4,22 @@ import TableCell from '@material-ui/core/TableCell';
 import Table from '@material-ui/core/Table'; //material-ui의 Table ui를 불러와서 프론트엔드에 쓰이는 모든 테이블 스타일을 이 스타일로 함.
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import { Field, reduxForm } from 'redux-form';
 
 
 const QuoteListComponent = ({pickedItem, pickedCount, qtySubmit}) => {
     let inputQty = ''
     const handleValueSubmit = (e) => {
         e.preventDefault();
-        console.log(inputQty)
-        // qtySubmit(inputQty)
-        console.log(e.target.quantity.value)
-        console.log(e.target.id.value)
+        const idQtyObject = {}
+        idQtyObject.id = e.target.id.value
+        idQtyObject.qty = e.target.quantity.value
+        qtySubmit(idQtyObject)
     }
     const eee = (e) => {
         e.preventDefault();
         inputQty = e.target.value
-        console.log(inputQty)
-
     }
-    console.log(pickedItem)
+
     const pickedItemMap = () => {
         return pickedItem.map((c, index) => {
             return (

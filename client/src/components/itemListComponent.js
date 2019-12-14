@@ -5,8 +5,7 @@ import Table from '@material-ui/core/Table'; //material-ui의 Table ui를 불러
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 
-
-const ItemListComponent = ({code, onFetch, itemList, inputItem}) => {
+const ItemListComponent = ({code, onFetch, itemList, inputItem, useStateLog}) => {
     var result = [];
     const itemListFilteredMap = () => {
             var matchedid = [];
@@ -38,6 +37,15 @@ const ItemListComponent = ({code, onFetch, itemList, inputItem}) => {
               }
               var temporary = returnWords();
     }
+    const alreadyCheck = (c) => {
+      function add(arr, id) {
+        const { length } = arr;
+        const newId = length + 1;
+        const found = arr.some(el => el.id === id.id);
+        if (!found) inputItem(id);
+      }
+      add(useStateLog, c)
+    }
     const itemListMap2 = () => {
         itemListFilteredMap();
         return result.map((c, index) => {
@@ -50,14 +58,20 @@ const ItemListComponent = ({code, onFetch, itemList, inputItem}) => {
                     <TableCell> <button onClick = {itemListFilteredMap}>-1</button></TableCell>
                     <TableCell> <button onClick= {function(e){
                               e.preventDefault();
-                              inputItem(c);
+                              // inputItem(c);
+                              alreadyCheck(c)
                             }}>삽입</button></TableCell> 
                 </TableRow>
         )})
     }
+    const Quy = () => {
+      console.log(useStateLog)
+    }
     return(
     <div>
         <button onClick = {onFetch}>Load</button>
+        <button onClick = {Quy}>-1</button>
+
         <hr></hr>
          <Table>
             <TableHead>

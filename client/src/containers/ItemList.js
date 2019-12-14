@@ -2,19 +2,22 @@ import React from 'react'
 import SearchAppBar from '../components/appBar'
 import ItemListComponent from '../components/itemListComponent'
 import QuoteListComponent from '../components/quoteList'
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import {search, fetchAction, inputItemAction, inputQtyAction}  from '../modules/itemListModule'
+
+
 
 
 const ItemListContainer = (
     {fetch, searchKeyword, search, itemList, inputItem, pickedItem, pickedCount, qtySubmit}
     ) => {
+        const loG = useSelector(state => state.itemList.pickedItem)
         return(
             <div>
                 <SearchAppBar 
                     onSearch = {search}>
                 </SearchAppBar>
-                <ItemListComponent code = {searchKeyword} onFetch = {fetch} itemList = {itemList} inputItem = {inputItem}></ItemListComponent>
+                <ItemListComponent code = {searchKeyword} onFetch = {fetch} itemList = {itemList} inputItem = {inputItem} useStateLog = {loG}></ItemListComponent>
                 <QuoteListComponent qtySubmit = {qtySubmit} pickedCount = {pickedCount} pickedItem = {pickedItem} inputItem = {inputItem}></QuoteListComponent>
             </div>
         )
@@ -39,6 +42,7 @@ const mapDispatchToProps = dispatch => ({
     },
     qtySubmit : (inputQty) => {
         console.log(inputQty);
+
         dispatch(inputQtyAction(inputQty))
     },
 })
