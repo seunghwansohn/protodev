@@ -1,23 +1,27 @@
-import React from 'react'
+import React, {useState, useEffect, useCallback} from 'react'
 import SearchAppBar from '../components/appBar'
 import ItemListComponent from '../components/itemListComponent'
 import QuoteListComponent from '../components/quoteList'
-import { connect, useSelector } from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 import {search, fetchAction, inputItemAction, inputQtyAction}  from '../modules/itemListModule'
 
 
 
 
 const ItemListContainer = (
-    {fetch, searchKeyword, search, itemList, inputItem, pickedItem, pickedCount, qtySubmit}
+    {fetch, searchKeyword, search, itemList, inputItem, pickedItem, pickedCount, qtySubmit, fetchAction}
     ) => {
         const loG = useSelector(state => state.itemList.pickedItem)
+        const items = useSelector(state => state.itemList.itemList)
+        const dispatch = useDispatch();
+        // const onFetch = dispatch(fetchAction()), [dispatch])
         return(
             <div>
                 <SearchAppBar 
-                    onSearch = {search}>
+                    onSearch = {search}
+                    fetchAction = {fetchAction}>
                 </SearchAppBar>
-                <ItemListComponent code = {searchKeyword} onFetch = {fetch} itemList = {itemList} inputItem = {inputItem} useStateLog = {loG}></ItemListComponent>
+                <ItemListComponent code = {searchKeyword} dispatch = {dispatch} itemList = {itemList} inputItem = {inputItem} useStateLog = {loG} onLoadApi = {fetchAction} items = {items}></ItemListComponent>
                 <QuoteListComponent qtySubmit = {qtySubmit} pickedCount = {pickedCount} pickedItem = {pickedItem} inputItem = {inputItem}></QuoteListComponent>
             </div>
         )
@@ -32,17 +36,14 @@ const mapStateToProps = state => ({ //state를 파라미터로 받아옴.
 const mapDispatchToProps = dispatch => ({
     search : (searchKeyword) => {
         dispatch(search(searchKeyword));
-        dispatch(fetchAction());
     },
-    fetch : () => {
-        dispatch(fetchAction())
+    fetchAction : () => {
+        dispatch(fetchAction());
     },
     inputItem :(selectedItem) => {
         dispatch(inputItemAction(selectedItem))
     },
     qtySubmit : (inputQty) => {
-        console.log(inputQty);
-
         dispatch(inputQtyAction(inputQty))
     },
 })

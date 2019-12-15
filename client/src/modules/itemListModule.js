@@ -1,5 +1,4 @@
 const axios = require('axios');
-
 const SEARCHKEYWORD = 'itemList/SEARCHKEYWORD';
 const APILOAD = 'itemList/APILOAD';
 const INPUTITEM = 'itemList/INPUTITEM'
@@ -9,16 +8,16 @@ export function fetchAction() {
   return function(callback) {
     return axios.get("/api/customers")
       .then(({ data }) => {
-        callback(itemListAction(data));
+        callback(itemListAction(data))
     });
   };
 }
-
 export const itemListAction = (itemList) => (
   {
-  type: APILOAD,
-  itemList
+    type: APILOAD,
+    itemList
 });
+
 
 var pickedItemArray = []
 
@@ -30,13 +29,13 @@ let initialState = {
     pickedItem: [],
 };
 
-export const search = searchKeyword => ({
+export const search = searchKeyword => (
+  {
   type: SEARCHKEYWORD, 
   searchKeyword
 });
 
 export const inputItemAction = (pickedItem) => (
-  console.log(pickedItem),
   pickedItem.qty = 0, 
   pickedItemArray.push(pickedItem),
   
@@ -70,7 +69,6 @@ function itemListModule (state = initialState, action) {
           pickedCount: action.pickedItemArray.length
         };
       case INPUTQTY:
-        console.log(action.inputQty)
         return {
           ...state,
           pickedItem : state.pickedItem.concat(action.inputQty)
