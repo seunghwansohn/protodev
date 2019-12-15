@@ -26,10 +26,9 @@ const ItemListComponent = ({code, onFetch, itemList, inputItem, useStateLog, onL
                 if (trueSearched === true) {
                   k = k + 1
                 }
-                if (k === codeArray.length) {matchedTrue = true}
-                else {matchedTrue = false}
+                if (k === codeArray.length) {matchedTrue = true} //공백으로 나눠진 단어 모두가 검색되는지를 true여부로 반환
+                else {matchedTrue = false} 
               }
-              var trueSearched = joinedString.indexOf(code) > - 1;
               if (matchedTrue === true) {
                 matchedid.push(num.id);   //matchedid라는 미리 선언된 배열변수에, 검색어를 포함한 아이템들의 id값만 담음.
                 }
@@ -57,9 +56,11 @@ const ItemListComponent = ({code, onFetch, itemList, inputItem, useStateLog, onL
     const alreadyCheck = (c) => {
       function add(arr, id) {
         const { length } = arr;
-        const newId = length + 1;
         const found = arr.some(el => el.id === id.id);
-        if (!found) inputItem(id);
+        if (!found) {
+          id.no = arr.length + 1
+          inputItem(id)}
+        ;
       }
       add(useStateLog, c)
     }
@@ -81,13 +82,13 @@ const ItemListComponent = ({code, onFetch, itemList, inputItem, useStateLog, onL
                 </TableRow>
         )})
     }
-    const itemshow = () => (
-      console.log(items)
-    )
+    // const itemshow = () => (
+    //   console.log(items)
+    // )
     return(
     <div>
         <button onClick = {onLoadApi}>Load</button>
-        <button onClick = {itemshow}>Load</button>
+        {/* <button onClick = {itemshow}>Load</button> */}
         <hr></hr>
          <Table>
             <TableHead>

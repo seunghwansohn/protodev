@@ -1,8 +1,12 @@
+import update from 'immutability-helper';
+
+
 const axios = require('axios');
 const SEARCHKEYWORD = 'itemList/SEARCHKEYWORD';
 const APILOAD = 'itemList/APILOAD';
 const INPUTITEM = 'itemList/INPUTITEM'
 const INPUTQTY = 'itemList/INPUTQTY'
+
 
 export function fetchAction() {
   return function(callback) {
@@ -36,12 +40,10 @@ export const search = searchKeyword => (
 });
 
 export const inputItemAction = (pickedItem) => (
-  pickedItem.qty = 0, 
-  pickedItemArray.push(pickedItem),
-  
+  // pickedItemArray.push(pickedItem),
   {
   type: INPUTITEM,
-  pickedItemArray
+  pickedItem
 });
 
 export const inputQtyAction = (inputQty) => (
@@ -62,17 +64,21 @@ function itemListModule (state = initialState, action) {
           ...state,
           itemList: action.itemList
         };
-      case INPUTITEM:
-        return {
-          ...state,
-          pickedItem: action.pickedItemArray,
-          pickedCount: action.pickedItemArray.length
-        };
+
       case INPUTQTY:
-        return {
-          ...state,
-          pickedItem : state.pickedItem.concat(action.inputQty)
-        }
+        let no = action.inputQty.no - 1
+        return update(state, {
+          pickedItem: {
+            [no]: {
+              qty : {$set:action.inputQty.qty}
+            }
+          }
+        })
+      case INPUTITEM:
+        return update(state, {
+          pickedItem: {$push : [action.pickedItem]}
+      })
+          
       default:
         return state;
     } 

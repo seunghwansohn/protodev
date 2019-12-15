@@ -11,8 +11,9 @@ const QuoteListComponent = ({pickedItem, pickedCount, qtySubmit}) => {
     const handleValueSubmit = (e) => {
         e.preventDefault();
         const idQtyObject = {}
-        idQtyObject.id = e.target.id.value
+        idQtyObject.no = e.target.no.value
         idQtyObject.qty = e.target.quantity.value
+        // console.log(idQtyObject.id)
         qtySubmit(idQtyObject)
     }
     const eee = (e) => {
@@ -24,13 +25,13 @@ const QuoteListComponent = ({pickedItem, pickedCount, qtySubmit}) => {
         return pickedItem.map((c, index) => {
             return (
                 <TableRow key = {index}>
-                    <TableCell>{c.id}</TableCell>
+                    <TableCell>{c.no}</TableCell>
                     <TableCell>{c.itemCode}</TableCell>
                     <TableCell>{c.itemName}</TableCell>
                     <TableCell>
                         <form onSubmit = {handleValueSubmit} method ="post">
                             <input type="number" name="quantity" onChange = {eee}></input>
-                            <input type="hidden" name="id" value={c.id}></input>
+                            <input type="hidden" name="no" value={c.no}></input>
                             <input type="submit" name="submit" value= "→"></input>
                             {inputQty}
                             {c.qty}
@@ -40,10 +41,14 @@ const QuoteListComponent = ({pickedItem, pickedCount, qtySubmit}) => {
             )
         })
     }
+    const rrr = () => {
+        console.log(pickedItem)
+    }
     return(
         <div>
             <hr></hr>
             <h1>Picked Item</h1>
+            <button onClick = {rrr}>확인</button>
             Number of picked items : {pickedCount}
             <Table>
                 <TableHead>
