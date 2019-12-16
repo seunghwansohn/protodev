@@ -1,12 +1,10 @@
 import update from 'immutability-helper';
 
-
 const axios = require('axios');
 const SEARCHKEYWORD = 'itemList/SEARCHKEYWORD';
 const APILOAD = 'itemList/APILOAD';
 const INPUTITEM = 'itemList/INPUTITEM'
 const INPUTQTY = 'itemList/INPUTQTY'
-
 
 export function fetchAction() {
   return function(callback) {
@@ -21,9 +19,6 @@ export const itemListAction = (itemList) => (
     type: APILOAD,
     itemList
 });
-
-
-var pickedItemArray = []
 
 let initialState = {
     input:'',
@@ -40,7 +35,6 @@ export const search = searchKeyword => (
 });
 
 export const inputItemAction = (pickedItem) => (
-  // pickedItemArray.push(pickedItem),
   {
   type: INPUTITEM,
   pickedItem
