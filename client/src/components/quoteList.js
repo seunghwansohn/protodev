@@ -7,6 +7,7 @@ import TableBody from '@material-ui/core/TableBody';
 import { PDFDownloadLink, PDFViewer } from "@react-pdf/renderer";
 import { PdfDocument } from "../pdf/quotation";
 import { PdfDocument1 } from "../pdf/quotation1";
+import Viewer from './viewer'
 
 const QuoteListComponent = ({pickedItem, pickedCount, qtySubmit}) => {
     let inputQty = ''
@@ -54,6 +55,11 @@ const QuoteListComponent = ({pickedItem, pickedCount, qtySubmit}) => {
 
             <hr></hr>
             <h1>Picked Item</h1>
+            <hr>
+            </hr>
+            <Viewer/>
+
+            <hr></hr>
             <button onClick = {rrr}>확인</button>
             Number of picked items : {pickedCount}
             <PDFDownloadLink
@@ -82,9 +88,6 @@ const QuoteListComponent = ({pickedItem, pickedCount, qtySubmit}) => {
                     {pickedItemMap()}
                 </TableBody>
             </Table>
-            <PDFViewer>
-                <PdfDocument1 />
-            </PDFViewer>
         </div>
     )
 }

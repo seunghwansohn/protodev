@@ -93,7 +93,7 @@ export function PdfDocument1() {
     const eeee = 'feef'
   return (
     <Document>
-         <Page style={styles.page}>
+         <Page size="A4">
             <Text>asdfasdf</Text>
          </Page>
     </Document>

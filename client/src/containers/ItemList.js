@@ -4,7 +4,8 @@ import ItemListComponent from '../components/itemListComponent'
 import QuoteListComponent from '../components/quoteList'
 import { connect, useSelector, useDispatch } from 'react-redux';
 import {search, fetchAction, inputItemAction, inputQtyAction}  from '../modules/itemListModule'
-
+import { MyDocument } from "../components/viewer";
+import { PDFViewer } from "@react-pdf/renderer";
 
 
 
@@ -23,6 +24,7 @@ const ItemListContainer = (
                 </SearchAppBar>
                 <ItemListComponent code = {searchKeyword} dispatch = {dispatch} itemList = {itemList} inputItem = {inputItem} useStateLog = {loG} onLoadApi = {fetchAction} items = {items}></ItemListComponent>
                 <QuoteListComponent qtySubmit = {qtySubmit} pickedCount = {pickedCount} pickedItem = {pickedItem} inputItem = {inputItem}></QuoteListComponent>
+                    <MyDocument />
             </div>
         )
     }   

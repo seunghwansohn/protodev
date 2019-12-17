@@ -94,7 +94,7 @@ export function PdfDocument(props) {
     const eeee = 'feef'
   return (
     <Document>
-         <Page style={styles.page}>
+         <Page size="A4" style={styles.page}>
             <Text>{props.data[0] ? props.data[0].itemName : eeee}</Text>
             {/* <Text>asdfasdf</Text> */}
 
