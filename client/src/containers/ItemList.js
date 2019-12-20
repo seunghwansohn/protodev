@@ -4,23 +4,58 @@ import ItemListComponent from '../components/itemListComponent'
 import { connect, useSelector, useDispatch } from 'react-redux';
 import {search, fetchAction, inputItemAction, inputQtyAction, inputPdfBlobUrl}  from '../modules/itemListModule'
 import QuoteListComponent from '../components/quoteList'
+
+
 const ItemListContainer = (
-    {fetch, searchKeyword, inputPdfBlobUrl, pdfBlobUrl, search, itemList, inputItem, pickedItem, pickedCount, qtySubmit, fetchAction}
-    ) => {
+    {
+        fetch,
+        searchKeyword,
+        inputPdfBlobUrl,
+        pdfBlobUrl,
+        search,
+        itemList,
+        inputItem,
+        pickedItem,
+        pickedCount,
+        qtySubmit,
+        fetchAction
+    }
+    ) => 
+    
+    {
         const loG = useSelector(state => state.itemList.pickedItem)
         const items = useSelector(state => state.itemList.itemList)
         const dispatch = useDispatch();
+
         return(
             <div>
                 <SearchAppBar 
                     onSearch = {search}
                     fetchAction = {fetchAction}>
                 </SearchAppBar>
-                <ItemListComponent code = {searchKeyword} dispatch = {dispatch} itemList = {itemList} inputItem = {inputItem} useStateLog = {loG} onLoadApi = {fetchAction} items = {items}></ItemListComponent>
-                <QuoteListComponent pdfBlobUrl = {pdfBlobUrl} qtySubmit = {qtySubmit} pickedCount = {pickedCount} pickedItem = {pickedItem} dispatch = {inputPdfBlobUrl} inputItem = {inputItem}></QuoteListComponent>
+                <ItemListComponent 
+                    code = {searchKeyword} 
+                    dispatch = {dispatch} 
+                    itemList = {itemList} 
+                    inputItem = {inputItem} 
+                    useStateLog = {loG} 
+                    onLoadApi = {fetchAction} 
+                    items = {items}
+                >
+                </ItemListComponent>
+                <QuoteListComponent 
+                    pdfBlobUrl = {pdfBlobUrl} 
+                    qtySubmit = {qtySubmit} 
+                    pickedCount = {pickedCount} 
+                    pickedItem = {pickedItem} 
+                    dispatch = {inputPdfBlobUrl} 
+                    inputItem = {inputItem}
+                >
+                </QuoteListComponent>
             </div>
         )
     }   
+    
 const mapStateToProps = state => ({ //state를 파라미터로 받아옴. 
     searchKeyword : state.itemList.searchKeyword,
     itemList : state.itemList.itemList,

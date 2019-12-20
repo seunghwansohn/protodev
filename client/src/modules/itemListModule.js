@@ -1,4 +1,4 @@
-import update from 'immutability-helper';
+import produce from 'immer'
 
 const axios = require('axios');
 const SEARCHKEYWORD = 'itemList/SEARCHKEYWORD';
@@ -6,6 +6,7 @@ const APILOAD = 'itemList/APILOAD';
 const INPUTITEM = 'itemList/INPUTITEM'
 const INPUTQTY = 'itemList/INPUTQTY'
 const INPUTPDFBLOBURL = 'itemList/INPUTPDFBLOBURL'
+
 
 export function fetchAction() {
   return function(callback) {
@@ -56,35 +57,26 @@ export const inputPdfBlobUrl = (blobUrl) => (
 function itemListModule (state = initialState, action) {
   switch (action.type) {
       case SEARCHKEYWORD:
-        return {
-          ...state,
-          searchKeyword: action.searchKeyword
-        };
+        return produce(state, draft =>{
+          draft.searchKeyword = action.searchKeyword
+        })       
       case APILOAD:
-        return {
-          ...state,
-          itemList: action.itemList
-        };
-
+        return produce(state, draft =>{
+          draft.itemList = action.itemList
+        })
       case INPUTQTY:
         let no = action.inputQty.no - 1
-        return update(state, {
-          pickedItem: {
-            [no]: {
-              qty : {$set:action.inputQty.qty}
-            }
-          }
+        return produce(state, draft => {
+          draft.pickedItem[no].qty = action.inputQty.qty
         })
       case INPUTITEM:
-        return update(state, {
-          pickedItem: {$push : [action.pickedItem]}
-      })
+        return produce(state, draft => {
+          draft.pickedItem.push(action.pickedItem)
+        })
       case INPUTPDFBLOBURL:
-        console.log(action)
-        return {
-          ...state,
-          pdfBlobUrl : action.blobUrl
-        }
+        return produce(state, draft => {
+          draft.pdfBlobUrl = action.blobUrl
+        })  
       default:
         return state;
     } 

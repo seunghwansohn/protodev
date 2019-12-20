@@ -26,10 +26,6 @@ export const MyDocument = () => (
       This is a This is a This is a This is a 
       This is a This is a This is a This is a 
       </Text>
-
-{/*  
-      <Text style={styles.emphasis}>breakable</Text> component made <Text style={styles.emphasis}>unbreakable</Text>. Instead of wrapping between both pages, it jumps straight to the next one</Text>
-      <View style={styles.breakable} wrap={false} /> */}
     </Page>
   </Document>
 );
@@ -40,11 +36,7 @@ const styles = StyleSheet.create({
   page: { padding: 20 },
   title: { marginTop: "3%" },
   emphasis: { fontFamily: 'Helvetica-Bold', color: '#F22300' },
-  breakable: { width: '100%', height: 400, backgroundColor: 'tomato' },
-  dialogPaper: {
-    minHeight: '80vh',
-    maxHeight: '80vh',
-  },
+  breakable: { width: '100%', height: 800, backgroundColor: 'tomato' },
 });
 
 
@@ -63,19 +55,43 @@ export default function FullScreenDialog( { pdfBlobUrl, dispatch }) {
     setOpen(false);
   };
 
-  // previewDocument()
   var dd = {
     content: [
         'First paragraph',
-        'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines'
+        'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines',
+        'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines',
+        'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines',
+        'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines',
+        'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines',
+        'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines',
+        'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines',
+        'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines',
+        'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines',
+        `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla faucibus lectus vitae posuere tristique. Phasellus sodales justo at sem pellentesque, pharetra malesuada mi sagittis. Cras rutrum finibus vulputate. Morbi sit amet convallis nisl. Nunc a egestas ipsum, eu auctor odio. Proin sit amet magna sed ex tristique volutpat sed sed tortor. Vivamus tempor est sit amet dui facilisis semper quis et just
+
+        Curabitur in dapibus nunc. Etiam non urna ut mauris ultrices placerat vel sit amet ante. Pellentesque eget fermentum enim. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras convallis id sem in gravida. Suspendisse eleifend rhoncus dui, ac lobortis leo scelerisque eu.
+        
+        Suspendisse convallis, dolor a venenatis tempus, diam neque vulputate nibh, et finibus nulla massa in purus. Quisque scelerisque metus vitae leo consequat, ac volutpat purus lobortis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque id nisl a nisl ultricies dapibus. Sed rutrum metus id nisi varius tristique. Duis et sollicitudin dui, sagittis fringilla nisl. Donec vehicula imperdiet diam eget vulputate. Morbi blandit est sit amet risus semper, vitae convallis tortor condimentum. Nulla euismod ornare commodo. Fusce ornare massa vitae neque fringilla lacinia. Praesent dignissim viverra elementum. Mauris vel odio ut risus dapibus mollis ultricies a turpis. Morbi elementum ex ut ex aliquam vestibulum.
+        
+        Etiam elit magna, ullamcorper non hendrerit elementum, lobortis eget leo. Ut quis quam efficitur dui gravida vulputate eu vitae nibh. Cras euismod vulputate enim vitae congue. Proin non felis porttitor sem porttitor lacinia. Donec turpis magna, pulvinar eu tortor eget, pulvinar facilisis sem. Pellentesque aliquet leo et pellentesque laoreet. Etiam sit amet malesuada erat, ut viverra sapien. Proin porttitor dui augue, vitae porttitor lectus bibendum eu. Integer non pretium augue. Cras commodo, neque non tincidunt congue, ipsum nisi dignissim nisl, sed mollis elit lacus eget massa. Nunc id lectus rhoncus libero convallis scelerisque.
+        
+        Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce aliquam ante sed magna rutrum, at feugiat orci placerat. Vestibulum eget turpis consectetur tellus ultricies commodo id a dui. Quisque nibh eros, consectetur nec aliquet vitae, faucibus et diam. Quisque ac enim ligula. Aliquam sit amet tellus non dui mattis placerat. Quisque malesuada sit amet erat in suscipit. Sed iaculis eu leo quis feugiat. Sed dolor risus, malesuada a tempor sit amet, ullamcorper ut tortor. Praesent efficitur molestie tincidunt.
+        
+        Generated 5 paragraphs, 405 words, 2755 bytes of Lorem IpsumCurabitur in dapibus nunc. Etiam non urna ut mauris ultrices placerat vel sit amet ante. Pellentesque eget fermentum enim. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Cras convallis id sem in gravida. Suspendisse eleifend rhoncus dui, ac lobortis leo scelerisque eu.
+        
+        Suspendisse convallis, dolor a venenatis tempus, diam neque vulputate nibh, et finibus nulla massa in purus. Quisque scelerisque metus vitae leo consequat, ac volutpat purus lobortis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque id nisl a nisl ultricies dapibus. Sed rutrum metus id nisi varius tristique. Duis et sollicitudin dui, sagittis fringilla nisl. Donec vehicula imperdiet diam eget vulputate. Morbi blandit est sit amet risus semper, vitae convallis tortor condimentum. Nulla euismod ornare commodo. Fusce ornare massa vitae neque fringilla lacinia. Praesent dignissim viverra elementum. Mauris vel odio ut risus dapibus mollis ultricies a turpis. Morbi elementum ex ut ex aliquam vestibulum.
+        
+        Etiam elit magna, ullamcorper non hendrerit elementum, lobortis eget leo. Ut quis quam efficitur dui gravida vulputate eu vitae nibh. Cras euismod vulputate enim vitae congue. Proin non felis porttitor sem porttitor lacinia. Donec turpis magna, pulvinar eu tortor eget, pulvinar facilisis sem. Pellentesque aliquet leo et pellentesque laoreet. Etiam sit amet malesuada erat, ut viverra sapien. Proin porttitor dui augue, vitae porttitor lectus bibendum eu. Integer non pretium augue. Cras commodo, neque non tincidunt congue, ipsum nisi dignissim nisl, sed mollis elit lacus eget massa. Nunc id lectus rhoncus libero convallis scelerisque.
+        
+        Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce aliquam ante sed magna rutrum, at feugiat orci placerat. Vestibulum eget turpis consectetur tellus ultricies commodo id a dui. Quisque nibh eros, consectetur nec aliquet vitae, faucibus et diam. Quisque ac enim ligula. Aliquam sit amet tellus non dui mattis placerat. Quisque malesuada sit amet erat in suscipit. Sed iaculis eu leo quis feugiat. Sed dolor risus, malesuada a tempor sit amet, ullamcorper ut tortor. Praesent efficitur molestie tincidunt.
+        
+        Generated 5 paragraphs, 405 words, 2755 bytes of Lorem Ipsum`
     ]
   }
 
   let abc = ''
-
   const previewDocument = (dd) => {
     const pdfDocGenerator = pdfMake.createPdf(dd);
-    
     // Get PDF blob and open in new window
    pdfDocGenerator.getBlob((blob) => {
       let blobURL = URL.createObjectURL(blob);
@@ -85,26 +101,33 @@ export default function FullScreenDialog( { pdfBlobUrl, dispatch }) {
 
     return abc;
   }
-  // previewDocument(dd)
+  async function showBBConsole() {
+    await previewDocument(dd)
+    await handleClickOpen()
+  }
+
+
+
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={handleClickOpen}>
+      <Button variant="outlined" color="primary" onClick={showBBConsole}>
         Open full-screen dialog
       </Button>
       <Dialog
+        TransitionComponent={Transition}
+        maxWidth={'md'}
+        fullWidth={true}
+        scroll={'paper'}
         open={open}
         onClose={handleClose}
-        TransitionComponent={Transition}
-        maxWidth={'sm'}
-        fullWidth={false}
       >
-             {/* <Button variant="outlined" color="primary" onClick={previewDocument(dd)}>
-        Open full-screen dialog
-      </Button> */}
-        <iframe src ={pdfBlobUrl}>
+
+        <iframe src ={pdfBlobUrl} height="500px">
+
 
         </iframe>
-       
+        
+
         <IconButton
           edge="start"
           color="inherit"
