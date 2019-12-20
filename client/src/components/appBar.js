@@ -72,6 +72,9 @@ const SearchAppBar =
   }
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
+      searchKeyword = e.target.value
+      e.preventDefault();
+      onSearch(searchKeyword)
       fetchAction()
     }
   }
@@ -102,7 +105,7 @@ const SearchAppBar =
               }}
               name = "searchKeyword"
             //   value = {this.state.searchKeyword}
-              onChange = {handleValueChange}
+              // onChange = {handleValueChange}
               onKeyPress={handleKeyPress}
               inputProps={{ 'aria-label': 'search' }}
             />
