@@ -5,6 +5,7 @@ const SEARCHKEYWORD = 'itemList/SEARCHKEYWORD';
 const APILOAD = 'itemList/APILOAD';
 const INPUTITEM = 'itemList/INPUTITEM'
 const INPUTQTY = 'itemList/INPUTQTY'
+const INPUTPDFBLOBURL = 'itemList/INPUTPDFBLOBURL'
 
 export function fetchAction() {
   return function(callback) {
@@ -26,6 +27,7 @@ let initialState = {
     searchKeyword: 'initial state 값을 전달받는데 성공',
     pickedCount: 0,
     pickedItem: [],
+    pdfBlobUrl:'dfaefae'
 };
 
 export const search = searchKeyword => (
@@ -45,7 +47,12 @@ export const inputQtyAction = (inputQty) => (
   inputQty
   }
 )
-  
+
+export const inputPdfBlobUrl = (blobUrl) => (
+  {type: INPUTPDFBLOBURL,
+  blobUrl
+  }
+)
 function itemListModule (state = initialState, action) {
   switch (action.type) {
       case SEARCHKEYWORD:
@@ -72,7 +79,12 @@ function itemListModule (state = initialState, action) {
         return update(state, {
           pickedItem: {$push : [action.pickedItem]}
       })
-          
+      case INPUTPDFBLOBURL:
+        console.log(action)
+        return {
+          ...state,
+          pdfBlobUrl : action.blobUrl
+        }
       default:
         return state;
     } 
