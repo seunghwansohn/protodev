@@ -7,6 +7,7 @@ import TableBody from '@material-ui/core/TableBody';
 import { PDFDownloadLink,} from "@react-pdf/renderer";
 import Viewer from './viewer'
 import { MyDocument } from './viewer'
+import FindDialog from './findDialog'
 
 var pdfMake = require('pdfmake/build/pdfmake.js');
 var pdfFonts = require('pdfmake/build/vfs_fonts.js');
@@ -14,7 +15,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 
 
-const QuoteListComponent = ({pdfBlobUrl, pickedItem, pickedCount, qtySubmit, dispatch }) => {
+const QuoteListComponent = ({pdfBlobUrl, pickedItem, pickedCount, qtySubmit, dispatch, CustomersfetchAction, clients }) => {
     let inputQty = ''
     const handleValueSubmit = (e) => {
         e.preventDefault();
@@ -50,7 +51,7 @@ const QuoteListComponent = ({pdfBlobUrl, pickedItem, pickedCount, qtySubmit, dis
         })
     }
     const consoleLogTemp = () => {
-        console.log(pickedItem)
+        console.log(clients)
     }
     
     const pdfOpen = () => {
@@ -79,11 +80,30 @@ const QuoteListComponent = ({pdfBlobUrl, pickedItem, pickedCount, qtySubmit, dis
         return abc;
     }
 
- 
+    let willSubmitCustomersName = ''
+    const test = e => {
+        e.preventDefault()
+        console.log(willSubmitCustomersName)
+    }
+    const FindCustomersHandleValueChange = e => {
+        e.preventDefault()
+        willSubmitCustomersName = e.target.value
+        // console.log(willSubmitCustomersName)
+    }
+
     return(
         <div>
             <hr></hr><h1>Picked Item</h1><hr></hr>
+            <form onSubmit={test}>
+                <input type = 'text' name="name" onChange = {FindCustomersHandleValueChange}/>
+                <input
+                    type='submit'
+                />
+                
+            </form>
             <Viewer pdfBlobUrl = {pdfBlobUrl} previewDocument = {previewDocument} dispatch = {dispatch}/>
+            <hr></hr>
+            <FindDialog CustomersfetchAction = {CustomersfetchAction} clients = {clients}/>
             <hr></hr>
             <PDFDownloadLink
                 document={<MyDocument data={pickedItem} />}
@@ -103,7 +123,7 @@ const QuoteListComponent = ({pdfBlobUrl, pickedItem, pickedCount, qtySubmit, dis
             <button onClick = {pdfOpen}>pdf 새창열기</button>            <hr></hr>
             Number of picked items : {pickedCount}
             <hr></hr>
-
+            
             <Table>
                 <TableHead>
                     <TableRow>

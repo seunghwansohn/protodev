@@ -26,6 +26,8 @@ import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
+
+//pagenation 지원하는 material-ui 테이블에 필요한 기본요소들
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -35,7 +37,6 @@ function desc(a, b, orderBy) {
   }
   return 0;
 }
-
 function stableSort(array, cmp) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -45,18 +46,19 @@ function stableSort(array, cmp) {
   });
   return stabilizedThis.map(el => el[0]);
 }
-
 function getSorting(order, orderBy) {
   return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 }
-
+//----------------------------
+//pagenation 지원하는 material-ui 테이블의 head메뉴들. map으로 자동으로 다 띄워줌.
 const headCells = [
-  { id: 'No', numeric: false, disablePadding: true, label: 'No' },
-  { id: 'Code', numeric: true, disablePadding: false, label: 'Code' },
-  { id: 'Name', numeric: true, disablePadding: false, label: 'Name' },
-  { id: 'Description', numeric: true, disablePadding: false, label: 'Description' },
+  { id: 'No', numeric: true, disablePadding: true, label: 'No' },
+  { id: 'Code', numeric: false, disablePadding: false, label: 'Code' },
+  { id: 'Name', numeric: false, disablePadding: false, label: 'Name' },
+  { id: 'Description', numeric: false, disablePadding: false, label: 'Description' },
 ];
-
+//-------------------------------
+//pagenation 지원하는 material-ui 테이블의 head부분 콤포넌트
 function EnhancedTableHead(props) {
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
   const createSortHandler = property => event => {
@@ -99,7 +101,7 @@ function EnhancedTableHead(props) {
     </TableHead>
   );
 }
-
+//----------------------------
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
@@ -109,7 +111,6 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
-
 const useToolbarStyles = makeStyles(theme => ({
   root: {
     paddingLeft: theme.spacing(2),
@@ -129,7 +130,7 @@ const useToolbarStyles = makeStyles(theme => ({
     flex: '1 1 100%',
   },
 }));
-
+//pagenation 지원하는 material-ui 테이블의 툴바
 const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
   const { numSelected } = props;
@@ -166,11 +167,9 @@ const EnhancedTableToolbar = props => {
     </Toolbar>
   );
 };
-
 EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
-
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -194,8 +193,23 @@ const useStyles = makeStyles(theme => ({
     width: 1,
   },
 }));
+//-----------------------------
 
-export default function EnhancedTable({itemList}) {
+//pagenation 지원하는 material-ui 테이블의 주 콤포넌트. 기본 export됨.
+export default function EnhancedTable(
+  {
+    code,
+    onFetch,
+    itemList,
+    inputItem,
+    useStateLog,
+    onLoadApi,
+    items,
+    searchingNow,
+    setSearchingNow
+  }) 
+  
+  {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -203,17 +217,32 @@ export default function EnhancedTable({itemList}) {
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
   function createData(name, calories, fat, carbs, protein) {
     return { name, calories, fat, carbs, protein };
   }
-  console.log(itemList)
-  const rows = itemList
+
+  //검색창(appBar.js)에서 검색어 넣고 엔터치면 searchingNow라는 state를 true로 바꿔줌
+  //그때 페이지를 0으로 자동으로 넘겨주는 역할을 함.
+  if (searchingNow === true) {
+    async function setPageAndReset() {
+      await console.log('a')
+      await setPage(0)
+      await setSearchingNow(false)
+    }
+    setPageAndReset()
+  }
+  //------------------------------------
+
+  const rows = itemList  //row에다가 api에서 받아온 itemList 객체를 넣어줌.
+
+
+  //굳이 건드릴 필요없는 pagenation-material-ui 이벤트 함수들.
   const handleRequestSort = (event, property) => {
     const isDesc = orderBy === property && order === 'desc';
     setOrder(isDesc ? 'asc' : 'desc');
     setOrderBy(property);
   };
-
   const handleSelectAllClick = event => {
     if (event.target.checked) {
       const newSelecteds = rows.map(n => n.name);
@@ -222,7 +251,6 @@ export default function EnhancedTable({itemList}) {
     }
     setSelected([]);
   };
-
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
@@ -242,24 +270,88 @@ export default function EnhancedTable({itemList}) {
 
     setSelected(newSelected);
   };
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
   const handleChangeDense = event => {
     setDense(event.target.checked);
   };
-
   const isSelected = name => selected.indexOf(name) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  //---------------------------------
 
+  //공백 넣어 띄워쓴 검색어 모두가 존재하는 것만 반환하도록 필터링하여 객체를 가공하는
+  //내가 만든 함수
+  var result = [];
+  const itemListFilteredMap = () => {
+          var matchedid = [];
+          itemList.map (function(num) {
+            var values = Object.values(num);
+            var joinedString = values.join(',');
+            joinedString = joinedString.toLowerCase() //리스트 문자열 합친걸 모두 소문자화
+            code = code.toLowerCase() //검색어를 모두 소문자화
+            code = code.replace(/\s*$/,''); //마지막 공백을 모두 제거
+            // var spaceCount = (code.split(" ").length - 1); //중간에 들어간 공백의 숫자
+            let codeArray = code.split(' ')
+            let matchedTrue = ''
+            for(let i=0, k = 0; i < codeArray.length; i++) {
+              var trueSearched = joinedString.indexOf(codeArray[i]) > - 1;
+              if (trueSearched === true) {
+                k = k + 1
+              }
+              if (k === codeArray.length) {matchedTrue = true} //공백으로 나눠진 단어 모두가 검색되는지를 true여부로 반환
+              else {matchedTrue = false} 
+            }
+            if (matchedTrue === true) {
+              matchedid.push(num.id);   //matchedid라는 미리 선언된 배열변수에, 검색어를 포함한 아이템들의 id값만 담음.
+              }
+          })
+          var returnWords = function(){
+              var matchedData = [];
+              var findDataId = '';
+                  for (var i=0; i < matchedid.length; i++){
+                    findDataId = matchedid[i];
+                    function searchMatchedData(id, itemList) {
+                      for (var i = 0; i < itemList.length; i++) {
+                        if (itemList[i].id === id)  {
+                          return itemList[i];
+                        }
+                      }
+                    }
+                    result.push(searchMatchedData(findDataId, itemList))
+         
+                    matchedData.push(itemList[matchedid[i]])
+                  }
+              return result;
+            }
+            return returnWords();
+  }
+  const alreadyCheck = (c) => {
+    function add(arr, id) {
+      const { length } = arr;
+      const found = arr.some(el => el.id === id.id);
+      if (!found) {
+        id.no = arr.length + 1
+        inputItem(id)}
+      ;
+    }
+    add(useStateLog, c)
+  }
+  //검색어 결과로 filtered된 배열값이 아래의 변수이름임
+  const filteredItemArray = itemListFilteredMap()
+  //-----------------------------------------
+
+  
+  const onPageZero = () => {
+    setPage(0)
+  }
+
+  
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -281,20 +373,20 @@ export default function EnhancedTable({itemList}) {
               rowCount={rows.length}
             />
             <TableBody>
-              {itemList[0] !== undefined ? stableSort(rows, getSorting(order, orderBy))
+              {itemList[0] !== undefined ? stableSort(filteredItemArray, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
-                  const isItemSelected = isSelected(row.name);
+                .map((filteredItemArray, index) => {
+                  const isItemSelected = isSelected(filteredItemArray.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
-                      onClick={event => handleClick(event, row.name)}
+                      onClick={event => handleClick(event, filteredItemArray.name)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={row.name}
+                      key={filteredItemArray.name}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -304,12 +396,20 @@ export default function EnhancedTable({itemList}) {
                         />
                       </TableCell>
                       <TableCell component="th" id={labelId} scope="row" padding="none">
-                        {row.id}
+                        {filteredItemArray.id}
                       </TableCell>
-                      <TableCell align="right">{row.itemCode}</TableCell>
-                      <TableCell align="right">{row.itemName}</TableCell>
-                      <TableCell align="right">{row.carbs}</TableCell>
-                      <TableCell align="right">{row.protein}</TableCell>
+                      <TableCell align="right">{filteredItemArray.itemCode}</TableCell>
+                      <TableCell align="right">{filteredItemArray.itemName}</TableCell>
+                      <TableCell align="right">{filteredItemArray.carbs}</TableCell>
+                      <TableCell align="right">{filteredItemArray.protein}</TableCell>
+                      <TableCell>                      
+                        <button onClick= {
+                          function(e){
+                            e.preventDefault();
+                            alreadyCheck(filteredItemArray);
+                          }}>삽입
+                         </button>
+                      </TableCell>
                     </TableRow>
                   );
                 }) : ''}
@@ -324,7 +424,7 @@ export default function EnhancedTable({itemList}) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={filteredItemArray.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
@@ -335,7 +435,7 @@ export default function EnhancedTable({itemList}) {
         control={<Switch checked={dense} onChange={handleChangeDense} />}
         label="Dense padding"
       />
-      <button> show itemList</button>
+      <button onClick = {onPageZero}> show itemList</button>
       
     </div>
   );
@@ -349,14 +449,9 @@ const useStyles1 = makeStyles(theme => ({
   },
 }));
 
-//테이블 요소
-const useStyles2 = makeStyles({
-  table: {
-    minWidth: 500,
-  },
-});
 
 
+//기존에 쓰던 ui없는 테이블 코드 -> 폐기
 const ItemListComponent = (
   {
     code,

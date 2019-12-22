@@ -6,7 +6,8 @@ const APILOAD = 'itemList/APILOAD';
 const INPUTITEM = 'itemList/INPUTITEM'
 const INPUTQTY = 'itemList/INPUTQTY'
 const INPUTPDFBLOBURL = 'itemList/INPUTPDFBLOBURL'
-
+const SETSEARCHINGNOW = 'itemList/SETSEARCHINGNOW'
+const FETCHVNCUSTOMERS = 'itemList/FETCHVNCUSTOMERS'
 
 export function fetchAction() {
   return function(callback) {
@@ -22,19 +23,41 @@ export const itemListAction = (itemList) => (
     itemList
 });
 
+
+
+export function CustomersfetchAction() {
+  return function(callback) {
+    return axios.get("/api/VNCustomers")
+      .then(({ data }) => {
+        console.log(data)
+        callback(CustomersAction(data))
+    });
+  };
+}
+export const CustomersAction = (VNCustomersList) => (
+  {
+    type: FETCHVNCUSTOMERS,
+    VNCustomersList
+});
+
 let initialState = {
     input:'',
     itemList: [],
     searchKeyword: 'initial state 값을 전달받는데 성공',
     pickedCount: 0,
     pickedItem: [],
-    pdfBlobUrl:'dfaefae'
+    pdfBlobUrl:'dfaefae',
+    searchingNow: false,
+    clients : {
+      VNbuyer : [{id: 'DTE', ENName : 'DATA GROUP', VNName : 'Data iii', MST : '33759298', RecentNews : 'established'}, {id:'', name: 'Entec'}],
+      KRseller : [{id: 'JU', name : 'Jaeung'}, {id:'EnT', name: 'Entec'}]
+    }
 };
 
 export const search = searchKeyword => (
   {
   type: SEARCHKEYWORD, 
-  searchKeyword
+  searchKeyword,
 });
 
 export const inputItemAction = (pickedItem) => (
@@ -54,11 +77,17 @@ export const inputPdfBlobUrl = (blobUrl) => (
   blobUrl
   }
 )
+export const setSearchingNow = (ox) => (
+  {type: SETSEARCHINGNOW,
+  ox
+  }
+)
 function itemListModule (state = initialState, action) {
   switch (action.type) {
       case SEARCHKEYWORD:
         return produce(state, draft =>{
           draft.searchKeyword = action.searchKeyword
+          draft.searchingNow = true
         })       
       case APILOAD:
         return produce(state, draft =>{
@@ -77,6 +106,14 @@ function itemListModule (state = initialState, action) {
         return produce(state, draft => {
           draft.pdfBlobUrl = action.blobUrl
         })  
+      case SETSEARCHINGNOW:
+        return produce(state, draft => {
+          draft.searchingNow = action.ox
+        })  
+      case FETCHVNCUSTOMERS:
+        return produce(state, draft => {
+          draft.clients.VNbuyer = action.VNCustomersList
+        }) 
       default:
         return state;
     } 
