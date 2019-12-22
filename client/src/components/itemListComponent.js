@@ -452,142 +452,142 @@ const useStyles1 = makeStyles(theme => ({
 
 
 //기존에 쓰던 ui없는 테이블 코드 -> 폐기
-const ItemListComponent = (
-  {
-    code,
-    onFetch,
-    itemList,
-    inputItem,
-    useStateLog,
-    onLoadApi,
-    items,
-    count, 
-    page, 
-    rowsPerPage, 
-    onChangePage,
-  }) => 
+// const ItemListComponent = (
+//   {
+//     code,
+//     onFetch,
+//     itemList,
+//     inputItem,
+//     useStateLog,
+//     onLoadApi,
+//     items,
+//     count, 
+//     page, 
+//     rowsPerPage, 
+//     onChangePage,
+//   }) => 
   
-  {
-    const classes = useStyles1();
-    const theme = useTheme();
-    var result = [];
-    const itemListFilteredMap = () => {
-            var matchedid = [];
-            itemList.map (function(num) {
-              var values = Object.values(num);
-              var joinedString = values.join(',');
-              joinedString = joinedString.toLowerCase() //리스트 문자열 합친걸 모두 소문자화
-              code = code.toLowerCase() //검색어를 모두 소문자화
-              code = code.replace(/\s*$/,''); //마지막 공백을 모두 제거
-              // var spaceCount = (code.split(" ").length - 1); //중간에 들어간 공백의 숫자
-              let codeArray = code.split(' ')
-              let matchedTrue = ''
-              for(let i=0, k = 0; i < codeArray.length; i++) {
-                var trueSearched = joinedString.indexOf(codeArray[i]) > - 1;
-                if (trueSearched === true) {
-                  k = k + 1
-                }
-                if (k === codeArray.length) {matchedTrue = true} //공백으로 나눠진 단어 모두가 검색되는지를 true여부로 반환
-                else {matchedTrue = false} 
-              }
-              if (matchedTrue === true) {
-                matchedid.push(num.id);   //matchedid라는 미리 선언된 배열변수에, 검색어를 포함한 아이템들의 id값만 담음.
-                }
-            })
-            var returnWords = function(){
-                var matchedData = [];
-                var findDataId = '';
-                    for (var i=0; i < matchedid.length; i++){
-                      findDataId = matchedid[i];
-                      function searchMatchedData(id, itemList) {
-                        for (var i = 0; i < itemList.length; i++) {
-                          if (itemList[i].id === id)  {
-                            return itemList[i];
-                          }
-                        }
-                      }
-                      result.push(searchMatchedData(findDataId, itemList))
+//   {
+//     const classes = useStyles1();
+//     const theme = useTheme();
+//     var result = [];
+//     const itemListFilteredMap = () => {
+//             var matchedid = [];
+//             itemList.map (function(num) {
+//               var values = Object.values(num);
+//               var joinedString = values.join(',');
+//               joinedString = joinedString.toLowerCase() //리스트 문자열 합친걸 모두 소문자화
+//               code = code.toLowerCase() //검색어를 모두 소문자화
+//               code = code.replace(/\s*$/,''); //마지막 공백을 모두 제거
+//               // var spaceCount = (code.split(" ").length - 1); //중간에 들어간 공백의 숫자
+//               let codeArray = code.split(' ')
+//               let matchedTrue = ''
+//               for(let i=0, k = 0; i < codeArray.length; i++) {
+//                 var trueSearched = joinedString.indexOf(codeArray[i]) > - 1;
+//                 if (trueSearched === true) {
+//                   k = k + 1
+//                 }
+//                 if (k === codeArray.length) {matchedTrue = true} //공백으로 나눠진 단어 모두가 검색되는지를 true여부로 반환
+//                 else {matchedTrue = false} 
+//               }
+//               if (matchedTrue === true) {
+//                 matchedid.push(num.id);   //matchedid라는 미리 선언된 배열변수에, 검색어를 포함한 아이템들의 id값만 담음.
+//                 }
+//             })
+//             var returnWords = function(){
+//                 var matchedData = [];
+//                 var findDataId = '';
+//                     for (var i=0; i < matchedid.length; i++){
+//                       findDataId = matchedid[i];
+//                       function searchMatchedData(id, itemList) {
+//                         for (var i = 0; i < itemList.length; i++) {
+//                           if (itemList[i].id === id)  {
+//                             return itemList[i];
+//                           }
+//                         }
+//                       }
+//                       result.push(searchMatchedData(findDataId, itemList))
            
-                      matchedData.push(itemList[matchedid[i]])
-                    }
-                return result;
-              }
-              returnWords();
-    }
-    const alreadyCheck = (c) => {
-      function add(arr, id) {
-        const { length } = arr;
-        const found = arr.some(el => el.id === id.id);
-        if (!found) {
-          id.no = arr.length + 1
-          inputItem(id)}
-        ;
-      }
-      add(useStateLog, c)
-    }
-    const itemListMap = () => {
-        itemListFilteredMap();
-        return result.map((c, index) => {
-            return(
-                <TableRow key = {index}>
-                    <TableCell>{c.id}</TableCell>
-                    <TableCell>{c.itemCode}</TableCell>
-                    <TableCell>{c.itemName}</TableCell>
-                    <TableCell> <button onClick = {onFetch}>+1</button></TableCell>
-                    <TableCell> <button onClick = {itemListFilteredMap}>-1</button></TableCell>
-                    <TableCell> 
-                      <button onClick= {
-                        function(e){
-                          e.preventDefault();
-                          alreadyCheck(c);
-                        }}>삽입
-                      </button>
-                    </TableCell> 
-                </TableRow>
-        )})
-    }
-    //페이지 나눔으로 인한 이벤트 부분
-    const handleFirstPageButtonClick = event => {
-      onChangePage(event, 0);
-    };
+//                       matchedData.push(itemList[matchedid[i]])
+//                     }
+//                 return result;
+//               }
+//               returnWords();
+//     }
+//     const alreadyCheck = (c) => {
+//       function add(arr, id) {
+//         const { length } = arr;
+//         const found = arr.some(el => el.id === id.id);
+//         if (!found) {
+//           id.no = arr.length + 1
+//           inputItem(id)}
+//         ;
+//       }
+//       add(useStateLog, c)
+//     }
+//     const itemListMap = () => {
+//         itemListFilteredMap();
+//         return result.map((c, index) => {
+//             return(
+//                 <TableRow key = {index}>
+//                     <TableCell>{c.id}</TableCell>
+//                     <TableCell>{c.itemCode}</TableCell>
+//                     <TableCell>{c.itemName}</TableCell>
+//                     <TableCell> <button onClick = {onFetch}>+1</button></TableCell>
+//                     <TableCell> <button onClick = {itemListFilteredMap}>-1</button></TableCell>
+//                     <TableCell> 
+//                       <button onClick= {
+//                         function(e){
+//                           e.preventDefault();
+//                           alreadyCheck(c);
+//                         }}>삽입
+//                       </button>
+//                     </TableCell> 
+//                 </TableRow>
+//         )})
+//     }
+//     //페이지 나눔으로 인한 이벤트 부분
+//     const handleFirstPageButtonClick = event => {
+//       onChangePage(event, 0);
+//     };
   
-    const handleBackButtonClick = event => {
-      onChangePage(event, page - 1);
-    };
+//     const handleBackButtonClick = event => {
+//       onChangePage(event, page - 1);
+//     };
   
-    const handleNextButtonClick = event => {
-      onChangePage(event, page + 1);
-    };
+//     const handleNextButtonClick = event => {
+//       onChangePage(event, page + 1);
+//     };
   
-    const handleLastPageButtonClick = event => {
-      onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-    };
-    //----------------------
-    return(
-    <div className = {classes.root}>
-        <button onClick = {onLoadApi}>Load</button>
-        <hr></hr>
+//     const handleLastPageButtonClick = event => {
+//       onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
+//     };
+//     //----------------------
+//     return(
+//     <div className = {classes.root}>
+//         <button onClick = {onLoadApi}>Load</button>
+//         <hr></hr>
 
-         <Table className = {classes.table}>
-            <TableHead>
-              <TableRow>
-              <TableCell align = "right">No</TableCell>
-              <TableCell>Code</TableCell>
-              <TableCell>Item</TableCell>
-              <TableCell>Plus</TableCell>
-              <TableCell>Minus</TableCell>
-              <TableCell>삽입</TableCell>
-              </TableRow>
-            </TableHead>
+//          <Table className = {classes.table}>
+//             <TableHead>
+//               <TableRow>
+//               <TableCell align = "right">No</TableCell>
+//               <TableCell>Code</TableCell>
+//               <TableCell>Item</TableCell>
+//               <TableCell>Plus</TableCell>
+//               <TableCell>Minus</TableCell>
+//               <TableCell>삽입</TableCell>
+//               </TableRow>
+//             </TableHead>
 
-            <TableBody>
-                {itemListMap()}
-            </TableBody>
-            <TableFooter>
-            </TableFooter>
-        </Table>
-        <EnhancedTable itemList = {itemList}/>
-    </div>
-    )
-}
-// export default ItemListComponent
+//             <TableBody>
+//                 {itemListMap()}
+//             </TableBody>
+//             <TableFooter>
+//             </TableFooter>
+//         </Table>
+//         <EnhancedTable itemList = {itemList}/>
+//     </div>
+//     )
+// }
+// // export default ItemListComponent

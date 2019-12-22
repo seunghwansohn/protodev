@@ -8,6 +8,7 @@ const INPUTQTY = 'itemList/INPUTQTY'
 const INPUTPDFBLOBURL = 'itemList/INPUTPDFBLOBURL'
 const SETSEARCHINGNOW = 'itemList/SETSEARCHINGNOW'
 const FETCHVNCUSTOMERS = 'itemList/FETCHVNCUSTOMERS'
+const QUOTELISTSELECTCUSTOMER = 'itemList/QUOTELISTSELECTCUSTOMER'
 
 export function fetchAction() {
   return function(callback) {
@@ -22,8 +23,6 @@ export const itemListAction = (itemList) => (
     type: APILOAD,
     itemList
 });
-
-
 
 export function CustomersfetchAction() {
   return function(callback) {
@@ -40,6 +39,13 @@ export const CustomersAction = (VNCustomersList) => (
     VNCustomersList
 });
 
+export const QuoteListCustomerSelectAction = (SelectedCustomerCode) => (
+  console.log(SelectedCustomerCode),
+  {
+    type: QUOTELISTSELECTCUSTOMER,
+    SelectedCustomerCode
+})
+
 let initialState = {
     input:'',
     itemList: [],
@@ -51,6 +57,9 @@ let initialState = {
     clients : {
       VNbuyer : [{id: 'DTE', ENName : 'DATA GROUP', VNName : 'Data iii', MST : '33759298', RecentNews : 'established'}, {id:'', name: 'Entec'}],
       KRseller : [{id: 'JU', name : 'Jaeung'}, {id:'EnT', name: 'Entec'}]
+    },
+    quoteList:{
+      SelectedCustomerCode : 'sdfsdf'
     }
 };
 
@@ -113,6 +122,11 @@ function itemListModule (state = initialState, action) {
       case FETCHVNCUSTOMERS:
         return produce(state, draft => {
           draft.clients.VNbuyer = action.VNCustomersList
+        }) 
+      case QUOTELISTSELECTCUSTOMER:
+        console.log(action)
+        return produce(state, draft => {
+          draft.quoteList.SelectedCustomerCode = action.SelectedCustomerCode
         }) 
       default:
         return state;

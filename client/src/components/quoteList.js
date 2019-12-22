@@ -15,7 +15,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 
 
-const QuoteListComponent = ({pdfBlobUrl, pickedItem, pickedCount, qtySubmit, dispatch, CustomersfetchAction, clients }) => {
+const QuoteListComponent = ({pdfBlobUrl, pickedItem, pickedCount, qtySubmit, dispatch, CustomersfetchAction, clients, QuoteListCustomerSelectAction, quoteList }) => {
     let inputQty = ''
     const handleValueSubmit = (e) => {
         e.preventDefault();
@@ -90,7 +90,7 @@ const QuoteListComponent = ({pdfBlobUrl, pickedItem, pickedCount, qtySubmit, dis
         willSubmitCustomersName = e.target.value
         // console.log(willSubmitCustomersName)
     }
-
+ 
     return(
         <div>
             <hr></hr><h1>Picked Item</h1><hr></hr>
@@ -103,7 +103,9 @@ const QuoteListComponent = ({pdfBlobUrl, pickedItem, pickedCount, qtySubmit, dis
             </form>
             <Viewer pdfBlobUrl = {pdfBlobUrl} previewDocument = {previewDocument} dispatch = {dispatch}/>
             <hr></hr>
-            <FindDialog CustomersfetchAction = {CustomersfetchAction} clients = {clients}/>
+            <FindDialog CustomersfetchAction = {CustomersfetchAction} clients = {clients} QuoteListCustomerSelectAction = {QuoteListCustomerSelectAction}/>
+            <hr></hr>
+            {quoteList.SelectedCustomerCode}
             <hr></hr>
             <PDFDownloadLink
                 document={<MyDocument data={pickedItem} />}

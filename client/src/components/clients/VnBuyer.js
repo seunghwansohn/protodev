@@ -22,13 +22,6 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-
-
-
 function desc(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -38,7 +31,6 @@ function desc(a, b, orderBy) {
   }
   return 0;
 }
-
 function stableSort(array, cmp) {
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
@@ -48,11 +40,9 @@ function stableSort(array, cmp) {
   });
   return stabilizedThis.map(el => el[0]);
 }
-
 function getSorting(order, orderBy) {
   return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
 }
-
 const headCells = [
   { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
   { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
@@ -61,14 +51,14 @@ const headCells = [
   { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
 ];
 
+
+
 function EnhancedTableHead(props) {
   const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, rows } = props;
   const createSortHandler = property => event => {
     onRequestSort(event, property);
   };
-  console.log(rows)
   const headCell = Object.keys(rows[0])
-  console.log(headCell)
   return (
     <TableHead>
       <TableRow>
@@ -82,25 +72,26 @@ function EnhancedTableHead(props) {
         </TableCell>
         {headCell.map(headCell => (
           <TableCell
-            align={'right'}
+            align={'center'}
             padding={'none'}
             sortDirection={orderBy === headCell[0] ? order : false}
           >
               {headCell}
-            {/* <TableSortLabel
+            <TableSortLabel
               active={orderBy === rows.id}
               direction={order}
               onClick={createSortHandler(rows.id)}
             >
               {headCell.label}
-              {orderBy === headCell.id ? (
+              {orderBy === rows.id ? (
                 <span className={classes.visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                 </span>
               ) : null}
-            </TableSortLabel> */}
+            </TableSortLabel>
           </TableCell>
         ))}
+        <TableCell>삽입</TableCell>
       </TableRow>
     </TableHead>
   );
@@ -202,7 +193,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-export default function EnhancedTable({CustomersfetchAction, clients}) {
+export default function EnhancedTable({CustomersfetchAction, clients, QuoteListCustomerSelectAction} ) {
   const classes = useStyles();
   const [order, setOrder] = React.useState('asc');
   const [orderBy, setOrderBy] = React.useState('calories');
@@ -266,13 +257,25 @@ export default function EnhancedTable({CustomersfetchAction, clients}) {
 
       return selected.indexOf(name) !== -1;
   }
+
   const rows = clients.VNbuyer
-  console.log(rows)
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   const test = () => {
       console.log(rows)
   }
-  
+
+  let selectedVNCustomer
+  const handleValueSubmit = (e) => {
+    e.preventDefault()
+    console.log(e.target.no.value)
+    QuoteListCustomerSelectAction(e.target.no.value)
+  }
+
+  const hadleValueChange = (e) => {
+    e.preventDefault();
+    selectedVNCustomer = e.target.value
+  }
+
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
@@ -317,14 +320,20 @@ export default function EnhancedTable({CustomersfetchAction, clients}) {
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                      <TableCell align="left">
                         {row.id}
                       </TableCell>
-                      <TableCell align="right">{row.code}</TableCell>
-                      <TableCell align="right">{row.ENName}</TableCell>
-                      <TableCell align="right">{row.VNName}</TableCell>
-                      <TableCell align="right">{row.MST}</TableCell>
-                      <TableCell><button onClick = {CustomersfetchAction}>확인</button></TableCell>
+                      <TableCell align="left">{row.code}</TableCell>
+                      <TableCell align="center">{row.ENName}</TableCell>
+                      <TableCell align="center">{row.VNName}</TableCell>
+                      <TableCell align="center">{row.MST}</TableCell>
+                      <TableCell align="center"><button onClick = {CustomersfetchAction}>확인</button></TableCell>
+                      <TableCell>                       
+                        <form onSubmit = {handleValueSubmit} method ="post">
+                            <input type="hidden" name="no" value={row.code}></input>
+                            <button>삽입</button>
+                        </form>
+                      </TableCell>
                     </TableRow>
                   );
                 })}

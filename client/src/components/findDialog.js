@@ -22,7 +22,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog( { pdfBlobUrl, dispatch, CustomersfetchAction, clients}) {
+export default function FullScreenDialog( { pdfBlobUrl, dispatch, CustomersfetchAction, clients, QuoteListCustomerSelectAction}) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -33,13 +33,11 @@ export default function FullScreenDialog( { pdfBlobUrl, dispatch, Customersfetch
     setOpen(false);
   };
 
-
   async function showBBConsole() {
     await handleClickOpen()
   }
 
-
-  CustomersfetchAction()
+  // CustomersfetchAction()
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={showBBConsole}>
@@ -55,7 +53,7 @@ export default function FullScreenDialog( { pdfBlobUrl, dispatch, Customersfetch
       >
 
         asdflkjasdf
-        <FindVnBuyer CustomersfetchAction = {CustomersfetchAction} clients = {clients}></FindVnBuyer>
+        <FindVnBuyer CustomersfetchAction = {CustomersfetchAction} clients = {clients} QuoteListCustomerSelectAction = {QuoteListCustomerSelectAction}></FindVnBuyer>
 
         <IconButton
           edge="start"
