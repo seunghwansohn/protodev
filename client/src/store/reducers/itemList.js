@@ -25,11 +25,6 @@ const initialState = {
 
 function reducer (state = initialState, action) {
   switch (action.type) {
-      case actionTypes.SEARCHKEYWORD:
-        return produce(state, draft =>{
-          draft.mainSearchBar.searchKeyword = action.searchKeyword
-          draft.searchingNow = true
-        })       
       case actionTypes.APILOAD:
         return produce(state, draft =>{
           draft.itemList = action.itemList
@@ -46,10 +41,6 @@ function reducer (state = initialState, action) {
       case actionTypes.INPUTPDFBLOBURL:
         return produce(state, draft => {
           draft.pdfWorks.pdfBlobUrl = action.blobUrl
-        })  
-      case actionTypes.SETSEARCHINGNOW:
-        return produce(state, draft => {
-          draft.searchingNow = action.ox
         })  
       case actionTypes.FETCHVNCUSTOMERS:
         return produce(state, draft => {
