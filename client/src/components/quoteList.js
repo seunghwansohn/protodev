@@ -88,43 +88,52 @@ const QuoteListComponent = ({pdfBlobUrl, pickedItem, pickedCount, qtySubmit, dis
     const FindCustomersHandleValueChange = e => {
         e.preventDefault()
         willSubmitCustomersName = e.target.value
-        // console.log(willSubmitCustomersName)
     }
  
     return(
         <div>
-            <hr></hr><h1>Picked Item</h1><hr></hr>
-            <form onSubmit={test}>
-                <input type = 'text' name="name" onChange = {FindCustomersHandleValueChange}/>
-                <input
-                    type='submit'
-                />
-                
-            </form>
-            <Viewer pdfBlobUrl = {pdfBlobUrl} previewDocument = {previewDocument} dispatch = {dispatch}/>
-            <hr></hr>
-            <FindDialog CustomersfetchAction = {CustomersfetchAction} clients = {clients} QuoteListCustomerSelectAction = {QuoteListCustomerSelectAction}/>
-            <hr></hr>
+            <Table>
+                <TableRow>
+                    <TableCell>
+                        <h1>Picked Item</h1>
+                    </TableCell>
+                    <TableCell>
+                        <Viewer pdfBlobUrl = {pdfBlobUrl} previewDocument = {previewDocument} dispatch = {dispatch}/>
+                    </TableCell>
+                    <TableCell>
+                        <form onSubmit={test}>
+                            <input type = 'text' name="name" onChange = {FindCustomersHandleValueChange}/>
+                            <input type='submit' value = 'select'/>
+                        </form>
+                    </TableCell>
+                    <TableCell>
+                        <FindDialog CustomersfetchAction = {CustomersfetchAction} clients = {clients} QuoteListCustomerSelectAction = {QuoteListCustomerSelectAction}/>
+                    </TableCell>
+                    <TableCell>
+                        <PDFDownloadLink
+                            document={<MyDocument data={pickedItem} />}
+                            fileName="movielist.pdf"
+                            style={{
+                                textDecoration: "none",
+                                padding: "10px",
+                                color: "#4a4a4a",
+                                backgroundColor: "#f2f2f2",
+                                border: "1px solid #4a4a4a"
+                            }}
+                            >
+                            Download PDF
+                        </PDFDownloadLink>
+                    </TableCell>
+                </TableRow>
+            </Table>
             {quoteList.SelectedCustomerCode}
-            <hr></hr>
-            <PDFDownloadLink
-                document={<MyDocument data={pickedItem} />}
-                fileName="movielist.pdf"
-                style={{
-                    textDecoration: "none",
-                    padding: "10px",
-                    color: "#4a4a4a",
-                    backgroundColor: "#f2f2f2",
-                    border: "1px solid #4a4a4a"
-                }}
-                >
-                Download PDF
-            </PDFDownloadLink>
-            <hr></hr>
+            <br></br>
+ 
+            <br></br>
             <button onClick = {consoleLogTemp}>변수확인</button>
-            <button onClick = {pdfOpen}>pdf 새창열기</button>            <hr></hr>
+            <button onClick = {pdfOpen}>pdf 새창열기</button>            <br></br>
             Number of picked items : {pickedCount}
-            <hr></hr>
+            <br></br>
             
             <Table>
                 <TableHead>

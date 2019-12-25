@@ -9,7 +9,7 @@ import QuoteListComponent from '../components/quoteList'
 const ItemListContainer = (
     {
         fetch,
-        searchKeyword,
+        mainSearchBar,
         inputPdfBlobUrl,
         pdfBlobUrl,
         search,
@@ -40,7 +40,7 @@ const ItemListContainer = (
                     fetchAction = {fetchAction}>
                 </SearchAppBar>
                 <ItemListComponent 
-                    code = {searchKeyword} 
+                    code = {mainSearchBar.searchKeyword} 
                     dispatch = {dispatch} 
                     itemList = {itemList} 
                     inputItem = {inputItem} 
@@ -70,7 +70,7 @@ const ItemListContainer = (
     }   
 
 const mapStateToProps = state => ({ //state를 파라미터로 받아옴. 
-    searchKeyword : state.itemList.searchKeyword,
+    mainSearchBar : state.itemList.mainSearchBar,
     itemList : state.itemList.itemList,
     pickedItem : state.itemList.pickedItem,
     pickedCount : state.itemList.pickedCount,

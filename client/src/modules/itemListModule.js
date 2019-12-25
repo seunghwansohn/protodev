@@ -28,7 +28,6 @@ export function CustomersfetchAction() {
   return function(callback) {
     return axios.get("/api/VNCustomers")
       .then(({ data }) => {
-        console.log(data)
         callback(CustomersAction(data))
     });
   };
@@ -40,16 +39,17 @@ export const CustomersAction = (VNCustomersList) => (
 });
 
 export const QuoteListCustomerSelectAction = (SelectedCustomerCode) => (
-  console.log(SelectedCustomerCode),
   {
     type: QUOTELISTSELECTCUSTOMER,
     SelectedCustomerCode
 })
 
 let initialState = {
-    input:'',
+    mainSearchBar : 
+      {
+        searchKeyword: '',
+      },
     itemList: [],
-    searchKeyword: 'initial state 값을 전달받는데 성공',
     pickedCount: 0,
     pickedItem: [],
     pdfBlobUrl:'dfaefae',
@@ -94,8 +94,10 @@ export const setSearchingNow = (ox) => (
 function itemListModule (state = initialState, action) {
   switch (action.type) {
       case SEARCHKEYWORD:
+        console.log(action.searchKeyword)
         return produce(state, draft =>{
-          draft.searchKeyword = action.searchKeyword
+          console.log(state)
+          draft.mainSearchBar.searchKeyword = action.searchKeyword
           draft.searchingNow = true
         })       
       case APILOAD:

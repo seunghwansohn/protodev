@@ -52,7 +52,7 @@ function getSorting(order, orderBy) {
 //----------------------------
 //pagenation 지원하는 material-ui 테이블의 head메뉴들. map으로 자동으로 다 띄워줌.
 const headCells = [
-  { id: 'No', numeric: true, disablePadding: true, label: 'No' },
+  { id: 'No', numeric: false, disablePadding: false, label: 'No' },
   { id: 'Code', numeric: false, disablePadding: false, label: 'Code' },
   { id: 'Name', numeric: false, disablePadding: false, label: 'Name' },
   { id: 'Description', numeric: false, disablePadding: false, label: 'Description' },
@@ -360,7 +360,7 @@ export default function EnhancedTable(
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'medium'}
+            size={dense ? 'small' : 'small'}
             aria-label="enhanced table"
           >
             <EnhancedTableHead
@@ -395,13 +395,11 @@ export default function EnhancedTable(
                           inputProps={{ 'aria-labelledby': labelId }}
                         />
                       </TableCell>
-                      <TableCell component="th" id={labelId} scope="row" padding="none">
+                      <TableCell align="left">
                         {filteredItemArray.id}
                       </TableCell>
-                      <TableCell align="right">{filteredItemArray.itemCode}</TableCell>
-                      <TableCell align="right">{filteredItemArray.itemName}</TableCell>
-                      <TableCell align="right">{filteredItemArray.carbs}</TableCell>
-                      <TableCell align="right">{filteredItemArray.protein}</TableCell>
+                      <TableCell align="left">{filteredItemArray.itemCode}</TableCell>
+                      <TableCell align="left">{filteredItemArray.itemName}</TableCell>
                       <TableCell>                      
                         <button onClick= {
                           function(e){
@@ -431,10 +429,6 @@ export default function EnhancedTable(
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
       <button onClick = {onPageZero}> show itemList</button>
       
     </div>
