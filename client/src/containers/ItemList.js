@@ -2,13 +2,21 @@ import React from 'react'
 import SearchAppBar from '../components/appBar'
 import ItemListComponent from '../components/itemListComponent'
 import { connect, useSelector, useDispatch } from 'react-redux';
-import {search, fetchAction, inputItemAction, inputQtyAction, inputPdfBlobUrl, setSearchingNow, CustomersfetchAction, QuoteListCustomerSelectAction}  from '../modules/itemListModule'
+import {
+    search,
+    fetchAction,
+    inputItemAction,
+    inputQtyAction,
+    inputPdfBlobUrl,
+    setSearchingNow,
+    CustomersfetchAction,
+    QuoteListCustomerSelectAction
+}  from '../modules/itemListModule'
 import QuoteListComponent from '../components/quoteList'
 
 
 const ItemListContainer = (
     {
-        fetch,
         mainSearchBar,
         inputPdfBlobUrl,
         pdfBlobUrl,

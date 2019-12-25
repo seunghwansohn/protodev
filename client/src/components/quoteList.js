@@ -4,9 +4,7 @@ import TableCell from '@material-ui/core/TableCell';
 import Table from '@material-ui/core/Table'; //material-ui의 Table ui를 불러와서 프론트엔드에 쓰이는 모든 테이블 스타일을 이 스타일로 함.
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import { PDFDownloadLink,} from "@react-pdf/renderer";
 import Viewer from './viewer'
-import { MyDocument } from './viewer'
 import FindDialog from './findDialog'
 
 var pdfMake = require('pdfmake/build/pdfmake.js');
@@ -15,7 +13,18 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 
 
-const QuoteListComponent = ({pdfBlobUrl, pickedItem, pickedCount, qtySubmit, dispatch, CustomersfetchAction, clients, QuoteListCustomerSelectAction, quoteList }) => {
+const QuoteListComponent = (
+    {
+        pdfBlobUrl, 
+        pickedItem, 
+        pickedCount,
+        qtySubmit, 
+        dispatch, 
+        CustomersfetchAction, 
+        clients, 
+        QuoteListCustomerSelectAction, 
+        quoteList 
+    }) => {
     let inputQty = ''
     const handleValueSubmit = (e) => {
         e.preventDefault();
@@ -107,23 +116,13 @@ const QuoteListComponent = ({pdfBlobUrl, pickedItem, pickedCount, qtySubmit, dis
                         </form>
                     </TableCell>
                     <TableCell>
-                        <FindDialog CustomersfetchAction = {CustomersfetchAction} clients = {clients} QuoteListCustomerSelectAction = {QuoteListCustomerSelectAction}/>
+                        <FindDialog 
+                            CustomersfetchAction = {CustomersfetchAction} 
+                            clients = {clients} 
+                            QuoteListCustomerSelectAction = {QuoteListCustomerSelectAction}
+                        />
                     </TableCell>
-                    <TableCell>
-                        <PDFDownloadLink
-                            document={<MyDocument data={pickedItem} />}
-                            fileName="movielist.pdf"
-                            style={{
-                                textDecoration: "none",
-                                padding: "10px",
-                                color: "#4a4a4a",
-                                backgroundColor: "#f2f2f2",
-                                border: "1px solid #4a4a4a"
-                            }}
-                            >
-                            Download PDF
-                        </PDFDownloadLink>
-                    </TableCell>
+   
                 </TableRow>
             </Table>
             {quoteList.SelectedCustomerCode}
