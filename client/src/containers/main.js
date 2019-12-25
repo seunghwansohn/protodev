@@ -1,18 +1,10 @@
 import React from 'react'
+
 import SearchAppBar from '../components/appBar'
 import ItemListComponent from '../components/itemList'
-import { connect, useSelector, useDispatch } from 'react-redux';
-import {
-    search,
-    fetchAction,
-    inputItemAction,
-    inputQtyAction,
-    inputPdfBlobUrl,
-    setSearchingNow,
-    CustomersfetchAction,
-    QuoteListCustomerSelectAction
-}  from '../modules/itemListModule'
 import QuoteListComponent from '../components/quoteList'
+
+import { connect, useSelector, useDispatch } from 'react-redux';
 import * as actionCreators from '../store/actions/actions';
 
 
@@ -20,6 +12,7 @@ import * as actionCreators from '../store/actions/actions';
 const ItemListContainer = (
     {
         searchKeyword,
+        fetchAction,
         inputPdfBlobUrl,
         pdfWorks,
         search,
@@ -28,13 +21,13 @@ const ItemListContainer = (
         pickedItem,
         pickedCount,
         qtySubmit,
-        fetchAction,
         searchingNow,
         setSearchingNow,
         CustomersfetchAction,
         clients,
         quoteList,
         QuoteListCustomerSelectAction,
+        alreadyPickedCheck
     }
     ) => 
     
@@ -60,6 +53,8 @@ const ItemListContainer = (
                     searchingNow = {searchingNow}
                     setSearchingNow = {setSearchingNow}
                     CustomersfetchAction = {CustomersfetchAction}
+                    alreadyPickedCheck = {alreadyPickedCheck}
+                    
                 >
                 </ItemListComponent>
                 <QuoteListComponent 
@@ -73,6 +68,7 @@ const ItemListContainer = (
                     clients = {clients}
                     quoteList = {quoteList}
                     QuoteListCustomerSelectAction = {QuoteListCustomerSelectAction}
+                    
                 >
                 </QuoteListComponent>
             </div>
@@ -84,7 +80,7 @@ const mapStateToProps = state => (
     { //state를 파라미터로 받아옴. 
     searchKeyword : state.mainSchBar.searchKeyword,
     itemList : state.itemList.itemList,
-    pickedItem : state.itemList.pickedItem,
+    pickedItem : state.quoteList.pickedItem,
     pickedCount : state.itemList.pickedCount,
     pdfWorks: state.itemList.pdfWorks,
     searchingNow : state.itemList.searchingNow,
@@ -101,7 +97,8 @@ const mapDispatchToProps = dispatch => {
         inputPdfBlobUrl : (blob) => dispatch(actionCreators.inputPdfBlobUrl(blob)),
         setSearchingNow : (blob) => dispatch(actionCreators.setSearchingNow(blob)),
         CustomersfetchAction : () => dispatch(actionCreators.CustomersfetchAction()),
-        QuoteListCustomerSelectAction : (selectedCustomer) => dispatch(actionCreators.QuoteListCustomerSelectAction(selectedCustomer))
+        QuoteListCustomerSelectAction : (selectedCustomer) => dispatch(actionCreators.QuoteListCustomerSelectAction(selectedCustomer)),
+        alreadyPickedCheck : (c) => dispatch(actionCreators.alreadyPickedCheck(c)),
 }}
 
 export default connect(

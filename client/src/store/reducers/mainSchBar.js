@@ -9,7 +9,6 @@ const initialState = {
 function reducer (state = initialState, action) {
   switch (action.type) {
         case actionTypes.SEARCHKEYWORD:
-            console.log(state)
             return produce(state, draft =>{
                 draft.searchKeyword = action.searchKeyword
                 draft.searchingNow = true

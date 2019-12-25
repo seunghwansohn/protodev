@@ -201,7 +201,7 @@ export default function EnhancedTable(
     code,
     onFetch,
     itemList,
-    inputItem,
+    alreadyPickedCheck,
     useStateLog,
     onLoadApi,
     items,
@@ -332,16 +332,16 @@ export default function EnhancedTable(
             return returnWords();
   }
   const alreadyCheck = (c) => {
-    function add(arr, id) {
-      const { length } = arr;
-      const found = arr.some(el => el.id === id.id);
-      if (!found) {
-        id.no = arr.length + 1
-        inputItem(id)}
-      ;
-    }
-    add(useStateLog, c)
-  }
+    // function add(arr, id) {
+    //   const { length } = arr;
+    //   const found = arr.some(el => el.id === id.id);
+    //   if (!found) {
+    //     id.no = arr.length + 1
+        alreadyPickedCheck(c)}
+      // ;
+    // }
+    // add(useStateLog, c)
+  // }
   //검색어 결과로 filtered된 배열값이 아래의 변수이름임
   const filteredItemArray = itemListFilteredMap()
   //-----------------------------------------

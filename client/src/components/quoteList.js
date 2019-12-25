@@ -43,7 +43,7 @@ const QuoteListComponent = (
         return pickedItem.map((c, index) => {
             return (
                 <TableRow key = {index}>
-                    <TableCell>{c.no}</TableCell>
+                    <TableCell>{c.id}</TableCell>
                     <TableCell>{c.itemCode}</TableCell>
                     <TableCell>{c.itemName}</TableCell>
                     <TableCell>
