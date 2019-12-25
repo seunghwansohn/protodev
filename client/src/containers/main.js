@@ -1,6 +1,6 @@
 import React from 'react'
 import SearchAppBar from '../components/appBar'
-import ItemListComponent from '../components/itemListComponent'
+import ItemListComponent from '../components/itemList'
 import { connect, useSelector, useDispatch } from 'react-redux';
 import {
     search,
@@ -19,7 +19,7 @@ const ItemListContainer = (
     {
         mainSearchBar,
         inputPdfBlobUrl,
-        pdfBlobUrl,
+        pdfWorks,
         search,
         itemList,
         inputItem,
@@ -61,7 +61,7 @@ const ItemListContainer = (
                 >
                 </ItemListComponent>
                 <QuoteListComponent 
-                    pdfBlobUrl = {pdfBlobUrl} 
+                    pdfBlobUrl = {pdfWorks.pdfBlobUrl} 
                     qtySubmit = {qtySubmit} 
                     pickedCount = {pickedCount} 
                     pickedItem = {pickedItem} 
@@ -82,7 +82,7 @@ const mapStateToProps = state => ({ //state를 파라미터로 받아옴.
     itemList : state.itemList.itemList,
     pickedItem : state.itemList.pickedItem,
     pickedCount : state.itemList.pickedCount,
-    pdfBlobUrl: state.itemList.pdfBlobUrl,
+    pdfWorks: state.itemList.pdfWorks,
     searchingNow : state.itemList.searchingNow,
     clients : state.itemList.clients,
     quoteList : state.itemList.quoteList

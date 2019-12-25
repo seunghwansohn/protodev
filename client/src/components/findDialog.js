@@ -5,7 +5,7 @@ import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
-import FindVnBuyer from './clients/VnBuyer'
+import FindVnBuyer from './clients/vnBuyer'
 // Create styles
 
 

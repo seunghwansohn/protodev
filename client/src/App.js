@@ -1,5 +1,5 @@
 import React from 'react';
-import ItemListContainer from './containers/ItemList'
+import ItemListContainer from './containers/main'
 
 function App() {
   return (

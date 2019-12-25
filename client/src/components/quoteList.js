@@ -75,18 +75,13 @@ const QuoteListComponent = (
     }
 
 
-    let abc = ''
     const previewDocument = (pdfContents) => {
         const pdfDocGenerator = pdfMake.createPdf(pdfContents);
         // Get PDF blob and open in new window
        pdfDocGenerator.getBlob((blob) => {
           let blobURL = URL.createObjectURL(blob);
-            abc = blobURL;
-            console.log(abc)
-            dispatch(abc)
+            dispatch(blobURL)
         })
-
-        return abc;
     }
 
     let willSubmitCustomersName = ''
@@ -98,7 +93,8 @@ const QuoteListComponent = (
         e.preventDefault()
         willSubmitCustomersName = e.target.value
     }
- 
+    
+  
     return(
         <div>
             <Table>

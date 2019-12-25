@@ -1,5 +1,5 @@
 import React from 'react';
-// import { Document, Page, Text, StyleSheet } from '@react-pdf/renderer';
+import { Document, Page, Text, StyleSheet } from '@react-pdf/renderer';
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
@@ -8,6 +8,11 @@ import Slide from "@material-ui/core/Slide";
 var pdfMake = require('pdfmake/build/pdfmake.js');
 var pdfFonts = require('pdfmake/build/vfs_fonts.js');
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
+
+// Create styles
+
+// Create Document Component
 
 
 export const downloadPdfDoc = (contents) => {
@@ -47,6 +52,13 @@ var contents = {
       Generated 5 paragraphs, 405 words, 2755 bytes of Lorem Ipsum`
   ]
 }
+
+const styles = StyleSheet.create({
+  page: { padding: 20 },
+  title: { marginTop: "3%" },
+  emphasis: { fontFamily: 'Helvetica-Bold', color: '#F22300' },
+  breakable: { width: '100%', height: 800, backgroundColor: 'tomato' },
+});
 
 
 const Transition = React.forwardRef(function Transition(props, ref) {
