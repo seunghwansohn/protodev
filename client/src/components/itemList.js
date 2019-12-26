@@ -8,21 +8,14 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import { makeStyles, useTheme, lighten } from '@material-ui/core/styles';
 import TableContainer from '@material-ui/core/TableContainer';
-import TableFooter from '@material-ui/core/TableFooter';
 import TablePagination from '@material-ui/core/TablePagination';
 import IconButton from '@material-ui/core/IconButton';
-import FirstPageIcon from '@material-ui/icons/FirstPage';
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-import LastPageIcon from '@material-ui/icons/LastPage';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import Tooltip from '@material-ui/core/Tooltip';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Switch from '@material-ui/core/Switch';
 import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 
@@ -55,6 +48,7 @@ const headCells = [
   { id: 'No', numeric: false, disablePadding: false, label: 'No' },
   { id: 'Code', numeric: false, disablePadding: false, label: 'Code' },
   { id: 'Name', numeric: false, disablePadding: false, label: 'Name' },
+  { id: 'VN U/P', numeric: false, disablePadding: false, label: 'VN U/P' },
   { id: 'Description', numeric: false, disablePadding: false, label: 'Description' },
 ];
 //-------------------------------
@@ -218,9 +212,6 @@ export default function EnhancedTable(
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-  }
 
   //검색창(appBar.js)에서 검색어 넣고 엔터치면 searchingNow라는 state를 true로 바꿔줌
   //그때 페이지를 0으로 자동으로 넘겨주는 역할을 함.
@@ -332,17 +323,9 @@ export default function EnhancedTable(
             return returnWords();
   }
   const alreadyCheck = (c) => {
-    // function add(arr, id) {
-    //   const { length } = arr;
-    //   const found = arr.some(el => el.id === id.id);
-    //   if (!found) {
-    //     id.no = arr.length + 1
-        alreadyPickedCheck(c)}
-      // ;
-    // }
-    // add(useStateLog, c)
-  // }
-  //검색어 결과로 filtered된 배열값이 아래의 변수이름임
+        alreadyPickedCheck(c)
+  }
+
   const filteredItemArray = itemListFilteredMap()
   //-----------------------------------------
 
@@ -386,7 +369,7 @@ export default function EnhancedTable(
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
-                      key={filteredItemArray.name}
+                      key={index}
                       selected={isItemSelected}
                     >
                       <TableCell padding="checkbox">
@@ -400,6 +383,7 @@ export default function EnhancedTable(
                       </TableCell>
                       <TableCell align="left">{filteredItemArray.itemCode}</TableCell>
                       <TableCell align="left">{filteredItemArray.itemName}</TableCell>
+                      <TableCell align="left">{filteredItemArray.VNSellingPrice}</TableCell>
                       <TableCell>                      
                         <button onClick= {
                           function(e){
@@ -443,145 +427,3 @@ const useStyles1 = makeStyles(theme => ({
   },
 }));
 
-
-
-//기존에 쓰던 ui없는 테이블 코드 -> 폐기
-// const ItemListComponent = (
-//   {
-//     code,
-//     onFetch,
-//     itemList,
-//     inputItem,
-//     useStateLog,
-//     onLoadApi,
-//     items,
-//     count, 
-//     page, 
-//     rowsPerPage, 
-//     onChangePage,
-//   }) => 
-  
-//   {
-//     const classes = useStyles1();
-//     const theme = useTheme();
-//     var result = [];
-//     const itemListFilteredMap = () => {
-//             var matchedid = [];
-//             itemList.map (function(num) {
-//               var values = Object.values(num);
-//               var joinedString = values.join(',');
-//               joinedString = joinedString.toLowerCase() //리스트 문자열 합친걸 모두 소문자화
-//               code = code.toLowerCase() //검색어를 모두 소문자화
-//               code = code.replace(/\s*$/,''); //마지막 공백을 모두 제거
-//               // var spaceCount = (code.split(" ").length - 1); //중간에 들어간 공백의 숫자
-//               let codeArray = code.split(' ')
-//               let matchedTrue = ''
-//               for(let i=0, k = 0; i < codeArray.length; i++) {
-//                 var trueSearched = joinedString.indexOf(codeArray[i]) > - 1;
-//                 if (trueSearched === true) {
-//                   k = k + 1
-//                 }
-//                 if (k === codeArray.length) {matchedTrue = true} //공백으로 나눠진 단어 모두가 검색되는지를 true여부로 반환
-//                 else {matchedTrue = false} 
-//               }
-//               if (matchedTrue === true) {
-//                 matchedid.push(num.id);   //matchedid라는 미리 선언된 배열변수에, 검색어를 포함한 아이템들의 id값만 담음.
-//                 }
-//             })
-//             var returnWords = function(){
-//                 var matchedData = [];
-//                 var findDataId = '';
-//                     for (var i=0; i < matchedid.length; i++){
-//                       findDataId = matchedid[i];
-//                       function searchMatchedData(id, itemList) {
-//                         for (var i = 0; i < itemList.length; i++) {
-//                           if (itemList[i].id === id)  {
-//                             return itemList[i];
-//                           }
-//                         }
-//                       }
-//                       result.push(searchMatchedData(findDataId, itemList))
-           
-//                       matchedData.push(itemList[matchedid[i]])
-//                     }
-//                 return result;
-//               }
-//               returnWords();
-//     }
-//     const alreadyCheck = (c) => {
-//       function add(arr, id) {
-//         const { length } = arr;
-//         const found = arr.some(el => el.id === id.id);
-//         if (!found) {
-//           id.no = arr.length + 1
-//           inputItem(id)}
-//         ;
-//       }
-//       add(useStateLog, c)
-//     }
-//     const itemListMap = () => {
-//         itemListFilteredMap();
-//         return result.map((c, index) => {
-//             return(
-//                 <TableRow key = {index}>
-//                     <TableCell>{c.id}</TableCell>
-//                     <TableCell>{c.itemCode}</TableCell>
-//                     <TableCell>{c.itemName}</TableCell>
-//                     <TableCell> <button onClick = {onFetch}>+1</button></TableCell>
-//                     <TableCell> <button onClick = {itemListFilteredMap}>-1</button></TableCell>
-//                     <TableCell> 
-//                       <button onClick= {
-//                         function(e){
-//                           e.preventDefault();
-//                           alreadyCheck(c);
-//                         }}>삽입
-//                       </button>
-//                     </TableCell> 
-//                 </TableRow>
-//         )})
-//     }
-//     //페이지 나눔으로 인한 이벤트 부분
-//     const handleFirstPageButtonClick = event => {
-//       onChangePage(event, 0);
-//     };
-  
-//     const handleBackButtonClick = event => {
-//       onChangePage(event, page - 1);
-//     };
-  
-//     const handleNextButtonClick = event => {
-//       onChangePage(event, page + 1);
-//     };
-  
-//     const handleLastPageButtonClick = event => {
-//       onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
-//     };
-//     //----------------------
-//     return(
-//     <div className = {classes.root}>
-//         <button onClick = {onLoadApi}>Load</button>
-//         <hr></hr>
-
-//          <Table className = {classes.table}>
-//             <TableHead>
-//               <TableRow>
-//               <TableCell align = "right">No</TableCell>
-//               <TableCell>Code</TableCell>
-//               <TableCell>Item</TableCell>
-//               <TableCell>Plus</TableCell>
-//               <TableCell>Minus</TableCell>
-//               <TableCell>삽입</TableCell>
-//               </TableRow>
-//             </TableHead>
-
-//             <TableBody>
-//                 {itemListMap()}
-//             </TableBody>
-//             <TableFooter>
-//             </TableFooter>
-//         </Table>
-//         <EnhancedTable itemList = {itemList}/>
-//     </div>
-//     )
-// }
-// // export default ItemListComponent
