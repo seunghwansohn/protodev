@@ -32,7 +32,8 @@ const QuoteListComponent = (
         CustomersfetchAction, 
         clients, 
         QuoteListCustomerSelectAction, 
-        quoteList 
+        quoteList,
+        onDelItem
     }) => {
     let inputQty = ''
     const handleValueSubmit = (e) => {
@@ -47,9 +48,13 @@ const QuoteListComponent = (
         e.preventDefault();
         inputQty = Number(e.target.value)
         console.log(typeof inputQty)
-
     }
-
+    const handleDeleteValueSubmit = (e) => {
+        e.preventDefault();
+        let idQtyObject = ''
+        idQtyObject = Number(e.target.no.value)
+        onDelItem(idQtyObject)
+    }
     const pickedItemMap = () => {
         return pickedItem.map((c, index) => {
             return (
@@ -68,6 +73,12 @@ const QuoteListComponent = (
                         </form>
                     </TableCell>
                     <TableCell>{c.price}</TableCell>
+                    <TableCell>
+                        <form onSubmit = {handleDeleteValueSubmit} method ="post">
+                            <input type="hidden" name="no" value={c.no}></input>
+                            <input type="submit" name="submit" value= "delete"></input>
+                        </form>
+                    </TableCell>
                 </TableRow>
             )
         })

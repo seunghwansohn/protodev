@@ -26,6 +26,7 @@ function reducer (state = initialState, action) {
             draft.pickedItem[no].price = action.inputQty.qty * draft.pickedItem[no].VNSellingPrice
           })
         case actionTypes.PICKITEM:
+            console.log(action)
             let pickedItemArray = state.pickedItem
             let number = state.pickedItem.length
             let nowPickedItemId = action.pickedItem.id
@@ -58,6 +59,12 @@ function reducer (state = initialState, action) {
           return produce(state, draft => {
             draft.quoteList.SelectedCustomerCode = action.SelectedCustomerCode
           }) 
+        case actionTypes.DELITEM:
+          console.log(action)
+          return produce(state, draft => {
+            draft.pickedItem.splice(action.pickedItemNo - 1, 1)
+          })
+          
         default:
           return state;
     } 

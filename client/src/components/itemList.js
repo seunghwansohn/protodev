@@ -388,6 +388,7 @@ export default function EnhancedTable(
                         <button onClick= {
                           function(e){
                             e.preventDefault();
+                            console.log(filteredItemArray)
                             alreadyCheck(filteredItemArray);
                           }}>삽입
                          </button>

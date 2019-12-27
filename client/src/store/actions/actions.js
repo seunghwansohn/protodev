@@ -4,6 +4,8 @@ export const APILOAD = 'itemList/APILOAD';
 
 export const INPUTQTY = 'quoteList/INPUTQTY'
 export const PICKITEM = 'quoteList/PICKITEM'
+export const DELITEM = 'quoteLIst/DELITEM'
+
 export const INPUTPDFBLOBURL = 'itemList/INPUTPDFBLOBURL'
 export const SETSEARCHINGNOW = 'itemList/SETSEARCHINGNOW'
 export const FETCHVNCUSTOMERS = 'itemList/FETCHVNCUSTOMERS'
@@ -20,6 +22,7 @@ export const QuoteListCustomerSelectAction = (SelectedCustomerCode) => ({type: Q
 export const inputQtyAction = (inputQty) => ({type: INPUTQTY, inputQty})
 export const inputPdfBlobUrl = (blobUrl) => ({type: INPUTPDFBLOBURL, blobUrl})
 export const inputItemAction = (pickedItem) => ({type: PICKITEM, pickedItem});
+export const delItemAction = (pickedItemNo) => ({type : DELITEM, pickedItemNo})
 
 
 export function fetchAction() {

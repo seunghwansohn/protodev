@@ -27,7 +27,8 @@ const ItemListContainer = (
         clients,
         quoteList,
         QuoteListCustomerSelectAction,
-        alreadyPickedCheck
+        alreadyPickedCheck,
+        delItemAction
     }
     ) => 
     
@@ -68,6 +69,7 @@ const ItemListContainer = (
                     clients = {clients}
                     quoteList = {quoteList}
                     QuoteListCustomerSelectAction = {QuoteListCustomerSelectAction}
+                    onDelItem = {delItemAction}
                     
                 >
                 </QuoteListComponent>
@@ -99,6 +101,7 @@ const mapDispatchToProps = dispatch => {
         CustomersfetchAction : () => dispatch(actionCreators.CustomersfetchAction()),
         QuoteListCustomerSelectAction : (selectedCustomer) => dispatch(actionCreators.QuoteListCustomerSelectAction(selectedCustomer)),
         alreadyPickedCheck : (c) => dispatch(actionCreators.alreadyPickedCheck(c)),
+        delItemAction :(pickedItemNo) => dispatch(actionCreators.delItemAction(pickedItemNo)),
 }}
 
 export default connect(

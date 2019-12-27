@@ -51,20 +51,70 @@ export default function FullScreenDialog( { pdfBlobUrl, dispatch, pickedItem, su
     return templateVals
   }
 
+  const todayFunction = () => {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+      if (dd < 10) {
+        dd = '0' + dd;
+      } 
+      if (mm < 10) {
+        mm = '0' + mm;
+      } 
+    var todayReturn = dd + '/' + mm + '/' + yyyy;
+    return todayReturn
+  }
+  const today = todayFunction()
+
+  
   const mapTemplateTable = () => {
-    let templateVals = ''
+    const header =
+    [
+      {text: 'No'}, 
+      {text: 'Items'}, 
+      {text: 'Specs'},
+      {text: 'Origin'},
+      {text: 'Unit'},
+      {text: 'Qty'},
+      {text: 'Unit Price'},
+      {text: 'Price'},
+      {text: 'remarks'},
+    ]
+    let templateRows = []
     if (pickedItem[0] !== undefined) {
-      templateVals = pickedItem[0].itemName
+      const k = pickedItem[0]
+      const row = [k.no, k.itemName, '', 'korea', 'pcs', k.qty, k.VNSellingPrice, '', '']
+      templateRows = row
     }
-    return templateVals
+    const templateBody = []
+    templateBody.push(header)
+    templateBody.push(templateRows)
+    return templateBody
   }
 
+
+  const testText = '090909'
   const templateVals = mapTemplateVals()
   const templateTable = mapTemplateTable()
   console.log(templateTable)
+  const textTest = {
+    style: 'tableExample',
+    table: {
+      widths: [12,'*',80,25,20,20,30,35,45],
+      headerRows: 1,
+      body: templateTable
+    },
+  }
   var contents = {
     content: [
-        
+          
+        {
+          text: 'Quotation' + testText + '졸라 짜증나네 씨발',
+          style: 'header',
+          // font:'nanumgothic'
+        },
+
         `Sub Total: ${templateVals.subTotal}`,
         `VAT: ${templateVals.vat}`,
         `Total: ${templateVals.total}`,
@@ -72,12 +122,18 @@ export default function FullScreenDialog( { pdfBlobUrl, dispatch, pickedItem, su
         {
           style: 'tableExample',
           table: {
+            widths: [48, 5, '*' ,40,80],
+            
             body: [
-              ['Column 1', 'Column 2', 'Column 3'],
-              ['One value goes here', 'Another one here', 'OK?']
+              ['To', ':','something','Date:', today],
+              ['Att', ':','something', '', ''],
+              ['Project', ':','something','',''],
+              ['Location',':','something' ,'',''],
             ]
-          }
+          },
+          layout: 'noBorders'
         },
+        textTest,
         'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines',
         'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines',
         'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines',
@@ -105,11 +161,48 @@ export default function FullScreenDialog( { pdfBlobUrl, dispatch, pickedItem, su
         Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Fusce aliquam ante sed magna rutrum, at feugiat orci placerat. Vestibulum eget turpis consectetur tellus ultricies commodo id a dui. Quisque nibh eros, consectetur nec aliquet vitae, faucibus et diam. Quisque ac enim ligula. Aliquam sit amet tellus non dui mattis placerat. Quisque malesuada sit amet erat in suscipit. Sed iaculis eu leo quis feugiat. Sed dolor risus, malesuada a tempor sit amet, ullamcorper ut tortor. Praesent efficitur molestie tincidunt.
         
         Generated 5 paragraphs, 405 words, 2755 bytes of Lorem Ipsum`
-    ]
+    ],
+    styles: {
+      header: {
+        fontSize: 18,
+        bold: true,
+        alignment: 'center',
+      },
+      subheader: {
+        fontSize: 15,
+        bold: true
+      },
+      quote: {
+        italics: true
+      },
+      small: {
+        fontSize: 8
+      },
+      tableHeader : {
+        fontSize: 8,
+        alignment: 'center',
+        bold : true
+      },
+      tableExample : {
+        fontSize: 8,
+      }
+    }
   }
 
   const previewDocument = (contents, pickedItem) => {
-    const pdfDocGenerator = pdfMake.createPdf(contents);
+    const fonts = pdfMake.fonts = {
+      Roboto: {
+              normal: 'nanumgothic.ttf',
+              bold: 'nanumgothic.ttf',
+              italics: 'nanumgothic.ttf',
+              bolditalics: 'nanumgothic.ttf',
+              nanumgothic: {
+                normal: 'nanumgothic.ttf'
+              }
+              
+        }
+    };
+    const pdfDocGenerator = pdfMake.createPdf(contents, null, fonts);
     // Get PDF blob and open in new window
     pdfDocGenerator.getBlob((blob) => {
         let blobURL = URL.createObjectURL(blob);
