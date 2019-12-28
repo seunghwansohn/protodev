@@ -12,23 +12,24 @@ const initialState = {
       VNbuyer : [{id: 'DTE', ENName : 'DATA GROUP', VNName : 'Data iii', MST : '33759298', RecentNews : 'established'}, {id:'', name: 'Entec'}],
       KRseller : [{id: 'JU', name : 'Jaeung'}, {id:'EnT', name: 'Entec'}]
     },
-    quoteList:{
-      SelectedCustomerCode : 'none'
-    }
+    SelectedCustomerCode : 'none',
+    quoteTotalValues :  {
+      subTotal : 0,
+      vat :  0,
+      Total : 0,
+  }
 };
 function reducer (state = initialState, action) {
     switch (action.type) {
         case actionTypes.INPUTQTY:
-          console.log(action)
           let no = action.index
           return produce(state, draft => {
             const rate = (draft.pickedItem[no].priceRate * 0.01) + 1
             draft.pickedItem[no].qty = action.inputQty
-            draft.pickedItem[no].price = action.inputQty * draft.pickedItem[no].VNSellingPrice * rate
+            draft.pickedItem[no].price = action.inputQty * draft.pickedItem[no].fixedPrice
           })
 
         case actionTypes.PICKITEM:
-            console.log(action)
             let pickedItemArray = state.pickedItem
             let number = state.pickedItem.length
             let nowPickedItemId = action.pickedItem.id
@@ -37,6 +38,7 @@ function reducer (state = initialState, action) {
               if (!found) {
                 action.pickedItem.no = number + 1 //no처음규정됨.
                 action.pickedItem.priceRate = 0
+                action.pickedItem.fixedPrice = action.pickedItem.VNSellingPrice
                 return false
               } else if (found) {
                 return true
@@ -67,9 +69,7 @@ function reducer (state = initialState, action) {
           const startNo = action.pickedItemNo + 1
           const Produce = (state) => {
             return produce(state, draft => {
-              console.log(state) 
               for (let i=startNo; i < newLength; i++) {
-                console.log(i)
                 return draft.pickedItem[0].no = 9
               }
               draft.pickedItem.splice(action.pickedItemNo - 1, 1)
@@ -79,13 +79,28 @@ function reducer (state = initialState, action) {
           return Produce(state)
 
         case actionTypes.CHANGEPRATE:
-          console.log(action)
           const index = action.index
           return produce(state, draft => {
             const rate = (action.rate * 0.01) + 1
             draft.pickedItem[index].priceRate = action.rate
-            draft.pickedItem[index].price = draft.pickedItem[index].qty * draft.pickedItem[index].VNSellingPrice * rate
+            draft.pickedItem[index].fixedPrice = 10000*(Math.round((draft.pickedItem[index].VNSellingPrice * rate)/10000))
+            draft.pickedItem[index].price = draft.pickedItem[index].qty * draft.pickedItem[index].fixedPrice
+            
           })
+        
+        case actionTypes.TOTAL_VALUE:
+          let totalValues = {}
+          totalValues.subTotal = 0
+          state.pickedItem.map(pickedItem => {
+            totalValues.subTotal = totalValues.subTotal + pickedItem.price
+          })
+          totalValues.vat = totalValues.subTotal * 0.1
+          totalValues.total = totalValues.subTotal + totalValues.vat
+          return produce(state, draft => {
+            draft.quoteTotalValues.subTotal = totalValues.subTotal
+            draft.quoteTotalValues.vat = totalValues.vat
+            draft.quoteTotalValues.total = totalValues.total
+            }) 
           
         case actionTypes.QUOTELISTSELECTCUSTOMER:
           return produce(state, draft => {

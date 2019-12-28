@@ -13,13 +13,15 @@ var pdfFonts = require('pdfmake/build/vfs_fonts.js');
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 const TotalComponent = (props) => {
+    const totalValues = props.quoteTotalValues
+    props.onTotalValue()
     return (
         <div>
-            Sub Total: {props.subTotal !== undefined ? props.subTotal.subTotal : ''}
+            Sub Total: {totalValues.subTotal}
             <br></br>
-            VAT: {props.subTotal !== undefined ? props.subTotal.vat : ''}
+            VAT: {totalValues.vat}
             <br></br>
-            Total: {props.subTotal !== undefined ? props.subTotal.total : ''}
+            Total: {totalValues.total}
         </div>
     )
 }
@@ -35,7 +37,9 @@ const QuoteListComponent = (
         QuoteListCustomerSelectAction, 
         quoteList,
         onDelItem,
-        onChangePRate
+        onChangePRate,
+        quoteTotalValues,
+        onTotalValue
     }) => {
     let inputQty = ''
     const handleValueSubmit = (e) => {
@@ -47,9 +51,7 @@ const QuoteListComponent = (
     }
     const hadleValueChange = (index, e) => {
         e.preventDefault();
-        console.log(index)
         inputQty = Number(e.target.value)
-        console.log(inputQty)
         qtySubmit(index, inputQty)
     }
     const handleDeleteValueSubmit = (e) => {
@@ -69,12 +71,12 @@ const QuoteListComponent = (
             return (
                 <TableRow key = {index}>
                     <TableCell>{index + 1}</TableCell>
-                    <TableCell>{c.itemCode}</TableCell>
                     <TableCell>{c.itemName}</TableCell>
                     <TableCell>{c.VNSellingPrice}</TableCell>
                     <TableCell>
                         <input type="number" placeholder = {c.priceRate + '%'} onChange = {(e) => handlePRateChange(index, e)}></input>
                     </TableCell>
+                    <TableCell>{c.fixedPrice}</TableCell>
                     <TableCell>
                         <input type="number" placeholder = '0' onChange = {(e) => hadleValueChange(index, e)}></input>
                     </TableCell>
@@ -201,10 +203,10 @@ const QuoteListComponent = (
                 <TableHead>
                     <TableRow>
                         <TableCell>No</TableCell>
-                        <TableCell>Code</TableCell>
                         <TableCell>Name</TableCell>
                         <TableCell>VN U/P</TableCell>
                         <TableCell>Rate</TableCell>
+                        <TableCell>fixed U/P</TableCell>
                         <TableCell>Qty</TableCell>
                         <TableCell>Price</TableCell>
                     </TableRow>
@@ -213,7 +215,7 @@ const QuoteListComponent = (
                     {pickedItemMap()}
                 </TableBody>
             </Table>
-            <TotalComponent subTotal = {subTotalValue}/>
+            <TotalComponent quoteTotalValues = {quoteTotalValues} onTotalValue = {onTotalValue}/>
         </div>
     )
 }

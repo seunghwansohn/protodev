@@ -6,7 +6,7 @@ export const INPUTQTY = 'quoteList/INPUTQTY'
 export const PICKITEM = 'quoteList/PICKITEM'
 export const DELITEM = 'quoteLIst/DELITEM'
 export const CHANGEPRATE = 'quoteList/CHANGEPRATE'
-
+export const TOTAL_VALUE = 'quoteList/TOTAL_VALUE'
 
 export const INPUTPDFBLOBURL = 'itemList/INPUTPDFBLOBURL'
 export const SETSEARCHINGNOW = 'itemList/SETSEARCHINGNOW'
@@ -26,7 +26,7 @@ export const inputPdfBlobUrl = (blobUrl) => ({type: INPUTPDFBLOBURL, blobUrl})
 export const inputItemAction = (pickedItem) => ({type: PICKITEM, pickedItem});
 export const delItemAction = (pickedItemNo) => ({type : DELITEM, pickedItemNo})
 export const changePRate = (index, rate) => ({type : CHANGEPRATE, index, rate})
-
+export const totalValue = () => ({type : TOTAL_VALUE})
 
 export function fetchAction() {
     return function(callback) {
@@ -44,7 +44,6 @@ export function CustomersfetchAction() {
         });
     };
 }
-zeus
 
 
 
