@@ -190,7 +190,11 @@ const QuoteListComponent = (
             <br></br>
             <button onClick = {consoleLogTemp}>변수확인</button>
             <button onClick = {pdfOpen}>pdf 새창열기</button>            <br></br>
-            Number of picked items : {pickedCount}
+            <Table>
+            <TableRow>
+               <TableCell> Number of picked items : {pickedCount}</TableCell>
+            </TableRow>
+            </Table>
             <br></br>
             
             <Table>

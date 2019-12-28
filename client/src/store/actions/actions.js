@@ -10,7 +10,7 @@ export const CHANGEPRATE = 'quoteList/CHANGEPRATE'
 
 export const INPUTPDFBLOBURL = 'itemList/INPUTPDFBLOBURL'
 export const SETSEARCHINGNOW = 'itemList/SETSEARCHINGNOW'
-export const FETCHVNCUSTOMERS = 'itemList/FETCHVNCUSTOMERS'
+export const FETCHVNCUSTOMERS = 'clients/FETCHVNCUSTOMERS'
 export const QUOTELISTSELECTCUSTOMER = 'itemList/QUOTELISTSELECTCUSTOMER'
 
 export const search = searchKeyword => ({type: SEARCHKEYWORD, searchKeyword});
@@ -44,7 +44,7 @@ export function CustomersfetchAction() {
         });
     };
 }
-
+zeus
 
 
 

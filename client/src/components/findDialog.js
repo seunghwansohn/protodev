@@ -34,6 +34,7 @@ export default function FullScreenDialog( { pdfBlobUrl, dispatch, Customersfetch
   };
 
   async function showBBConsole() {
+    await CustomersfetchAction()
     await handleClickOpen()
   }
 

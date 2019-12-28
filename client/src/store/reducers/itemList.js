@@ -24,14 +24,8 @@ function reducer (state = initialState, action) {
         return produce(state, draft => {
           draft.pdfWorks.pdfBlobUrl = action.blobUrl
         })  
-      case actionTypes.FETCHVNCUSTOMERS:
-        return produce(state, draft => {
-          draft.clients.VNbuyer = action.VNCustomersList
-        }) 
-      case actionTypes.QUOTELISTSELECTCUSTOMER:
-        return produce(state, draft => {
-          draft.quoteList.SelectedCustomerCode = action.SelectedCustomerCode
-        }) 
+
+
       default:
         return state;
     } 

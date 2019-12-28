@@ -86,7 +86,11 @@ function reducer (state = initialState, action) {
             draft.pickedItem[index].priceRate = action.rate
             draft.pickedItem[index].price = draft.pickedItem[index].qty * draft.pickedItem[index].VNSellingPrice * rate
           })
-
+          
+        case actionTypes.QUOTELISTSELECTCUSTOMER:
+          return produce(state, draft => {
+            draft.quoteList.SelectedCustomerCode = action.SelectedCustomerCode
+          }) 
         default:
           return state;
     } 
