@@ -54,10 +54,22 @@ app.post('/filetest1', function (req, res){
   );
 });
 
+
+//quoteList 제출 api 만들기
+app.post('/api/quoteSubmit', function (req, res){
+  req.body.map(input => {
+    connection.query(
+      `INSERT INTO \`Sell Quotes\` (\`No\`, \`Project\`, \`ItemCode\`, \`Qty\`) VALUES ('${input.no}', 'kvi', '${input.itemCode}', '1')`,
+    (err, rows, fields) => {
+    console.log(rows)
+    })
+  })
+});
+//-----------------------
+
 //mysql-repl api 서버 만들기
 const data = fs.readFileSync('./database.json');
 const conf = JSON.parse(data);
-
 const mysql = require('mysql');
 const connection = mysql.createConnection({
   host: conf.host,
@@ -66,7 +78,6 @@ const connection = mysql.createConnection({
   port: conf.port,
   database: conf.database
 });
-
 connection.connect();
 //---------------
 

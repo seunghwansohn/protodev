@@ -328,7 +328,6 @@ export default function EnhancedTable(
 
   const filteredItemArray = itemListFilteredMap()
   //-----------------------------------------
-
   
   const onPageZero = () => {
     setPage(0)

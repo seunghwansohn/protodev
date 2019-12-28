@@ -28,7 +28,8 @@ const ItemListContainer = (
         quoteList,
         QuoteListCustomerSelectAction,
         alreadyPickedCheck,
-        delItemAction
+        delItemAction,
+        changePRate
     }
     ) => 
     
@@ -70,6 +71,7 @@ const ItemListContainer = (
                     quoteList = {quoteList}
                     QuoteListCustomerSelectAction = {QuoteListCustomerSelectAction}
                     onDelItem = {delItemAction}
+                    onChangePRate = {changePRate}
                     
                 >
                 </QuoteListComponent>
@@ -95,13 +97,14 @@ const mapDispatchToProps = dispatch => {
         search : (searchKeyword) => dispatch(actionCreators.search(searchKeyword)),
         fetchAction : () => dispatch(actionCreators.fetchAction()),
         inputItem :(selectedItem) => dispatch(actionCreators.inputItemAction(selectedItem)),
-        qtySubmit : (inputQty) => dispatch(actionCreators.inputQtyAction(inputQty)),
+        qtySubmit : (index, inputQty) => dispatch(actionCreators.inputQtyAction(index, inputQty)),
         inputPdfBlobUrl : (blob) => dispatch(actionCreators.inputPdfBlobUrl(blob)),
         setSearchingNow : (blob) => dispatch(actionCreators.setSearchingNow(blob)),
         CustomersfetchAction : () => dispatch(actionCreators.CustomersfetchAction()),
         QuoteListCustomerSelectAction : (selectedCustomer) => dispatch(actionCreators.QuoteListCustomerSelectAction(selectedCustomer)),
         alreadyPickedCheck : (c) => dispatch(actionCreators.alreadyPickedCheck(c)),
         delItemAction :(pickedItemNo) => dispatch(actionCreators.delItemAction(pickedItemNo)),
+        changePRate :(index, rate) => dispatch(actionCreators.changePRate(index, rate))
 }}
 
 export default connect(

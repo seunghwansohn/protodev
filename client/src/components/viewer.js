@@ -97,7 +97,6 @@ export default function FullScreenDialog( { pdfBlobUrl, dispatch, pickedItem, su
   const testText = '090909'
   const templateVals = mapTemplateVals()
   const templateTable = mapTemplateTable()
-  console.log(templateTable)
   const textTest = {
     style: 'tableExample',
     table: {

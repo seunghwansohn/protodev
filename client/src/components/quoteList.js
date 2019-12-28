@@ -6,6 +6,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import Viewer from './viewer'
 import FindDialog from './findDialog'
+import QuoteSubmit from './quoteSubmit'
 
 var pdfMake = require('pdfmake/build/pdfmake.js');
 var pdfFonts = require('pdfmake/build/vfs_fonts.js');
@@ -33,7 +34,8 @@ const QuoteListComponent = (
         clients, 
         QuoteListCustomerSelectAction, 
         quoteList,
-        onDelItem
+        onDelItem,
+        onChangePRate
     }) => {
     let inputQty = ''
     const handleValueSubmit = (e) => {
@@ -41,13 +43,14 @@ const QuoteListComponent = (
         const idQtyObject = {}
         idQtyObject.no = Number(e.target.no.value)
         idQtyObject.qty = Number(e.target.quantity.value)
-        // console.log(idQtyObject.id)
         qtySubmit(idQtyObject)
     }
-    const hadleValueChange = (e) => {
+    const hadleValueChange = (index, e) => {
         e.preventDefault();
+        console.log(index)
         inputQty = Number(e.target.value)
-        console.log(typeof inputQty)
+        console.log(inputQty)
+        qtySubmit(index, inputQty)
     }
     const handleDeleteValueSubmit = (e) => {
         e.preventDefault();
@@ -55,27 +58,30 @@ const QuoteListComponent = (
         idQtyObject = Number(e.target.no.value)
         onDelItem(idQtyObject)
     }
+    const handlePRateChange = (index, e) => {
+        e.preventDefault()
+        console.log(index)
+        const newPRate = Number(e.target.value)
+        onChangePRate(index, newPRate)
+    }
     const pickedItemMap = () => {
         return pickedItem.map((c, index) => {
             return (
                 <TableRow key = {index}>
-                    <TableCell>{c.no}</TableCell>
+                    <TableCell>{index + 1}</TableCell>
                     <TableCell>{c.itemCode}</TableCell>
                     <TableCell>{c.itemName}</TableCell>
                     <TableCell>{c.VNSellingPrice}</TableCell>
                     <TableCell>
-                        <form onSubmit = {handleValueSubmit} method ="post">
-                            <input type="number" name="quantity" onChange = {hadleValueChange}></input>
-                            <input type="hidden" name="no" value={c.no}></input>
-                            <input type="submit" name="submit" value= "→"></input>
-                            {inputQty}
-                            {c.qty}
-                        </form>
+                        <input type="number" placeholder = {c.priceRate + '%'} onChange = {(e) => handlePRateChange(index, e)}></input>
+                    </TableCell>
+                    <TableCell>
+                        <input type="number" placeholder = '0' onChange = {(e) => hadleValueChange(index, e)}></input>
                     </TableCell>
                     <TableCell>{c.price}</TableCell>
                     <TableCell>
                         <form onSubmit = {handleDeleteValueSubmit} method ="post">
-                            <input type="hidden" name="no" value={c.no}></input>
+                            <input type="hidden" name="no" value={index + 1}></input>
                             <input type="submit" name="submit" value= "delete"></input>
                         </form>
                     </TableCell>
@@ -160,6 +166,7 @@ const QuoteListComponent = (
                             />
                         </TableCell>
                         <TableCell><button onClick = {test}>체크체크</button></TableCell>
+                        <TableCell><QuoteSubmit pickedItem = {pickedItem}></QuoteSubmit></TableCell>
                         <TableCell>
                             <form onSubmit={test}>
                                 <input type = 'text' name="name" onChange = {FindCustomersHandleValueChange}/>
@@ -193,6 +200,7 @@ const QuoteListComponent = (
                         <TableCell>Code</TableCell>
                         <TableCell>Name</TableCell>
                         <TableCell>VN U/P</TableCell>
+                        <TableCell>Rate</TableCell>
                         <TableCell>Qty</TableCell>
                         <TableCell>Price</TableCell>
                     </TableRow>

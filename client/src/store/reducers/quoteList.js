@@ -19,12 +19,14 @@ const initialState = {
 function reducer (state = initialState, action) {
     switch (action.type) {
         case actionTypes.INPUTQTY:
-          let no = action.inputQty.no - 1
-          console.log(typeof action.inputQty.qty)
+          console.log(action)
+          let no = action.index
           return produce(state, draft => {
-            draft.pickedItem[no].qty = action.inputQty.qty
-            draft.pickedItem[no].price = action.inputQty.qty * draft.pickedItem[no].VNSellingPrice
+            const rate = (draft.pickedItem[no].priceRate * 0.01) + 1
+            draft.pickedItem[no].qty = action.inputQty
+            draft.pickedItem[no].price = action.inputQty * draft.pickedItem[no].VNSellingPrice * rate
           })
+
         case actionTypes.PICKITEM:
             console.log(action)
             let pickedItemArray = state.pickedItem
@@ -33,7 +35,8 @@ function reducer (state = initialState, action) {
             const alreadyCheck = (pickedItemArray, number, nowPickedItemId) => {
               const found = pickedItemArray.some(el => el.id === nowPickedItemId);
               if (!found) {
-                action.pickedItem.no = number + 1
+                action.pickedItem.no = number + 1 //no처음규정됨.
+                action.pickedItem.priceRate = 0
                 return false
               } else if (found) {
                 return true
@@ -60,11 +63,30 @@ function reducer (state = initialState, action) {
             draft.quoteList.SelectedCustomerCode = action.SelectedCustomerCode
           }) 
         case actionTypes.DELITEM:
+          const newLength = state.pickedItem.length - 1
+          const startNo = action.pickedItemNo + 1
+          const Produce = (state) => {
+            return produce(state, draft => {
+              console.log(state) 
+              for (let i=startNo; i < newLength; i++) {
+                console.log(i)
+                return draft.pickedItem[0].no = 9
+              }
+              draft.pickedItem.splice(action.pickedItemNo - 1, 1)
+            })
+          }
+
+          return Produce(state)
+
+        case actionTypes.CHANGEPRATE:
           console.log(action)
+          const index = action.index
           return produce(state, draft => {
-            draft.pickedItem.splice(action.pickedItemNo - 1, 1)
+            const rate = (action.rate * 0.01) + 1
+            draft.pickedItem[index].priceRate = action.rate
+            draft.pickedItem[index].price = draft.pickedItem[index].qty * draft.pickedItem[index].VNSellingPrice * rate
           })
-          
+
         default:
           return state;
     } 
