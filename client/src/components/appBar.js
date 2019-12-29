@@ -65,11 +65,7 @@ const useStyles = makeStyles(theme => ({
 const SearchAppBar = 
     ({searchKeyword,onSearch,fetchAction}) => {
   const classes = useStyles();
-  const handleValueChange = e => {
-    searchKeyword = e.target.value
-    e.preventDefault();
-    onSearch(searchKeyword)
-  }
+
   const handleKeyPress = (e) => {
     if (e.key === "Enter") {
       searchKeyword = e.target.value
@@ -104,8 +100,6 @@ const SearchAppBar =
                 input: classes.inputInput,
               }}
               name = "searchKeyword"
-            //   value = {this.state.searchKeyword}
-              // onChange = {handleValueChange}
               onKeyPress={handleKeyPress}
               inputProps={{ 'aria-label': 'search' }}
             />

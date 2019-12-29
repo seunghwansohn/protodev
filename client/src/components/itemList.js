@@ -45,7 +45,6 @@ function getSorting(order, orderBy) {
 //----------------------------
 //pagenation 지원하는 material-ui 테이블의 head메뉴들. map으로 자동으로 다 띄워줌.
 const headCells = [
-  { id: 'No', numeric: false, disablePadding: false, label: 'No' },
   { id: 'Code', numeric: false, disablePadding: false, label: 'Code' },
   { id: 'Name', numeric: false, disablePadding: false, label: 'Name' },
   { id: 'VN U/P', numeric: false, disablePadding: false, label: 'VN U/P' },
@@ -54,7 +53,7 @@ const headCells = [
 //-------------------------------
 //pagenation 지원하는 material-ui 테이블의 head부분 콤포넌트
 function EnhancedTableHead(props) {
-  const { classes, onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } = props;
+  const { classes, onSelectAllClick, rowCount, onRequestSort } = props;
   const createSortHandler = property => event => {
     onRequestSort(event, property);
   };
@@ -62,32 +61,14 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
-          />
-        </TableCell>
         {headCells.map(headCell => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? 'right' : 'left'}
             padding={headCell.disablePadding ? 'none' : 'default'}
-            sortDirection={orderBy === headCell.id ? order : false}
           >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={order}
-              onClick={createSortHandler(headCell.id)}
-            >
+            <TableSortLabel>
               {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </span>
-              ) : null}
             </TableSortLabel>
           </TableCell>
         ))}
@@ -98,11 +79,6 @@ function EnhancedTableHead(props) {
 //----------------------------
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
 const useToolbarStyles = makeStyles(theme => ({
@@ -125,45 +101,7 @@ const useToolbarStyles = makeStyles(theme => ({
   },
 }));
 //pagenation 지원하는 material-ui 테이블의 툴바
-const EnhancedTableToolbar = props => {
-  const classes = useToolbarStyles();
-  const { numSelected } = props;
 
-  return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (
-        <Typography className={classes.title} color="inherit" variant="subtitle1">
-          {numSelected} selected
-        </Typography>
-      ) : (
-        <Typography className={classes.title} variant="h6" id="tableTitle">
-          Item List
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
-      )}
-    </Toolbar>
-  );
-};
-EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-};
 const useStyles = makeStyles(theme => ({
   root: {
     width: '100%',
@@ -193,12 +131,8 @@ const useStyles = makeStyles(theme => ({
 export default function EnhancedTable(
   {
     code,
-    onFetch,
     itemList,
     alreadyPickedCheck,
-    useStateLog,
-    onLoadApi,
-    items,
     searchingNow,
     setSearchingNow
   }) 
@@ -229,19 +163,8 @@ export default function EnhancedTable(
 
 
   //굳이 건드릴 필요없는 pagenation-material-ui 이벤트 함수들.
-  const handleRequestSort = (event, property) => {
-    const isDesc = orderBy === property && order === 'desc';
-    setOrder(isDesc ? 'asc' : 'desc');
-    setOrderBy(property);
-  };
-  const handleSelectAllClick = event => {
-    if (event.target.checked) {
-      const newSelecteds = rows.map(n => n.name);
-      setSelected(newSelecteds);
-      return;
-    }
-    setSelected([]);
-  };
+
+
   const handleClick = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
@@ -268,11 +191,6 @@ export default function EnhancedTable(
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  const handleChangeDense = event => {
-    setDense(event.target.checked);
-  };
-  const isSelected = name => selected.indexOf(name) !== -1;
-
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   //---------------------------------
 
@@ -337,7 +255,6 @@ export default function EnhancedTable(
   return (
     <div className={classes.root}>
       <Paper className={classes.paper}>
-        <EnhancedTableToolbar numSelected={selected.length} />
         <TableContainer>
           <Table
             className={classes.table}
@@ -347,39 +264,21 @@ export default function EnhancedTable(
           >
             <EnhancedTableHead
               classes={classes}
-              numSelected={selected.length}
-              order={order}
-              orderBy={orderBy}
-              onSelectAllClick={handleSelectAllClick}
-              onRequestSort={handleRequestSort}
               rowCount={rows.length}
             />
             <TableBody>
               {itemList[0] !== undefined ? stableSort(filteredItemArray, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((filteredItemArray, index) => {
-                  const isItemSelected = isSelected(filteredItemArray.name);
                   const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                       hover
                       onClick={event => handleClick(event, filteredItemArray.name)}
-                      role="checkbox"
-                      aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={index}
-                      selected={isItemSelected}
                     >
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                        />
-                      </TableCell>
-                      <TableCell align="left">
-                        {filteredItemArray.id}
-                      </TableCell>
                       <TableCell align="left">{filteredItemArray.itemCode}</TableCell>
                       <TableCell align="left">{filteredItemArray.itemName}</TableCell>
                       <TableCell align="left">{filteredItemArray.VNSellingPrice}</TableCell>
@@ -412,17 +311,7 @@ export default function EnhancedTable(
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
-      <button onClick = {onPageZero}> show itemList</button>
-      
     </div>
   );
 }
-
-
-const useStyles1 = makeStyles(theme => ({
-  root: {
-    flexShrink: 0,
-    marginLeft: theme.spacing(2.5),
-  },
-}));
 

@@ -7,6 +7,8 @@ import TableBody from '@material-ui/core/TableBody';
 import Viewer from './viewer'
 import FindDialog from './findDialog'
 import QuoteSubmit from './quoteSubmit'
+import InputBase from '@material-ui/core/InputBase';
+
 
 var pdfMake = require('pdfmake/build/pdfmake.js');
 var pdfFonts = require('pdfmake/build/vfs_fonts.js');
@@ -39,7 +41,10 @@ const QuoteListComponent = (
         onDelItem,
         onChangePRate,
         quoteTotalValues,
-        onTotalValue
+        onTotalValue,
+        selectedCustomer,
+        findDialogsOpen,
+        onDialogOpen
     }) => {
     let inputQty = ''
     const handleValueSubmit = (e) => {
@@ -119,9 +124,6 @@ const QuoteListComponent = (
     let willSubmitCustomersName = ''
     const test = e => {
         e.preventDefault()
-        // console.log(pickedItem[0].VNSellingPrice)
-        console.log(subTotalValue)
-
     }
     const FindCustomersHandleValueChange = e => {
         e.preventDefault()
@@ -150,6 +152,15 @@ const QuoteListComponent = (
     
     const subTotalValue = subTotal()
     
+    async function handleKeyPress (e) {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            console.log(e.target.value)
+            await CustomersfetchAction()
+            await onDialogOpen(true)
+        }
+      }
+    console.log(findDialogsOpen)
     return(
         <div>
             <Table>
@@ -170,25 +181,29 @@ const QuoteListComponent = (
                         <TableCell><button onClick = {test}>체크체크</button></TableCell>
                         <TableCell><QuoteSubmit pickedItem = {pickedItem}></QuoteSubmit></TableCell>
                         <TableCell>
-                            <form onSubmit={test}>
-                                <input type = 'text' name="name" onChange = {FindCustomersHandleValueChange}/>
-                                <input type='submit' value = 'select'/>
-                            </form>
+                            <InputBase
+                                placeholder="Search…"
+                                name = "searchKeyword"
+                                onKeyPress={handleKeyPress}
+                                inputProps={{ 'aria-label': 'search' }}
+                            />
+              
                         </TableCell>
                         <TableCell>
                             <FindDialog 
-                                CustomersfetchAction = {CustomersfetchAction} 
-                                clients = {clients} 
-                                QuoteListCustomerSelectAction = {QuoteListCustomerSelectAction}
+                                mode = {CustomersfetchAction} 
+                                data = {clients.VNbuyer} 
+                                selection = {QuoteListCustomerSelectAction}
+                                searchObject = 'VN Buyer'
+                                open = {findDialogsOpen.VNBuyers}
+                                setOpen = {onDialogOpen}
                             />
                         </TableCell>
     
                     </TableRow>
                 </TableBody>
             </Table>
-            {quoteList.SelectedCustomerCode}
-            <br></br>
- 
+            {selectedCustomer}
             <br></br>
             <button onClick = {consoleLogTemp}>변수확인</button>
             <button onClick = {pdfOpen}>pdf 새창열기</button>            <br></br>

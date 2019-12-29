@@ -62,7 +62,7 @@ function reducer (state = initialState, action) {
             }) 
         case actionTypes.QUOTELISTSELECTCUSTOMER:
           return produce(state, draft => {
-            draft.quoteList.SelectedCustomerCode = action.SelectedCustomerCode
+            draft.SelectedCustomerCode = action.SelectedCustomerCode
           }) 
         case actionTypes.DELITEM:
           const newLength = state.pickedItem.length - 1

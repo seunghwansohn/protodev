@@ -4,6 +4,7 @@ import quoteList from './quoteList'
 import mainSchBar from './mainSchBar'
 import clients from './clients'
 import quoteSubmit from './quoteSubmit'
+import dialogs from './dialogs'
 
 
 const rootReducer = combineReducers({
@@ -11,7 +12,8 @@ const rootReducer = combineReducers({
     quoteList,
     mainSchBar,
     clients,
-    quoteSubmit
+    quoteSubmit,
+    dialogs
 });
 
 export default rootReducer;

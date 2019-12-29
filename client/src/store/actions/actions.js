@@ -13,6 +13,8 @@ export const SETSEARCHINGNOW = 'itemList/SETSEARCHINGNOW'
 export const FETCHVNCUSTOMERS = 'clients/FETCHVNCUSTOMERS'
 export const QUOTELISTSELECTCUSTOMER = 'itemList/QUOTELISTSELECTCUSTOMER'
 
+export const ON_DIALOG_OPEN  = 'dialog/ON_DIALOG_OPEN'
+
 export const search = searchKeyword => ({type: SEARCHKEYWORD, searchKeyword});
 export const setSearchingNow = (ox) => ({type: SETSEARCHINGNOW, ox})
 
@@ -27,6 +29,8 @@ export const inputItemAction = (pickedItem) => ({type: PICKITEM, pickedItem});
 export const delItemAction = (pickedItemNo) => ({type : DELITEM, pickedItemNo})
 export const changePRate = (index, rate) => ({type : CHANGEPRATE, index, rate})
 export const totalValue = () => ({type : TOTAL_VALUE})
+
+export const onDialogOpen = (ox) => ({type: ON_DIALOG_OPEN, ox})
 
 export function fetchAction() {
     return function(callback) {

@@ -5,26 +5,17 @@ import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Slide from "@material-ui/core/Slide";
-import FindVnBuyer from './clients/vnBuyer'
-// Create styles
-
-
-
-const styles = StyleSheet.create({
-  page: { padding: 20 },
-  title: { marginTop: "3%" },
-  emphasis: { fontFamily: 'Helvetica-Bold', color: '#F22300' },
-  breakable: { width: '100%', height: 800, backgroundColor: 'tomato' },
-});
-
+import Table from '@material-ui/core/Table'; //material-ui의 Table ui를 불러와서 프론트엔드에 쓰이는 모든 테이블 스타일을 이 스타일로 함.
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog( { pdfBlobUrl, dispatch, CustomersfetchAction, clients, QuoteListCustomerSelectAction}) {
-  const [open, setOpen] = React.useState(false);
-
+export default function FullScreenDialog( {mode, data, selection, searchObject, open, setOpen}) {
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -34,15 +25,24 @@ export default function FullScreenDialog( { pdfBlobUrl, dispatch, Customersfetch
   };
 
   async function showBBConsole() {
-    await CustomersfetchAction()
+    await mode()
     await handleClickOpen()
   }
 
-  // CustomersfetchAction()
+
+  const tableHeadValues = Object.keys(data[0])
+  const showData = () => {
+  }
+  
+  const handleValueSubmit = (e) => {
+    e.preventDefault()
+    selection(e.target.code.value)
+  }
+
   return (
     <div>
       <Button variant="outlined" color="primary" onClick={showBBConsole}>
-        Find
+        Find {searchObject}
       </Button>
       <Dialog
         TransitionComponent={Transition}
@@ -50,18 +50,41 @@ export default function FullScreenDialog( { pdfBlobUrl, dispatch, Customersfetch
         fullWidth={true}
         scroll={'paper'}
         open={open}
-        onClose={handleClose}
-      >
-
-        asdflkjasdf
-        <FindVnBuyer CustomersfetchAction = {CustomersfetchAction} clients = {clients} QuoteListCustomerSelectAction = {QuoteListCustomerSelectAction}></FindVnBuyer>
+        onClose={handleClose}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              {tableHeadValues.map(tableHeadValues => (
+                <TableCell>
+                  {tableHeadValues}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map(data => (
+              <TableRow>
+                {Object.values(data).map(values => (
+                  <TableCell>
+                    {values}
+                  </TableCell>
+                ))}
+                  <TableCell>                       
+                    <form onSubmit = {handleValueSubmit} method ="post">
+                        <input type="hidden" name="code" value={data.code}></input>
+                        <button>삽입</button>
+                    </form>
+                  </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
 
         <IconButton
           edge="start"
           color="inherit"
           onClick={handleClose}
-          aria-label="close"
-        >
+          aria-label="close">
           <CloseIcon />
         </IconButton>
       </Dialog>
