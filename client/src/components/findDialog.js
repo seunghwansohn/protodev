@@ -1,5 +1,4 @@
 import React from 'react';
-import { Document, Page, Text, StyleSheet } from '@react-pdf/renderer';
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
@@ -31,8 +30,6 @@ export default function FullScreenDialog( {mode, data, selection, searchObject, 
 
 
   const tableHeadValues = Object.keys(data[0])
-  const showData = () => {
-  }
   
   const handleValueSubmit = (e) => {
     e.preventDefault()

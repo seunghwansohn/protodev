@@ -1,5 +1,5 @@
 import React from 'react';
-import { Document, Page, Text, StyleSheet } from '@react-pdf/renderer';
+import { StyleSheet } from '@react-pdf/renderer';
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import IconButton from "@material-ui/core/IconButton";
@@ -21,19 +21,11 @@ export const downloadPdfDoc = (contents) => {
 
 
 
-const styles = StyleSheet.create({
-  page: { padding: 20 },
-  title: { marginTop: "3%" },
-  emphasis: { fontFamily: 'Helvetica-Bold', color: '#F22300' },
-  breakable: { width: '100%', height: 800, backgroundColor: 'tomato' },
-});
-
-
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog( { pdfBlobUrl, dispatch, pickedItem, subTotalValue }) {
+export default function FullScreenDialog( { pdfBlobUrl, inputPdfBlobUrl, pickedItem, subTotalValue }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -205,7 +197,7 @@ export default function FullScreenDialog( { pdfBlobUrl, dispatch, pickedItem, su
     // Get PDF blob and open in new window
     pdfDocGenerator.getBlob((blob) => {
         let blobURL = URL.createObjectURL(blob);
-          dispatch(blobURL)
+        inputPdfBlobUrl(blobURL)
     })
   }
   async function showBBConsole() {

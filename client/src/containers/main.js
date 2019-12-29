@@ -12,20 +12,21 @@ import * as actionCreators from '../store/actions/actions';
 const ItemListContainer = (
     {
         searchKeyword,
+        pickedItem,
+        pickedCount,
+        clients,
+        quoteList,
         fetchAction,
         inputPdfBlobUrl,
         pdfWorks,
         search,
         itemList,
         inputItem,
-        pickedItem,
-        pickedCount,
         qtySubmit,
         searchingNow,
         setSearchingNow,
         CustomersfetchAction,
-        clients,
-        quoteList,
+
         QuoteListCustomerSelectAction,
         alreadyPickedCheck,
         delItemAction,
@@ -49,18 +50,12 @@ const ItemListContainer = (
                     fetchAction = {fetchAction}>
                 </SearchAppBar>
                 <ItemListComponent 
-                    code = {searchKeyword} 
-                    dispatch = {dispatch} 
+                    searchKeyword = {searchKeyword} 
                     itemList = {itemList} 
-                    inputItem = {inputItem} 
-                    useStateLog = {loG} 
                     onLoadApi = {fetchAction} 
-                    items = {items}
                     searchingNow = {searchingNow}
                     setSearchingNow = {setSearchingNow}
-                    CustomersfetchAction = {CustomersfetchAction}
                     alreadyPickedCheck = {alreadyPickedCheck}
-                    
                 >
                 </ItemListComponent>
                 <QuoteListComponent 
@@ -68,7 +63,7 @@ const ItemListContainer = (
                     qtySubmit = {qtySubmit} 
                     pickedCount = {pickedCount} 
                     pickedItem = {pickedItem} 
-                    dispatch = {inputPdfBlobUrl} 
+                    inputPdfBlobUrl = {inputPdfBlobUrl} 
                     inputItem = {inputItem}
                     CustomersfetchAction = {CustomersfetchAction}
                     clients = {clients}
@@ -95,7 +90,7 @@ const mapStateToProps = state => (
     pickedItem : state.quoteList.pickedItem,
     pickedCount : state.itemList.pickedCount,
     pdfWorks: state.itemList.pdfWorks,
-    searchingNow : state.itemList.searchingNow,
+    searchingNow : state.mainSchBar.searchingNow,
     clients : state.quoteList.clients,
     quoteList : state.itemList.quoteList,
     quoteTotalValues : state.quoteList.quoteTotalValues,

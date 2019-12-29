@@ -24,7 +24,6 @@ function reducer (state = initialState, action) {
         case actionTypes.INPUTQTY:
           let no = action.index
           return produce(state, draft => {
-            const rate = (draft.pickedItem[no].priceRate * 0.01) + 1
             draft.pickedItem[no].qty = action.inputQty
             draft.pickedItem[no].price = action.inputQty * draft.pickedItem[no].fixedPrice
           })

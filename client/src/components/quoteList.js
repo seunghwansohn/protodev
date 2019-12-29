@@ -33,7 +33,7 @@ const QuoteListComponent = (
         pickedItem, 
         pickedCount,
         qtySubmit, 
-        dispatch, 
+        inputPdfBlobUrl, 
         CustomersfetchAction, 
         clients, 
         QuoteListCustomerSelectAction, 
@@ -47,13 +47,6 @@ const QuoteListComponent = (
         onDialogOpen
     }) => {
     let inputQty = ''
-    const handleValueSubmit = (e) => {
-        e.preventDefault();
-        const idQtyObject = {}
-        idQtyObject.no = Number(e.target.no.value)
-        idQtyObject.qty = Number(e.target.quantity.value)
-        qtySubmit(idQtyObject)
-    }
     const hadleValueChange = (index, e) => {
         e.preventDefault();
         inputQty = Number(e.target.value)
@@ -117,19 +110,14 @@ const QuoteListComponent = (
         // Get PDF blob and open in new window
        pdfDocGenerator.getBlob((blob) => {
           let blobURL = URL.createObjectURL(blob);
-            dispatch(blobURL)
+          inputPdfBlobUrl(blobURL)
         })
     }
 
-    let willSubmitCustomersName = ''
     const test = e => {
         e.preventDefault()
     }
-    const FindCustomersHandleValueChange = e => {
-        e.preventDefault()
-        willSubmitCustomersName = e.target.value
-    }
-    
+
     const subTotal = () => {
         if(pickedItem[0] !== undefined) {
             let totalValues = {}
@@ -160,7 +148,6 @@ const QuoteListComponent = (
             await onDialogOpen(true)
         }
       }
-    console.log(findDialogsOpen)
     return(
         <div>
             <Table>
@@ -173,7 +160,7 @@ const QuoteListComponent = (
                             <Viewer 
                                 pdfBlobUrl = {pdfBlobUrl} 
                                 previewDocument = {previewDocument} 
-                                dispatch = {dispatch}
+                                inputPdfBlobUrl = {inputPdfBlobUrl}
                                 pickedItem = {pickedItem}
                                 subTotalValue = {subTotalValue}
                             />

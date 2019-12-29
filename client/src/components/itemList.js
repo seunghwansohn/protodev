@@ -1,24 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types';
-import clsx from 'clsx';
 import Table from '@material-ui/core/Table'; //material-ui의 Table ui를 불러와서 프론트엔드에 쓰이는 모든 테이블 스타일을 이 스타일로 함.
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
-import { makeStyles, useTheme, lighten } from '@material-ui/core/styles';
+import { makeStyles, lighten } from '@material-ui/core/styles';
 import TableContainer from '@material-ui/core/TableContainer';
 import TablePagination from '@material-ui/core/TablePagination';
-import IconButton from '@material-ui/core/IconButton';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
-import Checkbox from '@material-ui/core/Checkbox';
-import Tooltip from '@material-ui/core/Tooltip';
-import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
-
+import searchObjectArray from '../functions/search'
 
 //pagenation 지원하는 material-ui 테이블에 필요한 기본요소들
 function desc(a, b, orderBy) {
@@ -53,11 +45,6 @@ const headCells = [
 //-------------------------------
 //pagenation 지원하는 material-ui 테이블의 head부분 콤포넌트
 function EnhancedTableHead(props) {
-  const { classes, onSelectAllClick, rowCount, onRequestSort } = props;
-  const createSortHandler = property => event => {
-    onRequestSort(event, property);
-  };
-
   return (
     <TableHead>
       <TableRow>
@@ -130,7 +117,7 @@ const useStyles = makeStyles(theme => ({
 //pagenation 지원하는 material-ui 테이블의 주 콤포넌트. 기본 export됨.
 export default function EnhancedTable(
   {
-    code,
+    searchKeyword,
     itemList,
     alreadyPickedCheck,
     searchingNow,
@@ -149,6 +136,8 @@ export default function EnhancedTable(
 
   //검색창(appBar.js)에서 검색어 넣고 엔터치면 searchingNow라는 state를 true로 바꿔줌
   //그때 페이지를 0으로 자동으로 넘겨주는 역할을 함.
+  
+  console.log(searchingNow)
   if (searchingNow === true) {
     async function setPageAndReset() {
       await console.log('a')
@@ -156,6 +145,7 @@ export default function EnhancedTable(
       await setSearchingNow(false)
     }
     setPageAndReset()
+    console.log(searchingNow)
   }
   //------------------------------------
 
@@ -194,57 +184,12 @@ export default function EnhancedTable(
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
   //---------------------------------
 
-  //공백 넣어 띄워쓴 검색어 모두가 존재하는 것만 반환하도록 필터링하여 객체를 가공하는
-  //내가 만든 함수
-  var result = [];
-  const itemListFilteredMap = () => {
-          var matchedid = [];
-          itemList.map (function(num) {
-            var values = Object.values(num);
-            var joinedString = values.join(',');
-            joinedString = joinedString.toLowerCase() //리스트 문자열 합친걸 모두 소문자화
-            code = code.toLowerCase() //검색어를 모두 소문자화
-            code = code.replace(/\s*$/,''); //마지막 공백을 모두 제거
-            // var spaceCount = (code.split(" ").length - 1); //중간에 들어간 공백의 숫자
-            let codeArray = code.split(' ')
-            let matchedTrue = ''
-            for(let i=0, k = 0; i < codeArray.length; i++) {
-              var trueSearched = joinedString.indexOf(codeArray[i]) > - 1;
-              if (trueSearched === true) {
-                k = k + 1
-              }
-              if (k === codeArray.length) {matchedTrue = true} //공백으로 나눠진 단어 모두가 검색되는지를 true여부로 반환
-              else {matchedTrue = false} 
-            }
-            if (matchedTrue === true) {
-              matchedid.push(num.id);   //matchedid라는 미리 선언된 배열변수에, 검색어를 포함한 아이템들의 id값만 담음.
-              }
-          })
-          var returnWords = function(){
-              var matchedData = [];
-              var findDataId = '';
-                  for (var i=0; i < matchedid.length; i++){
-                    findDataId = matchedid[i];
-                    function searchMatchedData(id, itemList) {
-                      for (var i = 0; i < itemList.length; i++) {
-                        if (itemList[i].id === id)  {
-                          return itemList[i];
-                        }
-                      }
-                    }
-                    result.push(searchMatchedData(findDataId, itemList))
-         
-                    matchedData.push(itemList[matchedid[i]])
-                  }
-              return result;
-            }
-            return returnWords();
-  }
+  
   const alreadyCheck = (c) => {
         alreadyPickedCheck(c)
   }
 
-  const filteredItemArray = itemListFilteredMap()
+  const filteredItemArray = searchObjectArray(searchKeyword, itemList)
   //-----------------------------------------
   
   const onPageZero = () => {
@@ -270,7 +215,6 @@ export default function EnhancedTable(
               {itemList[0] !== undefined ? stableSort(filteredItemArray, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((filteredItemArray, index) => {
-                  const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
