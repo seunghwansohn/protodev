@@ -63,7 +63,7 @@ const useStyles = makeStyles(theme => ({
 
 
 const SearchAppBar = 
-    ({searchKeyword,onSearch,fetchAction}) => {
+    ({searchKeyword,onSearch,onFetchItem}) => {
   const classes = useStyles();
 
   const handleKeyPress = (e) => {
@@ -71,7 +71,7 @@ const SearchAppBar =
       searchKeyword = e.target.value
       e.preventDefault();
       onSearch(searchKeyword)
-      fetchAction()
+      onFetchItem()
     }
   }
   return (

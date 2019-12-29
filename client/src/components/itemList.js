@@ -117,11 +117,9 @@ const useStyles = makeStyles(theme => ({
 //pagenation 지원하는 material-ui 테이블의 주 콤포넌트. 기본 export됨.
 export default function EnhancedTable(
   {
-    searchKeyword,
-    itemList,
-    alreadyPickedCheck,
-    searchingNow,
-    setSearchingNow
+    itemListArr,
+    onAlreadyPickedCheck,
+    searchProps
   }) 
   
   {
@@ -137,19 +135,17 @@ export default function EnhancedTable(
   //검색창(appBar.js)에서 검색어 넣고 엔터치면 searchingNow라는 state를 true로 바꿔줌
   //그때 페이지를 0으로 자동으로 넘겨주는 역할을 함.
   
-  console.log(searchingNow)
-  if (searchingNow === true) {
+  if (searchProps.searchingNow === true) {
     async function setPageAndReset() {
       await console.log('a')
       await setPage(0)
-      await setSearchingNow(false)
+      await searchProps.onSetSearchingNow(false)
     }
     setPageAndReset()
-    console.log(searchingNow)
   }
   //------------------------------------
 
-  const rows = itemList  //row에다가 api에서 받아온 itemList 객체를 넣어줌.
+  const rows = itemListArr  //row에다가 api에서 받아온 itemList 객체를 넣어줌.
 
 
   //굳이 건드릴 필요없는 pagenation-material-ui 이벤트 함수들.
@@ -186,10 +182,10 @@ export default function EnhancedTable(
 
   
   const alreadyCheck = (c) => {
-        alreadyPickedCheck(c)
+        onAlreadyPickedCheck(c)
   }
 
-  const filteredItemArray = searchObjectArray(searchKeyword, itemList)
+  const filteredItemArray = searchObjectArray(searchProps.searchKeyword, itemListArr)
   //-----------------------------------------
   
   const onPageZero = () => {
@@ -212,7 +208,7 @@ export default function EnhancedTable(
               rowCount={rows.length}
             />
             <TableBody>
-              {itemList[0] !== undefined ? stableSort(filteredItemArray, getSorting(order, orderBy))
+              {itemListArr[0] !== undefined ? stableSort(filteredItemArray, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((filteredItemArray, index) => {
 

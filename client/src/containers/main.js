@@ -9,73 +9,49 @@ import * as actionCreators from '../store/actions/actions';
 
 
 
-const ItemListContainer = (
-    {
-        searchKeyword,
-        pickedItem,
-        pickedCount,
-        clients,
-        quoteList,
-        fetchAction,
-        inputPdfBlobUrl,
-        pdfWorks,
-        search,
-        itemList,
-        inputItem,
-        qtySubmit,
-        searchingNow,
-        setSearchingNow,
-        CustomersfetchAction,
-
-        QuoteListCustomerSelectAction,
-        alreadyPickedCheck,
-        delItemAction,
-        changePRate,
-        quoteTotalValues,
-        totalValue,
-        selectedCustomer,
-        findDialogsOpen,
-        onDialogOpen
-    }
-    ) => 
-    
+const ItemListContainer = (props) => 
     {
         const loG = useSelector(state => state.itemList.pickedItem)
-        const items = useSelector(state => state.itemList.itemList)
+        const items = useSelector(state => state.itemList.ItemList)
         const dispatch = useDispatch();
+
+        const searchProps = {
+            searchKeyword : props.searchKeyword,
+            searchingNow : props.searchingNow,
+            onSetSearchingNow : props.onSetSearchingNow
+        }
+        
         return(
             <div>
                 <SearchAppBar 
-                    onSearch = {search}
-                    fetchAction = {fetchAction}>
+                    onSearch = {props.onSearch}
+                    onFetchItem = {props.onFetchItem}>
                 </SearchAppBar>
                 <ItemListComponent 
-                    searchKeyword = {searchKeyword} 
-                    itemList = {itemList} 
-                    onLoadApi = {fetchAction} 
-                    searchingNow = {searchingNow}
-                    setSearchingNow = {setSearchingNow}
-                    alreadyPickedCheck = {alreadyPickedCheck}
+                    itemListArr = {props.itemListArr}
+                    searchProps = {searchProps}
+                    onAlreadyPickedCheck = {props.onAlreadyPickedCheck}
                 >
                 </ItemListComponent>
                 <QuoteListComponent 
-                    pdfBlobUrl = {pdfWorks.pdfBlobUrl} 
-                    qtySubmit = {qtySubmit} 
-                    pickedCount = {pickedCount} 
-                    pickedItem = {pickedItem} 
-                    inputPdfBlobUrl = {inputPdfBlobUrl} 
-                    inputItem = {inputItem}
-                    CustomersfetchAction = {CustomersfetchAction}
-                    clients = {clients}
-                    quoteList = {quoteList}
-                    QuoteListCustomerSelectAction = {QuoteListCustomerSelectAction}
-                    onDelItem = {delItemAction}
-                    onChangePRate = {changePRate}
-                    quoteTotalValues = {quoteTotalValues}
-                    onTotalValue = {totalValue}
-                    selectedCustomer = {selectedCustomer}
-                    findDialogsOpen = {findDialogsOpen}
-                    onDialogOpen = {onDialogOpen}
+                    pdfBlobUrl = {props.pdfWorks.pdfBlobUrl} 
+                    pickedItem = {props.pickedItem} 
+                    inputItem = {props.inputItem}
+                    CustomersfetchAction = {props.CustomersfetchAction}
+                    clients = {props.clients}
+                    quoteList = {props.quoteList}
+                    QuoteListCustomerSelectAction = {props.QuoteListCustomerSelectAction}
+
+                    quoteTotalValues = {props.quoteTotalValues}
+                    selectedCustomer = {props.selectedCustomer}
+                    findDialogsOpen = {props.findDialogsOpen}
+
+                    onDialogOpen = {props.onDialogOpen}
+                    onQtySubmit = {props.onQtySubmit}
+                    onInputPdfBlobUrl = {props.onInputPdfBlobUrl} 
+                    onDelItem = {props.delItemAction}
+                    onChangePRate = {props.changePRate}
+                    onTotalValue = {props.totalValue}
                     
                 >
                 </QuoteListComponent>
@@ -85,30 +61,33 @@ const ItemListContainer = (
 
 const mapStateToProps = state => (
     { //state를 파라미터로 받아옴. 
-    searchKeyword : state.mainSchBar.searchKeyword,
-    itemList : state.itemList.itemList,
-    pickedItem : state.quoteList.pickedItem,
+    searchKeyword   : state.mainSchBar.searchKeyword,
+    searchingNow    : state.mainSchBar.searchingNow,
+
+    itemListArr : state.itemList.itemListArr,
     pickedCount : state.itemList.pickedCount,
-    pdfWorks: state.itemList.pdfWorks,
-    searchingNow : state.mainSchBar.searchingNow,
-    clients : state.quoteList.clients,
-    quoteList : state.itemList.quoteList,
-    quoteTotalValues : state.quoteList.quoteTotalValues,
-    selectedCustomer : state.quoteList.SelectedCustomerCode,
+    quoteList   : state.itemList.quoteList,
+    pdfWorks    : state.itemList.pdfWorks,
+
+    clients             : state.quoteList.clients,
+    pickedItem          : state.quoteList.pickedItem,
+    quoteTotalValues    : state.quoteList.quoteTotalValues,
+    selectedCustomer    : state.quoteList.SelectedCustomerCode,
+
     findDialogsOpen : state.dialogs.findDialogsOpen
     //인자로 넘겨진 state 객체 아래 module에서 default로 내보내진 함수 객체 아래 initial state로 규정됨 searchKeyword를 받아서 mapStateToProps로 넘기면 됨.
 })
 const mapDispatchToProps = dispatch => {
     return {
-        search : (searchKeyword) => dispatch(actionCreators.search(searchKeyword)),
-        fetchAction : () => dispatch(actionCreators.fetchAction()),
+        onSearch : (searchKeyword) => dispatch(actionCreators.onSearch(searchKeyword)),
+        onFetchItem : () => dispatch(actionCreators.onFetchItem()),
         inputItem :(selectedItem) => dispatch(actionCreators.inputItemAction(selectedItem)),
-        qtySubmit : (index, inputQty) => dispatch(actionCreators.inputQtyAction(index, inputQty)),
-        inputPdfBlobUrl : (blob) => dispatch(actionCreators.inputPdfBlobUrl(blob)),
-        setSearchingNow : (blob) => dispatch(actionCreators.setSearchingNow(blob)),
+        onQtySubmit : (index, inputQty) => dispatch(actionCreators.inputQtyAction(index, inputQty)),
+        onInputPdfBlobUrl : (blob) => dispatch(actionCreators.onInputPdfBlobUrl(blob)),
+        onSetSearchingNow : (ox) => dispatch(actionCreators.onSetSearchingNow(ox)),
         CustomersfetchAction : () => dispatch(actionCreators.CustomersfetchAction()),
         QuoteListCustomerSelectAction : (selectedCustomer) => dispatch(actionCreators.QuoteListCustomerSelectAction(selectedCustomer)),
-        alreadyPickedCheck : (c) => dispatch(actionCreators.alreadyPickedCheck(c)),
+        onAlreadyPickedCheck : (c) => dispatch(actionCreators.onAlreadyPickedCheck(c)),
         delItemAction :(pickedItemNo) => dispatch(actionCreators.delItemAction(pickedItemNo)),
         changePRate :(index, rate) => dispatch(actionCreators.changePRate(index, rate)),
         totalValue : () => dispatch(actionCreators.totalValue()),

@@ -2,7 +2,7 @@ import produce from 'immer'
 import * as actionTypes from '../actions/actions';
 
 const initialState = {
-    itemList: [],
+    itemListArr: [],
     pickedCount: 0,
     pdfWorks : 
       {
@@ -17,10 +17,10 @@ function reducer (state = initialState, action) {
   switch (action.type) {
       case actionTypes.APILOAD:
         return produce(state, draft =>{
-          draft.itemList = action.itemList
+          draft.itemListArr = action.itemListArr
         })
 
-      case actionTypes.INPUTPDFBLOBURL:
+      case actionTypes.ON_INPUT_PDF_BLOB_URL:
         return produce(state, draft => {
           draft.pdfWorks.pdfBlobUrl = action.blobUrl
         })  

@@ -31,9 +31,8 @@ const QuoteListComponent = (
     {
         pdfBlobUrl, 
         pickedItem, 
-        pickedCount,
-        qtySubmit, 
-        inputPdfBlobUrl, 
+        onQtySubmit, 
+        onInputPdfBlobUrl, 
         CustomersfetchAction, 
         clients, 
         QuoteListCustomerSelectAction, 
@@ -50,7 +49,7 @@ const QuoteListComponent = (
     const hadleValueChange = (index, e) => {
         e.preventDefault();
         inputQty = Number(e.target.value)
-        qtySubmit(index, inputQty)
+        onQtySubmit(index, inputQty)
     }
     const handleDeleteValueSubmit = (e) => {
         e.preventDefault();
@@ -110,7 +109,7 @@ const QuoteListComponent = (
         // Get PDF blob and open in new window
        pdfDocGenerator.getBlob((blob) => {
           let blobURL = URL.createObjectURL(blob);
-          inputPdfBlobUrl(blobURL)
+          onInputPdfBlobUrl(blobURL)
         })
     }
 
@@ -160,7 +159,7 @@ const QuoteListComponent = (
                             <Viewer 
                                 pdfBlobUrl = {pdfBlobUrl} 
                                 previewDocument = {previewDocument} 
-                                inputPdfBlobUrl = {inputPdfBlobUrl}
+                                onInputPdfBlobUrl = {onInputPdfBlobUrl}
                                 pickedItem = {pickedItem}
                                 subTotalValue = {subTotalValue}
                             />
@@ -186,21 +185,12 @@ const QuoteListComponent = (
                                 setOpen = {onDialogOpen}
                             />
                         </TableCell>
-    
                     </TableRow>
                 </TableBody>
             </Table>
             {selectedCustomer}
-            <br></br>
             <button onClick = {consoleLogTemp}>변수확인</button>
             <button onClick = {pdfOpen}>pdf 새창열기</button>            <br></br>
-            <Table>
-            <TableRow>
-               <TableCell> Number of picked items : {pickedCount}</TableCell>
-            </TableRow>
-            </Table>
-            <br></br>
-            
             <Table>
                 <TableHead>
                     <TableRow>

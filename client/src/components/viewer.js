@@ -25,7 +25,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog( { pdfBlobUrl, inputPdfBlobUrl, pickedItem, subTotalValue }) {
+export default function FullScreenDialog( { pdfBlobUrl, onInputPdfBlobUrl, pickedItem, subTotalValue }) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -197,7 +197,7 @@ export default function FullScreenDialog( { pdfBlobUrl, inputPdfBlobUrl, pickedI
     // Get PDF blob and open in new window
     pdfDocGenerator.getBlob((blob) => {
         let blobURL = URL.createObjectURL(blob);
-        inputPdfBlobUrl(blobURL)
+        onInputPdfBlobUrl(blobURL)
     })
   }
   async function showBBConsole() {

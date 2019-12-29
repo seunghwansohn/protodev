@@ -51,7 +51,7 @@ function reducer (state = initialState, action) {
             } else if (checkIf) {
               console.log('이미 값이 있음')
             }
-        case actionTypes.INPUTPDFBLOBURL:
+        case actionTypes.onInputPdfBlobUrl:
           return produce(state, draft => {
             draft.pdfWorks.pdfBlobUrl = action.blobUrl
           })  
