@@ -203,10 +203,10 @@ export default function EnhancedTable(
             size={dense ? 'small' : 'small'}
             aria-label="enhanced table"
           >
-            <EnhancedTableHead
+            {/* <EnhancedTableHead
               classes={classes}
               rowCount={rows.length}
-            />
+            /> */}
             <TableBody>
               {itemListArr[0] !== undefined ? stableSort(filteredItemArray, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
