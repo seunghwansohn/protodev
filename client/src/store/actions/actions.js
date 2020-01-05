@@ -21,13 +21,12 @@ export const onSetSearchingNow = (ox) => ({type: SETSEARCHINGNOW, ox})
 export const itemListFetchAction = (itemListArr) => ({type: APILOAD, itemListArr});
 export const onAlreadyPickedCheck = (pickedItem) => ({type: PICKITEM, pickedItem})
 
-export const CustomersAction = (VNCustomersList) => ({type: FETCHVNCUSTOMERS, VNCustomersList});
-export const QuoteListCustomerSelectAction = (SelectedCustomerCode) => ({type: QUOTELISTSELECTCUSTOMER, SelectedCustomerCode});
+export const onFetchClientAct = (VNCustomersList) => ({type: FETCHVNCUSTOMERS, VNCustomersList});
+export const onCustomerSelect = (SelectedCustomerCode) => ({type: QUOTELISTSELECTCUSTOMER, SelectedCustomerCode});
 export const inputQtyAction = (index, inputQty) => ({type: INPUTQTY, index, inputQty})
 export const onInputPdfBlobUrl = (blobUrl) => ({type: ON_INPUT_PDF_BLOB_URL, blobUrl})
-export const inputItemAction = (pickedItem) => ({type: PICKITEM, pickedItem});
-export const delItemAction = (pickedItemNo) => ({type : DELITEM, pickedItemNo})
-export const changePRate = (index, rate) => ({type : CHANGEPRATE, index, rate})
+export const onDelPickedItem = (pickedItemNo) => ({type : DELITEM, pickedItemNo})
+export const onChangePRate = (index, rate) => ({type : CHANGEPRATE, index, rate})
 export const totalValue = () => ({type : TOTAL_VALUE})
 
 export const onDialogOpen = (ox) => ({type: ON_DIALOG_OPEN, ox})
@@ -40,11 +39,11 @@ export function onFetchItem() {
       });
     };
 }
-export function CustomersfetchAction() {
+export function onFetchClient() {
     return function(callback) {
         return axios.get("/api/VNCustomers")
         .then(({ data }) => {
-            callback(CustomersAction(data))
+            callback(onFetchClientAct(data))
         });
     };
 }

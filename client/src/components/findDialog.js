@@ -14,7 +14,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function FullScreenDialog( {mode, data, selection, searchObject, open, setOpen}) {
+export default function FullScreenDialog( {onFetchClient, data, onCustomerSelect, searchObject, open, setOpen}) {
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -23,8 +23,8 @@ export default function FullScreenDialog( {mode, data, selection, searchObject, 
     setOpen(false);
   };
 
-  async function showBBConsole() {
-    await mode()
+  async function onFind() {
+    await onFetchClient()
     await handleClickOpen()
   }
 
@@ -33,12 +33,12 @@ export default function FullScreenDialog( {mode, data, selection, searchObject, 
   
   const handleValueSubmit = (e) => {
     e.preventDefault()
-    selection(e.target.code.value)
+    onCustomerSelect(e.target.code.value)
   }
 
   return (
     <div>
-      <Button variant="outlined" color="primary" onClick={showBBConsole}>
+      <Button variant="outlined" color="primary" onClick={onFind}>
         Find {searchObject}
       </Button>
       <Dialog
