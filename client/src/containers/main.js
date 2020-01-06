@@ -3,10 +3,18 @@ import React from 'react'
 import SearchAppBar from '../components/appBar'
 import ItemListComponent from '../components/itemList'
 import QuoteListComponent from '../components/quoteList'
+import NewItem from '../components/newItem'
+
 
 import { connect, useSelector, useDispatch } from 'react-redux';
 import * as actionCreators from '../store/actions/actions';
 
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+  } from "react-router-dom";
 
 
 const ItemListContainer = (props) => 
@@ -26,8 +34,27 @@ const ItemListContainer = (props) =>
             onInputPdfBlobUrl   : props.onInputPdfBlobUrl
         }
         
+
         return(
+  
             <div>
+                <Router>
+                <div>
+                    <ul>
+                        <li>
+                            <Link to = "/">Home</Link>
+                        </li>
+                        <li>
+                            <Link to="/about">About</Link>
+                        </li>
+                    </ul>
+                    <Switch>
+                        <Route path = "/about">
+                            <NewItem></NewItem>
+                        </Route>
+                    </Switch>
+                </div>
+                </Router>
                 <SearchAppBar 
                     onSearch    = {props.onSearch}
                     onFetchItem = {props.onFetchItem}>
