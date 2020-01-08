@@ -4,6 +4,7 @@ import SearchAppBar from '../components/appBar'
 import ItemListComponent from '../components/itemList'
 import QuoteListComponent from '../components/quoteList'
 import NewItem from '../components/newItem'
+import LoginPage from '../components/login'
 
 
 import { connect, useSelector, useDispatch } from 'react-redux';
@@ -47,10 +48,16 @@ const ItemListContainer = (props) =>
                         <li>
                             <Link to="/about">About</Link>
                         </li>
+                        <li>
+                            <Link to="/login">Login</Link>
+                        </li>
                     </ul>
                     <Switch>
                         <Route path = "/about">
                             <NewItem></NewItem>
+                        </Route>
+                        <Route path = "/login">
+                            <LoginPage></LoginPage>
                         </Route>
                     </Switch>
                 </div>
