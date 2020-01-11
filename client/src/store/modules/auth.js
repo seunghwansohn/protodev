@@ -1,10 +1,18 @@
-import { createAction, handleActions } from 'redux-actions';
+// import { createAction, handleActions } from 'redux-actions';
+// import produce from 'immer';
+// import { takeLatest } from 'redux-saga/effects';
+// import createRequestSaga, {
+//   createRequestActionTypes
+// } from '../lib/createRequestSaga';
 import produce from 'immer';
-import { takeLatest } from 'redux-saga/effects';
+
+import { createAction, handleActions } from 'redux-actions';
+import { takeLatest, call } from 'redux-saga/effects';
+import * as authAPI from '../../lib/api/auth';
 import createRequestSaga, {
-  createRequestActionTypes
-} from '../lib/createRequestSaga';
-import * as authAPI from '../lib/api/auth';
+  createRequestActionTypes,
+} from '../../lib/createRequestSaga';
+
 
 const CHANGE_FIELD = 'auth/CHANGE_FIELD';
 const INITIALIZE_FORM = 'auth/INITIALIZE_FORM';
@@ -38,6 +46,7 @@ export const login = createAction(LOGIN, ({ username, password }) => ({
 // saga 생성
 const registerSaga = createRequestSaga(REGISTER, authAPI.register);
 const loginSaga = createRequestSaga(LOGIN, authAPI.login);
+
 export function* authSaga() {
   yield takeLatest(REGISTER, registerSaga);
   yield takeLatest(LOGIN, loginSaga);

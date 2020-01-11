@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { changeField, initializeForm, login } from '../modules/auth';
+import { changeField, initializeForm, login } from '../store/modules/auth';
 import AuthForm from '../components/auth/AuthForm';
-import { check } from '../modules/user';
+import { check } from '../store/modules/user';
 
-const LoginForm = ({ history }) => {
+const LoginForm = () => { //여기서 history는 react-router요소.
+//https://reacttraining.com/react-router/web/api/history  여기참조
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const { form, auth, authError, user } = useSelector(({ auth, user }) => (
-    console.log(auth),
+    // console.log(auth),
     {
     form: auth.login,
     auth: auth.auth,
@@ -32,6 +33,7 @@ const LoginForm = ({ history }) => {
   const onSubmit = e => {
     e.preventDefault();
     const { username, password } = form;
+    console.log(username, password)
     dispatch(login({ username, password }));
   };
 
@@ -55,16 +57,16 @@ const LoginForm = ({ history }) => {
 
   useEffect(() => {
     if (user) {
-      history.push('/');
       try {
         localStorage.setItem('user', JSON.stringify(user));
       } catch (e) {
         console.log('localStorage is not working');
       }
     }
-  }, [history, user]);
+  }, [user]);
 
   return (
+    <div> 
     <AuthForm
       type="login"
       form={form}
@@ -72,6 +74,7 @@ const LoginForm = ({ history }) => {
       onSubmit={onSubmit}
       error={error}
     />
+    </div>
   );
 };
 

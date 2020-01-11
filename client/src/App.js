@@ -2,6 +2,7 @@ import React from 'react';
 import ItemListContainer from './containers/main'
 import MainHeader from './containers/common/MainHeader'
 import LoginPages from './pages/loginPages'
+import RegisterPage from './pages/RegisterPage';
 import About from './containers/About'
 import {
   BrowserRouter as Router,
@@ -26,14 +27,17 @@ function App() {
                   <Route path = "/" exact>
                       <ItemListContainer></ItemListContainer>
                   </Route>
-                  <Route path = "/login">
+                  <Route path = "/login" >
                       <LoginPages></LoginPages>
                   </Route>
+                  <Route path = "/register" >
+                      <RegisterPage></RegisterPage>
+                  </Route>
+                  
               </Switch>
           </div>
           </Router>
       
-      {/* <Route component = {LoginPages} path = '/login'/>  */}
     </div>
   );
 }

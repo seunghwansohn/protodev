@@ -1,13 +1,6 @@
 import Joi from 'joi';
-// import User from '../../models/user';
+import User from '../../models/user';
 
-// /*
-//   POST /api/auth/register
-//   {
-//     username: 'velopert',
-//     password: 'mypass123'
-//   }
-// */
 export const register = async ctx => {
   // Request Body 검증하기
   const schema = Joi.object().keys({
@@ -52,24 +45,16 @@ export const register = async ctx => {
   }
 };
 
-/*
-  POST /api/auth/login
-  {
-    username: 'velopert',
-    password: 'mypass123'
-  }
-*/
+
+
 export const login = async ctx => {
   const { username, password } = ctx.request.body;
-
   // username, password 가 없으면 에러 처리
   if (!username || !password) {
     ctx.status = 401; // Unauthorized
     return;
   }
-
   try {
-    console.log(username)
     const user = await User.findByUsername(username);
     // 계정이 존재하지 않으면 에러 처리
     if (!user) {
@@ -78,27 +63,21 @@ export const login = async ctx => {
     }
     const valid = await user.checkPassword(password);
     // 로그인시에는 입력된 번호와 bycrypt로 hash된 암호를 비교하여 검증
-    console.log(password)
     if (!valid) {
       ctx.status = 401;
       return;
     }
     ctx.body = user.serialize();
-    console.log(ctx.body)
-    // const token = user.generateToken();
-    // ctx.cookies.set('access_token', token, {
-    //   maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
-    //   httpOnly: true,
-    // });
   } catch (e) {
     ctx.throw(500, e);
   }
 };
 
-/*
-  GET /api/auth/check
-*/
+
+
 export const check = async ctx => {
+  console.log('씨티엑스스테이트' , ctx.state)
+  console.log('씨티엑스' , ctx)
   const { user } = ctx.state;
   if (!user) {
     // 로그인중 아님
@@ -108,9 +87,6 @@ export const check = async ctx => {
   ctx.body = user;
 };
 
-/*
-  POST /api/auth/logout
-*/
 export const logout = async ctx => {
   ctx.cookies.set('access_token');
   ctx.status = 204; // No Content
