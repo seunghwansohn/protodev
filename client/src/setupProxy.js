@@ -28,4 +28,10 @@ module.exports = function(app) {
       changeOrigin: true
     })
   );
+  app.use(
+    proxy('/api/items', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+      target: 'http://localhost:4000/',       //node.js 서버의 포트 규정
+      changeOrigin: true
+    })
+  );
 };

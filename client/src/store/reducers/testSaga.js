@@ -1,6 +1,7 @@
 import produce from 'immer'
 import * as actionTypes from '../actions/actions';
-import {delay, put, takeEvery, takeLatest} from 'redux-saga/effects'
+import {delay, put, takeEvery, takeLatest, call} from 'redux-saga/effects'
+import * as testApi from '../../lib/api/test'
 
 const initialState = {
     quoteTotalValues :  {
@@ -10,10 +11,14 @@ const initialState = {
     }
 }
 
+// console.log(test1)
 function* testSaga () {
     {
         yield delay (1000)
-        yield put(actionTypes.onTestSaga())
+        console.log('테스트 성공')
+        const response = yield call(testApi.test1, null)
+        console.log(response)
+        console.log(response.data)
     }
 }
 
@@ -24,7 +29,6 @@ export function* testSagaClick(){
 function test (state = initialState, action) {
     switch (action.type) {
           case actionTypes.TEST:
-              console.log('테스트 성공')
             //   return produce(state, draft =>{
             //       draft.searchKeyword = action.searchKeyword
             //       draft.searchingNow = true    

@@ -14,7 +14,7 @@ export const checkObjectId = (ctx, next) => {
 };
 
 export const read = async ctx => {
-  console.log('겟중')
+  ctx.body = '바바바'
 }
 export const write = async ctx => {
   const schema = Joi.object().keys({

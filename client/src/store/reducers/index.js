@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
     clients,
     quoteSubmit,
     dialogs,
-    // testSaga
+    testSaga
 });
 
 export function* rootSaga () {

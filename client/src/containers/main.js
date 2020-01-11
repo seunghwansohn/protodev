@@ -7,7 +7,6 @@ import NewItem from '../components/newItem'
 import LoginPage from '../components/login'
 import Button from "@material-ui/core/Button";
 
-
 import { connect, useSelector, useDispatch } from 'react-redux';
 import * as actionCreators from '../store/actions/actions';
 
