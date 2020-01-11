@@ -13,6 +13,9 @@ export const checkObjectId = (ctx, next) => {
   return next();
 };
 
+export const read = async ctx => {
+  console.log('겟중')
+}
 export const write = async ctx => {
   const schema = Joi.object().keys({
     // 객체가 다음 필드를 가지고 있음을 검증

@@ -1,13 +1,13 @@
 import Joi from 'joi';
-import User from '../../models/user';
+// import User from '../../models/user';
 
-/*
-  POST /api/auth/register
-  {
-    username: 'velopert',
-    password: 'mypass123'
-  }
-*/
+// /*
+//   POST /api/auth/register
+//   {
+//     username: 'velopert',
+//     password: 'mypass123'
+//   }
+// */
 export const register = async ctx => {
   // Request Body 검증하기
   const schema = Joi.object().keys({

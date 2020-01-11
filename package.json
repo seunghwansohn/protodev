@@ -6,7 +6,7 @@
 		"client": "cd client && yarn start",
 		"server": "nodemon --watch server.js server.js",
 		"sample": "cd sample && yarn start",
-		"servermongo": "nodemon -r esm --watch servermongo.js servermongo.js",
+		"servermongo": "cd server && nodemon -r esm --watch src/ servermongo.js",
 		"dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\" \"yarn servermongo\""
 	},
 	"type": "module",

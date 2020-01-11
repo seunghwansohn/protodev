@@ -3,9 +3,9 @@ import Koa from 'koa';
 import Router from 'koa-router';
 import bodyParser from 'koa-bodyparser';
 import mongoose from 'mongoose';
-import api from './api';
+import api from './src/api';
 
-import jwtMiddleware from './lib/jwtMiddleware'
+// import jwtMiddleware from './lib/jwtMiddleware'
 
 const {PORT, MONGO_URI} = process.env;
 
@@ -30,7 +30,7 @@ router.use('/api', api.routes()) //api 라우트 적용
 app.koa.use(bodyParser())
 
 //토큰 처리를 위해 jwtMiddleware 적용 -> 반드시 라우터 전에 적용해야함.
-app.koa.use(jwtMiddleware)
+// app.koa.use(jwtMiddleware)
 
 //app 인스턴스에 라우터 적용
 app.koa.use(router.routes()).use(router.allowedMethods())
