@@ -1,13 +1,39 @@
 import React from 'react';
 import ItemListContainer from './containers/main'
-import { Route } from 'react-router-dom';
+import MainHeader from './containers/common/MainHeader'
 import LoginPages from './pages/loginPages'
+import About from './containers/About'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useRouteMatch
+} from "react-router-dom";
 
 function App() {
+  let match = useRouteMatch();
+  console.log(match)
   return (
     <div className="App">
-      <Route component = {ItemListContainer} path = '/' exact /> 
-      <Route component = {LoginPages} path = '/login'/> 
+          <Router>
+          <div>
+            <MainHeader></MainHeader>
+              <Switch>
+                  <Route path = "/about">
+                      <About></About>
+                  </Route>
+                  <Route path = "/" exact>
+                      <ItemListContainer></ItemListContainer>
+                  </Route>
+                  <Route path = "/login">
+                      <LoginPages></LoginPages>
+                  </Route>
+              </Switch>
+          </div>
+          </Router>
+      
+      {/* <Route component = {LoginPages} path = '/login'/>  */}
     </div>
   );
 }

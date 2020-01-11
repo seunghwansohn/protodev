@@ -4,9 +4,9 @@
 	"license": "UNLICENSED",
 	"scripts": {
 		"client": "cd client && yarn start",
-		"server": "nodemon server.js",
+		"server": "nodemon --watch server.js server.js",
 		"sample": "cd sample && yarn start",
-		"servermongo": "nodemon -r esm servermongo.js",
+		"servermongo": "nodemon -r esm --watch servermongo.js servermongo.js",
 		"dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\" \"yarn servermongo\""
 	},
 	"type": "module",
@@ -40,7 +40,9 @@
 		"react-router-dom": "^5.1.2",
 		"redux-devtools-extension": "^2.13.8",
 		"redux-form": "^8.2.6",
-		"redux-thunk": "^2.3.0"
+		"redux-saga": "^1.1.3",
+		"redux-thunk": "^2.3.0",
+		"styled-components": "^4.4.1"
 	},
 	"devDependencies": {
 		"concurrently": "^4.1.2",

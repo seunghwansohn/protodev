@@ -1,9 +1,10 @@
 import React from 'react';
-
+import LoginForm from '../containers/loginForm.js'
 const LoginPage = () => {
   return (
     <div>
-        ㅇㄴ리ㅏ먼ㅇㄹ
+      로그인폼
+        {/* <LoginForm/> */}
     </div>
   );
 };

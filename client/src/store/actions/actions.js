@@ -15,6 +15,10 @@ export const QUOTELISTSELECTCUSTOMER = 'itemList/QUOTELISTSELECTCUSTOMER'
 
 export const ON_DIALOG_OPEN  = 'dialog/ON_DIALOG_OPEN'
 
+export const TEST = 'login/TEST'
+
+
+
 export const onSearch = searchKeyword => ({type: SEARCHKEYWORD, searchKeyword});
 export const onSetSearchingNow = (ox) => ({type: SETSEARCHINGNOW, ox})
 
@@ -30,6 +34,8 @@ export const onChangePRate = (index, rate) => ({type : CHANGEPRATE, index, rate}
 export const totalValue = () => ({type : TOTAL_VALUE})
 
 export const onDialogOpen = (ox) => ({type: ON_DIALOG_OPEN, ox})
+
+export const onTestSaga = () => ({type: TEST})
 
 export function onFetchItem() {
     return function(callback) {

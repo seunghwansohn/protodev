@@ -5,6 +5,7 @@ import ItemListComponent from '../components/itemList'
 import QuoteListComponent from '../components/quoteList'
 import NewItem from '../components/newItem'
 import LoginPage from '../components/login'
+import Button from "@material-ui/core/Button";
 
 
 import { connect, useSelector, useDispatch } from 'react-redux';
@@ -39,35 +40,13 @@ const ItemListContainer = (props) =>
         return(
   
             <div>
-                <Router>
-                <div>
-                    <ul>
-                        <li>
-                            <Link to = "/">Home</Link>
-                        </li>
-                        <li>
-                            <Link to="/about">About</Link>
-                        </li>
-                        <li>
-                            <Link to="/login">Login</Link>
-                        </li>
-                    </ul>
-                    <Switch>
-                        <Route path = "/about">
-                            <NewItem></NewItem>
-                        </Route>
-                        <Route path = "/login">
-                            <LoginPage></LoginPage>
-                        </Route>
-                    </Switch>
-                </div>
-                </Router>
+                <Button onClick = {props.onTestSaga}>확인</Button>
                 <SearchAppBar 
                     onSearch    = {props.onSearch}
                     onFetchItem = {props.onFetchItem}>
                 </SearchAppBar>
                 
-                <ItemListComponent 
+                {/* <ItemListComponent 
                     itemListArr          = {props.itemListArr}
                     searchProps          = {searchProps}
                     onAlreadyPickedCheck = {props.onAlreadyPickedCheck}>
@@ -91,7 +70,8 @@ const ItemListContainer = (props) =>
                     onDelPickedItem     = {props.onDelPickedItem}
                     onChangePRate       = {props.onChangePRate}
                     onTotalValue        = {props.totalValue}>
-                </QuoteListComponent>
+                </QuoteListComponent> */}
+                
             </div>
         )
     }   
@@ -128,6 +108,7 @@ const mapDispatchToProps = dispatch => {
         onDelPickedItem :(pickedItemNo) => dispatch(actionCreators.onDelPickedItem(pickedItemNo)),
         onChangePRate :(index, rate) => dispatch(actionCreators.onChangePRate(index, rate)),
         totalValue : () => dispatch(actionCreators.totalValue()),
+        onTestSaga : () => dispatch(actionCreators.onTestSaga())
         
 }}
 
