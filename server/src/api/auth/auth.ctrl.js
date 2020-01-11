@@ -33,7 +33,7 @@ export const register = async ctx => {
     });
     await user.setPassword(password); // 비밀번호 설정 (post로 전달받은 password를 bycrypt로 암호화)
     await user.save(); // 데이터베이스에 저장
-    user.serialize()
+
     ctx.body = user.serialize();
     const token = user.generateToken();
     ctx.cookies.set('access_token', token, {
@@ -49,6 +49,7 @@ export const register = async ctx => {
 
 export const login = async ctx => {
   const { username, password } = ctx.request.body;
+  console.log(username, password)
   // username, password 가 없으면 에러 처리
   if (!username || !password) {
     ctx.status = 401; // Unauthorized
@@ -57,6 +58,7 @@ export const login = async ctx => {
   try {
     const user = await User.findByUsername(username);
     // 계정이 존재하지 않으면 에러 처리
+    console.log('씨티엑스 스테터스', ctx.status)
     if (!user) {
       ctx.status = 401;
       return;
@@ -67,7 +69,15 @@ export const login = async ctx => {
       ctx.status = 401;
       return;
     }
+
     ctx.body = user.serialize();
+
+    //아래는 토큰을 생성하여 클라이언트의 쿠키에 넣어주는 부분
+    const token = user.generateToken();
+    ctx.cookies.set('access_token', token, {
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
+      httpOnly: true,
+    });
   } catch (e) {
     ctx.throw(500, e);
   }
@@ -76,8 +86,8 @@ export const login = async ctx => {
 
 
 export const check = async ctx => {
-  console.log('씨티엑스스테이트' , ctx.state)
-  console.log('씨티엑스' , ctx)
+  // console.log('씨티엑스스테이트' , ctx.state)
+  // console.log('씨티엑스' , ctx)
   const { user } = ctx.state;
   if (!user) {
     // 로그인중 아님
