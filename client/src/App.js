@@ -17,10 +17,8 @@ function App() {
   console.log(match)
   return (
     <div className="App">
-          <Router>
           <div>
             <MainHeader></MainHeader>
-              <Switch>
                   <Route path = "/about">
                       <About></About>
                   </Route>
@@ -34,10 +32,7 @@ function App() {
                       <RegisterPage></RegisterPage>
                   </Route>
                   
-              </Switch>
           </div>
-          </Router>
-      
     </div>
   );
 }

@@ -52,7 +52,9 @@ export default handleActions(
       ...state,
       user,
     }),
-    [CHECK_SUCCESS]: (state, { payload: user }) => ({
+    [CHECK_SUCCESS]: (state, { payload: user }) => (
+      console.log(user),
+      {
       ...state,
       user,
       checkError: null,
@@ -62,7 +64,8 @@ export default handleActions(
       user: null,
       checkError: error,
     }),
-    [LOGOUT]: state => ({
+    [LOGOUT]: state => (
+      {
       ...state,
       user: null,
     }),

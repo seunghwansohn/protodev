@@ -5,7 +5,7 @@ import { changeField, initializeForm, login } from '../store/modules/auth';
 import AuthForm from '../components/auth/AuthForm';
 import { check } from '../store/modules/user';
 
-const LoginForm = () => { //여기서 history는 react-router요소.
+const LoginForm = ({history}) => { //여기서 history는 react-router-dom의 withRouter 요소.
 //https://reacttraining.com/react-router/web/api/history  여기참조
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const LoginForm = () => { //여기서 history는 react-router요소.
     dispatch(login({ username, password }));
   };
 
-  // 컴포넌트가 처음 렌더링 될 때 form 을 초기화함
+  // // 컴포넌트가 처음 렌더링 될 때 form 을 초기화함
   useEffect(() => {
     dispatch(initializeForm('login'));
   }, [dispatch]);
@@ -56,17 +56,20 @@ const LoginForm = () => { //여기서 history는 react-router요소.
   }, [auth, authError, dispatch]);
 
   useEffect(() => {
+    console.log('유저', user)
     if (user) {
+      history.push('/');
       try {
         localStorage.setItem('user', JSON.stringify(user));
       } catch (e) {
         console.log('localStorage is not working');
       }
     }
-  }, [user]);
+  });
 
   return (
     <div> 
+      ㅇㄹㅇㄹ
     <AuthForm
       type="login"
       form={form}

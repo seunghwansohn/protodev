@@ -9,8 +9,10 @@ import quoteSubmit from './quoteSubmit'
 import dialogs from './dialogs'
 
 import testSaga, { testSagaClick } from './testSaga'
+import loading from '../modules/loading';
 import auth, { authSaga } from '../modules/auth';
 import user, { userSaga } from '../modules/user';
+
 
 
 const rootReducer = combineReducers({
@@ -21,8 +23,10 @@ const rootReducer = combineReducers({
     quoteSubmit,
     dialogs,
     testSaga,
+    loading,
     auth,
     user,
+    
 });
 
 export function* rootSaga () {

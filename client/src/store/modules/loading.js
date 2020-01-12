@@ -21,11 +21,17 @@ const initialState = {};
 
 const loading = handleActions(
   {
-    [START_LOADING]: (state, action) => ({
+    [START_LOADING]: (state, action) => (
+      console.log('스타트로딩'),
+      console.log('스타트로딩액션페이로드', action.payload), // 여기서 페이로드는 auth/LOGIN, 등으로 반환됨. 이후 컨테이너의 USEEFFECT를 통해 체크가 실행됨.
+      {
       ...state,
       [action.payload]: true
     }),
-    [FINISH_LOADING]: (state, action) => ({
+    [FINISH_LOADING]: (state, action) => (
+      console.log('피니시로딩'),
+      console.log('피니시로딩액션페이로드', action.payload),
+      {
       ...state,
       [action.payload]: false
     })
