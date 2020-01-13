@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 const itemListPage = () => {
   return (
     <>
-       <ItemList>씨이바랍라</ItemList>
+       <ItemList></ItemList>
     </>
   );
 };

@@ -1,6 +1,19 @@
 import produce from 'immer'
 import * as actionTypes from '../actions/actions';
 
+export const QUOTELISTSELECTCUSTOMER = 'quoteList/QUOTELISTSELECTCUSTOMER'
+export const onAlreadyPickedCheck = (pickedItem) => ({type: PICKITEM, pickedItem})
+
+export const inputQtyAction = (index, inputQty) => ({type: INPUTQTY, index, inputQty})
+export const onFetchClientAct = (VNCustomersList) => ({type: FETCHVNCUSTOMERS, VNCustomersList});
+export const onCustomerSelect = (SelectedCustomerCode) => ({type: QUOTELISTSELECTCUSTOMER, SelectedCustomerCode});
+
+export const onInputPdfBlobUrl = (blobUrl) => ({type: ON_INPUT_PDF_BLOB_URL, blobUrl})
+export const onDelPickedItem = (pickedItemNo) => ({type : DELITEM, pickedItemNo})
+export const onChangePRate = (index, rate) => ({type : CHANGEPRATE, index, rate})
+export const totalValue = () => ({type : TOTAL_VALUE})
+
+
 const initialState = {
     pickedCount: 0,
     pickedItem:[],
@@ -17,8 +30,15 @@ const initialState = {
       subTotal : 0,
       vat :  0,
       Total : 0,
-  }
+    },
+    quoteTotalValues :  {
+        subTotal : 0,
+        vat :  0,
+        Total : 0,
+    }
 };
+
+
 function reducer (state = initialState, action) {
     switch (action.type) {
         case actionTypes.INPUTQTY:
@@ -105,6 +125,11 @@ function reducer (state = initialState, action) {
           return produce(state, draft => {
             draft.quoteList.SelectedCustomerCode = action.SelectedCustomerCode
           }) 
+        case actionTypes.SEARCHKEYWORD:
+            return produce(state, draft =>{
+                draft.searchKeyword = action.searchKeyword
+                draft.searchingNow = true
+        })      
         default:
           return state;
     } 
