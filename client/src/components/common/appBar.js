@@ -71,6 +71,7 @@ const SearchAppBar =
       searchKeyword = e.target.value
       e.preventDefault();
       onSearch(searchKeyword)
+      console.log('검색엔터')
       onFetchItem()
     }
   }

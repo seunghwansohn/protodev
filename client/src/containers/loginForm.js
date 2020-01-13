@@ -69,7 +69,6 @@ const LoginForm = ({history}) => { //여기서 history는 react-router-dom의 wi
 
   return (
     <div> 
-      ㅇㄹㅇㄹ
     <AuthForm
       type="login"
       form={form}

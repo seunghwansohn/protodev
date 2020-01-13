@@ -1,28 +1,15 @@
 import React from 'react'
 
-import SearchAppBar from '../components/appBar'
+import SearchAppBar from '../components/common/appBar'
 import ItemListComponent from '../components/itemList'
 import QuoteListComponent from '../components/quoteList'
-import NewItem from '../components/newItem'
-import LoginPage from '../components/login'
 import Button from "@material-ui/core/Button";
 
 import { connect, useSelector, useDispatch } from 'react-redux';
 import * as actionCreators from '../store/actions/actions';
 
-import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
-    Link
-  } from "react-router-dom";
-
-
 const ItemListContainer = (props) => 
     {
-        const loG = useSelector(state => state.itemList.pickedItem)
-        const items = useSelector(state => state.itemList.ItemList)
-        const dispatch = useDispatch();
 
         const searchProps = {
             searchKeyword      : props.searchKeyword,
@@ -37,15 +24,14 @@ const ItemListContainer = (props) =>
         
 
         return(
-  
-            <div>
+            <>
                 <Button onClick = {props.onTestSaga}>확인</Button>
                 <SearchAppBar 
                     onSearch    = {props.onSearch}
                     onFetchItem = {props.onFetchItem}>
                 </SearchAppBar>
                 
-                {/* <ItemListComponent 
+                <ItemListComponent 
                     itemListArr          = {props.itemListArr}
                     searchProps          = {searchProps}
                     onAlreadyPickedCheck = {props.onAlreadyPickedCheck}>
@@ -69,9 +55,9 @@ const ItemListContainer = (props) =>
                     onDelPickedItem     = {props.onDelPickedItem}
                     onChangePRate       = {props.onChangePRate}
                     onTotalValue        = {props.totalValue}>
-                </QuoteListComponent> */}
+                </QuoteListComponent>
                 
-            </div>
+            </>
         )
     }   
 
@@ -107,8 +93,7 @@ const mapDispatchToProps = dispatch => {
         onDelPickedItem :(pickedItemNo) => dispatch(actionCreators.onDelPickedItem(pickedItemNo)),
         onChangePRate :(index, rate) => dispatch(actionCreators.onChangePRate(index, rate)),
         totalValue : () => dispatch(actionCreators.totalValue()),
-        onTestSaga : () => dispatch(actionCreators.onTestSaga())
-        
+        onTestSaga : () => dispatch(actionCreators.onTestSaga()),
 }}
 
 export default connect(

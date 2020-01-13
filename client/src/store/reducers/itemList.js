@@ -16,6 +16,7 @@ const initialState = {
 function reducer (state = initialState, action) {
   switch (action.type) {
       case actionTypes.APILOAD:
+        console.log('푸하히더')
         return produce(state, draft =>{
           draft.itemListArr = action.itemListArr
         })
