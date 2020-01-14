@@ -32,7 +32,6 @@ export const register = createAction(REGISTER, ({ username, password }) => ({
   password
 }));
 export const login = createAction(LOGIN, ({ username, password }) => (
-  console.log('로긴중', username, password),
   {
   username,
   password

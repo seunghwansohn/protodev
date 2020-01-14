@@ -3,7 +3,7 @@ import {all} from 'redux-saga/effects'
 
 import items from './items'
 // import quoteList from './quoteList'
-import mainSearch from './mainSearch'
+import mainSearch, {itemsSaga} from './mainSearch'
 // import clients from '../reducers/clients'
 // import quoteSubmit from '../reducers/quoteSubmit'
 // import dialogs from '../reducers/dialogs'
@@ -28,7 +28,7 @@ const rootReducer = combineReducers({
 });
 
 export function* rootSaga () {
-    yield all([authSaga(), userSaga()])
+    yield all([authSaga(), userSaga(), itemsSaga()])
 }
 
 export default rootReducer;

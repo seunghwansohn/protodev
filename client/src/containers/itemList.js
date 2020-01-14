@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import SearchAppBar from '../components/common/appBar'
 import ItemListComponent from '../components/itemList'
@@ -7,10 +7,17 @@ import Button from "@material-ui/core/Button";
 import { connect, useSelector, useDispatch } from 'react-redux';
 // import * as actionCreators from '../store/actions/actions';
 import * as mainSearchAct from '../store/modules/mainSearch';
+import { onSearch, setSearchKeyword } from '../store/modules/mainSearch'
 
 const ItemListContainer = () => {
     const dispatch = useDispatch();
-
+    const { searchingNow, searchKeyword, itemListArr } = useSelector(
+        ({ mainSearch, items }) => ({
+            searchingNow : mainSearch.searchingNow,
+            searchKeyword : mainSearch.searchKeyword,
+            itemListArr : items.itemListArr
+        }),
+    );
     const onSearch = (searchKeyword) => {
         dispatch(mainSearchAct.setSearchKeyword(searchKeyword))
     }
@@ -32,8 +39,13 @@ const ItemListContainer = () => {
     //     pdfBlobUrl          : props.pdfWorks.pdfBlobUrl,
     //     onInputPdfBlobUrl   : props.onInputPdfBlobUrl
     // }
-    
-
+    useEffect(() => {
+        if (searchingNow) {
+            console.log(searchKeyword)
+            dispatch(setSearchKeyword(searchKeyword))
+        }
+    }, [searchingNow]);
+    console.log(itemListArr)
     return(
         <>
         asdf
@@ -42,13 +54,13 @@ const ItemListContainer = () => {
                 onSearch    = {onSearch}
                 onFetchItem = {mainSearchAct.onFetchItem}>
             </SearchAppBar>
-            {/*
-            <ItemListComponent 
-                itemListArr          = {props.itemListArr}
-                searchProps          = {searchProps}
-                onAlreadyPickedCheck = {props.onAlreadyPickedCheck}>
-            </ItemListComponent>
-
+        
+            {/* <ItemListComponent  */}
+                {/* itemListArr          = {itemListArr}> */}
+                {/* searchProps          = {searchProps}
+                onAlreadyPickedCheck = {props.onAlreadyPickedCheck}> */}
+            {/* </ItemListComponent> */}
+    {/*
             <QuoteListComponent 
                 pdfBlobUrl          = {props.pdfWorks.pdfBlobUrl} 
                 pickedItem          = {props.pickedItem} 
