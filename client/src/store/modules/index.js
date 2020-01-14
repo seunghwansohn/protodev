@@ -8,7 +8,7 @@ import mainSearch from './mainSearch'
 // import quoteSubmit from '../reducers/quoteSubmit'
 // import dialogs from '../reducers/dialogs'
 
-// import loading from './loading';
+import loading from './loading';
 import auth, { authSaga } from './auth';
 import user, { userSaga } from './user';
 
@@ -22,10 +22,9 @@ const rootReducer = combineReducers({
     // quoteSubmit,
     // dialogs,
     // testSaga,
-    // loading,
     auth,
+    loading,
     user,
-    
 });
 
 export function* rootSaga () {

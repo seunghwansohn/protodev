@@ -8,18 +8,19 @@ export const SEARCHKEYWORD = 'itemList/SEARCHKEYWORD';
 
 export const onSetSearchingNow = (ox) => ({type: SETSEARCHINGNOW, ox})
 export const onSearch = searchKeyword => ({type: SEARCHKEYWORD, searchKeyword});
+
 export function onFetchItem() {
     console.log('파하하')
     return function(callback) {
       return axios.get("/api_s/customers")
         .then(({ data }) => {
-        //   callback(itemListFetchAction(data))
+          callback(itemListFetchAction(data))
       });
     };
 }
 export const setSearchKeyword = createAction(SEARCHKEYWORD, setSearchKeyword => setSearchKeyword)
 
-// export const itemListFetchAction = (itemListArr) => ({type: APILOAD, itemListArr});
+export const itemListFetchAction = (itemListArr) => ({type: APILOAD, itemListArr});
 
 const initialState = {
     searchKeyword: '',

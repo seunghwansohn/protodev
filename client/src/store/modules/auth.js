@@ -14,7 +14,6 @@ const INITIALIZE_FORM = 'auth/INITIALIZE_FORM';
 const [REGISTER, REGISTER_SUCCESS, REGISTER_FAILURE] = createRequestActionTypes(
   'auth/REGISTER'
 );
-
 const [LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE] = createRequestActionTypes(
   'auth/LOGIN'
 );
@@ -32,7 +31,9 @@ export const register = createAction(REGISTER, ({ username, password }) => ({
   username,
   password
 }));
-export const login = createAction(LOGIN, ({ username, password }) => ({
+export const login = createAction(LOGIN, ({ username, password }) => (
+  console.log('로긴중', username, password),
+  {
   username,
   password
 }));

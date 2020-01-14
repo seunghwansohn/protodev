@@ -21,7 +21,6 @@ function App() {
     <div className="App">
           <div>
             <MainHeader></MainHeader>
-            {/* <ItemListPage></ItemListPage> */}
                   <Route path = "/about">
                       <About></About>
                   </Route>
@@ -30,11 +29,11 @@ function App() {
                   <Route path = "/login" >
                       <LoginPages></LoginPages>
                   </Route>
-                  {/* 
+                  
                   <Route path = "/register" >
                       <RegisterPage></RegisterPage>
                   </Route>
-                   */}
+                  
           </div>
     </div>
   );

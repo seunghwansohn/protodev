@@ -8,9 +8,9 @@ const FINISH_LOADING = 'loading/FINISH_LOADING';
 */
 
 export const startLoading = createAction(
-  START_LOADING,
-  requestType => requestType
-);
+    START_LOADING,
+    requestType => requestType
+  );
 
 export const finishLoading = createAction(
   FINISH_LOADING,
@@ -23,7 +23,7 @@ const loading = handleActions(
   {
     [START_LOADING]: (state, action) => (
       console.log('스타트로딩'),
-      console.log('스타트로딩액션페이로드', action.payload), // 여기서 페이로드는 auth/LOGIN, 등으로 반환됨. 이후 컨테이너의 USEEFFECT를 통해 체크가 실행됨.
+      // console.log('스타트로딩액션페이로드', action.payload), // 여기서 페이로드는 auth/LOGIN, 등으로 반환됨. 이후 컨테이너의 USEEFFECT를 통해 체크가 실행됨.
       {
       ...state,
       [action.payload]: true
