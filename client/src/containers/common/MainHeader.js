@@ -27,7 +27,6 @@ const MainHeader = () => {
     const { user } = useSelector(({ user }) => ({ user: user.user }));
     const dispatch = useDispatch();
     const onLogout = () => {
-        console.log('하하');
         dispatch(logout());
     }
     const check = () => {

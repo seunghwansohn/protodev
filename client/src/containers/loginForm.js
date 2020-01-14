@@ -56,7 +56,6 @@ const LoginForm = ({history}) => { //여기서 history는 react-router-dom의 wi
   }, [auth, authError, dispatch]);
 
   useEffect(() => {
-    console.log('유저', user)
     if (user) {
       history.push('/');
       try {

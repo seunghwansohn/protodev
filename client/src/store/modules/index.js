@@ -2,11 +2,14 @@ import { combineReducers } from 'redux';
 import {all} from 'redux-saga/effects'
 
 import items from './items'
-// import quoteList from './quoteList'
-import mainSearch, {itemsSaga} from './mainSearch'
-// import clients from '../reducers/clients'
-// import quoteSubmit from '../reducers/quoteSubmit'
-// import dialogs from '../reducers/dialogs'
+import quote from './quote'
+import mainSearch from './mainSearch'
+import {itemsSaga} from './items'
+
+import clients from './clients'
+// import quoteSubmit from './quoteSubmit'
+import dialogs from './dialogs'
+
 
 import loading from './loading';
 import auth, { authSaga } from './auth';
@@ -16,12 +19,11 @@ import user, { userSaga } from './user';
 
 const rootReducer = combineReducers({
     items,
-    // quoteList,
+    quote,
     mainSearch,
-    // clients,
+    clients,
     // quoteSubmit,
-    // dialogs,
-    // testSaga,
+    dialogs,
     auth,
     loading,
     user,

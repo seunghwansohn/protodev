@@ -1,9 +1,25 @@
 import produce from 'immer'
+import { createAction, handleActions } from 'redux-actions';
 import createRequestSaga, {
   createRequestActionTypes,
 } from '../../lib/createRequestSaga';
-export const ON_INPUT_PDF_BLOB_URL = 'itemList/ON_INPUT_PDF_BLOB_URL'
+import * as item from '../../lib/api/item';
+import { takeLatest, call } from 'redux-saga/effects';
+
 // export const APILOAD = 'itemList/APILOAD';
+
+const [
+  APILOAD,
+  APILOAD_SUCCESS,
+  APILOAD_FAILURE,
+] = createRequestActionTypes('itemList/APILOAD');
+
+export const setApiLoad = createAction(APILOAD)
+
+const apiLoadSaga = createRequestSaga(APILOAD, item.load);
+export function* itemsSaga() {
+  yield takeLatest(APILOAD, apiLoadSaga);
+}
 
 const initialState = {
     itemListArr: [],
@@ -17,24 +33,8 @@ const initialState = {
     }
 };
 
-
-const [
-  APILOAD,
-  APILOAD_SUCCESS,
-  APILOAD_FAILURE,
-] = createRequestActionTypes('itemList/APILOAD');
-
 function reducer (state = initialState, action) {
   switch (action.type) {
-      case APILOAD:
-        console.log('푸하히더')
-        return produce(state, draft =>{
-          draft.itemListArr = action.itemListArr
-        })
-      case ON_INPUT_PDF_BLOB_URL:
-        return produce(state, draft => {
-          draft.pdfWorks.pdfBlobUrl = action.blobUrl
-        })  
       case APILOAD_SUCCESS:
         const itemListArr = action.payload
         return produce(state, draft =>{

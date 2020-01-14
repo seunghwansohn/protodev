@@ -143,14 +143,14 @@ const QuoteListComponent = (props) => {
                     />
                 </TableCell>
                 <TableCell>
-                    <FindDialog 
+                    {/* <FindDialog 
                         onFetchClient       = {props.onFetchClient} 
                         data                = {props.clients.VNbuyer} 
                         onCustomerSelect    = {props.onCustomerSelect}
                         searchObject        = 'VN Buyer'
-                        open                = {props.findDialogsOpen.VNBuyers}
+                        open                = 'false'
                         setOpen             = {props.onDialogOpen}
-                    />
+                    /> */}
                 </TableCell>
             </TableRow>
             </TableBody>
@@ -173,7 +173,7 @@ const QuoteListComponent = (props) => {
                     {pickedItemMap()}
                 </TableBody>
             </Table>
-            <TotalComponent quoteTotalValues = {props.quoteTotalValues} onTotalValue = {props.onTotalValue}/>
+            {/* <TotalComponent quoteTotalValues = {props.quoteTotalValues} onTotalValue = {props.onTotalValue}/> */}
         </div>
     )
 }

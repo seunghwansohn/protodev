@@ -35,7 +35,7 @@ function loadUser() {
 }
 
 sagaMiddleware.run(rootSaga);
-// loadUser();
+loadUser();
 
 
 ReactDOM.render(

@@ -11,30 +11,8 @@ import TablePagination from '@material-ui/core/TablePagination';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
 import searchObjectArray from '../functions/search'
+import { useDispatch } from 'react-redux';
 
-//pagenation 지원하는 material-ui 테이블에 필요한 기본요소들
-function desc(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-function stableSort(array, cmp) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = cmp(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  return stabilizedThis.map(el => el[0]);
-}
-function getSorting(order, orderBy) {
-  return order === 'desc' ? (a, b) => desc(a, b, orderBy) : (a, b) => -desc(a, b, orderBy);
-}
-//----------------------------
 //pagenation 지원하는 material-ui 테이블의 head메뉴들. map으로 자동으로 다 띄워줌.
 const headCells = [
   { id: 'Code', numeric: false, disablePadding: false, label: 'Code' },
@@ -63,56 +41,6 @@ function EnhancedTableHead(props) {
     </TableHead>
   );
 }
-//----------------------------
-EnhancedTableHead.propTypes = {
-  classes: PropTypes.object.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-const useToolbarStyles = makeStyles(theme => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-  },
-  highlight:
-    theme.palette.type === 'light'
-      ? {
-          color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-        }
-      : {
-          color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark,
-        },
-  title: {
-    flex: '1 1 100%',
-  },
-}));
-//pagenation 지원하는 material-ui 테이블의 툴바
-
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: '100%',
-  },
-  paper: {
-    width: '100%',
-    marginBottom: theme.spacing(2),
-  },
-  table: {
-    minWidth: 750,
-  },
-  visuallyHidden: {
-    border: 0,
-    clip: 'rect(0 0 0 0)',
-    height: 1,
-    margin: -1,
-    overflow: 'hidden',
-    padding: 0,
-    position: 'absolute',
-    top: 20,
-    width: 1,
-  },
-}));
-//-----------------------------
 
 //pagenation 지원하는 material-ui 테이블의 주 콤포넌트. 기본 export됨.
 export default function EnhancedTable(
@@ -121,135 +49,103 @@ export default function EnhancedTable(
     onAlreadyPickedCheck,
     searchProps
   }) 
-  
   {
-  const classes = useStyles();
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
-  const [rowsPerPage, setRowsPerPage] = React.useState(5);
-
-
-  //검색창(appBar.js)에서 검색어 넣고 엔터치면 searchingNow라는 state를 true로 바꿔줌
-  //그때 페이지를 0으로 자동으로 넘겨주는 역할을 함.
   
-  if (searchProps.searchingNow === true) {
-    async function setPageAndReset() {
-      await console.log('a')
-      await setPage(0)
-      await searchProps.onSetSearchingNow(false)
+  let { searchKeyword } = searchProps;
+  var result = [];
+  const itemListFilteredMap = () => {
+    var matchedid = [];
+    itemListArr.map (function(num) {
+      var values = Object.values(num);
+      var joinedString = values.join(',');
+      joinedString = joinedString.toLowerCase() //리스트 문자열 합친걸 모두 소문자화
+      searchKeyword = searchKeyword.toLowerCase() //검색어를 모두 소문자화
+      searchKeyword = searchKeyword.replace(/\s*$/,''); //마지막 공백을 모두 제거
+      // var spaceCount = (code.split(" ").length - 1); //중간에 들어간 공백의 숫자
+      console.log(joinedString)
+      console.log(searchKeyword)
+
+      let codeArray = searchKeyword.split(' ')
+      console.log(codeArray)
+      let matchedTrue = ''
+      for(let i=0, k = 0; i < codeArray.length; i++) {
+        var trueSearched = joinedString.indexOf(codeArray[i]) > - 1;
+        if (trueSearched === true) {
+          k = k + 1
+        }
+        if (k === codeArray.length) {matchedTrue = true} //공백으로 나눠진 단어 모두가 검색되는지를 true여부로 반환
+        else {matchedTrue = false} 
+      }
+      if (matchedTrue === true) {
+        matchedid.push(num.id);   //matchedid라는 미리 선언된 배열변수에, 검색어를 포함한 아이템들의 id값만 담음.
+      }
+    })
+    console.log(matchedid)
+    var returnWords = function(){
+        var matchedData = [];
+        var findDataId = '';
+            for (var i=0; i < matchedid.length; i++){
+              findDataId = matchedid[i];
+              function searchMatchedData(id, itemListArr) {
+                for (var i = 0; i < itemListArr.length; i++) {
+                  if (itemListArr[i].id === id)  {
+                    return itemListArr[i];
+                  }
+                }
+              }
+              result.push(searchMatchedData(findDataId, itemListArr))
+    
+              matchedData.push(itemListArr[matchedid[i]])
+            }
+        return result;
     }
-    setPageAndReset()
+    returnWords();
   }
-  //------------------------------------
 
-  const rows = itemListArr  //row에다가 api에서 받아온 itemList 객체를 넣어줌.
-
-
-  //굳이 건드릴 필요없는 pagenation-material-ui 이벤트 함수들.
-
-
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    setSelected(newSelected);
-  };
-  const handleChangePage = (event, newPage) => {
-    setPage(newPage);
-  };
-  const handleChangeRowsPerPage = event => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
-  };
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  const dispatch = useDispatch()
+  const alreadyCheck = (items) => {
+    dispatch(onAlreadyPickedCheck(items))
+  }
+  const mappedTableBody = () => {
+    itemListFilteredMap();
+    return (
+      result.map((items, index) => 
+        <TableRow key = {index}>
+          <TableCell>{items.id}</TableCell>
+          <TableCell>{items.itemCode}</TableCell>
+          <TableCell>{items.itemName}</TableCell>
+          <TableCell>{items.KRsupplier}</TableCell>
+          <TableCell> 
+            <button onClick= {
+              function(e){
+                e.preventDefault();
+                alreadyCheck(items);
+              }}>삽입
+            </button>
+          </TableCell> 
+        </TableRow>
+      )
+    )
+  }
+  
   //---------------------------------
 
-  
-  const alreadyCheck = (c) => {
-        onAlreadyPickedCheck(c)
-  }
-
-  const filteredItemArray = searchObjectArray(searchProps.searchKeyword, itemListArr)
-  //-----------------------------------------
-  
-  const onPageZero = () => {
-    setPage(0)
-  }
-
-  
   return (
-    <div className={classes.root}>
-      <Paper className={classes.paper}>
+    <div>
+      <Paper>
         <TableContainer>
           <Table
-            className={classes.table}
             aria-labelledby="tableTitle"
-            size={dense ? 'small' : 'small'}
             aria-label="enhanced table"
           >
-            {/* <EnhancedTableHead
-              classes={classes}
-              rowCount={rows.length}
-            /> */}
+            <EnhancedTableHead/>
             <TableBody>
-              {itemListArr[0] !== undefined ? stableSort(filteredItemArray, getSorting(order, orderBy))
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((filteredItemArray, index) => {
-
-                  return (
-                    <TableRow
-                      hover
-                      onClick={event => handleClick(event, filteredItemArray.name)}
-                      tabIndex={-1}
-                      key={index}
-                    >
-                      <TableCell align="left">{filteredItemArray.itemCode}</TableCell>
-                      <TableCell align="left">{filteredItemArray.itemName}</TableCell>
-                      <TableCell align="left">{filteredItemArray.VNSellingPrice}</TableCell>
-                      <TableCell>                      
-                        <button onClick= {
-                          function(e){
-                            e.preventDefault();
-                            alreadyCheck(filteredItemArray);
-                          }}>삽입
-                         </button>
-                      </TableCell>
-                    </TableRow>
-                  );
-                }) : ''}
-              {emptyRows > 0 && (
-                <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
-                  <TableCell colSpan={6} />
-                </TableRow>
-              )}
+                {itemListArr.length !== 0  ? mappedTableBody() : ''}
             </TableBody>
+
           </Table>
         </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={filteredItemArray.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-        />
+        {searchProps.searchKeyword}
       </Paper>
     </div>
   );

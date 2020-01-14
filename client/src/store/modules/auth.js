@@ -31,6 +31,7 @@ export const register = createAction(REGISTER, ({ username, password }) => ({
   username,
   password
 }));
+
 export const login = createAction(LOGIN, ({ username, password }) => (
   {
   username,
@@ -72,13 +73,17 @@ const auth = handleActions(
       authError: null // 폼 전환 시 회원 인증 에러 초기화
     }),
     // 회원가입 성공
-    [REGISTER_SUCCESS]: (state, { payload: auth }) => ({
+    [REGISTER_SUCCESS]: (state, { payload: auth }) => (
+      console.log(auth),
+      {
       ...state,
       authError: null,
       auth
     }),
     // 회원가입 실패
-    [REGISTER_FAILURE]: (state, { payload: error }) => ({
+    [REGISTER_FAILURE]: (state, { payload: error }) => (
+      console.log(error),
+      {
       ...state,
       authError: error
     }),

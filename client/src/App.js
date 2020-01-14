@@ -16,7 +16,6 @@ import {
 
 function App() {
   let match = useRouteMatch();
-  console.log(match)
   return (
     <div className="App">
           <div>
