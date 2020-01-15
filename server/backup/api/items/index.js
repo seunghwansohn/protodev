@@ -1,6 +1,6 @@
 import Router from 'koa-router';
 import * as itemsCtrl from './items.Ctrl'
-// import checkLoggedIn from '../lib/checkLoggedIn'
+import checkLoggedIn from '../../lib/checkLoggedIn'
 
 const items = new Router();
 

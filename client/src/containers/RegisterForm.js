@@ -68,7 +68,6 @@ const RegisterForm = ({ history }) => {
 
     if (auth) {
       console.log('회원가입 성공');
-      console.log(auth);
       dispatch(check());
     }
   }, [auth, authError, dispatch]);
@@ -82,6 +81,8 @@ const RegisterForm = ({ history }) => {
       } catch (e) {
         console.log('localStorage is not working');
       }
+    } else {
+      console.log('유저없음')
     }
   }, [history, user]);
 

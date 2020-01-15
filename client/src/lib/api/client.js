@@ -1,7 +1,12 @@
 import axios from 'axios';
 
-const client = axios.create();
+const client = axios.create({
 
+  validateStatus: function (status) {
+
+       return status == 200;
+   },
+});
 /*
   글로벌 설정 예시:
   

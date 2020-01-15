@@ -30,7 +30,6 @@ const MainHeader = () => {
         dispatch(logout());
     }
     const check = () => {
-        console.log(user)
     }
   return (
     <div>

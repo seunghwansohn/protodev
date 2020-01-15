@@ -10,7 +10,6 @@ const LoginForm = ({history}) => { //여기서 history는 react-router-dom의 wi
   const [error, setError] = useState(null);
   const dispatch = useDispatch();
   const { form, auth, authError, user } = useSelector(({ auth, user }) => (
-    // console.log(auth),
     {
     form: auth.login,
     auth: auth.auth,
@@ -33,7 +32,6 @@ const LoginForm = ({history}) => { //여기서 history는 react-router-dom의 wi
   const onSubmit = e => {
     e.preventDefault();
     const { username, password } = form;
-    console.log(username, password)
     dispatch(login({ username, password }));
   };
 
@@ -44,13 +42,10 @@ const LoginForm = ({history}) => { //여기서 history는 react-router-dom의 wi
 
   useEffect(() => {
     if (authError) {
-      console.log('오류 발생');
-      console.log(authError);
       setError('로그인 실패');
       return;
     }
     if (auth) {
-      console.log('로그인 성공');
       dispatch(check());
     }
   }, [auth, authError, dispatch]);
@@ -64,7 +59,7 @@ const LoginForm = ({history}) => { //여기서 history는 react-router-dom의 wi
         console.log('localStorage is not working');
       }
     }
-  });
+  }, [history, user]);
 
   return (
     <div> 

@@ -74,7 +74,6 @@ const auth = handleActions(
     }),
     // 회원가입 성공
     [REGISTER_SUCCESS]: (state, { payload: auth }) => (
-      console.log(auth),
       {
       ...state,
       authError: null,
@@ -82,14 +81,12 @@ const auth = handleActions(
     }),
     // 회원가입 실패
     [REGISTER_FAILURE]: (state, { payload: error }) => (
-      console.log(error),
       {
       ...state,
       authError: error
     }),
     // 로그인 성공
     [LOGIN_SUCCESS]: (state, { payload: auth }) => (
-      console.log(auth),
       {
       ...state,
       authError: null,

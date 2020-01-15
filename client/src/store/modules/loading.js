@@ -22,7 +22,6 @@ const initialState = {};
 const loading = handleActions(
   {
     [START_LOADING]: (state, action) => (
-      console.log(action),
       {
       ...state,
       [action.payload]: true

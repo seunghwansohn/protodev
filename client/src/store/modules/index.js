@@ -21,11 +21,11 @@ const rootReducer = combineReducers({
     items,
     quote,
     mainSearch,
+    loading,
     clients,
     // quoteSubmit,
     dialogs,
     auth,
-    loading,
     user,
 });
 
