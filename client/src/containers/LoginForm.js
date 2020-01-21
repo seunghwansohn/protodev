@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import { changeField, initializeForm, login } from '../store/modules/auth';
+import { changeField, initializeForm, login, signIn } from '../store/modules/auth';
 import AuthForm from '../components/auth/AuthForm';
 import { check } from '../store/modules/user';
 
@@ -32,34 +32,35 @@ const LoginForm = ({history}) => { //여기서 history는 react-router-dom의 wi
   const onSubmit = e => {
     e.preventDefault();
     const { username, password } = form;
-    dispatch(login({ username, password }));
+    // dispatch(login({ username, password }));
+    dispatch(signIn({ username, password }));
   };
 
   // // 컴포넌트가 처음 렌더링 될 때 form 을 초기화함
-  useEffect(() => {
-    dispatch(initializeForm('login'));
-  }, [dispatch]);
+  // useEffect(() => {
+  //   dispatch(initializeForm('login'));
+  // }, [dispatch]);
 
-  useEffect(() => {
-    if (authError) {
-      setError('로그인 실패');
-      return;
-    }
-    if (auth) {
-      dispatch(check());
-    }
-  }, [auth, authError, dispatch]);
+  // useEffect(() => {
+  //   if (authError) {
+  //     setError('로그인 실패');
+  //     return;
+  //   }
+  //   if (auth) {
+  //     dispatch(check());
+  //   }
+  // }, [auth, authError, dispatch]);
 
-  useEffect(() => {
-    if (user) {
-      history.push('/');
-      try {
-        localStorage.setItem('user', JSON.stringify(user));
-      } catch (e) {
-        console.log('localStorage is not working');
-      }
-    }
-  }, [history, user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     history.push('/');
+  //     try {
+  //       localStorage.setItem('user', JSON.stringify(user));
+  //     } catch (e) {
+  //       console.log('localStorage is not working');
+  //     }
+  //   }
+  // }, [history, user]);
 
   return (
     <div> 

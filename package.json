@@ -4,10 +4,10 @@
 	"license": "UNLICENSED",
 	"scripts": {
 		"client": "cd client && yarn start",
-		"server": "cd server && nodemon --watch server.js server.js",
+		"server": "cd server && nodemon --watch server/ server.js",
 		"sample": "cd sample && yarn start",
 		"servermongo": "cd server && nodemon -r esm --watch src/ servermongo.js",
-		"dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\" \"yarn servermongo\""
+		"dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
 	},
 	"dependencies": {
 		"@david.kucsai/react-pdf-table": "^0.1.1",

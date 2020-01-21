@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '../../components/common/Button';
 import { logout } from '../../store/modules/user'
 import { useDispatch, useSelector } from 'react-redux';
+import { signIn } from '../../store/modules/auth'
 
 import {
   BrowserRouter as Router,
@@ -31,6 +32,10 @@ const MainHeader = () => {
     }
     const check = () => {
     }
+
+    const onSignIn = () => {
+        dispatch(signIn())
+    }
   return (
     <div>
         <PaginationBlock>
@@ -47,6 +52,7 @@ const MainHeader = () => {
                 <li>
                     <Link to="/register">register</Link>
                 </li>
+                <li><button onClick = {onSignIn}>확인</button></li>
             </ul>
         </PaginationBlock>
 
