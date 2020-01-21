@@ -38,7 +38,7 @@ export const register = createAction(REGISTER, ({ username, password }) => ({
 
 export const login = createAction(LOGIN, ({ username, password }) => (
   {
-  username,
+  username,ru
   password
 }));
 
