@@ -1,4 +1,5 @@
 import React        from 'react'
+<<<<<<< HEAD
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow     from '@material-ui/core/TableRow';
 import TableCell    from '@material-ui/core/TableCell';
@@ -7,6 +8,15 @@ import TableHead    from '@material-ui/core/TableHead';
 import TableBody    from '@material-ui/core/TableBody';
 import Viewer       from './viewer'
 import FindDialog   from './common/findDialog'
+=======
+import TableRow     from '@material-ui/core/TableRow';
+import TableCell    from '@material-ui/core/TableCell';
+import Table        from '@material-ui/core/Table'; //material-ui의 Table ui를 불러와서 프론트엔드에 쓰이는 모든 테이블 스타일을 이 스타일로 함.
+import TableHead    from '@material-ui/core/TableHead';
+import TableBody    from '@material-ui/core/TableBody';
+import Viewer       from './viewer'
+// import FindDialog   from './findDialog'
+>>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
 import QuoteSubmit  from './quoteSubmit'
 import InputBase    from '@material-ui/core/InputBase';
 
@@ -31,6 +41,7 @@ const TotalComponent = (props) => {
 
 const QuoteListComponent = (props) => {
     let inputQty = ''
+    
     const hadleValueChange = (index, e) => {
         e.preventDefault();
         inputQty = Number(e.target.value)
@@ -47,7 +58,35 @@ const QuoteListComponent = (props) => {
         const newPRate = Number(e.target.value)
         props.onChangePRate(index, newPRate)
     }
+<<<<<<< HEAD
 
+=======
+    const pickedItemMap = () => {
+        return props.pickedItem.map((c, index) => {
+            return (
+                <TableRow key = {index}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>{c.itemName}</TableCell>
+                    <TableCell>{c.VNSellingPrice}</TableCell>
+                    <TableCell>
+                        <input type="number" placeholder = {c.priceRate + '%'} onChange = {(e) => handlePRateChange(index, e)}></input>
+                    </TableCell>
+                    <TableCell>{c.fixedPrice}</TableCell>
+                    <TableCell>
+                        <input type="number" placeholder = '0' onChange = {(e) => hadleValueChange(index, e)}></input>
+                    </TableCell>
+                    <TableCell>{c.price}</TableCell>
+                    <TableCell>
+                        <form onSubmit = {handleDeleteValueSubmit} method ="post">
+                            <input type="hidden" name="no" value={index + 1}></input>
+                            <input type="submit" name="submit" value= "delete"></input>
+                        </form>
+                    </TableCell>
+                </TableRow>
+            )
+        })
+    }
+>>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
     const pdfOpen = () => {
         var pdfContents = {
             content: [
@@ -95,7 +134,66 @@ const QuoteListComponent = (props) => {
     const type = 'item'
     return(
         <div>
+<<<<<<< HEAD
 
+=======
+            <Table>
+            <TableBody>
+            <TableRow>
+                <TableCell>
+                    <h1>Picked Item</h1>
+                </TableCell>
+                <TableCell>
+                    <Viewer 
+                        pdfBlobUrl          = {props.pdfBlobUrl} 
+                        previewDocument     = {previewDocument} 
+                        onInputPdfBlobUrl   = {props.onInputPdfBlobUrl}
+                        pickedItem          = {props.pickedItem}
+                        subTotalValue       = {subTotalValue}
+                    />
+                </TableCell>
+                <TableCell><QuoteSubmit pickedItem = {props.pickedItem}></QuoteSubmit></TableCell>
+                <TableCell>
+                    <InputBase
+                        placeholder="Search…"
+                        name = "searchKeyword"
+                        onKeyPress={handleKeyPress}
+                        inputProps={{ 'aria-label': 'search' }}
+                    />
+                </TableCell>
+                <TableCell>
+                    {/* <FindDialog 
+                        onFetchClient       = {props.onFetchClient} 
+                        data                = {props.clients.VNbuyer} 
+                        onCustomerSelect    = {props.onCustomerSelect}
+                        searchObject        = 'VN Buyer'
+                        open                = 'false'
+                        setOpen             = {props.onDialogOpen}
+                    /> */}
+                </TableCell>
+            </TableRow>
+            </TableBody>
+            </Table>
+            {props.selectedCustomer}
+            <button onClick = {pdfOpen}>pdf 새창열기</button>            <br></br>
+            <Table>
+                <TableHead>
+                    <TableRow>
+                        <TableCell>No</TableCell>
+                        <TableCell>Name</TableCell>
+                        <TableCell>VN U/P</TableCell>
+                        <TableCell>Rate</TableCell>
+                        <TableCell>fixed U/P</TableCell>
+                        <TableCell>Qty</TableCell>
+                        <TableCell>Price</TableCell>
+                    </TableRow>
+                </TableHead>
+                <TableBody>
+                    {pickedItemMap()}
+                </TableBody>
+            </Table>
+            {/* <TotalComponent quoteTotalValues = {props.quoteTotalValues} onTotalValue = {props.onTotalValue}/> */}
+>>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
         </div>
     )
 }

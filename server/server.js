@@ -23,12 +23,15 @@ const Role = db.role;
 
 db.sequelize.sync();
 
+<<<<<<< HEAD
 // db.sequelize.sync({force: true}).then(() => {
 //   console.log('Drop and Resync Database with { force: true }');
 //   initial();
 // });
 
 
+=======
+>>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
 app.get('/', (req,res) => {
   res.send({message: "Welcome to bezkoder application." })
 });
@@ -36,10 +39,13 @@ app.get('/', (req,res) => {
 
 require('./routes/auth.routes')(app)
 require('./routes/user.routes')(app)
+<<<<<<< HEAD
 require('./routes/item.routes')(app)
 require('./routes/quote.routes')(app)
 require('./routes/client.routes')(app)
 
+=======
+>>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
 
 const port = process.env.PORT || 5000;
 
@@ -52,6 +58,7 @@ var formidable = require('formidable'),
 
 
 
+<<<<<<< HEAD
 app.listen(port, () => console.log(`Lisn port ${port}`))
 
 // function initial() {
@@ -70,3 +77,6 @@ app.listen(port, () => console.log(`Lisn port ${port}`))
 //     name: "admin"
 //   });
 // }
+=======
+app.listen(port, () => console.log(`Lisn port ${port}`))
+>>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329

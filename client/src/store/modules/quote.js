@@ -1,5 +1,29 @@
 import produce from 'immer'
-import * as actionTypes from '../actions/actions';
+import { createAction, handleActions } from 'redux-actions';
+
+export const quoteSELECTCUSTOMER = 'quote/quoteSELECTCUSTOMER'
+export const INPUTQTY = 'quote/INPUTQTY'
+export const PICKITEM = 'quote/PICKITEM'
+export const DELITEM = 'quote/DELITEM'
+export const CHANGEPRATE = 'quote/CHANGEPRATE'
+export const TOTAL_VALUE = 'quote/TOTAL_VALUE'
+export const ON_INPUT_PDF_BLOB_URL = 'itemList/ON_INPUT_PDF_BLOB_URL'
+
+
+
+
+export const TEST = 'login/TEST'
+
+
+export const onAlreadyPickedCheck = createAction(PICKITEM, pickedItem => pickedItem);
+export const inputQtyAction = (index, inputQty) => ({type: INPUTQTY, index, inputQty})
+export const onCustomerSelect = (SelectedCustomerCode) => ({type: quoteSELECTCUSTOMER, SelectedCustomerCode});
+
+export const onInputPdfBlobUrl = (blobUrl) => ({type: ON_INPUT_PDF_BLOB_URL, blobUrl})
+export const onDelPickedItem = (pickedItemNo) => ({type : DELITEM, pickedItemNo})
+export const onChangePRate = (index, rate) => ({type : CHANGEPRATE, index, rate})
+export const totalValue = () => ({type : TOTAL_VALUE})
+
 
 const initialState = {
     pickedCount: 0,
@@ -17,27 +41,34 @@ const initialState = {
       subTotal : 0,
       vat :  0,
       Total : 0,
-  }
+    },
+    quoteTotalValues :  {
+        subTotal : 0,
+        vat :  0,
+        Total : 0,
+    }
 };
+
+
 function reducer (state = initialState, action) {
     switch (action.type) {
-        case actionTypes.INPUTQTY:
+        case INPUTQTY:
           let no = action.index
           return produce(state, draft => {
             draft.pickedItem[no].qty = action.inputQty
             draft.pickedItem[no].price = action.inputQty * draft.pickedItem[no].fixedPrice
           })
-
-        case actionTypes.PICKITEM:
+        case PICKITEM:
+            const pickedItem = action.payload
             let pickedItemArray = state.pickedItem
             let number = state.pickedItem.length
-            let nowPickedItemId = action.pickedItem.id
+            let nowPickedItemId = pickedItem.id
             const alreadyCheck = (pickedItemArray, number, nowPickedItemId) => {
               const found = pickedItemArray.some(el => el.id === nowPickedItemId);
               if (!found) {
-                action.pickedItem.no = number + 1 //no처음규정됨.
-                action.pickedItem.priceRate = 0
-                action.pickedItem.fixedPrice = action.pickedItem.VNSellingPrice
+                pickedItem.no = number + 1 //no처음규정됨.
+                pickedItem.priceRate = 0
+                pickedItem.fixedPrice = pickedItem.VNSellingPrice
                 return false
               } else if (found) {
                 return true
@@ -46,24 +77,21 @@ function reducer (state = initialState, action) {
             const checkIf = alreadyCheck(pickedItemArray, number, nowPickedItemId)
             if (!checkIf) {
               return produce(state, draft => {
-              draft.pickedItem.push(action.pickedItem)
+              draft.pickedItem.push(pickedItem)
               })
             } else if (checkIf) {
               console.log('이미 값이 있음')
             }
-        case actionTypes.onInputPdfBlobUrl:
+        case onInputPdfBlobUrl:
           return produce(state, draft => {
             draft.pdfWorks.pdfBlobUrl = action.blobUrl
           })  
-        case actionTypes.FETCHVNCUSTOMERS:
-          return produce(state, draft => {
-            draft.clients.VNbuyer = action.VNCustomersList
-            }) 
-        case actionTypes.QUOTELISTSELECTCUSTOMER:
+
+        case quoteSELECTCUSTOMER:
           return produce(state, draft => {
             draft.SelectedCustomerCode = action.SelectedCustomerCode
           }) 
-        case actionTypes.DELITEM:
+        case DELITEM:
           const newLength = state.pickedItem.length - 1
           const startNo = action.pickedItemNo + 1
           const Produce = (state) => {
@@ -77,7 +105,7 @@ function reducer (state = initialState, action) {
 
           return Produce(state)
 
-        case actionTypes.CHANGEPRATE:
+        case CHANGEPRATE:
           const index = action.index
           return produce(state, draft => {
             const rate = (action.rate * 0.01) + 1
@@ -87,7 +115,7 @@ function reducer (state = initialState, action) {
             
           })
         
-        case actionTypes.TOTAL_VALUE:
+        case TOTAL_VALUE:
           let totalValues = {}
           totalValues.subTotal = 0
           state.pickedItem.map(pickedItem => {
@@ -101,10 +129,16 @@ function reducer (state = initialState, action) {
             draft.quoteTotalValues.total = totalValues.total
             }) 
           
-        case actionTypes.QUOTELISTSELECTCUSTOMER:
+        case quoteSELECTCUSTOMER:
           return produce(state, draft => {
-            draft.quoteList.SelectedCustomerCode = action.SelectedCustomerCode
+            draft.quote.SelectedCustomerCode = action.SelectedCustomerCode
           }) 
+     
+        case ON_INPUT_PDF_BLOB_URL:
+            return produce(state, draft => {
+              draft.pdfWorks.pdfBlobUrl = action.blobUrl
+            })  
+            
         default:
           return state;
     } 

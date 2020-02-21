@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+<<<<<<< HEAD
 import { changeField, initializeForm, register } from '../modules/auth';
 import AuthForm from '../components/auth/AuthForm';
 import { check } from '../modules/user';
+=======
+import { changeField, initializeForm, register } from '../store/modules/auth';
+import AuthForm from '../components/auth/AuthForm';
+import { check } from '../store/modules/user';
+>>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
 import { withRouter } from 'react-router-dom';
 
 const RegisterForm = ({ history }) => {
@@ -30,6 +36,10 @@ const RegisterForm = ({ history }) => {
   const onSubmit = e => {
     e.preventDefault();
     const { username, password, passwordConfirm } = form;
+<<<<<<< HEAD
+=======
+    console.log(form)
+>>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
     // 하나라도 비어있다면
     if ([username, password, passwordConfirm].includes('')) {
       setError('빈 칸을 모두 입력하세요.');
@@ -70,6 +80,11 @@ const RegisterForm = ({ history }) => {
       dispatch(check());
     }
   }, [auth, authError, dispatch]);
+<<<<<<< HEAD
+=======
+
+  // user 값이 잘 설정되었는지 확인
+>>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
   useEffect(() => {
     if (user) {
       history.push('/'); // 홈 화면으로 이동

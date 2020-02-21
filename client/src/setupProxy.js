@@ -12,6 +12,7 @@ module.exports = function(app) {
   );
   app.use(
     proxy('/api_s/customers', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+<<<<<<< HEAD
       target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
       changeOrigin: true
     })
@@ -37,11 +38,15 @@ module.exports = function(app) {
   );
   app.use(
     proxy('/api/auth/check', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+=======
+>>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
       target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
       changeOrigin: true
     })
   );
+
   app.use(
+<<<<<<< HEAD
     proxy('/api/auth/signin', {                 //node.js로 구성한 api서버의 리퀴스트 주소
       target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
       changeOrigin: true
@@ -63,13 +68,40 @@ module.exports = function(app) {
   app.use(
     proxy('/api/*/*', {                 //node.js로 구성한 api서버의 리퀴스트 주소
       target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
+=======
+    proxy('/api/items', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+      target: 'http://localhost:4000/',       //node.js 서버의 포트 규정
+>>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
+      changeOrigin: true
+    })
+  );
+  // app.use(
+  //   proxy('/api/auth', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+  //     target: 'http://localhost:4000/',       //node.js 서버의 포트 규정
+  //     changeOrigin: true
+  //   })
+  // );
+  app.use(
+<<<<<<< HEAD
+    proxy('/api/*/*/*', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+=======
+    proxy('/api/auth/login', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+      target: 'http://localhost:4000/',       //node.js 서버의 포트 규정
       changeOrigin: true
     })
   );
   app.use(
-    proxy('/api/*/*/*', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+    proxy('/api/auth/check', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+      target: 'http://localhost:4000/',       //node.js 서버의 포트 규정
+      changeOrigin: true
+    })
+  );
+  app.use(
+    proxy('/api/auth/signin', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+>>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
       target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
       changeOrigin: true
     })
   );
+
 };

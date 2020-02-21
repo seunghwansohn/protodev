@@ -9,18 +9,21 @@ import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
+import { connect, useSelector, useDispatch } from 'react-redux';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function FullScreenDialog( {onFetchClient, data, onCustomerSelect, searchObject, open, setOpen}) {
+  
+  const dispatch = useDispatch();
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
-    setOpen(false);
+    dispatch(setOpen(false));
   };
 
   async function onFind() {
