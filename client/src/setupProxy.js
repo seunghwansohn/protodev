@@ -5,25 +5,69 @@ const proxy = require('http-proxy-middleware'); //프록시를 위한 패키지 
 
 module.exports = function(app) {
   app.use(
-    proxy('/api/customers', {                 //node.js로 구성한 api서버의 리퀴스트 주소
-      target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
-      changeOrigin: true
-    })
-  );
-  app.use(
     proxy('/query/*', {                 //node.js로 구성한 api서버의 리퀴스트 주소
       target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
       changeOrigin: true
     })
   );
   app.use(
-    proxy('/api/VNCustomers', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+    proxy('/api_s/customers', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+      target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
+      changeOrigin: true
+    })
+  );
+
+  app.use(
+    proxy('/api/*/*', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+      target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
+      changeOrigin: true
+    })
+  );
+  // app.use(
+  //   proxy('/api/auth', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+  //     target: 'http://localhost:4000/',       //node.js 서버의 포트 규정
+  //     changeOrigin: true
+  //   })
+  // );
+  app.use(
+    proxy('/api/auth/login', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+      target: 'http://localhost:4000/',       //node.js 서버의 포트 규정
+      changeOrigin: true
+    })
+  );
+  app.use(
+    proxy('/api/auth/check', {                 //node.js로 구성한 api서버의 리퀴스트 주소
       target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
       changeOrigin: true
     })
   );
   app.use(
-    proxy('/api/quoteSubmit', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+    proxy('/api/auth/signin', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+      target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
+      changeOrigin: true
+    })
+  );
+  app.use(
+    proxy('/api/auth/logout', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+      target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
+      changeOrigin: true
+    })
+  );
+  app.use(
+    proxy('/api/auth/signup', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+      target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
+      changeOrigin: true
+    })
+  );
+
+  app.use(
+    proxy('/api/*/*', {                 //node.js로 구성한 api서버의 리퀴스트 주소
+      target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
+      changeOrigin: true
+    })
+  );
+  app.use(
+    proxy('/api/*/*/*', {                 //node.js로 구성한 api서버의 리퀴스트 주소
       target: 'http://localhost:5000/',       //node.js 서버의 포트 규정
       changeOrigin: true
     })

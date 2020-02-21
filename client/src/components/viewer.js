@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { StyleSheet } from '@react-pdf/renderer';
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -9,17 +9,9 @@ var pdfMake = require('pdfmake/build/pdfmake.js');
 var pdfFonts = require('pdfmake/build/vfs_fonts.js');
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-
-// Create styles
-
-// Create Document Component
-
-
 export const downloadPdfDoc = (contents) => {
   pdfMake.createPdf(contents).download()
 }
-
-
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -206,7 +198,6 @@ export default function FullScreenDialog( { pdfBlobUrl, onInputPdfBlobUrl, picke
   }
 
   const test = () => {
-    console.log(subTotalValue)
   }
   return (
     <div>

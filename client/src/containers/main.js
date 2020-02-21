@@ -16,44 +16,47 @@ const ItemListContainer = (props) =>
         const dispatch = useDispatch();
 
         const searchProps = {
-            searchKeyword : props.searchKeyword,
-            searchingNow : props.searchingNow,
-            onSetSearchingNow : props.onSetSearchingNow
+            searchKeyword      : props.searchKeyword,
+            searchingNow       : props.searchingNow,
+            onSetSearchingNow  : props.onSetSearchingNow
+        }
+
+        const pdfWorksProps = {
+            pdfBlobUrl          : props.pdfWorks.pdfBlobUrl,
+            onInputPdfBlobUrl   : props.onInputPdfBlobUrl
         }
         
         return(
             <div>
                 <SearchAppBar 
-                    onSearch = {props.onSearch}
+                    onSearch    = {props.onSearch}
                     onFetchItem = {props.onFetchItem}>
                 </SearchAppBar>
+                
                 <ItemListComponent 
-                    itemListArr = {props.itemListArr}
-                    searchProps = {searchProps}
-                    onAlreadyPickedCheck = {props.onAlreadyPickedCheck}
-                >
+                    itemListArr          = {props.itemListArr}
+                    searchProps          = {searchProps}
+                    onAlreadyPickedCheck = {props.onAlreadyPickedCheck}>
                 </ItemListComponent>
+
                 <QuoteListComponent 
-                    pdfBlobUrl = {props.pdfWorks.pdfBlobUrl} 
-                    pickedItem = {props.pickedItem} 
-                    inputItem = {props.inputItem}
-                    CustomersfetchAction = {props.CustomersfetchAction}
-                    clients = {props.clients}
-                    quoteList = {props.quoteList}
-                    QuoteListCustomerSelectAction = {props.QuoteListCustomerSelectAction}
+                    pdfBlobUrl          = {props.pdfWorks.pdfBlobUrl} 
+                    pickedItem          = {props.pickedItem} 
+                    onFetchClient       = {props.onFetchClient}
+                    clients             = {props.clients}
+                    quoteList           = {props.quoteList}
+                    onCustomerSelect    = {props.onCustomerSelect}
 
-                    quoteTotalValues = {props.quoteTotalValues}
-                    selectedCustomer = {props.selectedCustomer}
-                    findDialogsOpen = {props.findDialogsOpen}
+                    quoteTotalValues    = {props.quoteTotalValues}
+                    selectedCustomer    = {props.selectedCustomer}
+                    findDialogsOpen     = {props.findDialogsOpen}
 
-                    onDialogOpen = {props.onDialogOpen}
-                    onQtySubmit = {props.onQtySubmit}
-                    onInputPdfBlobUrl = {props.onInputPdfBlobUrl} 
-                    onDelItem = {props.delItemAction}
-                    onChangePRate = {props.changePRate}
-                    onTotalValue = {props.totalValue}
-                    
-                >
+                    onDialogOpen        = {props.onDialogOpen}
+                    onQtySubmit         = {props.onQtySubmit}
+                    onInputPdfBlobUrl   = {props.onInputPdfBlobUrl} 
+                    onDelPickedItem     = {props.onDelPickedItem}
+                    onChangePRate       = {props.onChangePRate}
+                    onTotalValue        = {props.totalValue}>
                 </QuoteListComponent>
             </div>
         )
@@ -81,17 +84,17 @@ const mapDispatchToProps = dispatch => {
     return {
         onSearch : (searchKeyword) => dispatch(actionCreators.onSearch(searchKeyword)),
         onFetchItem : () => dispatch(actionCreators.onFetchItem()),
-        inputItem :(selectedItem) => dispatch(actionCreators.inputItemAction(selectedItem)),
         onQtySubmit : (index, inputQty) => dispatch(actionCreators.inputQtyAction(index, inputQty)),
         onInputPdfBlobUrl : (blob) => dispatch(actionCreators.onInputPdfBlobUrl(blob)),
         onSetSearchingNow : (ox) => dispatch(actionCreators.onSetSearchingNow(ox)),
-        CustomersfetchAction : () => dispatch(actionCreators.CustomersfetchAction()),
-        QuoteListCustomerSelectAction : (selectedCustomer) => dispatch(actionCreators.QuoteListCustomerSelectAction(selectedCustomer)),
+        onDialogOpen : (ox) => dispatch(actionCreators.onDialogOpen(ox)),
         onAlreadyPickedCheck : (c) => dispatch(actionCreators.onAlreadyPickedCheck(c)),
-        delItemAction :(pickedItemNo) => dispatch(actionCreators.delItemAction(pickedItemNo)),
-        changePRate :(index, rate) => dispatch(actionCreators.changePRate(index, rate)),
+        onFetchClient : () => dispatch(actionCreators.onFetchClient()),
+        onCustomerSelect : (selectedCustomer) => dispatch(actionCreators.onCustomerSelect(selectedCustomer)),
+        onDelPickedItem :(pickedItemNo) => dispatch(actionCreators.onDelPickedItem(pickedItemNo)),
+        onChangePRate :(index, rate) => dispatch(actionCreators.onChangePRate(index, rate)),
         totalValue : () => dispatch(actionCreators.totalValue()),
-        onDialogOpen : (ox) => dispatch(actionCreators.onDialogOpen(ox))
+        
 }}
 
 export default connect(

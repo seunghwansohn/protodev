@@ -1,0 +1,14 @@
+export const getDate_yyyymmdd = (Arr, arrangeRules) => {
+    Date.prototype.yyyymmdd = function() {
+        var mm = this.getMonth() + 1; // getMonth() is zero-based
+        var dd = this.getDate();
+      
+        return [this.getFullYear(),
+                (mm>9 ? '' : '0') + mm,
+                (dd>9 ? '' : '0') + dd
+               ].join('');
+    };
+    var date = new Date();
+    return date.yyyymmdd();
+}
+
