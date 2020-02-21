@@ -25,9 +25,3 @@ yarn-error.log*
 #database.json
 database.json
 .env
-<<<<<<< HEAD
-=======
-db.config.js
-/server/config/db.config.js
-server/config/db.config.js
->>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329

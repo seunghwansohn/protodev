@@ -44,10 +44,7 @@ const StyledButton = styled.button`
   ${buttonStyle}
 `;
 
-<<<<<<< HEAD
 
-=======
->>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
 const StyledLink = styled(Link)`
   ${buttonStyle}
 `;

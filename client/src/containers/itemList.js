@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-<<<<<<< HEAD
 import { connect, useSelector, useDispatch } from 'react-redux';
 
 import {checkedItem, IsThereSelected} from '../modules/itemList'
@@ -27,24 +26,10 @@ import SupplierAdd from '../components/supplierAdd'
 
 import spacelize from '../lib/spacelize'
 import { Field, reduxForm } from 'redux-form'
-=======
-
-import SearchAppBar from '../components/common/appBar'
-import ItemListComponent from '../components/itemList'
-import QuoteListComponent from '../components/quoteList'
-import Button from "@material-ui/core/Button";
-import { connect, useSelector, useDispatch } from 'react-redux';
-// import * as actionCreators from '../store/actions/actions';
-import * as mainSearchAct from '../store/modules/mainSearch';
-import { setSearchKeyword } from '../store/modules/mainSearch'
-import { setApiLoad } from '../store/modules/items'
-import { onAlreadyPickedCheck } from '../store/modules/quote'
->>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
 
 
 const ItemListContainer = () => {
     const dispatch = useDispatch();
-<<<<<<< HEAD
     const { 
             opened, 
             dialogs, 
@@ -66,20 +51,12 @@ const ItemListContainer = () => {
             dialogs         : itemList.dialogs,
             opened          : dialogs.opened,
 
-=======
-    const { searchingNow, searchKeyword, itemListArr, searchProps } = useSelector(
-        ({ mainSearch, items }) => ({
-            searchingNow : mainSearch.searchingNow,
-            searchKeyword : mainSearch.searchKeyword,
-            itemListArr : items.itemListArr,
->>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
             searchProps : {
                 searchKeyword : mainSearch.searchKeyword,
                 searchingNow : mainSearch.searchingNow
             }
         }),
     );
-<<<<<<< HEAD
 
     const table = useSelector(state => state.itemList.table)
 
@@ -208,25 +185,10 @@ const ItemListContainer = () => {
 
     ]
 
-=======
-    
-  
-    const onSearch = (searchKeyword) => {
-        dispatch(setSearchKeyword(searchKeyword))
-    }
-    const onApiLoad = () => {
-        dispatch(setApiLoad())
-    }
-    // const pdfWorksProps = {
-    //     pdfBlobUrl          : props.pdfWorks.pdfBlobUrl,
-    //     onInputPdfBlobUrl   : props.onInputPdfBlobUrl
-    // }
->>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
     useEffect(() => {
         dispatch(setApiLoad())
     }, []);
 
-<<<<<<< HEAD
     useEffect(() => {
         dispatch(setAuthReset())
     }, []);
@@ -259,18 +221,6 @@ const ItemListContainer = () => {
                 >
                 </Table> : ''
             }
-=======
-    return(
-        <>
-            {/* <Button onClick = {props.onTestSaga}>확인</Button>*/}
-            <SearchAppBar onSearch    = {onSearch}/>
-
-            <ItemListComponent 
-                itemListArr          = {itemListArr}
-                onAlreadyPickedCheck = {onAlreadyPickedCheck}
-                searchProps          = {searchProps}>
-            </ItemListComponent>
->>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
         </>
     )
 }   

@@ -20,7 +20,6 @@ module.exports = function(app) {
   );
 
   app.post("/api/auth/signin", controller.signin);
-<<<<<<< HEAD
 
   app.post("/api/auth/check", controller.check);
   
@@ -28,6 +27,3 @@ module.exports = function(app) {
 };
 
 
-=======
-};
->>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329

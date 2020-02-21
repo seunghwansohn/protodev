@@ -41,15 +41,10 @@
 		"react-pdf": "^4.1.0",
 		"react-router": "^5.1.2",
 		"react-router-dom": "^5.1.2",
-<<<<<<< HEAD
 		"react-toastify": "^5.5.0",
 		"redux-devtools-extension": "^2.13.8",
 		"redux-form": "^8.2.6",
 		"redux-form-material-ui": "^4.3.4",
-=======
-		"redux-devtools-extension": "^2.13.8",
-		"redux-form": "^8.2.6",
->>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
 		"redux-saga": "^1.1.3",
 		"redux-thunk": "^2.3.0",
 		"sequelize": "^5.21.3",

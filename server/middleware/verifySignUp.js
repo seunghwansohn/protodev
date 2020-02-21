@@ -17,7 +17,6 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
     }
 
     // Email
-<<<<<<< HEAD
     // User.findOne({
     //   where: {
     //     email: req.body.email
@@ -32,22 +31,6 @@ checkDuplicateUsernameOrEmail = (req, res, next) => {
 
     next();
     // });
-=======
-    User.findOne({
-      where: {
-        email: req.body.email
-      }
-    }).then(user => {
-      if (user) {
-        res.status(400).send({
-          message: "Failed! Email is already in use!"
-        });
-        return;
-      }
-
-      next();
-    });
->>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
   });
 };
 

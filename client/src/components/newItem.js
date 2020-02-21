@@ -14,10 +14,6 @@ function onFetchItem() {
     return function(callback) {
       return axios.get("/api/customers")
         .then(({ data }) => {
-<<<<<<< HEAD
-=======
-        console.log(data)
->>>>>>> e3e6576cc497ca7bbc3ab5e2aecee3a67a053329
       });
     };
 }
