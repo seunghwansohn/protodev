@@ -11,7 +11,6 @@ import Grid             from '@material-ui/core/Grid';
 import Button           from '@material-ui/core/Button';
 import Paper            from '@material-ui/core/Paper';
 
-
 const useStyles = makeStyles(theme => ({
   root: {
     '& > *': {
@@ -26,13 +25,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-
-
 let SupplierAdd = props => {
   const classes = useStyles();
   const [type, setType]               = React.useState({});
 
-  const blankNotes = [];
+  const blankNotes = [[]];
 
   const [typeArr, setTypeArr]   = React.useState([...blankNotes]);
 
@@ -43,9 +40,7 @@ let SupplierAdd = props => {
 
 
   const handleArrChange = e => {
-    console.log(e.target)
     const updatedArr = [...typeArr];
-    console.log(updatedArr)
     updatedArr[e.target.id] = e.target.value;
     setTypeArr(updatedArr);
   };
@@ -64,21 +59,28 @@ let SupplierAdd = props => {
     return input
   }
 
-  console.log(typeArr)
-
-
-  const notesFragment = 
-    <React.Fragment>
-      <Grid item xs = {11}>
-        {createInput('notes')} 
-      </Grid>
-      <Grid item xs = {1}>
-        <Button variant="contained" color="primary" onClick = {addEmail}>
-          Add
-        </Button>
-      </Grid>
-    </React.Fragment>
-  console.log(type)
+  const notesFragment = (val, idx) => {
+    return( 
+      <React.Fragment>
+        <React.Fragment>
+          <Grid item xs = {11}>
+            <FormControl key = {idx} className = {classes.fieldItem}>
+              <InputLabel>{'notes ' + idx}</InputLabel>
+              <Input type = 'text' id={idx} value={typeArr[idx]} onChange={handleArrChange} />
+            </FormControl>
+          </Grid>
+        </React.Fragment>
+        {idx == 0 ? 
+          <React.Fragment>
+            <Button variant="contained" color="primary" onClick = {addEmail}>
+              Add
+            </Button>
+          </React.Fragment>
+          : ''
+        }
+      </React.Fragment>
+    )
+  }
 
 
   return (
@@ -117,20 +119,13 @@ let SupplierAdd = props => {
         </Grid>
 
         <Grid container xs = {12} className = {classes.grid} spacing={0}>
-          {notesFragment}
           {typeArr.map((val, idx) => {
             return (
-              <FormControl key = {idx} className = {'dfdf'}>
-                <InputLabel>{'notes'}</InputLabel>
-                <Input type = 'text' id={idx} value={typeArr[idx]} onChange={handleArrChange} />
-              </FormControl>
+              notesFragment(val, idx)
             )
           })}
         </Grid>
-
     </form>
-
-
   )
 }
 
