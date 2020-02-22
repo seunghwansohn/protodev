@@ -6,10 +6,13 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
+import { connect, useSelector, useDispatch } from 'react-redux';
 
 import Grid             from '@material-ui/core/Grid';
 import Button           from '@material-ui/core/Button';
 import Paper            from '@material-ui/core/Paper';
+
+import {setSupplierAdd} from '../modules/supplier'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -28,11 +31,13 @@ const useStyles = makeStyles(theme => ({
 let SupplierAdd = props => {
   const classes = useStyles();
   const [type, setType]               = React.useState({});
-
   const blankNotes = [[]];
+
 
   const [typeArr, setTypeArr]   = React.useState([...blankNotes]);
 
+  const dispatch = useDispatch();
+  const supplierProps = useSelector(state => state.supplier)
 
   const addEmail = () => {
     setTypeArr([...typeArr,  [...blankNotes] ]);
@@ -49,6 +54,10 @@ let SupplierAdd = props => {
     setType({ ...type, [prop]: event.target.value });
   };
   
+  const onSubmit = () => {
+    type.notes = typeArr
+    dispatch(setSupplierAdd(type))
+  }
 
   const createInput = (title) => {
     let input = 
@@ -125,6 +134,9 @@ let SupplierAdd = props => {
             )
           })}
         </Grid>
+        <Button variant="contained" color="primary" onClick = {onSubmit}>
+              Submit
+        </Button>
     </form>
   )
 }
