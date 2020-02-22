@@ -8,6 +8,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import { connect, useSelector, useDispatch } from 'react-redux';
 
+import axios from 'axios';
+
+
 import Grid             from '@material-ui/core/Grid';
 import Button           from '@material-ui/core/Button';
 import Paper            from '@material-ui/core/Paper';
@@ -31,6 +34,8 @@ const useStyles = makeStyles(theme => ({
 let SupplierAdd = props => {
   const classes = useStyles();
   const [type, setType]               = React.useState({});
+  const [note, setNote]               = React.useState('');
+
   const blankNotes = [[]];
 
 
@@ -54,6 +59,10 @@ let SupplierAdd = props => {
     setType({ ...type, [prop]: event.target.value });
   };
   
+  const handleChangeNote = (e) => {
+    e.preventDefault()
+    setNote(e.target.value)
+  }
   const onSubmit = () => {
     type.notes = typeArr
     dispatch(setSupplierAdd(type))
@@ -91,53 +100,94 @@ let SupplierAdd = props => {
     )
   }
 
+  const writeNote = (note, supplierCode) => {
+    axios.post(`/api/supplier/addNotes`, {note:note, supplierCode : supplierCode})
+    .then(res => {
+      console.log(res);
+      console.log(res.data);
+    })
+  }
+
+
+  const loadNote = () => {
+    axios.get(`/api/supplier/loadNotes/dfef`)
+    .then(res => {
+      console.log(res);
+      console.log(res.data);
+    })
+  }
+  loadNote()
+  
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const supplierCode = 'dflkd'
+      writeNote(note, supplierCode)
+ // onFetchItem()
+    }
+  }
 
   return (
-    <form className={classes.root} noValidate autoComplete="off">
-        <Grid container xs = {12} className = {classes.grid} spacing={0}>
-          <Grid item xs = {5}>
-            {createInput('supplierCode')} 
+    <React.Fragment>
+      <form className={classes.root} noValidate autoComplete="off">
+          <Grid container xs = {12} className = {classes.grid} spacing={0}>
+            <Grid item xs = {5}>
+              {createInput('supplierCode')} 
+            </Grid>
+            <Grid item xs = {7}>
+              {createInput('supplierName')} 
+            </Grid>
           </Grid>
-          <Grid item xs = {7}>
-            {createInput('supplierName')} 
+          <Grid container xs = {12} className = {classes.grid} spacing={0}>
+            <Grid item xs = {5}>
+              {createInput('country')} 
+            </Grid>
+            <Grid item xs = {7}>
+              {createInput('province')} 
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid container xs = {12} className = {classes.grid} spacing={0}>
-          <Grid item xs = {5}>
-            {createInput('country')} 
+          <Grid container xs = {12} className = {classes.grid} spacing={0}>
+            <Grid item xs = {5}>
+              {createInput('ceo')} 
+            </Grid>
+            <Grid item xs = {7}>
+              {createInput('taxCode')} 
+            </Grid>
           </Grid>
-          <Grid item xs = {7}>
-            {createInput('province')} 
+          <Grid container xs = {12} className = {classes.grid} spacing={0}>
+            <Grid item xs = {5}>
+              {createInput('emailType')} 
+            </Grid>
+            <Grid item xs = {7}>
+              {createInput('emailAddress')} 
+            </Grid>
           </Grid>
-        </Grid>
-        <Grid container xs = {12} className = {classes.grid} spacing={0}>
-          <Grid item xs = {5}>
-            {createInput('ceo')} 
-          </Grid>
-          <Grid item xs = {7}>
-            {createInput('taxCode')} 
-          </Grid>
-        </Grid>
-        <Grid container xs = {12} className = {classes.grid} spacing={0}>
-          <Grid item xs = {5}>
-            {createInput('emailType')} 
-          </Grid>
-          <Grid item xs = {7}>
-            {createInput('emailAddress')} 
-          </Grid>
-        </Grid>
 
+          <Grid container xs = {12} className = {classes.grid} spacing={0}>
+            {typeArr.map((val, idx) => {
+              return (
+                notesFragment(val, idx)
+              )
+            })}
+          </Grid>
+          <Button variant="contained" color="primary" onClick = {onSubmit}>
+                Submit
+          </Button>
+          {/* <Button variant="contained" color="primary" onClick = {checkApi}>
+                Submit
+          </Button> */}
+      </form>
+      <form className={classes.root} noValidate autoComplete="off">
         <Grid container xs = {12} className = {classes.grid} spacing={0}>
-          {typeArr.map((val, idx) => {
-            return (
-              notesFragment(val, idx)
-            )
-          })}
+          <Grid item xs = {12}>
+            <FormControl className = {classes.fieldItem}>
+              <InputLabel>{'notes'}</InputLabel>
+              <Input id={'notes'} value={note} onChange={handleChangeNote} onKeyPress={handleKeyPress} />
+            </FormControl>          
+          </Grid>
         </Grid>
-        <Button variant="contained" color="primary" onClick = {onSubmit}>
-              Submit
-        </Button>
-    </form>
+      </form>
+    </React.Fragment>
   )
 }
 

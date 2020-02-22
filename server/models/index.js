@@ -30,6 +30,9 @@ db.quote = require("../models/quote.model.js")(sequelize, Sequelize);
 db.client = require("../models/client.model.js")(sequelize, Sequelize);
 db.clientRate = require("../models/client.rate.model.js")(sequelize, Sequelize);
 db.itemPRice = require("../models/item.Price.model.js")(sequelize, Sequelize);
+db.supplier = require("../models/supplier.model.js")(sequelize, Sequelize);
+db.supplierNote = require("../models/supplier.notes.model.js")(sequelize, Sequelize);
+
 
 db.role.belongsToMany(db.user, {
     through: "user_roles", //through : 둘을 연결해주는 table을 하나 생성하여 여기를 통해 연결됨
@@ -51,7 +54,8 @@ db.item.belongsTo(db.itemPRice,
 db.client.belongsTo(db.clientRate, 
     {as : "rate", through: "client_clientRate", foreignKey: 'clientRate', targetKey: 'clientRate'})
 
-
+db.supplier.belongsTo(db.supplierNote, 
+    {as : "note", through: "supplier_supplierNote", foreignKey: 'supplierCode', targetKey: 'supplierCode'})
         
 db.ROLES = ["user", "admin", "moderator"];
 

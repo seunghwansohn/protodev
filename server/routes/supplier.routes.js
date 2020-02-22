@@ -10,6 +10,9 @@ module.exports = function(app) {
   });
 
   app.post("/api/supplier/addNew", controller.addNew)
+  app.post("/api/supplier/addNotes", controller.addNotes)
+  app.get("/api/supplier/loadNotes/:id", controller.loadNotes);
+
 };
 
 
