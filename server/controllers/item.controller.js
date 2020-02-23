@@ -81,10 +81,25 @@ exports.check = (req, res) => {
   const {table, checkVal} = req.body
   console.log(table)
   console.log(checkVal)
-  // switch(table) {
-  //   case 'item':
-      
+};
 
-  // }
-
+exports.query = (req, res) => {
+  try {
+    console.log(req.body)
+    let result = ''
+    const includingKey = 'Price'
+    Item.findAll(
+      {where: req.body, include: [{model:ItemPrice, as: includingKey}] }
+      ).then(items => {
+        result = monolize(items, includingKey)
+      }).then(() => {
+        calPrice.VNSellP(result)
+        console.log(result)
+        res.status(200).send(result);
+      })
+  }
+  catch (err) {
+    res.status(500).send({message:err.message})
+    console.log(err.message)
+  }
 };

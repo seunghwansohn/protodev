@@ -188,9 +188,7 @@ export default function StickyHeadTable(
   const handleClickTableCol = async (value, column) => {
     if (column == 'itemName') {
       const ox = true
-      console.log(value)
-      console.log(column)
-      await dispatch(onDialogOpen(ox, 'itemQuery'))
+      await dispatch(onDialogOpen(ox, 'itemQuery', value))
     }
   }
 
@@ -261,7 +259,7 @@ export default function StickyHeadTable(
                       if(colTypes.hasOwnProperty(column)){
                         if(colTypes[column].style == 'input') {
                           return (
-                            <TableCell key={column} align={column.align} onClick = {() => console.log('테이블클릭')}>
+                            <TableCell key={column} align={column.align}>
                               <input 
                                 type = {colTypes[column].type} 
                                 name = {column}

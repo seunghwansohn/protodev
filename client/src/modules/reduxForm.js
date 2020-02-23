@@ -28,7 +28,8 @@ function reducer (state = initialState, action) {
     switch (action.type) {
         case LOAD :
             return produce(state, draft => {
-
+                console.log(action.payload)
+                draft.itemName = action.payload.itemName
               })
         case SLIDER_STK_V_VAR :
         return produce(state, draft => {

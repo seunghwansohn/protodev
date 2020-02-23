@@ -193,6 +193,17 @@ const ItemListContainer = () => {
         'description'
 
     ]
+    const initValFunc = (type) => {
+        let initVal = ''
+        opened.map(obj => {
+            if (obj.type == type && obj.initVal !== null && obj.initVal !== undefined) {
+                initVal = obj.initVal
+            }
+        })
+        return initVal
+    }
+
+    initValFunc('itemQuery')
 
     useEffect(() => {
         dispatch(setApiLoad())
@@ -211,11 +222,18 @@ const ItemListContainer = () => {
             <ButtonHeader type = {type} onHeaderButton = { onHeaderButton } isThereSelected = {isThereSelected}></ButtonHeader>
             <button onClick = {onCheck}>체크</button>
             <DialogST attr = {DialogsAttr.itemAdd}>
-                <ItemAdd title = {DialogsAttr.itemAdd.title} fieldsAttr = {arrFunc()}></ItemAdd>
+                <ItemAdd 
+                    title = {DialogsAttr.itemAdd.title} 
+                    fieldsAttr = {arrFunc()}
+                ></ItemAdd>
             </DialogST>
 
             <DialogST attr = {DialogsAttr.itemQuery}>
-                <ItemQuery title = {DialogsAttr.itemQuery.title} fieldsAttr = {arrFunc()}></ItemQuery>
+                <ItemQuery 
+                    title = {DialogsAttr.itemQuery.title} 
+                    fieldsAttr = {arrFunc()}
+                    initVal = {initValFunc('itemQuery')}
+                ></ItemQuery>
             </DialogST>
 
             <DialogST attr = {DialogsAttr.addSupplier}>

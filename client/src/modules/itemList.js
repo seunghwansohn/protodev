@@ -31,6 +31,7 @@ export const SELECT_ITEMS = 'item/SELECT_ITEMS'
 export const CHANGE_NEW_ITEM_SPECS = 'item/CHANGE_NEW_ITEM_SPECS'
 export const SET_HEADER = 'item/SET_HEADER'
 export const SET_SELECTED_ITEMS = 'item/SET_SELECTED_ITEMS'
+export const SET_ITEM_QUERY_INIT_LOAD = 'item/SET_ITEM_QUERY_INIT_LOAD'
 
 
 export const setApiLoad = createAction(APILOAD)
@@ -43,7 +44,6 @@ export const changeNewItemSpecs = createAction(CHANGE_NEW_ITEM_SPECS, spec => sp
 export const setHeader = createAction(SET_HEADER, columns => columns)
 export const setSelectedItems = createAction(SET_SELECTED_ITEMS, items => items)
 export const setSubmitAddItem = createAction(SETSUBMITADDITEM, item => item)
-
 
 export function* itemsSaga() {
   yield takeLatest(APILOAD, apiLoadSaga);

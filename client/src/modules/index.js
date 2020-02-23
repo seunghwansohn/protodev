@@ -11,6 +11,8 @@ import supplier, {supplierSaga}                 from './supplier';
 import auth, { authSaga }       from './auth';
 import user, { userSaga }       from './user';
 import table, { tableSaga }     from './test';
+import query, { querySaga }     from './query';
+
 import basicInfo, { basicInfoSaga }     from './basicInfo';
 import { authtestSaga }         from './authtest';
 import { reducer as formReducer } from 'redux-form'
@@ -29,7 +31,8 @@ const rootReducer = combineReducers({
     form: formReducer,
     basicInfo,
     reduxFormInit,
-    supplier
+    supplier,
+    query
 });
 
 export function* rootSaga () {
@@ -42,7 +45,8 @@ export function* rootSaga () {
         quoteSaga(),
         clientsSaga(),
         basicInfoSaga(),
-        supplierSaga()
+        supplierSaga(),
+        querySaga()
     ])
 }
 

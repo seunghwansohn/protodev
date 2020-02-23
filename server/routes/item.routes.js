@@ -19,6 +19,5 @@ module.exports = function(app) {
   app.post("/api/item/test", controller.test)
   app.post("/api/item/checkExist", controller.check)
   app.post("/api/item/add", controller.newItem)
-
-
+  app.post("/api/item/query", controller.query)
 };

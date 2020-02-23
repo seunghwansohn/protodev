@@ -19,7 +19,7 @@ import Button           from '@material-ui/core/Button';
 import Paper            from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import { ToastContainer, toast } from 'react-toastify';
-
+import Input from '@material-ui/core/Input';
 
 import { getExchangeRate } from '../modules/basicInfo'
 
@@ -29,6 +29,10 @@ import spacelize  from '../lib/spacelize'
 import * as cal   from '../lib/calSTValues'
 
 import {setSubmitAddItem} from '../modules/itemList'
+import {initLoad} from '../modules/query'
+
+import axios from 'axios';
+
 
 toast.configure()
 
@@ -193,148 +197,71 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-const validate = values => {
-  const errors = {}
-  const requiredFields = [
-    'itemCode',
-    'itemName',
-  ]
-  requiredFields.forEach(field => {
-    if (!values[field]) {
-        errors[field] = 'Required'
-    }
-  })
-  return errors
-}
-
-const required = value => value ? undefined : 'Required'
-const maxLength = max => value =>
-  value && value.length > max ? `Must be ${max} characters or less` : undefined
-const maxLength15 = maxLength(15)
-const number = value => value && isNaN(Number(value)) ? 'Must be a number' : undefined
-const minValue = min => value =>
-  value && value < min ? `Must be at least ${min}` : undefined
-const minValue18 = minValue(18)
-
-const renderTextField = ({
-  label,
-  input,
-  meta: { touched, invalid, error },
-  ...custom
-}) => {
-  return (
-    <TextField
-        label={label}
-        placeholder={label}
-        error={touched && invalid}
-        helperText={touched && error}
-        {...input}
-        {...custom}
-    />
-  )
-}
-const renderCheckbox = ({ input, label }) => {
-  return (
-    <div>
-      <FormControlLabel
-      control={
-        <Checkbox
-          checked={input.value ? true : false}
-          onChange={input.onChange}
-        />
-      }
-      label={label}
-      />
-    </div>
-  )
-}
-const radioButton = ({ input, ...rest }) => {
-  return (
-    <FormControl>
-        <RadioGroup {...input} {...rest}>
-        <FormControlLabel value="female" control={<Radio />} label="Female" />
-        <FormControlLabel value="male" control={<Radio />} label="Male" />
-        <FormControlLabel value="other" control={<Radio />} label="Other" />
-        </RadioGroup>
-    </FormControl>
-  )
-}
-const renderFromHelper = ({ touched, error }) => {
-  if (!(touched && error)) {
-      return
-  } else {
-      return <FormHelperText>{touched && error}</FormHelperText>
-  }
-}
-
-const renderSelectField = ({
-  input,
-  label,
-  meta: { touched, error },
-  children,
-  ...custom
-}) => 
-{ 
-  return (
-    <FormControl error={touched && error}>
-      <InputLabel htmlFor="color-native-simple">{label}</InputLabel>
-      <Select
-      native
-      {...input}
-      {...custom}
-      inputProps={{
-          name: input.name,
-          id: 'color-native-simple'
-      }}
-      >
-      {children}
-      </Select>
-      {renderFromHelper({ touched, error })}
-    </FormControl>
-  )
-}
-
 
 let ItemQuery = props => {
-  const { handleSubmit, pristine, reset, submitting, fieldsAttr, onLoad, onSetStkVVar, onSetStkCVar} = props
+  const { initVal, handleSubmit, pristine, reset, submitting, fieldsAttr, onLoad, onSetStkVVar, onSetStkCVar} = props
   const classes = useStyles();
   const dispatch = useDispatch()
-  const formValues = useSelector(state => state.form.itemQuery.values)
-  const {
-    buyingPrice, 
-    importTaxRate, 
-    importPrice, 
-    width,
-    depth,
-    height,
-    weight
-  } = formValues
 
   const {stkVVar, stkCVar} = useSelector(state => state.reduxFormInit)
 
   const exchangeRate = useSelector(state => state.basicInfo.exchangeRate)
+
+
+  const [itemCode, setItemCode]       = React.useState(null);
+  const [itemName, setItemName]       = React.useState(null);
+
+  const [supplier, setSupplier]        = React.useState(null);
+  const [description, setDescription]  = React.useState(null);
+
+  const [maker, setMaker]                 = React.useState(null);
+  const [makerModelNo, setMakerModelNo]   = React.useState(null);
+
+  const [importTaxRate, setImportTaxRate]  = React.useState(0);
+  const [importPrice, setImportPrice]      = React.useState(0);
+  
+  const [buyingPrice, setBuyingPrice]   = React.useState(0);
+  const [importTax, setImportTax]       = React.useState(0);
+
+  const [width, setWidth]   = React.useState(0);
+  const [depth, setDepth]   = React.useState(0);
+  const [height, setHeight] = React.useState(0);
+  const [weight, setWeight] = React.useState(0);
 
   const [CBM, setCBM]                       = React.useState(0);
   const [deliveryKorea, setDeliveryKorea]   = React.useState(0);
   const [seaFreight, setSeaFreight]         = React.useState(0);
   const [airFreight, setAirFreight]         = React.useState(0);
   const [handCarryFee, setHandCarryFee]     = React.useState(0);
+
   const [STKVPrice, setSTKVPrice]     = React.useState(0);
   const [segeroPay, setSegeroPay]     = React.useState(0);
-  const [importTax, setImportTax]     = React.useState(0);
   const [packingFee, setPackingFee]     = React.useState(0);
   const [defaultFreight, setDefaultFreight]     = React.useState();
   const [VNSellingP, setVNSellingP]     = React.useState(0);
   const [buyingPriceUSD, setBuyingPriceUSD] = React.useState(0);
+
   const [profitKR, setProfitKR] = React.useState(0);
   const [profitVN, setProfitVN] = React.useState(0);
+
   const [costKR, setCostKR] = React.useState(0);
   const [costVN, setCostVN] = React.useState(0);
+
   const [profitCostKR, setProfitCostKR] = React.useState(0);
   const [profitCostVN, setProfitCostVN] = React.useState(0);
+
   const [totalProfit, setTotalProfit] = React.useState(0);
   const [totalProfitCost, setTotalProfitCost] = React.useState(0);
 
+  const [type, setType]               = React.useState({});
+
+
+
+  useEffect(() => {
+    axios.post('/api/item/query', {itemName : initVal}).then(res => {
+        setItemCode(res.data[0].itemCode)
+    })
+  },[])
 
   useEffect(() => {
     const CBM = cal.CBM(width, depth, height)
@@ -343,7 +270,6 @@ let ItemQuery = props => {
     const deliveryKorea = cal.deliveryKorea(weight)
     const packingFee = cal.packingFee(CBM)
     const defaultFreight= cal.defaultFreight(seaFreight, packingFee, exchangeRate.KRW)
-
     setCBM(CBM)
     setSeaFreight(seaFreight)
     setAirFreight(airFreight)
@@ -353,19 +279,19 @@ let ItemQuery = props => {
   },[width, depth, height, weight])
 
   useEffect(() => {
-        const STKVPrice= cal.STKVPrice(stkVVar, buyingPrice)
-        const segeroPay= cal.segeroPay(STKVPrice)
-        const importTax= cal.importTax(importTaxRate, STKVPrice)
-        const VNSellingP= cal.VNSellingP(STKVPrice, importTax, stkCVar)
-        const buyingPriceUSD= cal.buyingPriceUSD(buyingPrice, exchangeRate.KRW)
-        const costKR = cal.costKR(defaultFreight, segeroPay, buyingPriceUSD)
-        const costVN = cal.costVN(importTax, STKVPrice)
-        const profitKR = cal.profitKR(STKVPrice, costKR)
-        const profitVN = cal.profitKR(VNSellingP, costVN)
-        const profitCostKR = cal.profitCost(profitKR, costKR)
-        const profitCostVN = cal.profitCost(profitVN, costVN)
-        const totalProfit = profitKR + profitVN
-        const totalProfitCost = Math.round(totalProfit/(costKR+costVN - STKVPrice) *10) *10
+        const STKVPrice         = cal.STKVPrice(stkVVar, buyingPrice)
+        const segeroPay         = cal.segeroPay(STKVPrice)
+        const importTax         = cal.importTax(importTaxRate, STKVPrice)
+        const VNSellingP        = cal.VNSellingP(STKVPrice, importTax, stkCVar)
+        const buyingPriceUSD    = cal.buyingPriceUSD(buyingPrice, exchangeRate.KRW)
+        const costKR            = cal.costKR(defaultFreight, segeroPay, buyingPriceUSD)
+        const costVN            = cal.costVN(importTax, STKVPrice)
+        const profitKR          = cal.profitKR(STKVPrice, costKR)
+        const profitVN          = cal.profitKR(VNSellingP, costVN)
+        const profitCostKR      = cal.profitCost(profitKR, costKR)
+        const profitCostVN      = cal.profitCost(profitVN, costVN)
+        const totalProfit       = profitKR + profitVN
+        const totalPinitValrofitCost   = Math.round(totalProfit/(costKR+costVN - STKVPrice) *10) *10
 
         setSTKVPrice(STKVPrice)
         setSegeroPay(segeroPay)
@@ -386,19 +312,6 @@ let ItemQuery = props => {
     dispatch(getExchangeRate())
   },[])
 
-  const fields = () => {
-    let fields = []
-    if(Array.isArray(fieldsAttr) && fieldsAttr.length > 0) {
-      fieldsAttr.map(field => {
-        let newObj = {}
-        newObj = field
-        newObj.component = eval(field.component)
-        fields.push(newObj)
-      })
-    }
-    return fields
-  }
-
   function valuetext(value) {
     dispatch(sliderStKVVar(value))
   }
@@ -407,19 +320,13 @@ let ItemQuery = props => {
     dispatch(sliderStKCVar(value))
   }
 
+  const handleChange = prop => event => {
+    setType({ ...type, [prop]: event.target.value });
+  };
 
-  const onCheck = () => { 
-    let submitValues = formValues
-    submitValues.stkCVar = stkCVar
-    submitValues.stkVVar = stkVVar
-  }
 
-  const createField = (name, component,style, normalize) => {
-    let field = <Field name={name} component={renderTextField} label={spacelize(name)} className = {classes[style]}  normalize={normalize} validate={[ required ]}/>
-    return field
-  }
   const onSubmit = () => {
-    let submitValues = formValues
+    let submitValues = {}
     submitValues.stkCVar = stkCVar
     submitValues.stkVVar = stkVVar
     const required = ['itemCode', 'itemName', 'supplier', 'maker' ]
@@ -439,62 +346,40 @@ let ItemQuery = props => {
     }
   }
 
+  const createInput = (title, state, setState, unit) => {
+    let input = 
+      <FormControl className = {classes.fieldItem}>
+        <InputLabel>{title}</InputLabel>
+        <Input id={title} value={state} onChange={(e) => setState(e.target.value)}/>
+      </FormControl>
+    return input
+  }
+
   return (
-    <div>
+    <React.Fragment>
       <Grid container xs = {12} className = {classes.grid} spacing={0}>
         <Grid item xs = {12}>
           <Grid container className = {classes.grid} spacing={0}>
-            <Grid item xs = {3}> {createField('itemCode', renderTextField,'fieldItem')} </Grid>
-            <Grid item xs = {9}> {createField('itemName', renderTextField, 'fieldItem')} </Grid>
+            <Grid item xs = {3}> {createInput('itemCode', itemCode, setItemCode)}</Grid>
+            <Grid item xs = {9}> {createInput('itemName', itemName, setItemName)} </Grid>
           </Grid>
         </Grid>
         <Grid item xs = {12}>
           <Grid container className = {classes.grid} spacing={0}>
-            <Grid item xs = {3}> {createField('supplier', renderTextField, 'fieldInfo')} </Grid>
-            <Grid item xs = {9}> 
-              <Field name={'description'} 
-                component={renderTextField} 
-                label={spacelize('description')} 
-                className = {classes.fieldPrice} 
-                placeholder = 'description'>
-              </Field>
-            </Grid>
+            <Grid item xs = {3}> {createInput('supplier', supplier, setSupplier)} </Grid>
+            <Grid item xs = {9}> {createInput('description', description, setDescription)} </Grid>
           </Grid>
         </Grid>
         <Grid item xs = {12}>
           <Grid container className = {classes.grid} spacing={0}>
-            <Grid item xs = {3}> {createField('maker', renderTextField, 'fieldInfo')} </Grid>
-            <Grid item xs = {9}> 
-              <Field name={'makerModelNo'} 
-                component={renderTextField} 
-                label={spacelize('makerModelNo')} 
-                className = {classes.fieldPrice} 
-                placeholder = {spacelize('makerModelNo')}>
-              </Field>
-            </Grid>
+            <Grid item xs = {3}> {createInput('maker', maker, setMaker)} </Grid>
+            <Grid item xs = {9}> {createInput('makerModelNo', makerModelNo, setMakerModelNo)} </Grid>
           </Grid>
         </Grid>
     
         <Grid container item xs = {3} className = {classes.gridPrice} spacing={0}>
-            <Grid item xs ={12}> 
-              <Field name={'buyingPrice'} 
-                  component={renderTextField} 
-                  label={spacelize('buyingPrice') + ' (KRW)'} 
-                  className = {classes.fieldPrice} 
-                  validate={[ number ]}
-                  placeholder = 'buyingPrice (KRW)'>
-              </Field>
-            </Grid>
-            <Grid item xs ={12}> 
-              <Field name={'importTaxRate'} 
-                  component={renderTextField} 
-                  label={spacelize('importTaxRate') + ' (%)'} 
-                  className = {classes.fieldPrice} 
-                  validate={[ number ]}
-                  placeholder = 'Import Tax Rate (%)'>
-                    cm
-              </Field>
-            </Grid>
+            <Grid item xs ={12}> {createInput('buyingPrice', buyingPrice, setBuyingPrice)} </Grid>
+            <Grid item xs ={12}> {createInput('importTaxRate', importTaxRate, setImportTaxRate)}</Grid>
             <Grid item xs ={12}> 
               <Typography id="discrete-slider-small-steps" gutterBottom>
                 STK V Var
@@ -612,38 +497,10 @@ let ItemQuery = props => {
         </Grid>
 
         <Grid item xs = {3}> 
-            <Field name={'width'} 
-              component={renderTextField} 
-              label={spacelize('width') + ' (cm)'} 
-              className = {classes.fieledDimension} 
-              validate={[ number ]}
-              placeholder = 'width (cm)'>
-                cm
-            </Field>
-            <Field name={'depth'} 
-              component={renderTextField} 
-              label={spacelize('depth') + ' (cm)'} 
-              className = {classes.fieledDimension} 
-              validate={[ number ]}
-              placeholder = 'depth (cm)'>
-                cm
-            </Field>
-            <Field name={'height'} 
-              component={renderTextField} 
-              label={spacelize('height') + ' (cm)'} 
-              className = {classes.fieledDimension} 
-              validate={[ number ]}
-              placeholder = 'height (cm)'>
-                cm
-            </Field>
-            <Field name={'weight'} 
-              component={renderTextField} 
-              label={spacelize('weight') + ' (kg)'} 
-              className = {classes.fieledDimension} 
-              validate={[ number ]}
-              placeholder = 'weight (kg)'>
-                cm
-            </Field>
+            {createInput('width', width, setWidth)}
+            {createInput('depth', depth, setDepth)}
+            {createInput('height', height, setHeight)}
+            {createInput('weight', weight, setWeight)}
         </Grid>
         <Grid item xs = {6}> 
           <Paper className={classes.paperDeliveryInfo}> CBM: {CBM} </Paper>
@@ -661,27 +518,21 @@ let ItemQuery = props => {
                 $ 1 = VND {Math.round(exchangeRate.VND * 100)/100}
               </Box>
         </Grid>
-        <Grid item xs = {12}>{createField('note', renderTextField, 'fieledNote')} </Grid>
+        {/* <Grid item xs = {12}>{createField('note', renderTextField, 'fieledNote')} </Grid> */}
       </Grid>
       <Button variant="contained" onClick = {onSubmit}>Submit</Button>
-      <Button variant="contained" onClick = {onCheck}>Check</Button>
+      {/* <Button variant="contained" onClick = {onCheck}>Check</Button> */}
 
-    </div>
+
+    </React.Fragment>
   )
 }
 
 ItemQuery = reduxForm({
   form: 'itemQuery', // a unique identifier for this form
-  validate,
 })(ItemQuery)
 
 ItemQuery = connect(
-  state => ({
-    initialValues: state.reduxFormInit // pull initial values from account reducer
-  }),
-  {
-    onLoad : load,
-  }
 )(ItemQuery)
 
 export default ItemQuery
