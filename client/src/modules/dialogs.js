@@ -19,8 +19,16 @@ function reducer (state = initialState, action) {
               temp.type = 'itemAdd'
             }
             else {temp.type = action.meta.type}
-            temp.ox = action.meta.ox
-            draft.opened.push(temp)
+            if (action.meta.ox == true) {
+              temp.ox = action.meta.ox
+              draft.opened.push(temp)
+            } else if (action.meta.ox == false){
+              state.opened.map((dialog, index) => {
+                if (dialog.type == action.meta.type) {
+                  delete draft.opened[index]
+                }
+              })
+            }
         })
       default:
         return state;

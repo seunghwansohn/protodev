@@ -21,6 +21,7 @@ import DialogST from '../components/common/DialogST'
 import Table from '../components/common/Table'
 import ButtonHeader from '../components/common/ButtonHeader'
 import ItemAdd from '../components/ItemAdd'
+import ItemQuery from '../components/ItemQuery'
 import SupplierAdd from '../components/supplierAdd'
 
 
@@ -145,6 +146,14 @@ const ItemListContainer = () => {
             scroll : 'paper'
             
         },
+        itemQuery : {
+            title : 'Item Query',
+            maxWidth : 'md' ,
+            funcs : funcs,
+            open : checkOpened('itemQuery'),
+            scroll : 'paper'
+            
+        },
         check : {
             title : 'check',
             maxWidth : 'xl',
@@ -204,6 +213,11 @@ const ItemListContainer = () => {
             <DialogST attr = {DialogsAttr.itemAdd}>
                 <ItemAdd title = {DialogsAttr.itemAdd.title} fieldsAttr = {arrFunc()}></ItemAdd>
             </DialogST>
+
+            <DialogST attr = {DialogsAttr.itemQuery}>
+                <ItemQuery title = {DialogsAttr.itemQuery.title} fieldsAttr = {arrFunc()}></ItemQuery>
+            </DialogST>
+
             <DialogST attr = {DialogsAttr.addSupplier}>
                 <SupplierAdd></SupplierAdd>
             </DialogST>

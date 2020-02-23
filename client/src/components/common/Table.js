@@ -13,6 +13,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import Checkbox from '@material-ui/core/Checkbox';
 import {checkedItem, IsThereSelected, selectItems} from '../../modules/itemList'
 import {setQuoteListHeader, setAddHeader, addStoreValue, onAlreadyPickedCheck} from '../../modules/quote'
+import {onDialogOpen} from '../../modules/dialogs'
+
 
 const useStyles = makeStyles({
   root: {
@@ -183,6 +185,15 @@ export default function StickyHeadTable(
     onChangeInput(id, name, value)
   }
 
+  const handleClickTableCol = async (value, column) => {
+    if (column == 'itemName') {
+      const ox = true
+      console.log(value)
+      console.log(column)
+      await dispatch(onDialogOpen(ox, 'itemQuery'))
+    }
+  }
+
   return (
     <Paper className={classes.root}>
       <div>
@@ -250,7 +261,7 @@ export default function StickyHeadTable(
                       if(colTypes.hasOwnProperty(column)){
                         if(colTypes[column].style == 'input') {
                           return (
-                            <TableCell key={column} align={column.align}>
+                            <TableCell key={column} align={column.align} onClick = {() => console.log('테이블클릭')}>
                               <input 
                                 type = {colTypes[column].type} 
                                 name = {column}
@@ -264,7 +275,7 @@ export default function StickyHeadTable(
                       }
                       else {
                         return (
-                          <TableCell key={column} align={column.align}>
+                          <TableCell key={column} align={column.align} onClick = {() => handleClickTableCol(value, column)}>
                             {column.format && typeof value === 'number' ? column.format(value) : value}
                           </TableCell>
                           

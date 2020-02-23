@@ -50,6 +50,11 @@ exports.addNotes = (req, res) => {
 
 exports.loadNotes = (req, res) => {
     console.log(req.params)
-
+    SupplierNote.findAll({where : {supplierCode : 'fefef'}}
+    ).then(suppliers => {
+        result = suppliers
+    }).then(() => {
+        res.status(200).send(result);
+    })
 };
   
