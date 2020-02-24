@@ -60,5 +60,5 @@ export const profitVN = (VNSellingP, costVN) => {
 
 
 export const profitCost = (profit, cost) => {
-    return Math.round((profit/cost) * 10)/10 * 100
+    return Math.round((profit/cost) * 10000)/100
 }

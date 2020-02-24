@@ -1,47 +1,29 @@
-import React, {useState, useEffect}           from 'react'
-import { connect, useSelector, useDispatch }  from 'react-redux';
-import { Field, reduxForm, Fields }           from 'redux-form'
+import React, {useState, useEffect, useCallback, useMemo}           from 'react'
+import { useSelector, useDispatch }  from 'react-redux';
 
 import styled, {createGlobalStyle} from 'styled-components';
 
 import clsx from 'clsx';
 
-import Typography from '@material-ui/core/Typography';
-import Slider from '@material-ui/core/Slider';
+import Typography       from '@material-ui/core/Typography';
+import Slider           from '@material-ui/core/Slider';
 import TextField        from '@material-ui/core/TextField'
-import Checkbox         from '@material-ui/core/Checkbox'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import FormControl      from '@material-ui/core/FormControl'
-import Select           from '@material-ui/core/Select'
-import InputLabel       from '@material-ui/core/InputLabel'
-import FormHelperText   from '@material-ui/core/FormHelperText'
-import Radio            from '@material-ui/core/Radio'
-import RadioGroup       from '@material-ui/core/RadioGroup'
 import { makeStyles }   from '@material-ui/core/styles';
 import Grid             from '@material-ui/core/Grid';
 import Button           from '@material-ui/core/Button';
 import Paper            from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
+import Box              from '@material-ui/core/Box';
+import InputAdornment   from '@material-ui/core/InputAdornment';
+import IconButton       from '@material-ui/core/IconButton';
+import EditIcon         from '@material-ui/icons/Edit';
+
 import { ToastContainer, toast } from 'react-toastify';
-import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
 
+import * as calST   from '../lib/calSTValues'
+import axios        from 'axios';
 
-import { getExchangeRate } from '../modules/basicInfo'
-
-import {load, sliderStKVVar, sliderStKCVar} from '../modules/reduxForm'
-
-import spacelize  from '../lib/spacelize'
-import * as cal   from '../lib/calSTValues'
-
-import {setSubmitAddItem} from '../modules/itemList'
-import {initLoad} from '../modules/query'
-
-import axios  from 'axios';
-import {axiosPost} from '../lib/api/axios'
-
+import {setSubmitAddItem}   from '../modules/itemList'
+import {getExchangeRate}    from '../modules/basicInfo'
 
 const StyledTextField = styled(TextField)`
   background-color: #6772e5;
@@ -54,7 +36,6 @@ const StyledTextField = styled(TextField)`
 const styledGrid = styled(Grid)`
   
 `
-
 toast.configure()
 
 const useStyles = makeStyles(theme => ({
@@ -238,22 +219,12 @@ const useStyles = makeStyles(theme => ({
 
 // const StyledPapar = styled.textFiend``
 
-const GlobalStyle = createGlobalStyle`
-  body {
-    color: ${props => (props.whiteColor ? 'white' : 'black')};
-    font-size: 2.8rem;
-  }
-`
-
 let ItemQuery = props => {
-  const { initVal, handleSubmit, pristine, reset, submitting, fieldsAttr, onLoad, onSetStkVVar, onSetStkCVar} = props
+  const { initVal, handleSubmit, pristine, reset, submitting, fieldsAttr, onLoad} = props
   const classes = useStyles();
   const dispatch = useDispatch()
 
-  const {stkVVar, stkCVar} = useSelector(state => state.reduxFormInit)
-
   const exchangeRate = useSelector(state => state.basicInfo.exchangeRate)
-
 
   const [itemCode, setItemCode]       = React.useState(null);
   const [itemName, setItemName]       = React.useState(null);
@@ -304,23 +275,24 @@ let ItemQuery = props => {
 
   const [disabledForms, setDisabledForms] = React.useState([])
 
-
+  const [stkCVar, setStkCVar] = React.useState(1.02)
+  const [stkVVar, setStkVVar] = React.useState(1.10)
 
   useEffect(() => {
     axios.post('/api/item/query', {itemName : initVal}).then(res => {
         setItemCode(res.data[0].itemCode)
         setItemName(res.data[0].itemName)
-
     })
   },[])
 
   useEffect(() => {
-    const CBM = cal.CBM(width, depth, height)
-    const seaFreight = cal.seaFreight(CBM)
-    const airFreight = cal.airFreight(weight)
-    const deliveryKorea = cal.deliveryKorea(weight)
-    const packingFee = cal.packingFee(CBM)
-    const defaultFreight= cal.defaultFreight(seaFreight, packingFee, exchangeRate.KRW)
+    const CBM             = calST.CBM(width, depth, height)
+    const seaFreight      = calST.seaFreight(CBM)
+    const airFreight      = calST.airFreight(weight)
+    const deliveryKorea   = calST.deliveryKorea(weight)
+    const packingFee      = calST.packingFee(CBM)
+    const defaultFreight  = calST.defaultFreight(seaFreight, packingFee, exchangeRate.KRW)
+    
     setCBM(CBM)
     setSeaFreight(seaFreight)
     setAirFreight(airFreight)
@@ -330,19 +302,19 @@ let ItemQuery = props => {
   },[width, depth, height, weight])
 
   useEffect(() => {
-        const STKVPrice         = cal.STKVPrice(stkVVar, buyingPrice)
-        const segeroPay         = cal.segeroPay(STKVPrice)
-        const importTax         = cal.importTax(importTaxRate, STKVPrice)
-        const VNSellingP        = cal.VNSellingP(STKVPrice, importTax, stkCVar)
-        const buyingPriceUSD    = cal.buyingPriceUSD(buyingPrice, exchangeRate.KRW)
-        const costKR            = cal.costKR(defaultFreight, segeroPay, buyingPriceUSD)
-        const costVN            = cal.costVN(importTax, STKVPrice)
-        const profitKR          = cal.profitKR(STKVPrice, costKR)
-        const profitVN          = cal.profitKR(VNSellingP, costVN)
-        const profitCostKR      = cal.profitCost(profitKR, costKR)
-        const profitCostVN      = cal.profitCost(profitVN, costVN)
+        const STKVPrice         = calST.STKVPrice(stkVVar, buyingPrice)
+        const segeroPay         = calST.segeroPay(STKVPrice)
+        const importTax         = calST.importTax(importTaxRate, STKVPrice)
+        const VNSellingP        = calST.VNSellingP(STKVPrice, importTax, stkCVar)
+        const buyingPriceUSD    = calST.buyingPriceUSD(buyingPrice, exchangeRate.KRW)
+        const costKR            = calST.costKR(defaultFreight, segeroPay, buyingPriceUSD)
+        const costVN            = calST.costVN(importTax, STKVPrice)
+        const profitKR          = calST.profitKR(STKVPrice, costKR)
+        const profitVN          = calST.profitKR(VNSellingP, costVN)
+        const profitCostKR      = calST.profitCost(profitKR, costKR)
+        const profitCostVN      = calST.profitCost(profitVN, costVN)
         const totalProfit       = profitKR + profitVN
-        const totalPinitValrofitCost   = Math.round(totalProfit/(costKR+costVN - STKVPrice) *10) *10
+        const totalProfitCost   = Math.round(totalProfit/(costKR+costVN - STKVPrice) *10000) /100
 
         setSTKVPrice(STKVPrice)
         setSegeroPay(segeroPay)
@@ -357,26 +329,26 @@ let ItemQuery = props => {
         setProfitCostVN(profitCostVN)
         setTotalProfit(totalProfit)
         setTotalProfitCost(totalProfitCost)
-  },[stkVVar, stkCVar, buyingPrice, importTaxRate])
+  },[stkVVar, stkCVar, buyingPrice, importTaxRate, defaultFreight])
   
   useEffect(() => {
     dispatch(getExchangeRate())
   },[])
 
-  function valuetext(value) {
-    dispatch(sliderStKVVar(value))
-  }
-
   function onSetSTKCVar(value) {
-    dispatch(sliderStKCVar(value))
+    setStkCVar(value)
   }
 
-  const handleChange = prop => event => {
+  function onSetSTKVVar(value) {
+    setStkVVar(value)
+  }
+
+  const handleChange = useCallback(prop => event => {
+    event.preventDefault()
     setType({ ...type, [prop]: event.target.value });
-  };
+  },[])
 
-
-  const onSubmit = () => {
+  const onSubmit = useCallback(() => {
     let submitValues = {}
     submitValues.stkCVar = stkCVar
     submitValues.stkVVar = stkVVar
@@ -394,9 +366,9 @@ let ItemQuery = props => {
     } else {
       dispatch(setSubmitAddItem(submitValues))
     }
-  }
+  }, [])
 
-  const disabledCheck = (title) => {
+  const disabledCheck = useCallback((title) => {
     let checkAlready = disabledForms.includes(title)
     if (checkAlready) {
       return false
@@ -404,15 +376,25 @@ let ItemQuery = props => {
     else {
       return true
     }
-  }
+  },[disabledForms])
 
-  const onKeyPressOnForms = (e, title) => {
+  const onKeyPressOnForms = useCallback((e, title) => {
     if (e.key === "Enter") {
       e.preventDefault();
       setDisabledForms(disabledForms.filter(title => title !== title))
     }
-  }
-
+  },[])
+  
+  const buttonClicked = useCallback((title) => {
+    (function() {
+      let checkAlready = disabledForms.includes(title)
+      if (checkAlready) {
+        setDisabledForms(disabledForms.filter(title => title !== title))
+      } else {
+        setDisabledForms(disabledForms => [...disabledForms, title])
+      }
+    }())
+  }, [])
 
   const createInput = (title, state, setState, unit, unitPosition) => {
     let input = 
@@ -448,24 +430,9 @@ let ItemQuery = props => {
               onKeyPress = {function(e) {onKeyPressOnForms(e,title)}}
             />
           </Grid>
-
         </Grid>
       </React.Fragment>
     return input
-  }
-
-  const onCheck = (res) => {
-    axiosPost('/api/item/query', {itemName : initVal}).then(
-      res => console.log(res))
-  }
-
-  const buttonClicked = (title) => {
-    let checkAlready = disabledForms.includes(title)
-    if (checkAlready) {
-      setDisabledForms(disabledForms.filter(title => title !== title))
-    } else {
-      setDisabledForms(disabledForms => [...disabledForms, title])
-    }
   }
 
   return (
@@ -499,7 +466,7 @@ let ItemQuery = props => {
               </Typography>
               <Slider
                 defaultValue={1.02}
-                getAriaValueText={valuetext}
+                getAriaValueText={onSetSTKVVar}
                 aria-labelledby="discrete-slider-small-steps"
                 step={0.01}
                 marks
@@ -634,18 +601,8 @@ let ItemQuery = props => {
         {/* <Grid item xs = {12}>{createField('note', renderTextField, 'fieledNote')} </Grid> */}
       </Grid>
       <Button variant="contained" onClick = {onSubmit}>Submit</Button>
-      <Button variant="contained" onClick = {onCheck}>Check</Button>
-
-
     </React.Fragment>
   )
 }
-
-ItemQuery = reduxForm({
-  form: 'itemQuery', // a unique identifier for this form
-})(ItemQuery)
-
-ItemQuery = connect(
-)(ItemQuery)
 
 export default ItemQuery
