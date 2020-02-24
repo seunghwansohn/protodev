@@ -1,19 +1,16 @@
 import React, {useState, useEffect}           from 'react'
-import { makeStyles } from '@material-ui/core/styles';
-import FilledInput from '@material-ui/core/FilledInput';
-import FormControl from '@material-ui/core/FormControl';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import OutlinedInput from '@material-ui/core/OutlinedInput';
-import { connect, useSelector, useDispatch } from 'react-redux';
 
-import axios from 'axios';
-
-
+import { makeStyles }   from '@material-ui/core/styles';
+import FormControl      from '@material-ui/core/FormControl';
+import Input            from '@material-ui/core/Input';
+import InputLabel       from '@material-ui/core/InputLabel';
 import Grid             from '@material-ui/core/Grid';
 import Button           from '@material-ui/core/Button';
 import Paper            from '@material-ui/core/Paper';
+
+import { connect, useSelector, useDispatch } from 'react-redux';
+
+import axios from 'axios';
 
 import {setSupplierAdd} from '../modules/supplier'
 
@@ -31,17 +28,25 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+let SupplierNotes = props => {
+  return (
+    <React.Fragment>
+      모르고
+    </React.Fragment>
+  )
+}
+
 let SupplierAdd = props => {
   const classes = useStyles();
-  const [type, setType]               = React.useState({});
-  const [note, setNote]               = React.useState('');
+  const dispatch = useDispatch();
 
   const blankNotes = [[]];
 
+  const [type, setType]               = React.useState({});
 
-  const [typeArr, setTypeArr]   = React.useState([...blankNotes]);
+  const [note, setNote]               = React.useState('');
+  const [typeArr, setTypeArr]         = React.useState([...blankNotes]);
 
-  const dispatch = useDispatch();
   const supplierProps = useSelector(state => state.supplier)
 
   const addEmail = () => {
@@ -63,10 +68,21 @@ let SupplierAdd = props => {
     e.preventDefault()
     setNote(e.target.value)
   }
+
+  const handleKeyPress = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      const supplierCode = 'dflkd'
+      writeNote(note, supplierCode)
+    }
+  }
+
+
   const onSubmit = () => {
     type.notes = typeArr
     dispatch(setSupplierAdd(type))
   }
+  
 
   const createInput = (title) => {
     let input = 
@@ -118,14 +134,7 @@ let SupplierAdd = props => {
   }
   loadNote()
   
-  const handleKeyPress = (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      const supplierCode = 'dflkd'
-      writeNote(note, supplierCode)
- // onFetchItem()
-    }
-  }
+
 
   return (
     <React.Fragment>
@@ -170,23 +179,16 @@ let SupplierAdd = props => {
               )
             })}
           </Grid>
+
+          <SupplierNotes></SupplierNotes>
+
+          <br></br>
+          
           <Button variant="contained" color="primary" onClick = {onSubmit}>
                 Submit
           </Button>
-          {/* <Button variant="contained" color="primary" onClick = {checkApi}>
-                Submit
-          </Button> */}
       </form>
-      <form className={classes.root} noValidate autoComplete="off">
-        <Grid container xs = {12} className = {classes.grid} spacing={0}>
-          <Grid item xs = {12}>
-            <FormControl className = {classes.fieldItem}>
-              <InputLabel>{'notes'}</InputLabel>
-              <Input id={'notes'} value={note} onChange={handleChangeNote} onKeyPress={handleKeyPress} />
-            </FormControl>          
-          </Grid>
-        </Grid>
-      </form>
+
     </React.Fragment>
   )
 }
