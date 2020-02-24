@@ -31,7 +31,9 @@ import * as cal   from '../lib/calSTValues'
 import {setSubmitAddItem} from '../modules/itemList'
 import {initLoad} from '../modules/query'
 
-import axios from 'axios';
+import axios  from 'axios';
+import {axiosPost} from '../lib/api/axios'
+
 
 
 toast.configure()
@@ -354,7 +356,11 @@ let ItemQuery = props => {
       </FormControl>
     return input
   }
-
+  const onCheck = (res) => {
+    axiosPost('/api/item/query', {itemName : initVal}).then(
+      res => console.log(res))
+  }
+  
   return (
     <React.Fragment>
       <Grid container xs = {12} className = {classes.grid} spacing={0}>
@@ -521,7 +527,7 @@ let ItemQuery = props => {
         {/* <Grid item xs = {12}>{createField('note', renderTextField, 'fieledNote')} </Grid> */}
       </Grid>
       <Button variant="contained" onClick = {onSubmit}>Submit</Button>
-      {/* <Button variant="contained" onClick = {onCheck}>Check</Button> */}
+      <Button variant="contained" onClick = {onCheck}>Check</Button>
 
 
     </React.Fragment>

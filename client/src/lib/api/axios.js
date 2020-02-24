@@ -27,5 +27,12 @@ const client = axios.create({
 //   }
 // )  
 
+export const axiosPost = async (addr, req) => {
+  var strr = ''
+  await axios.post(addr, req).then(function(res){
+    strr = res
+  })
+  return strr
+}
 
 export default client;
