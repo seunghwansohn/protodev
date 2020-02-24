@@ -368,6 +368,15 @@ let ItemQuery = props => {
     }
   }
 
+  const onKeyPressOnForms = (e, title) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      setDisabledForms(disabledForms.filter(title => title !== title))
+    }
+  }
+
+  console.log(disabledForms)
+
   const createInput = (title, state, setState, unit, unitPosition) => {
     let input = 
       <React.Fragment>
@@ -383,6 +392,7 @@ let ItemQuery = props => {
         }}
         value={state == 0 ? null : state} 
         onChange={(e) => setState(e.target.value)}
+        onKeyPress = {function(e) {onKeyPressOnForms(e,title)}}
         />
         <IconButton onClick = {() => buttonClicked(title)}>
           <EditIcon className={clsx(classes.margin, classes.textField)}></EditIcon>
@@ -399,6 +409,7 @@ let ItemQuery = props => {
   const buttonClicked = (title) => {
     let checkAlready = disabledForms.includes(title)
     if (checkAlready) {
+      setDisabledForms(disabledForms.filter(title => title !== title))
     } else {
       setDisabledForms(disabledForms => [...disabledForms, title])
     }
