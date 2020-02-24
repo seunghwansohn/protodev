@@ -2,6 +2,8 @@ import React, {useState, useEffect}           from 'react'
 import { connect, useSelector, useDispatch }  from 'react-redux';
 import { Field, reduxForm, Fields }           from 'redux-form'
 
+import clsx from 'clsx';
+
 import Typography from '@material-ui/core/Typography';
 import Slider from '@material-ui/core/Slider';
 import TextField        from '@material-ui/core/TextField'
@@ -20,6 +22,8 @@ import Paper            from '@material-ui/core/Paper';
 import Box from '@material-ui/core/Box';
 import { ToastContainer, toast } from 'react-toastify';
 import Input from '@material-ui/core/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
+
 
 import { getExchangeRate } from '../modules/basicInfo'
 
@@ -262,6 +266,8 @@ let ItemQuery = props => {
   useEffect(() => {
     axios.post('/api/item/query', {itemName : initVal}).then(res => {
         setItemCode(res.data[0].itemCode)
+        setItemName(res.data[0].itemName)
+
     })
   },[])
 
@@ -348,19 +354,27 @@ let ItemQuery = props => {
     }
   }
 
-  const createInput = (title, state, setState, unit) => {
+  const createInput = (title, state, setState, unit, unitPosition) => {
     let input = 
-      <FormControl className = {classes.fieldItem}>
-        <InputLabel>{title}</InputLabel>
-        <Input id={title} value={state} onChange={(e) => setState(e.target.value)}/>
-      </FormControl>
+      <TextField
+      label={title}
+      id={title}
+      className={clsx(classes.margin, classes.textField)}
+      InputProps={unitPosition == 'end' ? {
+        endAdornment: <InputAdornment position={unitPosition ? unitPosition : "start"}>{unit}</InputAdornment>,
+      } : {
+        startAdornment: <InputAdornment position={unitPosition ? unitPosition : "start"}>{unit}</InputAdornment>,
+      }}
+      value={state == 0 ? null : state} 
+      onChange={(e) => setState(e.target.value)}
+      />
     return input
   }
   const onCheck = (res) => {
     axiosPost('/api/item/query', {itemName : initVal}).then(
       res => console.log(res))
   }
-  
+
   return (
     <React.Fragment>
       <Grid container xs = {12} className = {classes.grid} spacing={0}>
@@ -384,8 +398,8 @@ let ItemQuery = props => {
         </Grid>
     
         <Grid container item xs = {3} className = {classes.gridPrice} spacing={0}>
-            <Grid item xs ={12}> {createInput('buyingPrice', buyingPrice, setBuyingPrice)} </Grid>
-            <Grid item xs ={12}> {createInput('importTaxRate', importTaxRate, setImportTaxRate)}</Grid>
+            <Grid item xs ={12}> {createInput('buyingPrice', buyingPrice, setBuyingPrice, 'KRW')} </Grid>
+            <Grid item xs ={12}> {createInput('importTaxRate', importTaxRate, setImportTaxRate, '%', 'end')}</Grid>
             <Grid item xs ={12}> 
               <Typography id="discrete-slider-small-steps" gutterBottom>
                 STK V Var
@@ -503,10 +517,10 @@ let ItemQuery = props => {
         </Grid>
 
         <Grid item xs = {3}> 
-            {createInput('width', width, setWidth)}
-            {createInput('depth', depth, setDepth)}
-            {createInput('height', height, setHeight)}
-            {createInput('weight', weight, setWeight)}
+            {createInput('width', width, setWidth, 'cm', 'end')}
+            {createInput('depth', depth, setDepth, 'cm', 'end')}
+            {createInput('height', height, setHeight, 'cm', 'end')}
+            {createInput('weight', weight, setWeight, 'cm', 'end')}
         </Grid>
         <Grid item xs = {6}> 
           <Paper className={classes.paperDeliveryInfo}> CBM: {CBM} </Paper>

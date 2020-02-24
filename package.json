@@ -17,6 +17,7 @@
 		"bcrypt": "^3.0.7",
 		"bcryptjs": "^2.4.3",
 		"body-parser": "^1.18.3",
+		"clsx": "^1.1.0",
 		"cookie-parser": "^1.4.4",
 		"corejs": "^1.0.0",
 		"cors": "^2.8.5",
