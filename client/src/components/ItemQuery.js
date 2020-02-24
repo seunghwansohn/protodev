@@ -23,6 +23,8 @@ import Box from '@material-ui/core/Box';
 import { ToastContainer, toast } from 'react-toastify';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
 
 
 import { getExchangeRate } from '../modules/basicInfo'
@@ -261,6 +263,8 @@ let ItemQuery = props => {
 
   const [type, setType]               = React.useState({});
 
+  const [disabledForms, setDisabledForms] = React.useState([])
+
 
 
   useEffect(() => {
@@ -354,25 +358,50 @@ let ItemQuery = props => {
     }
   }
 
+  const disabledCheck = (title) => {
+    let checkAlready = disabledForms.includes(title)
+    if (checkAlready) {
+      return false
+    }
+    else {
+      return true
+    }
+  }
+
   const createInput = (title, state, setState, unit, unitPosition) => {
     let input = 
-      <TextField
-      label={title}
-      id={title}
-      className={clsx(classes.margin, classes.textField)}
-      InputProps={unitPosition == 'end' ? {
-        endAdornment: <InputAdornment position={unitPosition ? unitPosition : "start"}>{unit}</InputAdornment>,
-      } : {
-        startAdornment: <InputAdornment position={unitPosition ? unitPosition : "start"}>{unit}</InputAdornment>,
-      }}
-      value={state == 0 ? null : state} 
-      onChange={(e) => setState(e.target.value)}
-      />
+      <React.Fragment>
+        <TextField
+        disabled = {disabledCheck(title)}
+        label={title}
+        id={title}
+        className={clsx(classes.margin, classes.textField)}
+        InputProps={unitPosition == 'end' ? {
+          endAdornment: <InputAdornment position={unitPosition ? unitPosition : "start"}>{unit}</InputAdornment>,
+        } : {
+          startAdornment: <InputAdornment position={unitPosition ? unitPosition : "start"}>{unit}</InputAdornment>,
+        }}
+        value={state == 0 ? null : state} 
+        onChange={(e) => setState(e.target.value)}
+        />
+        <IconButton onClick = {() => buttonClicked(title)}>
+          <EditIcon className={clsx(classes.margin, classes.textField)}></EditIcon>
+        </IconButton>
+      </React.Fragment>
     return input
   }
+
   const onCheck = (res) => {
     axiosPost('/api/item/query', {itemName : initVal}).then(
       res => console.log(res))
+  }
+
+  const buttonClicked = (title) => {
+    let checkAlready = disabledForms.includes(title)
+    if (checkAlready) {
+    } else {
+      setDisabledForms(disabledForms => [...disabledForms, title])
+    }
   }
 
   return (
