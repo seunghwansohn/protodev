@@ -2,6 +2,8 @@ import React, {useState, useEffect}           from 'react'
 import { connect, useSelector, useDispatch }  from 'react-redux';
 import { Field, reduxForm, Fields }           from 'redux-form'
 
+import styled, {createGlobalStyle} from 'styled-components';
+
 import clsx from 'clsx';
 
 import Typography from '@material-ui/core/Typography';
@@ -41,6 +43,17 @@ import axios  from 'axios';
 import {axiosPost} from '../lib/api/axios'
 
 
+const StyledTextField = styled(TextField)`
+  background-color: #6772e5;
+  display : 'flex';
+  &:hover {
+    background-color: #5469d4;
+  }
+`;
+
+const styledGrid = styled(Grid)`
+  
+`
 
 toast.configure()
 
@@ -88,8 +101,10 @@ const useStyles = makeStyles(theme => ({
   grid: {
       padding: theme.spacing(0),
       textAlign: 'left',
+      alignContent: 'center',
+      justifyContent : 'center',
       display: 'flex',
-      backgroundColor : '#ecdfed'
+      backgroundColor : '#ecdfed',
   },
   gridPrice: {
     padding: theme.spacing(0),
@@ -202,9 +217,33 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     fontSize : '23px',
   },
+  textField : {
+    width: '100%',
+    padding: theme.spacing(0),
+    justifyContent: 'center',
+    display: 'flex',
+    fontSize : '18px',
+
+  },
+  iconButton : {
+    padding: theme.spacing(0),
+    justifyContent: 'center',
+    alignContent: 'center',
+    display: 'flex',
+    fontSize : '18px',
+
+  },
 
 }));
 
+// const StyledPapar = styled.textFiend``
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    color: ${props => (props.whiteColor ? 'white' : 'black')};
+    font-size: 2.8rem;
+  }
+`
 
 let ItemQuery = props => {
   const { initVal, handleSubmit, pristine, reset, submitting, fieldsAttr, onLoad, onSetStkVVar, onSetStkCVar} = props
@@ -353,7 +392,6 @@ let ItemQuery = props => {
         toast(error)
       })
     } else {
-      console.log(submitValues)
       dispatch(setSubmitAddItem(submitValues))
     }
   }
@@ -375,28 +413,43 @@ let ItemQuery = props => {
     }
   }
 
-  console.log(disabledForms)
 
   const createInput = (title, state, setState, unit, unitPosition) => {
     let input = 
       <React.Fragment>
-        <TextField
-        disabled = {disabledCheck(title)}
-        label={title}
-        id={title}
-        className={clsx(classes.margin, classes.textField)}
-        InputProps={unitPosition == 'end' ? {
-          endAdornment: <InputAdornment position={unitPosition ? unitPosition : "start"}>{unit}</InputAdornment>,
-        } : {
-          startAdornment: <InputAdornment position={unitPosition ? unitPosition : "start"}>{unit}</InputAdornment>,
-        }}
-        value={state == 0 ? null : state} 
-        onChange={(e) => setState(e.target.value)}
-        onKeyPress = {function(e) {onKeyPressOnForms(e,title)}}
-        />
-        <IconButton onClick = {() => buttonClicked(title)}>
-          <EditIcon className={clsx(classes.margin, classes.textField)}></EditIcon>
-        </IconButton>
+        <Grid Container item xs = {12}>
+          <Grid item xs = {11}>
+            <TextField
+              disabled = {disabledCheck(title)}
+              label={title}
+              id={title}
+              className={classes.textField}
+              InputProps={unitPosition == 'end' ? {
+                endAdornment: 
+                  <InputAdornment position={unitPosition ? unitPosition : "start"}>
+                    <IconButton className = {classes.iconButton} onClick = {() => buttonClicked(title)}>
+                      <EditIcon fontSize = {'small'}></EditIcon>
+                    </IconButton>
+                    {unit}
+                  </InputAdornment>,
+                } : {
+                startAdornment: 
+                  <InputAdornment position={unitPosition ? 
+                    unitPosition : "start"}>
+                    <IconButton className = {classes.iconButton} onClick = {() => buttonClicked(title)}>
+                      <EditIcon fontSize = {'small'}></EditIcon>
+                    </IconButton>
+                    {unit}
+                  </InputAdornment>,
+                }
+              }
+              value={state == 0 ? null : state} 
+              onChange={(e) => setState(e.target.value)}
+              onKeyPress = {function(e) {onKeyPressOnForms(e,title)}}
+            />
+          </Grid>
+
+        </Grid>
       </React.Fragment>
     return input
   }
@@ -557,10 +610,10 @@ let ItemQuery = props => {
         </Grid>
 
         <Grid item xs = {3}> 
-            {createInput('width', width, setWidth, 'cm', 'end')}
-            {createInput('depth', depth, setDepth, 'cm', 'end')}
-            {createInput('height', height, setHeight, 'cm', 'end')}
-            {createInput('weight', weight, setWeight, 'cm', 'end')}
+            {createInput('width', width, setWidth, '(cm)', 'start')}
+            {createInput('depth', depth, setDepth, '(cm)', 'start')}
+            {createInput('height', height, setHeight, '(cm)', 'start')}
+            {createInput('weight', weight, setWeight, '(kg)', 'start')}
         </Grid>
         <Grid item xs = {6}> 
           <Paper className={classes.paperDeliveryInfo}> CBM: {CBM} </Paper>
