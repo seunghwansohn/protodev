@@ -85,7 +85,6 @@ function reducer (state = initialState, action) {
 
       case APILOAD_SUCCESS:
         const newItemListArr = []
-        console.log(action.payload)
         const itemListArr = action.payload
         itemListArr.map(itemList => {
           let newItemList = monolizeObj(itemList)
@@ -158,16 +157,13 @@ function reducer (state = initialState, action) {
 
       case SET_SELECTED_ITEMS:
         return produce(state, draft => {
-          console.log(action.payload)
           draft.table.selectedItem = action.payload
         })
       case SETSUBMITADDITEM_SUCCESS:
         return produce(state, draft => {
-          console.log(action.payload)
         })
       case SETSUBMITADDITEM_FAILURE:
         return produce(state, draft => {
-          console.log(action.payload)
         })
   
       default:

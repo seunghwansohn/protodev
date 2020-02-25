@@ -434,7 +434,6 @@ let ItemAdd = props => {
         toast(error)
       })
     } else {
-      console.log(submitValues)
       dispatch(setSubmitAddItem(submitValues))
     }
   }

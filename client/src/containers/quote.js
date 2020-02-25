@@ -65,7 +65,6 @@ const QuoteContainer = () => {
             dispatch(recordQuote(quoteProp.table))
         }
         const onQuerySubmit = async (type, payload) => {
-            await console.log(type, payload)
             await dispatch(querySubmit({type, payload}))
             await dispatch(onDialogOpen(true, type))
         }

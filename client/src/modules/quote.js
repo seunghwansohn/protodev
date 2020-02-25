@@ -117,7 +117,6 @@ function reducer (state = initialState, action) {
             }
             const date = getDate_yyyymmdd()
             const quoteLastNo = '001'
-            console.log(date)
             const checkIf = alreadyCheck(pickedItemArray, alreadyPickedNumber, nowPickedItemId)
             if (!checkIf) {
               return produce(state, draft => {

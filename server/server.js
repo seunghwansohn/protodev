@@ -40,6 +40,7 @@ require('./routes/item.routes')(app)
 require('./routes/quote.routes')(app)
 require('./routes/client.routes')(app)
 require('./routes/supplier.routes')(app)
+require('./routes/common.routes')(app)
 
 const port = process.env.PORT || 5000;
 

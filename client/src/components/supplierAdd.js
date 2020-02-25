@@ -71,15 +71,15 @@ let SupplierAdd = props => {
   const writeNote = (note, supplierCode) => {
     axios.post(`/api/supplier/addNotes`, {note:note, supplierCode : supplierCode})
     .then(res => {
-      console.log(res);
-      console.log(res.data);
+      // console.log(res);
+      // console.log(res.data);
     })
   }
   const loadNote = () => {
     axios.get(`/api/supplier/loadNotes/dfef`)
     .then(res => {
-      console.log(res);
-      console.log(res.data);
+      // console.log(res);
+      // console.log(res.data);
     })
   }
   loadNote()
@@ -104,7 +104,7 @@ let SupplierAdd = props => {
             <Grid item xs = {7}> {createInput('emailAddress')} </Grid>
           </Grid>
 
-          <SupplierNotes></SupplierNotes>
+          <SupplierNotes type = {'suppliers'} code = {type.supplierCode}></SupplierNotes>
 
           <br></br>
           

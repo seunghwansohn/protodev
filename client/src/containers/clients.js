@@ -48,7 +48,6 @@ const Client = props => {
     }
 
     const onInsertButton = (selected) => {
-        console.log(selected.clientCode)
         dispatch(setInsertClient(selected))
     }
     const defaultHideCols = [
@@ -87,7 +86,6 @@ const Client = props => {
     const {opened} = dialogs
 
     const checkOpened = (title) => {
-        console.log(title)
         let result = ''
         opened.map(array => {
             if (array.type == title){
@@ -97,9 +95,7 @@ const Client = props => {
         return result
     }
 
-    console.log(opened)
     const onHeaderButton = async (type) => {
-        console.log(type)
         const ox = true
         await dispatch(onDialogOpen(ox, type))
     }
