@@ -1,11 +1,27 @@
 const db = require("../models");
 const config = require("../config/auth.config");
-const Client = db.client;
-const Role = db.role;
-const Op = db.Sequelize.Op;
-const ClientRate = db.clientRate;
+
+const Supplier = db.supplier;
+const SupplierNote = db.supplierNote;
+
 // const monolizeObj = require("../api/monolizeObj")
 
 exports.addNotes = (req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
+    const {obj} = req.body
+    const {type, notesArr, code} = obj
+    try {
+        notesArr.map(note => {
+            SupplierNote.create({
+                supplierCode: code,
+                notes : note
+            }).then(() => {
+                res.send({ message: "supplier added successfully" });
+            })
+        })
+    }
+      catch (err) {
+        res.status(500).send({message:err.message})
+        console.log(err.message)
+    }
 };
