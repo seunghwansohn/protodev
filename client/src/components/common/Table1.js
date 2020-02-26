@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -14,6 +14,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import {checkedItem, IsThereSelected, selectItems} from '../../modules/itemList'
 import {setQuoteListHeader, setAddHeader, addStoreValue, onAlreadyPickedCheck} from '../../modules/quote'
 import {onDialogOpen} from '../../modules/dialogs'
+import {selectMultipleStates} from '../../lib/tableFuncs'
 
 
 const useStyles = makeStyles({
@@ -33,38 +34,64 @@ const useStyles = makeStyles({
   }
 });
 
-
-const STTableHeader = (props) => {
-  const {headers} = props
-  return (
-    <TableHead>
-      <TableRow>
-        {headers ? headers.map(header => {
-          return(
-            <TableCell>
-              {header}
-            </TableCell>
-          )}
-        ) : ''}
-      </TableRow>
-    </TableHead>
-  )
-} 
 const STTable = (props) => {
-  const {tableArr} = props
-  const keys = tableArr ? Object.keys(tableArr[0]) : []
-  const check = () => {
-    console.log(tableArr)
+  const {tableArr, attr} = props
+  
+  const headers = tableArr ? Object.keys(tableArr[0]) : []
+
+  const [hided, setHided]             = useState([]);
+  const [selected, setSelected]       = useState([]);
+
+  const isSelected = name => selected.indexOf(name) !== -1;
+  const isHidedCulumn = name => hided.indexOf(name) !== -1;
+
+  const onHidedCulumn = selectMultipleStates
+  const handleClickFlag = selectMultipleStates
+
+
+  const unhide = (columns) => {
+    let newHided = [];
+    const hidedIndex = hided.indexOf(columns);
+    newHided = newHided.concat(hided)
+    newHided.splice(hidedIndex, 1)
+    setHided(newHided);
   }
 
+  console.log(hided)
   return (
     <React.Fragment>
       <TableContainer>
-        <STTableHeader headers = {keys}></STTableHeader>
+        <TableHead>
+          <TableRow>
+            {headers ? headers.map((header, index) => {
+              const isColumnHided = isHidedCulumn(header)
+              if (!isColumnHided) {
+                return (
+                  <TableCell
+                    onClick={event => onHidedCulumn(header, null, hided, setHided)}
+                  >
+                    {header}
+                  </TableCell>
+                )
+              }
+            }) : ''}
+          </TableRow>
+        </TableHead>
         <TableBody>
           {tableArr ? tableArr.map((row, index) => {
+            const isItemSelected = isSelected(row)
+            const labelId = `enhanced-table-checkbox-${index}`;
             return(
               <TableRow>
+                {attr.flag ? 
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      checked={isItemSelected}
+                      inputProps={{ 'aria-labelledby': labelId }}
+                      onClick={event => handleClickFlag(row, null, selected, setSelected)}
+                    />
+                  </TableCell>:''
+                }
                 <TableCell>
                   {index}
                 </TableCell>
@@ -76,7 +103,6 @@ const STTable = (props) => {
           }) :''}
         </TableBody>
       </TableContainer>
-      <button onClick = {check}></button>
     </React.Fragment>
   )
   

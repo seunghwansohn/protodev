@@ -13,6 +13,9 @@ import {
     setInputChange,
  } from '../modules/supplier'
 
+const tableAttr = {
+    flag : true
+}
 
 const Supplier = props => {
     
@@ -29,7 +32,10 @@ const Supplier = props => {
     return(
         <>
             <button onClick = {getSuppliers}> 체크</button>
-            <Table tableArr = {suppliers.data}></Table>
+            <Table 
+                tableArr = {suppliers.data}  
+                attr = {tableAttr}
+            ></Table>
         </>
     )
 }   
