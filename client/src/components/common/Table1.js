@@ -14,7 +14,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import {checkedItem, IsThereSelected, selectItems} from '../../modules/itemList'
 import {setQuoteListHeader, setAddHeader, addStoreValue, onAlreadyPickedCheck} from '../../modules/quote'
 import {onDialogOpen} from '../../modules/dialogs'
-import {selectMultipleStates} from '../../lib/tableFuncs'
+import {selectMultipleStates, unSelectMultipleStates} from '../../lib/tableFuncs'
 
 
 const useStyles = makeStyles({
@@ -39,27 +39,27 @@ const STTable = (props) => {
   
   const headers = tableArr ? Object.keys(tableArr[0]) : []
 
-  const [hided, setHided]             = useState([]);
+  const [hided,    setHided]             = useState([]);
   const [selected, setSelected]       = useState([]);
 
-  const isSelected = name => selected.indexOf(name) !== -1;
+  const isSelected    = name => selected.indexOf(name) !== -1;
   const isHidedCulumn = name => hided.indexOf(name) !== -1;
 
-  const onHidedCulumn = selectMultipleStates
+  const onHidedCulumn   = selectMultipleStates
   const handleClickFlag = selectMultipleStates
 
-
-  const unhide = (columns) => {
-    let newHided = [];
-    const hidedIndex = hided.indexOf(columns);
-    newHided = newHided.concat(hided)
-    newHided.splice(hidedIndex, 1)
-    setHided(newHided);
-  }
+  const unhide = unSelectMultipleStates
 
   console.log(hided)
   return (
     <React.Fragment>
+      <div>
+        {hided.map(columns => {
+          return(
+          <button onClick = {event => unhide(columns, hided, setHided)}>{columns}</button>
+          )
+        })}
+      </div>
       <TableContainer>
         <TableHead>
           <TableRow>

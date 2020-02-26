@@ -22,6 +22,14 @@ export const selectMultipleStates = (key, defaultArr, state, setFuncs) => {
     setFuncs(filtered);
 }
 
+export const unSelectMultipleStates = (key, state, setState) => {
+    let newHided = [];
+    const hidedIndex = state.indexOf(key);
+    newHided = newHided.concat(state)
+    newHided.splice(hidedIndex, 1)
+    setState(newHided);
+  }
+
 const handleClickFlag = (event, name, itemCode, state, setState) => {
     const selectedIndex = state.indexOf(itemCode);
     let newSelected = [];
