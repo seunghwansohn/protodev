@@ -12,22 +12,30 @@ const initialState = {
     }
 }
 
-export const SET_HEADER       = 'supplier/SET_HEADER'
-export const SET_INPUT_CHANGE = 'supplier/SET_INPUT_CHANGE'
+export const SET_HEADER         = 'supplier/SET_HEADER'
+export const SET_INPUT_CHANGE   = 'supplier/SET_INPUT_CHANGE'
+export const SET_SET_LOAD       = 'supplier/SET_LOAD'
+
 
 
 const [SET_SUPPLIER_ADD, SET_SUPPLIER_ADD_SUCCESS, SET_SUPPLIER_ADD_FAILURE ] 
 = createRequestActionTypes('supplier/SET_SUPPLIER_ADD');
+const [SET_LOAD, SET_LOAD_SUCCESS, SET_LOAD_ADD_FAILURE ] 
+= createRequestActionTypes('supplier/SET_LOAD');
 
-const supplierAddSaga = createRequestSaga(SET_SUPPLIER_ADD, supplier.addNew);
+const supplierAddSaga   = createRequestSaga(SET_SUPPLIER_ADD, supplier.addNew);
+const supplierLoadSaga  = createRequestSaga(SET_LOAD, supplier.load);
 
 
-export const setHeader = createAction(SET_HEADER, columns => columns)
-export const setSupplierAdd = createAction(SET_SUPPLIER_ADD, info => info)
-export const setInputChange = createAction(SET_INPUT_CHANGE, ({id, name, value}) => ({id, name, value}))
+
+export const setHeader          = createAction(SET_HEADER, columns => columns)
+export const setSupplierAdd     = createAction(SET_SUPPLIER_ADD, info => info)
+export const setSupplierLoad    = createAction(SET_LOAD)
 
 export function* supplierSaga() {
     yield takeLatest(SET_SUPPLIER_ADD, supplierAddSaga);
+    yield takeLatest(SET_LOAD, supplierLoadSaga);
+
 }
 
 

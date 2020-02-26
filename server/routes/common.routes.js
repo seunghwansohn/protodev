@@ -11,6 +11,8 @@ module.exports = function(app) {
   });
 
   app.post("/api/notes/add", controller.addNotes);
+
+  app.get("/api/notes/load", controller.loadNotes)
 };
 
 

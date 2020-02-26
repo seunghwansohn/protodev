@@ -102,6 +102,7 @@ const ItemListContainer = () => {
             }
         }
         const ox = true
+        console.log(type)
         await dispatch(onDialogOpen(ox, type))
     }
 

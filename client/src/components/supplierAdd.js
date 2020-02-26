@@ -13,6 +13,8 @@ import axios from 'axios';
 
 import SupplierNotes from '../components/common/notes'
 
+import {setSupplierAdd} from '../modules/supplier'
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -32,13 +34,13 @@ let SupplierAdd = props => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
-  const [type, setType]               = React.useState({});
+  const [values, setValues]               = React.useState({});
   const [note, setNote]               = React.useState('');
 
   const supplierProps = useSelector(state => state.supplier)
   
   const handleChange = prop => event => {
-    setType({ ...type, [prop]: event.target.value });
+    setValues({ ...values, [prop]: event.target.value });
   };
   
   const handleChangeNote = (e) => {
@@ -54,16 +56,15 @@ let SupplierAdd = props => {
     }
   }
 
-  const onSubmit = () => {
-    // type.notes = typeArr
-    // dispatch(setSupplierAdd(type))
+  const onSubmitSupplier = () => {
+    dispatch(setSupplierAdd(values))
   }
   
   const createInput = (title) => {
     let input = 
       <FormControl className = {classes.fieldItem}>
         <InputLabel>{title}</InputLabel>
-        <Input id={title} value={type[title]} onChange={handleChange(title)} />
+        <Input id={title} value={values[title]} onChange={handleChange(title)} />
       </FormControl>
     return input
   }
@@ -104,11 +105,11 @@ let SupplierAdd = props => {
             <Grid item xs = {7}> {createInput('emailAddress')} </Grid>
           </Grid>
 
-          <SupplierNotes type = {'suppliers'} code = {type.supplierCode}></SupplierNotes>
+          <SupplierNotes values = {'suppliers'} code = {values.supplierCode}></SupplierNotes>
 
           <br></br>
           
-          <Button variant="contained" color="primary" onClick = {onSubmit}>
+          <Button variant="contained" color="primary" onClick = {onSubmitSupplier}>
                 Submit
           </Button>
       </form>

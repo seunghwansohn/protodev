@@ -5,8 +5,9 @@ import LoginPages from './pages/loginPages'
 import ItemListPage from './pages/itemListPage'
 import ClientPage from './pages/clientPage'
 import TestPage from './pages/TestPage'
-
+import SuppliersPage from './pages/SuppliersPage'
 import RegisterPage from './pages/RegisterPage';
+
 import About from './containers/About'
 import {
   BrowserRouter as Router,
@@ -37,6 +38,10 @@ function App() {
 
                   <Route path = "/test" >
                       <TestPage></TestPage>
+                  </Route>
+
+                  <Route path = "/suppliers" >
+                    <SuppliersPage></SuppliersPage>
                   </Route>
                   
                   <Route component = {ClientPage} path = "/client" exact/>

@@ -9,8 +9,20 @@ import Input                                    from '@material-ui/core/Input';
 import InputLabel                               from '@material-ui/core/InputLabel';
 import Button                                   from '@material-ui/core/Button';
 
+import Paper from '@material-ui/core/Paper';
+
+
 import {setAddNotes}                            from '../../modules/common';
 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
+
+import axios                            from '../../lib/api/axios';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -26,6 +38,8 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+
+
 let Notes = props => {
 
     const classes = useStyles();
@@ -34,18 +48,45 @@ let Notes = props => {
     const {code, type} = props
   
     const [notesArr, setNotesArr]         = React.useState([...blankNotes]);
+    const [existNotes, setExistNotes]         = React.useState([]);
+
+    const loadNotes = () => {
+      axios.get('/api/notes/load').then(res => {
+        setExistNotes(res)
+      })
+    }
+    
   
     const handleArrChange = e => {
       const updatedArr = [...notesArr];
       updatedArr[e.target.id] = e.target.value;
       setNotesArr(updatedArr);
     };
+    console.log(existNotes)
+
 
     const addNote = () => {
       setNotesArr([...notesArr,  [...blankNotes] ]);
     };
 
-    const notesFragment = (val, idx) => {
+
+    const ExistNotesTable = () => {
+      return(
+      <React.Fragment>
+          {existNotes.data ? existNotes.data.map(noteArr => {
+            return(
+            <Grid item xs = {12}>
+              <Paper>
+                  {noteArr.notes}
+              </Paper>
+            </Grid>
+            )
+          }) : ''}
+      </React.Fragment>
+      )
+    }
+
+    const addNotesFragment = (val, idx) => {
       return( 
         <React.Fragment>
             <React.Fragment>
@@ -72,18 +113,22 @@ let Notes = props => {
         dispatch(setAddNotes({type, code, notesArr}))
     }
 
+
+
     return (
       <React.Fragment>
         <Grid container xs = {12} className = {classes.grid} spacing={0}>
           {notesArr.map((val, idx) => {
             return (
-              notesFragment(val, idx)
+              addNotesFragment(val, idx)
             )
           })}
+          <ExistNotesTable></ExistNotesTable>
         </Grid>
         <Button variant="contained" color="primary" onClick = {onSubmit}>
             Submit
         </Button>
+        <Button onClick = {loadNotes}>load</Button>
       </React.Fragment>
     )
   }

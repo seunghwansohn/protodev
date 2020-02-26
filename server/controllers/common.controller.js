@@ -16,12 +16,25 @@ exports.addNotes = (req, res) => {
                 supplierCode: code,
                 notes : note
             }).then(() => {
-                res.send({ message: "supplier added successfully" });
+                res.send({ message: "Notes added successfully" });
             })
         })
     }
       catch (err) {
         res.status(500).send({message:err.message})
         console.log(err.message)
+    }
+};
+
+
+exports.loadNotes = (req, res) => {
+    try {
+        SupplierNote.findAll(
+            ).then(response => {
+                res.send( response );
+            })
+        }
+    catch (err) {
+        res.status(500).send({message:err.message})
     }
 };

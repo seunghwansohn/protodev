@@ -46,6 +46,7 @@ export default function StickyHeadTable(
   const classes = useStyles();
 
   const {contents, header} = table
+  console.log(table)
   const {
     onInsertButton,
     onRecordToDB, 
@@ -185,10 +186,15 @@ export default function StickyHeadTable(
     onChangeInput(id, name, value)
   }
 
-  const handleClickTableCol = async (value, column) => {
+  const handleClickTableBodyCol = async (value, column) => {
+    console.log(column, value)
     if (column == 'itemName') {
       const ox = true
       await dispatch(onDialogOpen(ox, 'itemQuery', value))
+    }
+    if (column == 'supplierCode') {
+      const ox = true
+      await dispatch(onDialogOpen(ox, 'addSupplier', value))
     }
   }
 
@@ -273,7 +279,7 @@ export default function StickyHeadTable(
                       }
                       else {
                         return (
-                          <TableCell key={column} align={column.align} onClick = {() => handleClickTableCol(value, column)}>
+                          <TableCell key={column} align={column.align} onClick = {() => handleClickTableBodyCol(value, column)}>
                             {column.format && typeof value === 'number' ? column.format(value) : value}
                           </TableCell>
                           

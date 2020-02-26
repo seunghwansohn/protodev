@@ -57,4 +57,14 @@ exports.loadNotes = (req, res) => {
         res.status(200).send(result);
     })
 };
+
+
+exports.loadSuppliers = (req, res) => {
+    SupplierNote.findAll()
+        .then(suppliers => {
+            result = suppliers
+        }).then(() => {
+            res.status(200).send(result);
+    })
+};
   

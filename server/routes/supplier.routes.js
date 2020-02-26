@@ -13,6 +13,9 @@ module.exports = function(app) {
   app.post("/api/supplier/addNotes", controller.addNotes)
   app.get("/api/supplier/loadNotes/:id", controller.loadNotes);
 
+  app.get("/api/supplier/load/", controller.loadSuppliers);
+
+
 };
 
 
