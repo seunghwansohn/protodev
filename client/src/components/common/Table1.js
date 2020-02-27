@@ -16,6 +16,8 @@ import {selectMultipleStates, unSelectMultipleStates} from '../../lib/tableFuncs
 import styled from "styled-components";
 import Input from '@material-ui/core/Input';
 
+import produce from 'immer'
+
 const useStyles = makeStyles({
   root: {
     width: '100%',
@@ -133,9 +135,14 @@ const STTable = (props) => {
   }
 
   const handleChangeFixableCol = (e, index, header) => {
-    let temp = tableVals
-    temp[index][header] = e.target.value
-    setTableVals([...temp])
+    setTableVals(
+      produce(tableVals, draft => {
+        draft[index][header] = e.target.value
+      })
+    )
+    // let temp = tableVals
+    // temp[index][header] = e.target.value
+    // setTableVals([...temp])
 
   }
 
@@ -230,9 +237,7 @@ const STTable = (props) => {
                         </StyledTableCell>
                       )
                     }
-
                   })}
-
                   <StyledTableCell>
                     <button onClick = {() => {checkRow(headers[index])}}></button>
                   </StyledTableCell>
