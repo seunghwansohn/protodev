@@ -14,8 +14,7 @@ import {checkedItem, IsThereSelected, selectItems} from '../../modules/itemList'
 import {setQuoteListHeader, setAddHeader, addStoreValue, onAlreadyPickedCheck} from '../../modules/quote'
 import {selectMultipleStates, unSelectMultipleStates} from '../../lib/tableFuncs'
 import styled from "styled-components";
-
-
+import Input from '@material-ui/core/Input';
 
 const useStyles = makeStyles({
   root: {
@@ -47,16 +46,57 @@ const StyledTableBody = styled(TableBody)`
     background-color : #e4f4e5;
   }
 `
+const StyledCheckBox = styled(Checkbox)`
+  background-color: #ffffff;
+  &:hover {
+    background-color : #e4f4e5;
+  }
+`
+const StyledTableCell = styled(TableCell)`
+  background-color: #ffffff;
+  width : '10%';
+  &:hover {
+    background-color : #eef534;
+  }
+`
+
+const StyledInput = styled(Input)`
+  background-color: #ffffff;
+  width: ${props => props.width ? props.width : 'auto'};
+  &:hover {
+    background-color : #eef534;
+  }
+`
 
 const STTable = (props) => {
   const {tableArr, attr} = props
-  
-  const headers = tableArr ? Object.keys(tableArr[0]) : []
+
+  let headers = tableArr ? Object.keys(tableArr[0]) : []
+
+  const [tableHeaderVals, setTableHeaderVals]           = useState([]);
 
   const [hided,    setHided]           = useState([]);
   const [selected, setSelected]        = useState([]);
   const [allSelected, setAllselected]  = useState(false);
+  const [fixMode, setFixMode]  = useState(false);
+  const [fixableCols, setFixableCols]  = useState({});
+  const [tableVals, setTableVals]  = useState(tableArr);
 
+  useEffect(() => {
+    const deleteKey = 'id'
+    headers = headers.filter(function (el) {
+      return el !== deleteKey
+    })
+    setTableHeaderVals(headers)
+    // if (tableArr) {tableArr.map(arr => {
+    //   delete arr[deleteKey]
+    // })}
+    // setTableBodyVals(tableArr)
+  },[tableVals])
+
+  useEffect(() => {
+    setTableVals(tableArr)
+  },[tableArr])
 
   const isSelected    = name => selected.indexOf(name) !== -1;
   const isHidedCulumn = name => hided.indexOf(name) !== -1;
@@ -65,6 +105,58 @@ const STTable = (props) => {
   const handleClickFlag = selectMultipleStates
 
   const unhide = unSelectMultipleStates
+
+  const checkFixablity = (key) => {
+    return {
+      'supplierCode' : true
+    }[key]
+  }
+
+  const chek = () => {
+    console.log(checkFixablity('supplierCode'))
+  }
+
+  const checkRow =(key) => {
+  }
+
+  const onSetfixMode = () => {
+    fixMode ? setFixMode(false) : setFixMode(true)
+  }
+
+  const onClickRows = (row, header) => {
+    if (fixMode){
+      const temp = {row : row, header : header}
+      setFixableCols(temp)
+    }
+    else {
+    }
+  }
+
+  const handleChangeFixableCol = (e, index, header) => {
+    let temp = tableVals
+    temp[index][header] = e.target.value
+    setTableVals([...temp])
+
+  }
+
+  const checkFixable = (index, header) => {
+    let ox = false
+    if (fixableCols.row == index){
+      if(fixableCols.header == header){
+        ox = true
+      }
+    }
+    else {
+      ox = false
+    }
+    return ox
+  }
+
+  const onKeyPressOnCol = (e) => {
+    if (e.key === "Enter") {
+      console.log('엔터눌러짐')
+    }
+  }
 
   return (
     <React.Fragment>
@@ -75,50 +167,75 @@ const STTable = (props) => {
           )
         })}
       </div>
+      <button onClick = { chek}>쿨쿨</button>
+      <button onClick = { onSetfixMode}>fixmode</button>
       <StyledTable>
         <TableContainer>
           <StyledTableHeader>
             <TableRow>
-              {headers && attr.flag ? 
-                <TableCell padding="checkbox">
+              {tableHeaderVals && attr.flag ? 
+                <StyledTableCell>
 
-                </TableCell>:''
+                </StyledTableCell>:''
               }
-              {headers ? headers.map((header, index) => {
+              {tableHeaderVals !== [] ? <StyledTableCell>No</StyledTableCell> : ''}  
+              {tableHeaderVals ? tableHeaderVals.map((header, index) => {
                 const isColumnHided = isHidedCulumn(header)
                 if (!isColumnHided) {
                   return (
-                    <TableCell
+                    <StyledTableCell
                       onClick={event => onHidedCulumn(header, null, hided, setHided)}
                     >
                       {header}
-                    </TableCell>
+                    </StyledTableCell>
                   )
                 }
               }) : ''}
             </TableRow>
           </StyledTableHeader>
           <StyledTableBody>
-            {tableArr ? tableArr.map((row, index) => {
+            {tableVals ? tableVals.map((row, index) => {
               const isItemSelected = isSelected(row)
               const labelId = `enhanced-table-checkbox-${index}`;
               return(
-                <TableRow>
+                <TableRow 
+                  key = {tableHeaderVals[index]}
+                >
                   {attr.flag ? 
                     <TableCell padding="checkbox">
-                      <Checkbox
+                      <StyledCheckBox
                         checked={isItemSelected}
                         inputProps={{ 'aria-labelledby': labelId }}
                         onClick={event => handleClickFlag(row, null, selected, setSelected)}
                       />
                     </TableCell>:''
                   }
-                  <TableCell>
-                    {index}
-                  </TableCell>
-                  <TableCell>
-                    {row.supplierCode}
-                  </TableCell>
+                  <StyledTableCell>
+                    {index+1}
+                  </StyledTableCell>
+                  {tableHeaderVals.map(header => {
+                    const fixable = checkFixable(index, header)
+                    if (fixable) {
+                      return (
+                        <Input 
+                        onChange = {(event) => handleChangeFixableCol(event, index, header)} 
+                        key = {header }
+                        value = {tableVals[index][header] } 
+                        onKeyPress = {onKeyPressOnCol}/>
+                      )
+                    } else {
+                      return(
+                        <StyledTableCell onClick = {() => {onClickRows(index, header)}}>
+                          {row[header]}
+                        </StyledTableCell>
+                      )
+                    }
+
+                  })}
+
+                  <StyledTableCell>
+                    <button onClick = {() => {checkRow(headers[index])}}></button>
+                  </StyledTableCell>
                 </TableRow>
               )
             }) :''}

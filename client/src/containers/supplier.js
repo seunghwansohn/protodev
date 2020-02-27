@@ -14,19 +14,23 @@ import {
  } from '../modules/supplier'
 
 const tableAttr = {
-    flag : true
+    flag : true,
 }
 
 const Supplier = props => {
     
     const [suppliers, setSuppliers] = useState([])
 
-    const getSuppliers = () => {
-        axios.get('/api/supplier/load').then(res => {
+    const getSuppliers = async () => {
+        await axios.get('/api/supplier/load').then(res => {
             setSuppliers(res)
         })
     }
     
+    useEffect(async () => {
+        await getSuppliers()
+    },[])
+
     console.log(suppliers)
 
     return(
