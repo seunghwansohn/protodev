@@ -1,9 +1,13 @@
 import React, {useEffect, useState} from 'react';
+import {useDispatch} from 'react-redux';
+
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import Button from '@material-ui/core/Button';
+
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
@@ -11,6 +15,8 @@ import TableRow from '@material-ui/core/TableRow';
 import {ArrayKeysToColumns, objArrKeysToArr, onArrangeCols} from '../../lib/arrayKeysToColumns'
 import Checkbox from '@material-ui/core/Checkbox';
 import {checkedItem, IsThereSelected, selectItems} from '../../modules/itemList'
+import {setSupplierUpdate} from '../../modules/supplier'
+
 import {setQuoteListHeader, setAddHeader, addStoreValue, onAlreadyPickedCheck} from '../../modules/quote'
 import {selectMultipleStates, unSelectMultipleStates} from '../../lib/tableFuncs'
 import styled from "styled-components";
@@ -75,14 +81,21 @@ const STTable = (props) => {
 
   let headers = tableArr ? Object.keys(tableArr[0]) : []
 
-  const [tableHeaderVals, setTableHeaderVals]           = useState([]);
+  const [tableHeaderVals, setTableHeaderVals] = useState([]);
+  const [hided,    setHided]                  = useState([]);
+  const [selected, setSelected]               = useState([]);
+  const [allSelected, setAllselected]         = useState(false);
+  const [fixMode, setFixMode]                 = useState(false);
+  const [fixableCols, setFixableCols]         = useState({});
+  const [tableVals, setTableVals]             = useState(tableArr);
+  const [fixedVals, setFixedVals]             = useState([]);
 
-  const [hided,    setHided]           = useState([]);
-  const [selected, setSelected]        = useState([]);
-  const [allSelected, setAllselected]  = useState(false);
-  const [fixMode, setFixMode]  = useState(false);
-  const [fixableCols, setFixableCols]  = useState({});
-  const [tableVals, setTableVals]  = useState(tableArr);
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    setTableVals(tableArr)
+  },[tableArr])
+  
 
   useEffect(() => {
     const deleteKey = 'id'
@@ -90,35 +103,19 @@ const STTable = (props) => {
       return el !== deleteKey
     })
     setTableHeaderVals(headers)
-    // if (tableArr) {tableArr.map(arr => {
-    //   delete arr[deleteKey]
-    // })}
-    // setTableBodyVals(tableArr)
   },[tableVals])
-
-  useEffect(() => {
-    setTableVals(tableArr)
-  },[tableArr])
 
   const isSelected    = name => selected.indexOf(name) !== -1;
   const isHidedCulumn = name => hided.indexOf(name) !== -1;
 
   const onHidedCulumn   = selectMultipleStates
   const handleClickFlag = selectMultipleStates
-
   const unhide = unSelectMultipleStates
 
   const checkFixablity = (key) => {
     return {
       'supplierCode' : true
     }[key]
-  }
-
-  const chek = () => {
-    console.log(checkFixablity('supplierCode'))
-  }
-
-  const checkRow =(key) => {
   }
 
   const onSetfixMode = () => {
@@ -134,6 +131,26 @@ const STTable = (props) => {
     }
   }
 
+  const onKeyPressOnCol = (e, index, header) => {
+    if (e.key === "Enter") {
+      const temp = {}
+      setFixableCols(temp)
+
+      let temp1 = {}
+      temp1[header] = e.target.value
+      temp1.index = index
+      temp1.code = tableVals[index].supplierCode
+  
+      setFixedVals(
+        produce(fixedVals, draft => {
+          draft.push(temp1)
+        })
+      )
+    }
+  }
+
+  console.log(fixedVals)
+
   const handleChangeFixableCol = (e, index, header) => {
     setTableVals(
       produce(tableVals, draft => {
@@ -143,7 +160,6 @@ const STTable = (props) => {
     // let temp = tableVals
     // temp[index][header] = e.target.value
     // setTableVals([...temp])
-
   }
 
   const checkFixable = (index, header) => {
@@ -159,10 +175,20 @@ const STTable = (props) => {
     return ox
   }
 
-  const onKeyPressOnCol = (e) => {
-    if (e.key === "Enter") {
-      console.log('엔터눌러짐')
-    }
+  const checkFixed = (index, header) => {
+    let ox = false
+    fixedVals.map(obj => {
+      console.log(obj)
+      if (obj.index == index && Object.keys(obj)[0] == header) {
+        ox = true
+      }
+    })
+    return ox
+  }
+  
+  const onSubmit = () => {
+    console.log(fixedVals)
+    dispatch(setSupplierUpdate(fixedVals))
   }
 
   return (
@@ -174,7 +200,6 @@ const STTable = (props) => {
           )
         })}
       </div>
-      <button onClick = { chek}>쿨쿨</button>
       <button onClick = { onSetfixMode}>fixmode</button>
       <StyledTable>
         <TableContainer>
@@ -221,32 +246,43 @@ const STTable = (props) => {
                     {index+1}
                   </StyledTableCell>
                   {tableHeaderVals.map(header => {
-                    const fixable = checkFixable(index, header)
+                    let fixable = checkFixable(index, header)
+                    let fixed = checkFixed(index, header)
+
                     if (fixable) {
                       return (
                         <Input 
                         onChange = {(event) => handleChangeFixableCol(event, index, header)} 
                         key = {header }
-                        value = {tableVals[index][header] } 
-                        onKeyPress = {onKeyPressOnCol}/>
+                        value = {tableVals[index][header]} 
+                        onKeyPress = {(event) => onKeyPressOnCol(event, index, header)}/>
                       )
                     } else {
-                      return(
-                        <StyledTableCell onClick = {() => {onClickRows(index, header)}}>
-                          {row[header]}
-                        </StyledTableCell>
-                      )
+                      if (fixed) {
+                        return(
+                          <StyledTableCell style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickRows(index, header)}}>
+                            {row[header]}
+                          </StyledTableCell>
+                        )
+                      }
+                      else {
+                        return(
+                            <StyledTableCell onClick = {() => {onClickRows(index, header)}}>
+                              {row[header]}
+                            </StyledTableCell>
+                        )
+                      }
                     }
+
                   })}
-                  <StyledTableCell>
-                    <button onClick = {() => {checkRow(headers[index])}}></button>
-                  </StyledTableCell>
+
                 </TableRow>
               )
             }) :''}
           </StyledTableBody>
         </TableContainer>
       </StyledTable>
+      <Button onClick = {onSubmit}>Submit</Button>
     </React.Fragment>
   )
   

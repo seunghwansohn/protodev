@@ -5,3 +5,5 @@ import axios from './axios';
 export const addNew = (info) => axios.post('/api/supplier/addNew', info);
 
 export const load = () => axios.get('/api/supplier/load');
+
+export const update = (info) => axios.post('/api/supplier/update', info);

@@ -7,7 +7,7 @@ import mainSearch               from './mainSearch'
 import clients, {clientsSaga}   from './clients'
 import dialogs                  from './dialogs'
 import loading                  from './loading';
-import supplier, {supplierSaga}                 from './supplier';
+import supplier, {supplierSaga} from './supplier';
 import auth, { authSaga }       from './auth';
 import user, { userSaga }       from './user';
 import table, { tableSaga }     from './test';

@@ -60,11 +60,25 @@ exports.loadNotes = (req, res) => {
 
 
 exports.loadSuppliers = (req, res) => {
-    SupplierNote.findAll()
+    Supplier.findAll()
         .then(suppliers => {
             result = suppliers
         }).then(() => {
             res.status(200).send(result);
     })
+};
+  
+exports.updateSuppliers = async (req, res) => {
+    console.log(req.body[0].code)
+    const jane = await Supplier.findOne({where:{supplierCode : req.body[0].code}})
+    jane.supplierName = '개새끼'
+    console.log(jane)
+    await jane.save()
+    // Supplier.update({})
+    //     .then(suppliers => {
+    //         result = suppliers
+    //     }).then(() => {
+    //         res.status(200).send(result);
+    // })
 };
   

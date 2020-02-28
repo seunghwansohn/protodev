@@ -17,25 +17,26 @@ export const SET_INPUT_CHANGE   = 'supplier/SET_INPUT_CHANGE'
 export const SET_SET_LOAD       = 'supplier/SET_LOAD'
 
 
-
 const [SET_SUPPLIER_ADD, SET_SUPPLIER_ADD_SUCCESS, SET_SUPPLIER_ADD_FAILURE ] 
 = createRequestActionTypes('supplier/SET_SUPPLIER_ADD');
+const [SET_UPDATE_SUPPLIERS, SSET_UPDATE_SUPPLIERS_SUCCESS, SET_UPDATE_SUPPLIERS_FAILURE ] 
+= createRequestActionTypes('supplier/SET_UPDATE_SUPPLIERS');
 const [SET_LOAD, SET_LOAD_SUCCESS, SET_LOAD_ADD_FAILURE ] 
 = createRequestActionTypes('supplier/SET_LOAD');
 
 const supplierAddSaga   = createRequestSaga(SET_SUPPLIER_ADD, supplier.addNew);
 const supplierLoadSaga  = createRequestSaga(SET_LOAD, supplier.load);
-
-
+const supplierUpdateSaga  = createRequestSaga(SET_UPDATE_SUPPLIERS, supplier.update);
 
 export const setHeader          = createAction(SET_HEADER, columns => columns)
 export const setSupplierAdd     = createAction(SET_SUPPLIER_ADD, info => info)
 export const setSupplierLoad    = createAction(SET_LOAD)
+export const setSupplierUpdate  = createAction(SET_UPDATE_SUPPLIERS, info => info)
 
 export function* supplierSaga() {
     yield takeLatest(SET_SUPPLIER_ADD, supplierAddSaga);
     yield takeLatest(SET_LOAD, supplierLoadSaga);
-
+    yield takeLatest(SET_UPDATE_SUPPLIERS, supplierUpdateSaga);
 }
 
 

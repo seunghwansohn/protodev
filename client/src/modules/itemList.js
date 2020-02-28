@@ -19,31 +19,29 @@ const [NEWCOPIED, NEWCOPIED_SUCCESS, NEWCOPIED_FAILURE ]
 const [SETSUBMITADDITEM, SETSUBMITADDITEM_SUCCESS, SETSUBMITADDITEM_FAILURE ] 
 = createRequestActionTypes('itemList/SETSUBMITADDITEM');
 
-const apiLoadSaga = createRequestSaga(APILOAD, item.load);
-const newItemSaga = createRequestSaga(NEWITEM, item.newItem);
+const apiLoadSaga   = createRequestSaga(APILOAD, item.load);
+const newItemSaga   = createRequestSaga(NEWITEM, item.newItem);
 const newCopiedSaga = createRequestSaga(NEWCOPIED, item.newCopied);
-const addItemSaga = createRequestSaga(SETSUBMITADDITEM, item.addItem);
+const addItemSaga   = createRequestSaga(SETSUBMITADDITEM, item.addItem);
 
-
-export const CLICK_BUTTON_HEADER = 'item/CLICK_BUTTON_HEADER'
-export const IS_THERE_SELECTED = 'item/IS_THERE_SELECTED'
-export const SELECT_ITEMS = 'item/SELECT_ITEMS'
-export const CHANGE_NEW_ITEM_SPECS = 'item/CHANGE_NEW_ITEM_SPECS'
-export const SET_HEADER = 'item/SET_HEADER'
-export const SET_SELECTED_ITEMS = 'item/SET_SELECTED_ITEMS'
+export const CLICK_BUTTON_HEADER      = 'item/CLICK_BUTTON_HEADER'
+export const IS_THERE_SELECTED        = 'item/IS_THERE_SELECTED'
+export const SELECT_ITEMS             = 'item/SELECT_ITEMS'
+export const CHANGE_NEW_ITEM_SPECS    = 'item/CHANGE_NEW_ITEM_SPECS'
+export const SET_HEADER               = 'item/SET_HEADER'
+export const SET_SELECTED_ITEMS       = 'item/SET_SELECTED_ITEMS'
 export const SET_ITEM_QUERY_INIT_LOAD = 'item/SET_ITEM_QUERY_INIT_LOAD'
 
-
-export const setApiLoad = createAction(APILOAD)
-export const setNewItem = createAction(NEWITEM, (newItemValues) => (newItemValues))
-export const checkedItem = createAction(NEWCOPIED, itemCode => itemCode)
-export const IsThereSelected = createAction(IS_THERE_SELECTED, ox => ox)
-export const selectItems = createAction(SELECT_ITEMS, newSelected => newSelected)
-export const clickButtonHeader = createAction(CLICK_BUTTON_HEADER, type => type)
+export const setApiLoad         = createAction(APILOAD)
+export const setNewItem         = createAction(NEWITEM, (newItemValues) => (newItemValues))
+export const checkedItem        = createAction(NEWCOPIED, itemCode => itemCode)
+export const IsThereSelected    = createAction(IS_THERE_SELECTED, ox => ox)
+export const selectItems        = createAction(SELECT_ITEMS, newSelected => newSelected)
+export const clickButtonHeader  = createAction(CLICK_BUTTON_HEADER, type => type)
 export const changeNewItemSpecs = createAction(CHANGE_NEW_ITEM_SPECS, spec => spec)
-export const setHeader = createAction(SET_HEADER, columns => columns)
-export const setSelectedItems = createAction(SET_SELECTED_ITEMS, items => items)
-export const setSubmitAddItem = createAction(SETSUBMITADDITEM, item => item)
+export const setHeader          = createAction(SET_HEADER, columns => columns)
+export const setSelectedItems   = createAction(SET_SELECTED_ITEMS, items => items)
+export const setSubmitAddItem   = createAction(SETSUBMITADDITEM, item => item)
 
 export function* itemsSaga() {
   yield takeLatest(APILOAD, apiLoadSaga);
@@ -51,7 +49,6 @@ export function* itemsSaga() {
   yield takeLatest(NEWCOPIED, newCopiedSaga);
   yield takeLatest(SETSUBMITADDITEM, addItemSaga);
 }
-
 
 const initialState = {
     pickedCount: 0,
