@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { connect, useSelector, useDispatch } from 'react-redux';
 
-import Table from '../components/common/Table1'
+import Table    from '../components/common/Table1'
+import DialogST from '../components/common/DialogST'
+import SupplierQuery from '../components/SupplierQuery'
+
+
 import axios from '../lib/api/axios'
 
 import {setSupplierUpdate, updateChange} from '../modules/supplier'
+import { onDialogOpen }                  from '../modules/dialogs'
+
 
 const tableAttr = {
     flag : true,
@@ -18,6 +24,7 @@ const Supplier = props => {
     const [updated, setUpdated]     = useState(false);
 
     const { update } = useSelector(({ supplier }) => ({ update : supplier.table.update }));
+    const opened = useSelector(state => state.dialogs.opened)
 
     const getSuppliers = async () => {
         await axios.get('/api/supplier/load').then(res => {
@@ -50,9 +57,29 @@ const Supplier = props => {
         await setFixedVals([])
     }
 
+    const checkOpened = (title) => {
+        let result = ''
+        opened.map(array => {
+            if (array.type == title){
+                result = array.ox
+            }
+        })
+        return result
+    }
+
     const funcs = {
         load : getSuppliers,
-        onSubmitUpdatedVals : onSubmitUpdatedVals
+        onSubmitUpdatedVals : onSubmitUpdatedVals,
+        onDialogOpen : onDialogOpen
+    }
+
+    const DialogsAttr = {
+        supplierQuery : {
+            title : 'supplierQuery',
+            maxWidth : 'xl' ,
+            funcs : funcs,
+            open : checkOpened('supplierQuery')
+        }
     }
 
     return(
@@ -65,6 +92,9 @@ const Supplier = props => {
                 states = {states}
                 setStates = {setStates}
             ></Table>
+            <DialogST attr = {DialogsAttr.supplierQuery}>
+                <SupplierQuery></SupplierQuery>
+            </DialogST>
         </>
     )
 }   

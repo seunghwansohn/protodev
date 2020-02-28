@@ -80,7 +80,7 @@ const STTable = ({
   
   const {suppliers, updated}        = states
   const {setSuppliers, setUpdated}  = setStates
-  const {load, onSubmitUpdatedVals} = funcs
+  const {load, onSubmitUpdatedVals, onDialogOpen} = funcs
 
   let headers = suppliers && suppliers.length > 1 ? Object.keys(suppliers[0]) : []
 
@@ -167,6 +167,7 @@ const STTable = ({
       setFixableCols(temp)
     }
     else {
+      dispatch(onDialogOpen(true, 'supplierQuery'))
     }
   }
 
