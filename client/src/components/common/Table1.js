@@ -12,9 +12,6 @@ import TableRow         from '@material-ui/core/TableRow';
 import Checkbox         from '@material-ui/core/Checkbox';
 import Input            from '@material-ui/core/Input';
 
-import {checkedItem, IsThereSelected, selectItems} from '../../modules/itemList'
-import {setSupplierUpdate}                         from '../../modules/supplier'
-
 import {selectMultipleStates, unSelectMultipleStates}       from '../../lib/tableFuncs'
 
 import styled from "styled-components";
@@ -111,6 +108,17 @@ const STTable = ({
     setTableHeaderVals(headers)
   },[suppliers])
 
+  useEffect(() => {
+    if (updated) {
+      setShowUpdatedSign(true)
+      setTimeout(() => {
+        setShowUpdatedSign(false)
+        setFixedVals([])
+      }, 3000);
+      setUpdated(false)
+    }
+  },[updated])
+
   const isChecked     = name => selected.indexOf(name)  !== -1;
   const isHidedCulumn = name => hided.indexOf(name)     !== -1;
 
@@ -146,24 +154,14 @@ const STTable = ({
     return ox
   }
   
-  useEffect(() => {
-    if (updated) {
-      setShowUpdatedSign(true)
-      setTimeout(() => {
-        setShowUpdatedSign(false)
-        setFixedVals([])
-      }, 3000);
-      setUpdated(false)
-    }
-  },[updated])
-
-  console.log(showUpdatedSign)
-
   const onSetfixMode = () => {
     fixMode ? setFixMode(false) : setFixMode(true)
   }
 
   const onClickCols = (row, header) => {
+    console.log(suppliers)
+    console.log(row,header)
+    console.log(suppliers[row][header])
     if (fixMode){
       const temp = {row : row, header : header}
       setFixableCols(temp)
@@ -262,20 +260,20 @@ const STTable = ({
                         value = {tableVals[index][header]} 
                         onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}/>
                       )
-                    } else {
-                        if (fixed) {
-                          return(
-                            <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(index, header)}}>
-                              {row[header]}
-                            </StyledTableCell>
-                          )
-                        } else {
-                            return(
-                                <StyledTableCell onClick = {() => {onClickCols(index, header)}}>
-                                  {row[header]}
-                                </StyledTableCell>
-                            )
-                        }
+                    }else{
+                      if (fixed) {
+                        return(
+                          <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(index, header)}}>
+                            {row[header]}
+                          </StyledTableCell>
+                        )
+                      }else{
+                        return(
+                          <StyledTableCell onClick = {() => {onClickCols(index, header)}}>
+                            {row[header]}
+                          </StyledTableCell>
+                        )
+                      }
                     }
                   })}
                 </TableRow>

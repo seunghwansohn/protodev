@@ -129,18 +129,19 @@ export default function EnhancedTable(
   return (
     <div>
       <Paper>
-        <TableContainer>
-          <Table
+        <Table
             aria-labelledby="tableTitle"
             aria-label="enhanced table"
-          >
-            <EnhancedTableHead/>
-            <TableBody>
-                {itemListArr.length !== 0  ? mappedTableBody() : ''}
-            </TableBody>
+        >
+          <TableContainer>
+              <EnhancedTableHead/>
+              <TableBody>
+                  {itemListArr.length !== 0  ? mappedTableBody() : ''}
+              </TableBody>
 
-          </Table>
-        </TableContainer>
+
+          </TableContainer>
+        </Table>
         {searchProps.searchKeyword}
       </Paper>
     </div>

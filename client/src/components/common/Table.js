@@ -202,119 +202,121 @@ export default function StickyHeadTable(
         })}
       </div>
       {/* <button onClick = { addHeader}> 체크</button> */}
-      <TableContainer className={classes.container}>
-        <Table size = "small" stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              {types.flags ? <TableCell className = {classes.tableHeader} padding="checkbox"/> : ''}
-              {header.map(column => {
-                const isColumnHided = isHidedCulumn(column)
-                if (!isColumnHided) {
-                  return(
-                    <TableCell className = {classes.tableHeader}
-                      key={column}
-                      align={column.align}
-                      style={{ minWidth: column.minWidth }}
-                      onClick={event => onHandleClickColumn(column)}
-                    >
-                      {column}
-                    </TableCell>
-                    )
-                }
-              })}
-                {types.insertButton ? 
-                <TableCell className = {classes.tableHeader}> 
-                  Insert
-                </TableCell> : ''}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {rows ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-              const isItemSelected = isSelected(row.itemCode)
-              
-              if(isItemSelected == true) {}
-              const labelId = `enhanced-table-checkbox-${index}`;
+      <Table>
+        <TableContainer className={classes.container}>
+          <Table size = "small" stickyHeader aria-label="sticky table">
+            <TableHead>
+              <TableRow>
+                {types.flags ? <TableCell className = {classes.tableHeader} padding="checkbox"/> : ''}
+                {header.map(column => {
+                  const isColumnHided = isHidedCulumn(column)
+                  if (!isColumnHided) {
+                    return(
+                      <TableCell className = {classes.tableHeader}
+                        key={column}
+                        align={column.align}
+                        style={{ minWidth: column.minWidth }}
+                        onClick={event => onHandleClickColumn(column)}
+                      >
+                        {column}
+                      </TableCell>
+                      )
+                  }
+                })}
+                  {types.insertButton ? 
+                  <TableCell className = {classes.tableHeader}> 
+                    Insert
+                  </TableCell> : ''}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {rows ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
+                const isItemSelected = isSelected(row.itemCode)
+                
+                if(isItemSelected == true) {}
+                const labelId = `enhanced-table-checkbox-${index}`;
 
-              return (
-                <TableRow 
-                  hover role="checkbox" 
-                  tabIndex={-1}
-                  key={row.id}
-                  aria-checked={isItemSelected}
-                  selected={isItemSelected}
-                >
-                    {types.flags ? 
-                      <TableCell padding="checkbox">
-                        <Checkbox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                          onClick={event => handleClick(event, row.id, row.itemCode)}
-                        />
-                      </TableCell>:''}
-                      
-                  {header.map(column => {
-                    const value = row[column];
-                    const isColumnHided = isHidedCulumn(column)
-                    if (!isColumnHided) {
-                      if(colTypes.hasOwnProperty(column)){
-                        if(colTypes[column].style == 'input') {
+                return (
+                  <TableRow 
+                    hover role="checkbox" 
+                    tabIndex={-1}
+                    key={row.id}
+                    aria-checked={isItemSelected}
+                    selected={isItemSelected}
+                  >
+                      {types.flags ? 
+                        <TableCell padding="checkbox">
+                          <Checkbox
+                            checked={isItemSelected}
+                            inputProps={{ 'aria-labelledby': labelId }}
+                            onClick={event => handleClick(event, row.id, row.itemCode)}
+                          />
+                        </TableCell>:''}
+                        
+                    {header.map(column => {
+                      const value = row[column];
+                      const isColumnHided = isHidedCulumn(column)
+                      if (!isColumnHided) {
+                        if(colTypes.hasOwnProperty(column)){
+                          if(colTypes[column].style == 'input') {
+                            return (
+                              <TableCell key={column} align={column.align}>
+                                <input 
+                                  type = {colTypes[column].type} 
+                                  name = {column}
+                                  id = {row.id} 
+                                  onChange = {handleChangeInput}
+                                  value = {value}
+                                  placeholder = {0}/>
+                              </TableCell>
+                            );
+                          }
+                        }
+                        else {
                           return (
-                            <TableCell key={column} align={column.align}>
-                              <input 
-                                type = {colTypes[column].type} 
-                                name = {column}
-                                id = {row.id} 
-                                onChange = {handleChangeInput}
-                                value = {value}
-                                placeholder = {0}/>
+                            <TableCell key={column} align={column.align} onClick = {() => handleClickTableCol(value, column)}>
+                              {column.format && typeof value === 'number' ? column.format(value) : value}
                             </TableCell>
+                            
                           );
                         }
+
                       }
-                      else {
-                        return (
-                          <TableCell key={column} align={column.align} onClick = {() => handleClickTableCol(value, column)}>
-                            {column.format && typeof value === 'number' ? column.format(value) : value}
-                          </TableCell>
-                          
-                        );
-                      }
+                    })}
+                      
+                      {types.insertButton ? <TableCell> 
+                          <button onClick= {function(e){
+                              e.preventDefault();
+                              onInsertButton(row);
+                          }}>Insert
 
-                    }
-                  })}
-                    
-                    {types.insertButton ? <TableCell> 
-                        <button onClick= {function(e){
-                            e.preventDefault();
-                            onInsertButton(row);
-                        }}>Insert
+                          </button>
+                      </TableCell> : ''}
+                  </TableRow>
 
-                        </button>
-                    </TableCell> : ''}
-                </TableRow>
-
-              );
-            }): ''}
-            {type == 'quoteList' ? 
-              <>
-                <TableRow>
-                  <TableCell>Sub Total :</TableCell>
-                  <TableCell>{table.totalValues.subTotal}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>VAT:</TableCell>
-                  <TableCell>{table.totalValues.VAT}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Total:</TableCell>
-                  <TableCell>{table.totalValues.total}</TableCell>
-                </TableRow>
-              </>
-              : ''}
-          </TableBody>
-        </Table>
-        <button onClick = {onRecordToDB}>제출</button>
-      </TableContainer>
+                );
+              }): ''}
+              {type == 'quoteList' ? 
+                <>
+                  <TableRow>
+                    <TableCell>Sub Total :</TableCell>
+                    <TableCell>{table.totalValues.subTotal}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>VAT:</TableCell>
+                    <TableCell>{table.totalValues.VAT}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>Total:</TableCell>
+                    <TableCell>{table.totalValues.total}</TableCell>
+                  </TableRow>
+                </>
+                : ''}
+            </TableBody>
+          </Table>
+          <button onClick = {onRecordToDB}>제출</button>
+        </TableContainer>
+      </Table>
       {rows ? <TablePagination
         rowsPerPageOptions={[10, 25, 100]}
         component="div"
