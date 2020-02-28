@@ -10,13 +10,13 @@ const tableAttr = {
     flag : true,
 }
 
-const funcs = {
-    
-}
 const Supplier = props => {
     const dispatch = useDispatch()
+
     const [suppliers, setSuppliers] = useState([])
     const [fixedVals, setFixedVals] = useState([]);
+    const [updated, setUpdated]     = useState(false);
+
     const { update } = useSelector(({ supplier }) => ({ update : supplier.table.update }));
 
     const getSuppliers = async () => {
@@ -30,19 +30,22 @@ const Supplier = props => {
 
     if (update) {
         getSuppliers()
+        dispatch(updateChange(false))
+        setUpdated(true)
     }
 
     const states = {
         suppliers : suppliers,
+        updated   : updated,
     }
 
     const setStates = {
         setSuppliers : setSuppliers,
+        setUpdated: setUpdated
     }
 
     const onSubmitUpdatedVals = async (fixedVals) => {
         await dispatch(setSupplierUpdate(fixedVals))
-        // await dispatch(updateChange(true))
         await getSuppliers()
         await setFixedVals([])
     }

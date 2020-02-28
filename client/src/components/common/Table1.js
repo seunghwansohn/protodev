@@ -59,6 +59,7 @@ const StyledCheckBox = styled(Checkbox)`
 const StyledTableCell = styled(TableCell)`
   background-color: #ffffff;
   width : '10%';
+  border-style : ${props => props.updated ? 'ridge':'none'};
   &:hover {
     background-color : #eef534;
   }
@@ -80,9 +81,9 @@ const STTable = ({
   funcs, 
 }) => {
   
-  const {suppliers}        = states
-  const {setSuppliers}  = setStates
-  const {load, onSubmitUpdatedVals}  = funcs
+  const {suppliers, updated}        = states
+  const {setSuppliers, setUpdated}  = setStates
+  const {load, onSubmitUpdatedVals} = funcs
 
   let headers = suppliers && suppliers.length > 1 ? Object.keys(suppliers[0]) : []
 
@@ -94,7 +95,7 @@ const STTable = ({
   const [fixableCols, setFixableCols]         = useState({});
   const [tableVals, setTableVals]             = useState(suppliers);
   const [fixedVals, setFixedVals]             = useState([]);
-
+  const [showUpdatedSign, setShowUpdatedSign] = useState(false);
 
   const dispatch = useDispatch()
   
@@ -145,6 +146,18 @@ const STTable = ({
     return ox
   }
   
+  useEffect(() => {
+    if (updated) {
+      setFixedVals([])
+      setShowUpdatedSign(true)
+      setTimeout(() => {
+        setShowUpdatedSign(false)
+      }, 3000);
+      setUpdated(false)
+    }
+  },[updated])
+
+  console.log(showUpdatedSign)
 
   const onSetfixMode = () => {
     fixMode ? setFixMode(false) : setFixMode(true)
@@ -176,8 +189,6 @@ const STTable = ({
       )
     }
   }
-
-  console.log(fixedVals)
 
   const handleChangeInput = (e, index, header) => {
     setTableVals(
@@ -260,7 +271,7 @@ const STTable = ({
                           )
                         } else {
                             return(
-                                <StyledTableCell onClick = {() => {onClickCols(index, header)}}>
+                                <StyledTableCell updated = {showUpdatedSign} onClick = {() => {onClickCols(index, header)}}>
                                   {row[header]}
                                 </StyledTableCell>
                             )
