@@ -148,10 +148,10 @@ const STTable = ({
   
   useEffect(() => {
     if (updated) {
-      setFixedVals([])
       setShowUpdatedSign(true)
       setTimeout(() => {
         setShowUpdatedSign(false)
+        setFixedVals([])
       }, 3000);
       setUpdated(false)
     }
@@ -265,13 +265,13 @@ const STTable = ({
                     } else {
                         if (fixed) {
                           return(
-                            <StyledTableCell style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(index, header)}}>
+                            <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(index, header)}}>
                               {row[header]}
                             </StyledTableCell>
                           )
                         } else {
                             return(
-                                <StyledTableCell updated = {showUpdatedSign} onClick = {() => {onClickCols(index, header)}}>
+                                <StyledTableCell onClick = {() => {onClickCols(index, header)}}>
                                   {row[header]}
                                 </StyledTableCell>
                             )
