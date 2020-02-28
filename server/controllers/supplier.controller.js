@@ -68,17 +68,14 @@ exports.loadSuppliers = (req, res) => {
     })
 };
   
-exports.updateSuppliers = async (req, res) => {
-    console.log(req.body[0].code)
-    const jane = await Supplier.findOne({where:{supplierCode : req.body[0].code}})
-    jane.supplierName = '개새끼'
-    console.log(jane)
-    await jane.save()
-    // Supplier.update({})
-    //     .then(suppliers => {
-    //         result = suppliers
-    //     }).then(() => {
-    //         res.status(200).send(result);
-    // })
+exports.updateSuppliers = (req, res) => {
+    let data = req.body
+    data.map(async (obj) => {
+        let draft = await Supplier.findOne({where:{supplierCode : obj['code']}})
+        draft.supplierName = await obj['supplierName']
+        await draft.save()
+    }).then(
+        res.status(200).send('Update Successfully')
+    )
 };
   
