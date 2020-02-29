@@ -1,11 +1,10 @@
 import React from 'react';
-import AuthTemplate from '../components/auth/AuthTemplate';
-import Test from '../containers/Test';
+import SupplierQuery from '../containers/SupplierQuery';
 
 const TestPage = () => {
   return (
-    <Test></Test>
+    <SupplierQuery></SupplierQuery>
   );
-};
+}
 
 export default TestPage;

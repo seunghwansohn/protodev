@@ -92,9 +92,11 @@ const Supplier = props => {
                 states = {states}
                 setStates = {setStates}
             ></Table>
+
             <DialogST attr = {DialogsAttr.supplierQuery}>
                 <SupplierQuery></SupplierQuery>
             </DialogST>
+            
         </>
     )
 }   
