@@ -35,11 +35,12 @@ const TextFieldST = styled(TextField)`
 
 `
 
-const InputST = ({title, state, setState, attr, type, fixMode, fixable, fixedData, setFixedData}) => {
+const InputST = ({title, state, setState, attr, type, lodedData, fixMode, fixable, fixedData, setFixedData}) => {
   const onChangeValue = (event, func) => {
     setState(event.target.value)  
   }
 
+  console.log(lodedData)
   const onKeyPressInput = (event) => {
     if (event.key == "Enter") {
       let temp = {}
@@ -67,6 +68,7 @@ const InputST = ({title, state, setState, attr, type, fixMode, fixable, fixedDat
         style={{width: "95%"}}
         fixMode = {fixMode}
         variant="outlined"
+        value = {state}
         disabled = {type == 'fixable' && fixMode == true ? false : true}
         onChange = {(event) => onChangeValue(event, setState)}
         onKeyPress = {(event) => onKeyPressInput(event)}

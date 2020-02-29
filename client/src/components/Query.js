@@ -37,9 +37,14 @@ const Query = ({loadedTempData, queryFormType, queryProps}) => {
 
   useEffect(() => {
     setLodedData(loadedTempData)
+    queryProps.map(obj => {
+      if (loadedTempData.hasOwnProperty(obj.title)) {
+        obj.setState(loadedTempData[obj.title])
+      }
+    })
   },[loadedTempData])
 
-  console.log(fixedData)
+  console.log(lodedData)
   return (
       <React.Fragment>
         <Grid container>
@@ -52,9 +57,11 @@ const Query = ({loadedTempData, queryFormType, queryProps}) => {
                     attr  = {'regular'}
                     type  = {row.type}
                     fixMode = {fixMode}
+                    state = {row.state}
                     setState = {row.setState}
                     fixedData = {fixedData}
                     setFixedData = {setFixedData}
+                    lodedData = {lodedData ? lodedData : null}
                   ></InputST>
                 </Grid>
               )

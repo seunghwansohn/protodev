@@ -15,6 +15,8 @@ module.exports = function(app) {
 
   app.get("/api/supplier/load/", controller.loadSuppliers);
   app.post("/api/supplier/update/", controller.updateSuppliers);
+  app.post("/api/supplier/query/", controller.querySuppliers);
+
 
 };
 

@@ -78,4 +78,13 @@ exports.updateSuppliers = (req, res) => {
         res.status(200).send('Update Successfully')
     )
 };
+
+exports.querySuppliers = (req, res) => {
+    console.log(req.body.code)
+    Supplier.findOne({where:{supplierCode : req.body.code}})
+    .then(res => {
+        console.log(res)
+        result = res.dataValues
+    }).then(() => res.status(200).send(result) )
+};
   
