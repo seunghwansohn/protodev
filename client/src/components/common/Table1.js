@@ -19,10 +19,9 @@ import ListItem         from '@material-ui/core/ListItem';
 import ListItemIcon     from '@material-ui/core/ListItemIcon';
 import ListItemText     from '@material-ui/core/ListItemText';
 import ListSubheader    from '@material-ui/core/ListSubheader';
-
+import TablePagination  from '@material-ui/core/TablePagination';
 
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
-
 
 import {selectMultipleStates, unSelectMultipleStates}       from '../../lib/tableFuncs'
 
@@ -101,6 +100,12 @@ const STTable = ({
   const [tableHeaderVals, setTableHeaderVals] = useState([]);
   const [hided, setHided]                     = useState([]);
   const [fixableCols, setFixableCols]         = useState([]);
+
+  const [order, setOrder]                     = useState('asc');
+  const [orderBy, setOrderBy]                 = useState('calories');
+  const [page, setPage]                       = React.useState(0);
+  const [rowsPerPage, setRowsPerPage]         = React.useState(10);
+
   const [selected, setSelected]               = useState([]);
   const [allSelected, setAllselected]         = useState(false);
   const [fixMode, setFixMode]                 = useState(false);
@@ -227,6 +232,8 @@ const STTable = ({
     }
   }
 
+
+
   const handleChangeInput = (e, index, header) => {
     setTableVals(
       produce(tableVals, draft => {
@@ -251,6 +258,41 @@ const STTable = ({
   const handleMenuClose = () => {
     setMenuActivated(null)
   }
+
+  const stableSort = (array, comparator) => {
+    const stabilizedThis = array.map((el, index) => [el, index]);
+    stabilizedThis.sort((a, b) => {
+      const order = comparator(a[0], b[0]);
+      if (order !== 0) return order;
+      return a[1] - b[1];
+    });
+    return stabilizedThis.map(el => el[0]);
+  }
+
+  const getComparator = (order, orderBy) => {
+    return order === 'desc'
+      ? (a, b) => descendingComparator(a, b, orderBy)
+      : (a, b) => -descendingComparator(a, b, orderBy);
+  }
+
+  function descendingComparator(a, b, orderBy) {
+    if (b[orderBy] < a[orderBy]) {
+      return -1;
+    }
+    if (b[orderBy] > a[orderBy]) {
+      return 1;
+    }
+    return 0;
+  }
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = event => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
 
   return (
     <React.Fragment>
@@ -313,8 +355,11 @@ const STTable = ({
               }) : ''}
             </TableRow>
           </StyledTableHeader>
+          
           <StyledTableBody>
-            {tableVals ? tableVals.map((row, index) => {
+            {tableVals ? stableSort(tableVals, getComparator(order, orderBy))
+             .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+             .map((row, index) => {
               const isItemSelected = isChecked(row)
               const labelId = `enhanced-table-checkbox-${index}`;
               return(
@@ -370,6 +415,15 @@ const STTable = ({
           </StyledTableBody>
         </StyledTable>
       </TableContainer>
+      <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={tableVals.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onChangePage={handleChangePage}
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
 
       <Button onClick = {() => {onSubmitUpdatedVals(fixedVals)}}>Submit</Button>
     </React.Fragment>
