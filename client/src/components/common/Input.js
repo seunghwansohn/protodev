@@ -32,15 +32,12 @@ const TextFieldST = styled(TextField)`
       border-color: green;
     }
   }      
-
 `
-
 const InputST = ({title, state, setState, attr, type, lodedData, fixMode, fixable, fixedData, setFixedData}) => {
   const onChangeValue = (event, func) => {
     setState(event.target.value)  
   }
 
-  console.log(lodedData)
   const onKeyPressInput = (event) => {
     if (event.key == "Enter") {
       let temp = {}

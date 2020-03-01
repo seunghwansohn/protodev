@@ -93,11 +93,13 @@ const STTable = ({
   
   const {rawData, updated, clickedCol}          = states
   const {setRawData, setUpdated, setClickedCol} = setStates
-  const {load, onSubmitUpdatedVals, onDialogOpen} = funcs
+  const {load, onSubmitUpdatedVals, onDialogOpen, onDelete} = funcs
 
   let headers = rawData && rawData.length > 1 ? Object.keys(rawData[0]) : []
 
   const [tableHeaderVals, setTableHeaderVals] = useState([]);
+  const [tableVals, setTableVals]             = useState(rawData);
+
   const [hided, setHided]                     = useState([]);
   const [fixableCols, setFixableCols]         = useState([]);
 
@@ -108,13 +110,20 @@ const STTable = ({
 
   const [selected, setSelected]               = useState([]);
   const [allSelected, setAllselected]         = useState(false);
+
   const [fixMode, setFixMode]                 = useState(false);
   const [fixableCells, setFixableCells]         = useState({});
-  const [tableVals, setTableVals]             = useState(rawData);
+
+
   const [fixedVals, setFixedVals]             = useState([]);
+
   const [showUpdatedSign, setShowUpdatedSign] = useState(false);
-  const [menuActivated, setMenuActivated] = useState('');
-  const [menuAnchoredEl, setMenuAnchoredEl] = React.useState(null);
+
+  const [menuActivated, setMenuActivated]     = useState('');
+  const [menuAnchoredEl, setMenuAnchoredEl]   = useState(null);
+
+  const [addedNew, setAddedNew]               = useState([])
+
 
   const dispatch = useDispatch()
   
@@ -232,14 +241,21 @@ const STTable = ({
     }
   }
 
-
-
   const handleChangeInput = (e, index, header) => {
     setTableVals(
       produce(tableVals, draft => {
         draft[index][header] = e.target.value
       })
     )
+  }
+
+  const handleChangeNewAddedInput = (e, header) => {
+    console.log(e.target.value, header)
+
+  }
+
+  const onKeyPressOnNewAddedInput = (e, header) => {
+    console.log(e.target.value, header)
   }
 
   const onMouseHover = (event, header) => {
@@ -294,12 +310,23 @@ const STTable = ({
     setPage(0);
   };
 
+  const onAddNewBlank = () => {
+    let tempObj = {}
+    let tempArr = addedNew
+    headers.map(header => {
+      tempObj[header] = null
+    })
+    tempArr.push(tempObj)
+    setAddedNew([...tempArr])
+  }
+  console.log(addedNew)
+
   return (
     <React.Fragment>
       <div>
         {hided.map(columns => {
           return(
-          <button onClick = {event => unhide(columns, hided, setHided)}>{columns}</button>
+            <button onClick = {event => unhide(columns, hided, setHided)}>{columns}</button>
           )
         })}
       </div>
@@ -363,55 +390,78 @@ const STTable = ({
               const isItemSelected = isChecked(row)
               const labelId = `enhanced-table-checkbox-${index}`;
               return(
-                <TableRow 
-                  key = {tableHeaderVals[index]}
-                >
-                  {attr.flag ? 
-                    <TableCell padding="checkbox">
-                      <StyledCheckBox
-                        checked={isItemSelected}
-                        inputProps={{ 'aria-labelledby': labelId }}
-                        onClick={event => handleClickFlag(row, null, selected, setSelected)}
-                      />
-                    </TableCell>:''
-                  }
-                  <StyledTableCell>
-                    {index+1}
-                  </StyledTableCell>
-                  {tableHeaderVals.map(header => {
-                    let fixable = checkColFixable(index, header)
-                    let fixed = checkColFixed(index, header)
-                    let isfixableCol = isFixable(header)
-                    const isColumnHided = isHidedCulumn(header)
-                    if (!isColumnHided) {
-                      if (fixable & isfixableCol) {
-                        return (
-                          <Input 
-                          onChange = {(event) => handleChangeInput(event, index, header)} 
-                          key = {header }
-                          value = {tableVals[index][header]} 
-                          onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}/>
-                        )
-                      }else{
-                        if (fixed) {
-                          return(
-                            <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], index, header)}}>
-                              {row[header]}
-                            </StyledTableCell>
+                  <TableRow 
+                    key = {tableHeaderVals[index]}
+                  >
+                    {attr.flag ? 
+                      <TableCell padding="checkbox">
+                        <StyledCheckBox
+                          checked={isItemSelected}
+                          inputProps={{ 'aria-labelledby': labelId }}
+                          onClick={event => handleClickFlag(row, null, selected, setSelected)}
+                        />
+                      </TableCell>:''
+                    }
+                    <StyledTableCell>
+                      {index+1}
+                    </StyledTableCell>
+                    {tableHeaderVals.map(header => {
+                      let fixable = checkColFixable(index, header)
+                      let fixed = checkColFixed(index, header)
+                      let isfixableCol = isFixable(header)
+                      const isColumnHided = isHidedCulumn(header)
+                      if (!isColumnHided) {
+                        if (fixable & isfixableCol) {
+                          return (
+                            <Input 
+                            onChange = {(event) => handleChangeInput(event, index, header)} 
+                            key = {header }
+                            value = {tableVals[index][header]} 
+                            onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}/>
                           )
                         }else{
-                          return(
-                            <StyledTableCell onClick = {() => {onClickCols(row[header], index, header)}}>
-                              {row[header]}
-                            </StyledTableCell>
-                          )
+                          if (fixed) {
+                            return(
+                              <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], index, header)}}>
+                                {row[header]}
+                              </StyledTableCell>
+                            )
+                          }else{
+                            return(
+                              <StyledTableCell onClick = {() => {onClickCols(row[header], index, header)}}>
+                                {row[header]}
+                              </StyledTableCell>
+                            )
+                          }
                         }
-                      }
-                  }
-                  })}
-                </TableRow>
+                    }
+                    })}
+                  </TableRow>
               )
             }) :''}
+            {addedNew.length > 0 ? addedNew.map((row, index) => {
+              return (
+                <TableRow>
+                <StyledCheckBox
+
+                />
+                <StyledTableCell>{index + 1}</StyledTableCell>
+                {headers.map(header => {
+                  const isColumnHided = isHidedCulumn(header)
+                  console.log(header, isColumnHided)
+                  if (!isColumnHided && header !== 'id') {
+                    return(
+                      <StyledTableCell>
+                        <Input 
+                          onChange   = {(event) => handleChangeInput(event)} 
+                          onKeyPress = {(event) => onKeyPressOnInput(event)}/>
+                      </StyledTableCell>
+                    )
+                  }
+                })}
+                </TableRow>
+              )})
+            :''}
           </StyledTableBody>
         </StyledTable>
       </TableContainer>
@@ -424,8 +474,10 @@ const STTable = ({
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
       />
-
+      <Button onClick = {onAddNewBlank}>add New</Button>
       <Button onClick = {() => {onSubmitUpdatedVals(fixedVals)}}>Submit</Button>
+      {selected.length !== 0 ? <Button onClick = {() => {onDelete(selected)}}>Delete</Button> :''}
+
     </React.Fragment>
   )
 }

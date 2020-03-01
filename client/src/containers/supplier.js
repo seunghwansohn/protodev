@@ -40,6 +40,14 @@ const Supplier = props => {
         })
     }
 
+    const onDelete = async (codes) =>{
+        await codes.map(code => {
+            axios.post('/api/supplier/delete', {supplierCode : code.supplierCode}).then(res =>{
+                getSuppliers()
+            })
+        })
+    }
+
     useEffect(async () => {
         await getSuppliers()
     },[])
@@ -56,6 +64,7 @@ const Supplier = props => {
             dispatch(onDialogOpen(true, type, clickedCol))
         } 
     },[clickedCol])
+    
 
     const states = {
         rawData   : suppliers,
@@ -123,7 +132,8 @@ const Supplier = props => {
     const funcs = {
         load : getSuppliers,
         onSubmitUpdatedVals : onSubmitUpdatedVals,
-        onDialogOpen : onDialogOpen
+        onDialogOpen : onDialogOpen,
+        onDelete : onDelete
     }
 
     const DialogsAttr = {

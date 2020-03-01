@@ -92,3 +92,8 @@ exports.querySuppliers = (req, res) => {
     }).then(() => res.status(200).send(result) )
 };
   
+exports.deleteSuppliers = async (req, res) => {
+    let draft = await Supplier.findOne({where:req.body})
+    await draft.destroy();
+};
+  
