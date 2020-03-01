@@ -51,20 +51,57 @@ const Supplier = props => {
     }
 
     useEffect(() => {
-        dispatch(setClickedTableCol(clickedCol))
-        dispatch(onDialogOpen(true, type, clickedCol))
+        if (Object.keys(clickedCol).length > 0) {
+            dispatch(setClickedTableCol(clickedCol))
+            dispatch(onDialogOpen(true, type, clickedCol))
+        } 
     },[clickedCol])
 
     const states = {
-        suppliers   : suppliers,
+        rawData   : suppliers,
         updated     : updated,
         clickedCol  : clickedCol
     }
 
     const setStates = {
-        setSuppliers    : setSuppliers,
+        setRawData    : setSuppliers,
         setUpdated      : setUpdated,
         setClickedCol   : setClickedCol
+    }
+
+    const stateAttr = {
+        supplierCode : {
+            fixable : false,
+            defaultHided : false
+        },
+        supplierName : {
+            fixable : true,
+            defaultHided : false
+        },
+        country : {
+            fixable : true,
+            defaultHided : false
+        },
+        ceo : {
+            fixable : true,
+            defaultHided : true
+        },
+        taxCode : {
+            fixable : true,
+            defaultHided : true
+        },
+        notes : {
+            fixable : true,
+            defaultHided : false
+        },
+        createdAt : {
+            fixable : false,
+            defaultHided : true
+        },
+        updatedAt : {
+            fixable : false,
+            defaultHided : true
+        }
     }
 
     const onSubmitUpdatedVals = async (fixedVals) => {
@@ -108,6 +145,7 @@ const Supplier = props => {
                 funcs       = {funcs}
                 states      = {states}
                 setStates   = {setStates}
+                stateAttr   = {stateAttr}
             ></Table>
 
             <DialogST attr = {DialogsAttr.supplierQuery}>

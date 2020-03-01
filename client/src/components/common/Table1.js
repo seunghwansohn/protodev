@@ -11,6 +11,18 @@ import TableHead        from '@material-ui/core/TableHead';
 import TableRow         from '@material-ui/core/TableRow';
 import Checkbox         from '@material-ui/core/Checkbox';
 import Input            from '@material-ui/core/Input';
+import Menu             from '@material-ui/core/Menu';
+import MenuItem         from '@material-ui/core/MenuItem';
+import IconButton       from '@material-ui/core/IconButton';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+import ListSubheader from '@material-ui/core/ListSubheader';
+
+
+import { ExpandLess, ExpandMore } from '@material-ui/icons';
+
 
 import {selectMultipleStates, unSelectMultipleStates}       from '../../lib/tableFuncs'
 
@@ -72,34 +84,38 @@ const StyledInput = styled(Input)`
 
 const STTable = ({
   type,
-  states, 
-  setStates, 
   tableArr, 
   attr, 
   funcs, 
+  states, 
+  setStates, 
+  stateAttr
 }) => {
   
-  const {suppliers, updated, clickedCol}          = states
-  const {setSuppliers, setUpdated, setClickedCol} = setStates
+  const {rawData, updated, clickedCol}          = states
+  const {setRawData, setUpdated, setClickedCol} = setStates
   const {load, onSubmitUpdatedVals, onDialogOpen} = funcs
 
-  let headers = suppliers && suppliers.length > 1 ? Object.keys(suppliers[0]) : []
+  let headers = rawData && rawData.length > 1 ? Object.keys(rawData[0]) : []
 
   const [tableHeaderVals, setTableHeaderVals] = useState([]);
-  const [hided,    setHided]                  = useState([]);
+  const [hided, setHided]                     = useState([]);
+  const [fixableCols, setFixableCols]         = useState([]);
   const [selected, setSelected]               = useState([]);
   const [allSelected, setAllselected]         = useState(false);
   const [fixMode, setFixMode]                 = useState(false);
-  const [fixableCols, setFixableCols]         = useState({});
-  const [tableVals, setTableVals]             = useState(suppliers);
+  const [fixableCells, setFixableCells]         = useState({});
+  const [tableVals, setTableVals]             = useState(rawData);
   const [fixedVals, setFixedVals]             = useState([]);
   const [showUpdatedSign, setShowUpdatedSign] = useState(false);
+  const [menuActivated, setMenuActivated] = useState('');
+  const [menuAnchoredEl, setMenuAnchoredEl] = React.useState(null);
 
   const dispatch = useDispatch()
   
   useEffect(() => {
-    setTableVals(suppliers)
-  },[suppliers])
+    setTableVals(rawData)
+  },[rawData])
 
   useEffect(() => {
     const deleteKey = 'id'
@@ -107,7 +123,7 @@ const STTable = ({
       return el !== deleteKey
     })
     setTableHeaderVals(headers)
-  },[suppliers])
+  },[rawData])
 
   useEffect(() => {
     if (updated) {
@@ -119,9 +135,26 @@ const STTable = ({
       setUpdated(false)
     }
   },[updated])
+  
+  useEffect(() => {
+    let tmpDefaultHided = []
+    let tempFixableCols = []
+    Object.keys(stateAttr).map(key => {
+      if(stateAttr[key].defaultHided){
+        tmpDefaultHided.push(key)
+      }
+      if(stateAttr[key].fixable){
+        tempFixableCols.push(key)
+      }
+    })
+    setHided(tmpDefaultHided)
+    setFixableCols(tempFixableCols)
+  },[])
 
-  const isChecked     = name => selected.indexOf(name)  !== -1;
-  const isHidedCulumn = name => hided.indexOf(name)     !== -1;
+  
+  const isChecked     = name => selected.indexOf(name)    !== -1;
+  const isHidedCulumn = name => hided.indexOf(name)       !== -1;
+  const isFixable     = name => fixableCols.indexOf(name) !== -1;
 
   const onHidedCulumn   = selectMultipleStates
   const handleClickFlag = selectMultipleStates
@@ -135,8 +168,8 @@ const STTable = ({
 
   const checkColFixable = (index, header) => {
     let ox = false
-    if (fixableCols.row == index){
-      if(fixableCols.header == header){
+    if (fixableCells.row == index){
+      if(fixableCells.header == header){
         ox = true
       }
     }
@@ -169,7 +202,7 @@ const STTable = ({
 
     if (fixMode){
       const temp = {row : row, header : header}
-      setFixableCols(temp)
+      setFixableCells(temp)
     }
     else {
       setClickedCol(tempObj)
@@ -179,7 +212,7 @@ const STTable = ({
   const onKeyPressOnInput = (e, index, header) => {
     if (e.key === "Enter") {
       const temp = {}
-      setFixableCols(temp)
+      setFixableCells(temp)
 
       let temp1 = {}
       temp1[header] = e.target.value
@@ -200,6 +233,23 @@ const STTable = ({
         draft[index][header] = e.target.value
       })
     )
+  }
+
+  const onMouseHover = (event, header) => {
+    setMenuAnchoredEl(event.currentTarget)
+    setMenuActivated(header)
+  }
+
+  const openMenu = (e, header) =>{
+    console.log(header)
+  }
+
+  const checkMenuActivated = (header) => {
+    return (header, menuActivated == header)
+  }
+  
+  const handleMenuClose = () => {
+    setMenuActivated(null)
   }
 
   return (
@@ -224,11 +274,40 @@ const STTable = ({
                 const isColumnHided = isHidedCulumn(header)
                 if (!isColumnHided) {
                   return (
-                    <StyledTableCell
-                      onClick={event => onHidedCulumn(header, null, hided, setHided)}
-                    >
+                    <TableCell>
                       {header}
-                    </StyledTableCell>
+                      <IconButton
+                        key="close"
+                        aria-label="Close"
+                        color="inherit"
+                        onClick = {(event) => onMouseHover(event, header)}
+                      >
+                        <ExpandMore />
+                      </IconButton>
+                      <Menu
+                        key="menu"
+                        open={checkMenuActivated(header)}
+                        anchorEl={menuAnchoredEl}
+                        onClose={handleMenuClose}
+                        transitionDuration = {0}
+                        autoFocus = {true}
+                      >
+                        <MenuItem
+                          onClick={event => onHidedCulumn(header, null, hided, setHided)}
+                        >
+                          Hide
+                        </MenuItem>
+                        <MenuItem>
+                          Filter
+                        </MenuItem>
+                        <List>
+                          <ListSubheader>
+                          Nested List Items
+                          </ListSubheader>
+                          <ListItemText>fefe</ListItemText>
+                        </List>
+                      </Menu>
+                    </TableCell>
                   )
                 }
               }) : ''}
@@ -257,30 +336,33 @@ const STTable = ({
                   {tableHeaderVals.map(header => {
                     let fixable = checkColFixable(index, header)
                     let fixed = checkColFixed(index, header)
-
-                    if (fixable) {
-                      return (
-                        <Input 
-                        onChange = {(event) => handleChangeInput(event, index, header)} 
-                        key = {header }
-                        value = {tableVals[index][header]} 
-                        onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}/>
-                      )
-                    }else{
-                      if (fixed) {
-                        return(
-                          <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], index, header)}}>
-                            {row[header]}
-                          </StyledTableCell>
+                    let isfixableCol = isFixable(header)
+                    const isColumnHided = isHidedCulumn(header)
+                    if (!isColumnHided) {
+                      if (fixable & isfixableCol) {
+                        return (
+                          <Input 
+                          onChange = {(event) => handleChangeInput(event, index, header)} 
+                          key = {header }
+                          value = {tableVals[index][header]} 
+                          onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}/>
                         )
                       }else{
-                        return(
-                          <StyledTableCell onClick = {() => {onClickCols(row[header], index, header)}}>
-                            {row[header]}
-                          </StyledTableCell>
-                        )
+                        if (fixed) {
+                          return(
+                            <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], index, header)}}>
+                              {row[header]}
+                            </StyledTableCell>
+                          )
+                        }else{
+                          return(
+                            <StyledTableCell onClick = {() => {onClickCols(row[header], index, header)}}>
+                              {row[header]}
+                            </StyledTableCell>
+                          )
+                        }
                       }
-                    }
+                  }
                   })}
                 </TableRow>
               )
