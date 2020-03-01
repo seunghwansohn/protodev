@@ -71,6 +71,7 @@ const StyledInput = styled(Input)`
 `
 
 const STTable = ({
+  type,
   states, 
   setStates, 
   tableArr, 
@@ -78,8 +79,8 @@ const STTable = ({
   funcs, 
 }) => {
   
-  const {suppliers, updated}        = states
-  const {setSuppliers, setUpdated}  = setStates
+  const {suppliers, updated, clickedCol}          = states
+  const {setSuppliers, setUpdated, setClickedCol} = setStates
   const {load, onSubmitUpdatedVals, onDialogOpen} = funcs
 
   let headers = suppliers && suppliers.length > 1 ? Object.keys(suppliers[0]) : []
@@ -158,16 +159,20 @@ const STTable = ({
     fixMode ? setFixMode(false) : setFixMode(true)
   }
 
-  const onClickCols = (row, header) => {
-    console.log(suppliers)
-    console.log(row,header)
-    console.log(suppliers[row][header])
+  const onClickCols = (value, row, header) => {
+    const tempObj = {
+      value : value,
+      type  : type,
+      index : row,
+      header: header
+    }
+
     if (fixMode){
       const temp = {row : row, header : header}
       setFixableCols(temp)
     }
     else {
-      dispatch(onDialogOpen(true, 'supplierQuery'))
+      setClickedCol(tempObj)
     }
   }
 
@@ -264,13 +269,13 @@ const STTable = ({
                     }else{
                       if (fixed) {
                         return(
-                          <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(index, header)}}>
+                          <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], index, header)}}>
                             {row[header]}
                           </StyledTableCell>
                         )
                       }else{
                         return(
-                          <StyledTableCell onClick = {() => {onClickCols(index, header)}}>
+                          <StyledTableCell onClick = {() => {onClickCols(row[header], index, header)}}>
                             {row[header]}
                           </StyledTableCell>
                         )

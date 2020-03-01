@@ -13,9 +13,10 @@ const initialState = {
     }
 }
 
-export const SET_HEADER         = 'supplier/SET_HEADER'
-export const SET_INPUT_CHANGE   = 'supplier/SET_INPUT_CHANGE'
-export const SET_UPDATE_CHANGE  = 'supplier/SET_UPDATE_CHANGE'
+export const SET_HEADER             = 'supplier/SET_HEADER'
+export const SET_INPUT_CHANGE       = 'supplier/SET_INPUT_CHANGE'
+export const SET_UPDATE_CHANGE      = 'supplier/SET_UPDATE_CHANGE'
+export const SET_CLICKED_TABLE_COL  = 'supplier/SET_CLICKED_TABLE_COL'
 
 const [SET_SUPPLIER_ADD, SET_SUPPLIER_ADD_SUCCESS, SET_SUPPLIER_ADD_FAILURE ] 
 = createRequestActionTypes('supplier/SET_SUPPLIER_ADD');
@@ -33,6 +34,8 @@ export const setSupplierAdd     = createAction(SET_SUPPLIER_ADD, info => info)
 export const setSupplierLoad    = createAction(SET_LOAD)
 export const setSupplierUpdate  = createAction(SET_UPDATE_SUPPLIERS, info => info)
 export const updateChange       = createAction(SET_UPDATE_CHANGE, ox => ox)
+export const setClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
+
 
 export function* supplierSaga() {
     yield takeLatest(SET_SUPPLIER_ADD, supplierAddSaga);
@@ -62,6 +65,11 @@ function reducer (state = initialState, action) {
         case SET_UPDATE_SUPPLIERS_SUCCESS:
             return produce(state, draft => {
                 draft.table.update = true
+            })
+        case SET_CLICKED_TABLE_COL:
+            return produce(state, draft => {
+                console.log(action.payload)
+                
             })
         default:
             return state;

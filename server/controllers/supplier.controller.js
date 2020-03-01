@@ -80,8 +80,12 @@ exports.updateSuppliers = (req, res) => {
 };
 
 exports.querySuppliers = (req, res) => {
-    console.log(req.body.code)
-    Supplier.findOne({where:{supplierCode : req.body.code}})
+
+    const header = req.body.header
+    const tempObj = {}
+    tempObj[header] = req.body.value
+
+    Supplier.findOne({where:tempObj})
     .then(res => {
         console.log(res)
         result = res.dataValues
