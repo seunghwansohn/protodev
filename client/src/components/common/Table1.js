@@ -14,11 +14,11 @@ import Input            from '@material-ui/core/Input';
 import Menu             from '@material-ui/core/Menu';
 import MenuItem         from '@material-ui/core/MenuItem';
 import IconButton       from '@material-ui/core/IconButton';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
+import List             from '@material-ui/core/List';
+import ListItem         from '@material-ui/core/ListItem';
+import ListItemIcon     from '@material-ui/core/ListItemIcon';
+import ListItemText     from '@material-ui/core/ListItemText';
+import ListSubheader    from '@material-ui/core/ListSubheader';
 
 
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
@@ -262,8 +262,8 @@ const STTable = ({
         })}
       </div>
       <button onClick = { onSetfixMode }>fixmode</button>
-      <StyledTable>
-        <TableContainer>
+      <TableContainer>
+        <StyledTable size = {'small'}>
           <StyledTableHeader>
             <TableRow>
               {tableHeaderVals && attr.flag ? 
@@ -368,8 +368,9 @@ const STTable = ({
               )
             }) :''}
           </StyledTableBody>
-        </TableContainer>
-      </StyledTable>
+        </StyledTable>
+      </TableContainer>
+
       <Button onClick = {() => {onSubmitUpdatedVals(fixedVals)}}>Submit</Button>
     </React.Fragment>
   )
