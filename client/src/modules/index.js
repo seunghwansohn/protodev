@@ -11,6 +11,7 @@ import supplier, {supplierSaga} from './supplier';
 import auth, { authSaga }       from './auth';
 import user, { userSaga }       from './user';
 import table, { tableSaga }     from './test';
+import maker, { makerSaga }     from './maker';
 import query, { querySaga }     from './query';
 import common, { commonSaga}                   from './common';
 
@@ -35,7 +36,8 @@ const rootReducer = combineReducers({
     reduxFormInit,
     supplier,
     query,
-    common
+    common,
+    maker
 });
 
 export function* rootSaga () {
@@ -50,7 +52,8 @@ export function* rootSaga () {
         basicInfoSaga(),
         supplierSaga(),
         querySaga(),
-        commonSaga()
+        commonSaga(),
+        makerSaga()
     ])
 }
 

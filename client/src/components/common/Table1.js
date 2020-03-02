@@ -15,8 +15,6 @@ import Menu             from '@material-ui/core/Menu';
 import MenuItem         from '@material-ui/core/MenuItem';
 import IconButton       from '@material-ui/core/IconButton';
 import List             from '@material-ui/core/List';
-import ListItem         from '@material-ui/core/ListItem';
-import ListItemIcon     from '@material-ui/core/ListItemIcon';
 import ListItemText     from '@material-ui/core/ListItemText';
 import ListSubheader    from '@material-ui/core/ListSubheader';
 import TablePagination  from '@material-ui/core/TablePagination';
@@ -91,8 +89,8 @@ const STTable = ({
   stateAttr
 }) => {
   
-  const {rawData, updated, clickedCol, addedNew, selected}          = states
-  const {setRawData, setUpdated, setClickedCol, setAddedNew, setSelected} = setStates
+  const {rawData, updated, clickedCol, addedNew, selected}                    = states
+  const {setRawData, setUpdated, setClickedCol, setAddedNew, setSelected}     = setStates
   const {load, onSubmitUpdatedVals, onDialogOpen, onDelete, onSubmitNewAdded} = funcs
 
   let headers = rawData && rawData.length > 1 ? Object.keys(rawData[0]) : []
@@ -105,13 +103,13 @@ const STTable = ({
 
   const [order, setOrder]                     = useState('asc');
   const [orderBy, setOrderBy]                 = useState('calories');
-  const [page, setPage]                       = React.useState(0);
-  const [rowsPerPage, setRowsPerPage]         = React.useState(10);
+  const [page, setPage]                       = useState(0);
+  const [rowsPerPage, setRowsPerPage]         = useState(10);
 
   const [allSelected, setAllselected]         = useState(false);
 
   const [fixMode, setFixMode]                 = useState(false);
-  const [fixableCells, setFixableCells]         = useState({});
+  const [fixableCells, setFixableCells]       = useState({});
 
 
   const [fixedVals, setFixedVals]             = useState([]);
@@ -221,12 +219,10 @@ const STTable = ({
     if (e.key === "Enter") {
       const temp = {}
       setFixableCells(temp)
-
       let temp1 = {}
       temp1[header] = e.target.value
       temp1.index = index
       temp1.code = tableVals[index].supplierCode
-  
       setFixedVals(
         produce(fixedVals, draft => {
           draft.push(temp1)
@@ -239,6 +235,18 @@ const STTable = ({
     setTableVals(
       produce(tableVals, draft => {
         draft[index][header] = e.target.value
+      })
+    )
+  }
+
+  const onAddNewBlank = () => {
+    let tempObj = {}
+    headers.map(header => {
+      tempObj[header] = null
+    })
+    setAddedNew(
+      produce(addedNew, draft => {
+        draft.push(tempObj)
       })
     )
   }
@@ -289,7 +297,7 @@ const STTable = ({
       : (a, b) => -descendingComparator(a, b, orderBy);
   }
 
-  function descendingComparator(a, b, orderBy) {
+  const descendingComparator = (a, b, orderBy) => {
     if (b[orderBy] < a[orderBy]) {
       return -1;
     }
@@ -307,19 +315,6 @@ const STTable = ({
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
-  const onAddNewBlank = () => {
-    let tempObj = {}
-    headers.map(header => {
-      tempObj[header] = null
-    })
-    setAddedNew(
-      produce(addedNew, draft => {
-        draft.push(tempObj)
-      })
-    )
-  }
-
 
   return (
     <React.Fragment>
@@ -433,7 +428,7 @@ const STTable = ({
                   </TableRow>
               )
             }) :''}
-            {addedNew.length > 0 ? addedNew.map((row, index) => {
+            {addedNew && addedNew.length > 0 ? addedNew.map((row, index) => {
               return (
                 <TableRow>
                 <StyledCheckBox
@@ -471,7 +466,7 @@ const STTable = ({
       <Button onClick = {onAddNewBlank}>add New</Button>
       <Button onClick = {() => onSubmitNewAdded(addedNew)}>Submit New</Button>
       <Button onClick = {() => onSubmitUpdatedVals(fixedVals)}>Submit</Button>
-      {selected.length !== 0 ? <Button onClick = {() => {onDelete(selected)}}>Delete</Button> :''}
+      {selected && selected.length !== 0 ? <Button onClick = {() => {onDelete(selected)}}>Delete</Button> :''}
 
     </React.Fragment>
   )

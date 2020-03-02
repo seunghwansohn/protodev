@@ -25,7 +25,7 @@ const [SET_UPDATE_SUPPLIERS, SET_UPDATE_SUPPLIERS_SUCCESS, SET_UPDATE_SUPPLIERS_
 const [SET_LOAD, SET_LOAD_SUCCESS, SET_LOAD_ADD_FAILURE ] 
 = createRequestActionTypes('supplier/SET_LOAD');
 const [SET_SUPPLIER_DELETE, SET_SUPPLIER_DELETE_SUCCESS, SET_SUPPLIER_DELETE_FAILURE ] 
-= createRequestActionTypes('supplier/SET_LOAD');
+= createRequestActionTypes('supplier/SET_DELETE');
 
 const supplierAddSaga       = createRequestSaga(SET_SUPPLIER_ADD, supplier.addNew);
 const supplierLoadSaga      = createRequestSaga(SET_LOAD, supplier.load);

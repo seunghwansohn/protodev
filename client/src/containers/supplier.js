@@ -5,7 +5,6 @@ import Table    from '../components/common/Table1'
 import DialogST from '../components/common/DialogST'
 import SupplierQuery from '../containers/SupplierQuery'
 
-
 import axios from '../lib/api/axios'
 
 import {
@@ -18,13 +17,13 @@ import {
 
 import { onDialogOpen }      from '../modules/dialogs'
 
-
 const tableAttr = {
     flag : true,
 }
 
 const Supplier = props => {
-    const dispatch = useDispatch()
+    
+    const dispatch                      = useDispatch()
 
     const [suppliers, setSuppliers]     = useState([])
     const [fixedVals, setFixedVals]     = useState([]);
@@ -33,9 +32,8 @@ const Supplier = props => {
     const [addedNew, setAddedNew]       = useState([]);
     const [selected, setSelected]       = useState([]);
 
-    const { update } = useSelector(({ supplier }) => ({ update : supplier.table.update }));
-
-    const opened = useSelector(state => state.dialogs.opened)
+    const { update }    = useSelector(({ supplier }) => ({ update : supplier.table.update }));
+    const opened        = useSelector(state => state.dialogs.opened)
 
     const type = 'supplier'
 
@@ -44,7 +42,7 @@ const Supplier = props => {
             setSuppliers(res.data)
         })
     }
-
+    
     const onDelete = async (Arr) => {
         await Arr.map(obj => {
             dispatch(setSupplierDelete(obj.supplierCode))
@@ -61,12 +59,6 @@ const Supplier = props => {
         setUpdated(true)
     },[suppliers])
 
-    if (update) {
-        getSuppliers()
-        dispatch(updateChange(false))
-        setUpdated(true)
-    }
-
     useEffect(() => {
         if (Object.keys(clickedCol).length > 0) {
             dispatch(setClickedTableCol(clickedCol))
@@ -74,6 +66,12 @@ const Supplier = props => {
         } 
     },[clickedCol])
     
+    if (update) {
+        getSuppliers()
+        dispatch(updateChange(false))
+        setUpdated(true)
+    }
+
     const onSubmitUpdatedVals = async (fixedVals) => {
         await dispatch(setSupplierUpdate(fixedVals))
         await getSuppliers()
@@ -146,8 +144,6 @@ const Supplier = props => {
             defaultHided : true
         }
     }
-
-
 
     const funcs = {
         load : getSuppliers,

@@ -21,39 +21,42 @@ const tableAttr = {
     flag : true,
 }
 
-const Supplier = props => {
+const Maker = props => {
     const dispatch = useDispatch()
 
-    const [suppliers, setSuppliers] = useState([])
-    const [fixedVals, setFixedVals] = useState([]);
-    const [updated, setUpdated]     = useState(false);
-    const [clickedCol, setClickedCol]     = useState({});
+    const type = 'maker'
+
+    const [rawData, setRawData]           = useState([])
+    const [fixedVals, setFixedVals]     = useState([]);
+    const [updated, setUpdated]         = useState(false);
+    const [clickedCol, setClickedCol]   = useState({});
+    const [addedNew, setAddedNew]       = useState([]);
+    const [selected, setSelected]       = useState([]);
 
     const { update } = useSelector(({ supplier }) => ({ update : supplier.table.update }));
     const opened = useSelector(state => state.dialogs.opened)
 
-    const type = 'supplier'
 
-    const getSuppliers = async () => {
-        await axios.get('/api/supplier/load').then(res => {
-            setSuppliers(res.data)
+    const getRawData = async () => {
+        await axios.get('/api/' + type + '/load').then(res => {
+            setRawData(res.data)
         })
     }
 
     const onDelete = async (codes) =>{
         await codes.map(code => {
-            axios.post('/api/supplier/delete', {supplierCode : code.supplierCode}).then(res =>{
-                getSuppliers()
+            axios.post('/api/' + type + '/delete', {supplierCode : code.supplierCode}).then(res =>{
+                getRawData()
             })
         })
     }
 
     useEffect(async () => {
-        await getSuppliers()
+        await getRawData()
     },[])
 
     if (update) {
-        getSuppliers()
+        getRawData()
         dispatch(updateChange(false))
         setUpdated(true)
     }
@@ -67,39 +70,31 @@ const Supplier = props => {
     
 
     const states = {
-        rawData   : suppliers,
+        rawData     : rawData,
         updated     : updated,
-        clickedCol  : clickedCol
+        clickedCol  : clickedCol,
+        addedNew    : addedNew,
+        selected    : selected
     }
 
     const setStates = {
-        setRawData    : setSuppliers,
+        setRawData      : setRawData,
         setUpdated      : setUpdated,
-        setClickedCol   : setClickedCol
+        setClickedCol   : setClickedCol,
+        setAddedNew     : setAddedNew,
+        setSelected     : setSelected
     }
 
     const stateAttr = {
-        supplierCode : {
+        makerCode : {
             fixable : false,
             defaultHided : false
         },
-        supplierName : {
+        makerName : {
             fixable : true,
             defaultHided : false
         },
-        country : {
-            fixable : true,
-            defaultHided : false
-        },
-        ceo : {
-            fixable : true,
-            defaultHided : true
-        },
-        taxCode : {
-            fixable : true,
-            defaultHided : true
-        },
-        notes : {
+        origin : {
             fixable : true,
             defaultHided : false
         },
@@ -115,7 +110,7 @@ const Supplier = props => {
 
     const onSubmitUpdatedVals = async (fixedVals) => {
         await dispatch(setSupplierUpdate(fixedVals))
-        await getSuppliers()
+        await setRawData()
         await setFixedVals([])
     }
 
@@ -130,7 +125,7 @@ const Supplier = props => {
     }
 
     const funcs = {
-        load : getSuppliers,
+        load : getRawData,
         onSubmitUpdatedVals : onSubmitUpdatedVals,
         onDialogOpen : onDialogOpen,
         onDelete : onDelete
@@ -147,10 +142,9 @@ const Supplier = props => {
 
     return(
         <>
-            <button onClick = {getSuppliers}> 체크</button>
             <Table 
                 type        = {type}
-                tableArr    = {suppliers.data}  
+                tableArr    = {rawData.data}  
                 attr        = {tableAttr}
                 funcs       = {funcs}
                 states      = {states}
@@ -167,4 +161,4 @@ const Supplier = props => {
     )
 }   
 
-export default Supplier
+export default Maker
