@@ -11,8 +11,7 @@ import axios from '../lib/api/axios'
 import {
     setSupplierUpdate, 
     updateChange, 
-    setClickedTableCol,
-    setSupplierAdd
+    setClickedTableCol
 }                            from '../modules/supplier'
 
 import { onDialogOpen }      from '../modules/dialogs'
@@ -25,14 +24,12 @@ const tableAttr = {
 const Supplier = props => {
     const dispatch = useDispatch()
 
-    const [suppliers, setSuppliers]     = useState([])
-    const [fixedVals, setFixedVals]     = useState([]);
-    const [updated, setUpdated]         = useState(false);
-    const [clickedCol, setClickedCol]   = useState({});
-    const [addedNew, setAddedNew]       = useState([]);
+    const [suppliers, setSuppliers] = useState([])
+    const [fixedVals, setFixedVals] = useState([]);
+    const [updated, setUpdated]     = useState(false);
+    const [clickedCol, setClickedCol]     = useState({});
 
     const { update } = useSelector(({ supplier }) => ({ update : supplier.table.update }));
-
     const opened = useSelector(state => state.dialogs.opened)
 
     const type = 'supplier'
@@ -68,40 +65,17 @@ const Supplier = props => {
         } 
     },[clickedCol])
     
-    const onSubmitUpdatedVals = async (fixedVals) => {
-        await dispatch(setSupplierUpdate(fixedVals))
-        await getSuppliers()
-        await setFixedVals([])
-    }
-
-    const onSubmitNewAdded = async (addedNew) => {
-        await dispatch(setSupplierAdd(addedNew))
-        await getSuppliers()
-        await setAddedNew([])
-    }
-
-    const checkOpened = (title) => {
-        let result = ''
-        opened.map(array => {
-            if (array.type == title){
-                result = array.ox
-            }
-        })
-        return result
-    }
 
     const states = {
         rawData   : suppliers,
         updated     : updated,
-        clickedCol  : clickedCol,
-        addedNew : addedNew
+        clickedCol  : clickedCol
     }
 
     const setStates = {
         setRawData    : setSuppliers,
         setUpdated      : setUpdated,
-        setClickedCol   : setClickedCol,
-        setAddedNew : setAddedNew
+        setClickedCol   : setClickedCol
     }
 
     const stateAttr = {
@@ -139,14 +113,27 @@ const Supplier = props => {
         }
     }
 
+    const onSubmitUpdatedVals = async (fixedVals) => {
+        await dispatch(setSupplierUpdate(fixedVals))
+        await getSuppliers()
+        await setFixedVals([])
+    }
 
+    const checkOpened = (title) => {
+        let result = ''
+        opened.map(array => {
+            if (array.type == title){
+                result = array.ox
+            }
+        })
+        return result
+    }
 
     const funcs = {
         load : getSuppliers,
         onSubmitUpdatedVals : onSubmitUpdatedVals,
         onDialogOpen : onDialogOpen,
-        onDelete : onDelete,
-        onSubmitNewAdded: onSubmitNewAdded
+        onDelete : onDelete
     }
 
     const DialogsAttr = {

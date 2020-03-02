@@ -91,9 +91,9 @@ const STTable = ({
   stateAttr
 }) => {
   
-  const {rawData, updated, clickedCol}          = states
-  const {setRawData, setUpdated, setClickedCol} = setStates
-  const {load, onSubmitUpdatedVals, onDialogOpen, onDelete} = funcs
+  const {rawData, updated, clickedCol, addedNew}          = states
+  const {setRawData, setUpdated, setClickedCol, setAddedNew} = setStates
+  const {load, onSubmitUpdatedVals, onDialogOpen, onDelete, onSubmitNewAdded} = funcs
 
   let headers = rawData && rawData.length > 1 ? Object.keys(rawData[0]) : []
 
@@ -121,9 +121,6 @@ const STTable = ({
 
   const [menuActivated, setMenuActivated]     = useState('');
   const [menuAnchoredEl, setMenuAnchoredEl]   = useState(null);
-
-  const [addedNew, setAddedNew]               = useState([])
-
 
   const dispatch = useDispatch()
   
@@ -179,7 +176,6 @@ const STTable = ({
       'supplierCode' : true
     }[key]
   }
-
   const checkColFixable = (index, header) => {
     let ox = false
     if (fixableCells.row == index){
@@ -213,7 +209,6 @@ const STTable = ({
       index : row,
       header: header
     }
-
     if (fixMode){
       const temp = {row : row, header : header}
       setFixableCells(temp)
@@ -249,9 +244,13 @@ const STTable = ({
     )
   }
 
-  const handleChangeNewAddedInput = (e, header) => {
-    console.log(e.target.value, header)
-
+  const handleChangeNewAddedInput = (event, index, header) => {
+    const temp = event.target.value
+    setAddedNew(
+      produce(addedNew, draft => {
+        draft[index][header] = temp
+      })
+    )
   }
 
   const onKeyPressOnNewAddedInput = (e, header) => {
@@ -309,7 +308,7 @@ const STTable = ({
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-
+  console.log(addedNew)
   const onAddNewBlank = () => {
     let tempObj = {}
     let tempArr = addedNew
@@ -319,7 +318,6 @@ const STTable = ({
     tempArr.push(tempObj)
     setAddedNew([...tempArr])
   }
-  console.log(addedNew)
 
   return (
     <React.Fragment>
@@ -349,8 +347,7 @@ const STTable = ({
                         key="close"
                         aria-label="Close"
                         color="inherit"
-                        onClick = {(event) => onMouseHover(event, header)}
-                      >
+                        onClick = {(event) => onMouseHover(event, header)}>
                         <ExpandMore />
                       </IconButton>
                       <Menu
@@ -359,20 +356,15 @@ const STTable = ({
                         anchorEl={menuAnchoredEl}
                         onClose={handleMenuClose}
                         transitionDuration = {0}
-                        autoFocus = {true}
-                      >
-                        <MenuItem
-                          onClick={event => onHidedCulumn(header, null, hided, setHided)}
-                        >
+                        autoFocus = {true}>
+                        <MenuItem onClick={event => onHidedCulumn(header, null, hided, setHided)}>
                           Hide
                         </MenuItem>
                         <MenuItem>
                           Filter
                         </MenuItem>
                         <List>
-                          <ListSubheader>
-                          Nested List Items
-                          </ListSubheader>
+                          <ListSubheader>Nested List Items</ListSubheader>
                           <ListItemText>fefe</ListItemText>
                         </List>
                       </Menu>
@@ -448,13 +440,12 @@ const STTable = ({
                 <StyledTableCell>{index + 1}</StyledTableCell>
                 {headers.map(header => {
                   const isColumnHided = isHidedCulumn(header)
-                  console.log(header, isColumnHided)
                   if (!isColumnHided && header !== 'id') {
                     return(
                       <StyledTableCell>
                         <Input 
-                          onChange   = {(event) => handleChangeInput(event)} 
-                          onKeyPress = {(event) => onKeyPressOnInput(event)}/>
+                          onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
+                          onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}/>
                       </StyledTableCell>
                     )
                   }
@@ -465,6 +456,7 @@ const STTable = ({
           </StyledTableBody>
         </StyledTable>
       </TableContainer>
+      
       <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
@@ -472,10 +464,11 @@ const STTable = ({
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
-      />
+          onChangeRowsPerPage={handleChangeRowsPerPage}/>
+
       <Button onClick = {onAddNewBlank}>add New</Button>
-      <Button onClick = {() => {onSubmitUpdatedVals(fixedVals)}}>Submit</Button>
+      <Button onClick = {() => onSubmitNewAdded(addedNew)}>Submit New</Button>
+      <Button onClick = {() => onSubmitUpdatedVals(fixedVals)}>Submit</Button>
       {selected.length !== 0 ? <Button onClick = {() => {onDelete(selected)}}>Delete</Button> :''}
 
     </React.Fragment>

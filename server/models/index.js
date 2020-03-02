@@ -32,6 +32,8 @@ db.clientRate = require("../models/client.rate.model.js")(sequelize, Sequelize);
 db.itemPRice = require("../models/item.Price.model.js")(sequelize, Sequelize);
 db.supplier = require("../models/supplier.model.js")(sequelize, Sequelize);
 db.supplierNote = require("../models/supplier.notes.model.js")(sequelize, Sequelize);
+db.maker = require("../models/maker.model.js")(sequelize, Sequelize);
+
 
 
 db.role.belongsToMany(db.user, {

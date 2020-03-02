@@ -23,11 +23,7 @@ module.exports = (sequelize, Sequelize) => {
       taxCode : {
         type: Sequelize.STRING,
         allowNull: true,
-      },
-      notes : {
-        type: Sequelize.STRING,
-        allowNull: true,
-      },
+      }
     });
   return Supplier;
 };

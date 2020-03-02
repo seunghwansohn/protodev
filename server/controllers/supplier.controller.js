@@ -4,25 +4,21 @@ const Supplier = db.supplier;
 const SupplierNote = db.supplierNote;
 
 exports.addNew = (req, res) => {
-  const info = req.body
-  console.log(info)
+  const Arr = req.body
+  
   try {
-    Supplier.create({
-        supplierCode: info.supplierCode,
-        supplierName: info.supplierName,
-        country: info.country,
-        province: info.province,
-        ceo: info.ceo,
-        taxCode: info.taxCode,
-      }).then(() => {
-        req.body.notes.map(note => {
-            SupplierNote.create({
-                supplierCode: info.supplierCode,
-                notes : note
-            })
-        })
-        res.send({ message: "supplier added successfully" });
-      })
+    Arr.map(obj => {
+        Supplier.create({
+            supplierCode: obj.supplierCode,
+            supplierName: obj.supplierName,
+            country: obj.country,
+            province: obj.province,
+            ceo: obj.ceo,
+            taxCode: obj.taxCode,
+          }).then(() => {
+            res.send({ message: "supplier added successfully" });
+          })
+    })
   }
 
   catch (err) {

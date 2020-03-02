@@ -57,6 +57,7 @@ function reducer (state = initialState, action) {
         case SET_SUPPLIER_ADD_SUCCESS:
             return produce(state, draft => {
                 draft.table.header = action.payload
+                draft.table.update = true
             })
         case SET_SUPPLIER_ADD:
             return produce(state, draft => {
