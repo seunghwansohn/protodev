@@ -12,7 +12,8 @@ import {
     setSupplierUpdate, 
     updateChange, 
     setClickedTableCol,
-    setSupplierAdd
+    setSupplierAdd,
+    setSupplierDelete
 }                            from '../modules/supplier'
 
 import { onDialogOpen }      from '../modules/dialogs'
@@ -30,6 +31,7 @@ const Supplier = props => {
     const [updated, setUpdated]         = useState(false);
     const [clickedCol, setClickedCol]   = useState({});
     const [addedNew, setAddedNew]       = useState([]);
+    const [selected, setSelected]       = useState([]);
 
     const { update } = useSelector(({ supplier }) => ({ update : supplier.table.update }));
 
@@ -43,17 +45,21 @@ const Supplier = props => {
         })
     }
 
-    const onDelete = async (codes) =>{
-        await codes.map(code => {
-            axios.post('/api/supplier/delete', {supplierCode : code.supplierCode}).then(res =>{
-                getSuppliers()
-            })
+    const onDelete = async (Arr) => {
+        await Arr.map(obj => {
+            dispatch(setSupplierDelete(obj.supplierCode))
         })
+        await setUpdated(true)
+        await setSelected([])
     }
 
     useEffect(async () => {
         await getSuppliers()
     },[])
+
+    useEffect(() => {
+        setUpdated(true)
+    },[suppliers])
 
     if (update) {
         getSuppliers()
@@ -94,14 +100,16 @@ const Supplier = props => {
         rawData   : suppliers,
         updated     : updated,
         clickedCol  : clickedCol,
-        addedNew : addedNew
+        addedNew : addedNew,
+        selected : selected
     }
 
     const setStates = {
         setRawData    : setSuppliers,
         setUpdated      : setUpdated,
         setClickedCol   : setClickedCol,
-        setAddedNew : setAddedNew
+        setAddedNew : setAddedNew,
+        setSelected : setSelected
     }
 
     const stateAttr = {

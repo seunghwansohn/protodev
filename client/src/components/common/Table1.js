@@ -91,8 +91,8 @@ const STTable = ({
   stateAttr
 }) => {
   
-  const {rawData, updated, clickedCol, addedNew}          = states
-  const {setRawData, setUpdated, setClickedCol, setAddedNew} = setStates
+  const {rawData, updated, clickedCol, addedNew, selected}          = states
+  const {setRawData, setUpdated, setClickedCol, setAddedNew, setSelected} = setStates
   const {load, onSubmitUpdatedVals, onDialogOpen, onDelete, onSubmitNewAdded} = funcs
 
   let headers = rawData && rawData.length > 1 ? Object.keys(rawData[0]) : []
@@ -108,7 +108,6 @@ const STTable = ({
   const [page, setPage]                       = React.useState(0);
   const [rowsPerPage, setRowsPerPage]         = React.useState(10);
 
-  const [selected, setSelected]               = useState([]);
   const [allSelected, setAllselected]         = useState(false);
 
   const [fixMode, setFixMode]                 = useState(false);
@@ -318,7 +317,7 @@ const STTable = ({
     tempArr.push(tempObj)
     setAddedNew([...tempArr])
   }
-
+  console.log(selected)
   return (
     <React.Fragment>
       <div>

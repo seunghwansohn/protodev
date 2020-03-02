@@ -89,6 +89,7 @@ exports.querySuppliers = (req, res) => {
 };
   
 exports.deleteSuppliers = async (req, res) => {
+    console.log(req.body)
     let draft = await Supplier.findOne({where:req.body})
     await draft.destroy();
 };
