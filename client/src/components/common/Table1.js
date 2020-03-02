@@ -307,17 +307,20 @@ const STTable = ({
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
-  console.log(addedNew)
+
   const onAddNewBlank = () => {
     let tempObj = {}
-    let tempArr = addedNew
     headers.map(header => {
       tempObj[header] = null
     })
-    tempArr.push(tempObj)
-    setAddedNew([...tempArr])
+    setAddedNew(
+      produce(addedNew, draft => {
+        draft.push(tempObj)
+      })
+    )
   }
-  console.log(selected)
+
+
   return (
     <React.Fragment>
       <div>
