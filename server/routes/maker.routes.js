@@ -11,7 +11,6 @@ module.exports = function(app) {
   app.get("/api/maker/load/", controller.load);
   app.post("/api/maker/addNew", controller.addNew)
   app.post("/api/maker/delete/", controller.delete);
-
 };
 
 
