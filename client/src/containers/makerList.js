@@ -9,10 +9,12 @@ import SupplierQuery from '../containers/SupplierQuery'
 import axios from '../lib/api/axios'
 
 import {
-    setSupplierUpdate, 
+    setUpdate, 
     updateChange, 
-    setClickedTableCol
-}                            from '../modules/supplier'
+    setClickedTableCol,
+    setAdd,
+    setDelete
+}                            from '../modules/maker'
 
 import { onDialogOpen }      from '../modules/dialogs'
 
@@ -33,7 +35,7 @@ const Maker = props => {
     const [addedNew, setAddedNew]       = useState([]);
     const [selected, setSelected]       = useState([]);
 
-    const { update } = useSelector(({ supplier }) => ({ update : supplier.table.update }));
+    const { update } = useSelector(({ maker }) => ({ update : maker.table.update }));
     const opened = useSelector(state => state.dialogs.opened)
 
 
@@ -44,11 +46,22 @@ const Maker = props => {
     }
 
     const onDelete = async (codes) =>{
+        console.log(codes)
+        console.log(type)
         await codes.map(code => {
-            axios.post('/api/' + type + '/delete', {supplierCode : code.supplierCode}).then(res =>{
-                getRawData()
-            })
+            dispatch(setDelete(type, code.makerCode))
         })
+        await setUpdated(true)
+        await setSelected([])
+            // axios.post('/api/' + type + '/delete', {makerCode : code.makerCode}).then(res =>{
+            //     getRawData()
+            // })
+    }
+
+    const onSubmitNewAdded = async (addedNew) => {
+        await dispatch(setAdd(addedNew))
+        await getRawData()
+        await setAddedNew([])
     }
 
     useEffect(async () => {
@@ -109,7 +122,7 @@ const Maker = props => {
     }
 
     const onSubmitUpdatedVals = async (fixedVals) => {
-        await dispatch(setSupplierUpdate(fixedVals))
+        await dispatch(setUpdate(fixedVals))
         await setRawData()
         await setFixedVals([])
     }
@@ -128,7 +141,8 @@ const Maker = props => {
         load : getRawData,
         onSubmitUpdatedVals : onSubmitUpdatedVals,
         onDialogOpen : onDialogOpen,
-        onDelete : onDelete
+        onDelete : onDelete,
+        onSubmitNewAdded : onSubmitNewAdded
     }
 
     const DialogsAttr = {

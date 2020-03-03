@@ -25,7 +25,7 @@ const [SET_UPDATE, SET_UPDATE_SUCCESS, SET_UPDATE_FAILURE ]
 const [SET_LOAD, SET_LOAD_SUCCESS, SET_LOAD_ADD_FAILURE ] 
 = createRequestActionTypes('maker/SET_LOAD');
 const [SET_DELETE, SET_DELETE_SUCCESS, SET_DELETE_FAILURE ] 
-= createRequestActionTypes('maker/DELETE');
+= createRequestActionTypes('maker/SET_DELETE');
 
 const addSaga       = createRequestSaga(SET_ADD, maker.addNew);
 const loadSaga      = createRequestSaga(SET_LOAD, maker.load);
@@ -38,7 +38,7 @@ export const setLoad            = createAction(SET_LOAD)
 export const setUpdate          = createAction(SET_UPDATE, info => info)
 export const updateChange       = createAction(SET_UPDATE_CHANGE, ox => ox)
 export const setClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
-export const setDelete          = createAction(SET_DELETE, code => code)
+export const setDelete          = createAction(SET_DELETE, (type, code) => ({type, code}))
 
 export function* makerSaga() {
     yield takeLatest(SET_ADD,    addSaga);
@@ -73,6 +73,10 @@ function reducer (state = initialState, action) {
                 draft.table.update = true
             })
         case SET_CLICKED_TABLE_COL:
+            return produce(state, draft => {
+                console.log(action.payload)
+            })
+        case SET_DELETE:
             return produce(state, draft => {
                 console.log(action.payload)
             })

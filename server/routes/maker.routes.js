@@ -8,7 +8,10 @@ module.exports = function(app) {
     );
     next();
   });
-  app.get("/api/maker/load/", controller.loadMakers);
+  app.get("/api/maker/load/", controller.load);
+  app.post("/api/maker/addNew", controller.addNew)
+  app.post("/api/maker/delete/", controller.delete);
+
 };
 
 
