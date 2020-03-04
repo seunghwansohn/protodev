@@ -73,21 +73,26 @@ const QueryHeader = ({quoteNo, type, funcs, queryHeaderProps}) => {
     <div className = {classes.root}>
 
     <Grid container spacing={0}>
-      {queryHeaderProps.map(arr => {
-        let tempCompArr = []
-        arr.map(obj => {
-          if (obj.size !== undefined) {
-            console.log('사이즈있음', obj.size)
-            tempCompArr.push(
-              <Grid>
-              {obj.title}
-            </Grid>
+      {(function(){
+        let returnArr = []
+        queryHeaderProps.map(arr => {
+          let returnChildren = []
+          arr.map(obj => {
+            returnChildren.push(
+              <Paper className={classes.paper}>
+                {obj.title}
+              </Paper>
             )
-          }
-          console.log(obj)
+          })
+          returnArr.push(
+            <Grid xs = {arr[0].size}>
+              {returnChildren}
+            </Grid>
+          )
         })
-        return tempCompArr
-      })}
+        return returnArr
+      })()}
+
       <Grid item xs = {3}> 
         <Paper className={classes.paper}> 
           Customer: <input type = 'text' onClick = {onClientSubmit} value = {selectedClientName}/>
