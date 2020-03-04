@@ -73,62 +73,21 @@ const QueryHeader = ({quoteNo, type, funcs, queryHeaderProps}) => {
     <div className = {classes.root}>
 
     <Grid container spacing={0}>
-      <Grid>
-        {/* {queryHeaderProps.map(prop => {
-          if(prop.type == 'input') {
-            return(
-              <Paper className={classes.paper}>
-                {prop.title}:
-                <Input>
-                </Input>
-              </Paper>
-            )
-          }else if(prop.type == 'paper') {
-            return(
-              <Paper className={classes.paper}>
-                {prop.title}: {prop.state}
-              </Paper>
+      {queryHeaderProps.map(arr => {
+        let tempCompArr = []
+        arr.map(obj => {
+          if (obj.size !== undefined) {
+            console.log('사이즈있음', obj.size)
+            tempCompArr.push(
+              <Grid>
+              {obj.title}
+            </Grid>
             )
           }
-        })} */}
-
-        {(function(){
-          return(
-            (function(){
-              let temp = []
-              for (let i = 0; i < newColNo[1]; i++) {
-                temp.push(
-                  <Paper className={classes.paper}>
-                    {queryHeaderProps[i].title}:
-                    <Input>
-                    </Input>
-                  </Paper>
-                )
-              }
-              console.log(temp)
-              return temp
-            })()
-          )
-        })()}
-        {/* {(fuction(){return(queryHeaderProps.map((prop, index) => {
-          if(prop.type == 'input') {
-            return(
-              <Paper className={classes.paper}>
-                {prop.title}:
-                <Input>
-                </Input>
-              </Paper>
-            )
-          }else if(prop.type == 'paper') {
-            return(
-              <Paper className={classes.paper}>
-                {prop.title}: {prop.state}
-              </Paper>
-            )
-          }
-        })} */}
-      </Grid>
-
+          console.log(obj)
+        })
+        return tempCompArr
+      })}
       <Grid item xs = {3}> 
         <Paper className={classes.paper}> 
           Customer: <input type = 'text' onClick = {onClientSubmit} value = {selectedClientName}/>

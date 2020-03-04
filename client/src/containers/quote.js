@@ -145,15 +145,14 @@ const QuoteContainer = () => {
     }
 
     const queryHeaderProps = [
-        {type : 'paper', newCol : true, size : 2, title: 'quoteNo', state : quoteNo, style:'regular'},
-        {type : 'paper', title: 'date', state : quoteNo, style:'regular'},
-        {type : 'Input', newCol : true, size : 2, title: 'customer', state : quoteNo, style:'regular'},
-
-        // {type : 'fixable', newCol : true, size : 7, title: 'supplierName', state : supplierName, setState : setSupplierName, style:'regular'},
-        // {type : 'fixable', newCol : false, size : 5, title: 'country', state : country, setState : setCountry, style:'regular'},
-        // {type : 'fixable', newCol : false, size : 5, title: 'province', state : province, setState : setProvince, style:'regular'},
-        // {type : 'divider', typoGraphy : 'basicInfo'},
-        // {type : 'fixable', newCol : false, size : 5, title: 'ceo', state : ceo, setState : setCeo, style:'regular'},
+        [
+            {type : 'paper', size : 2, title: 'quoteNo', state : quoteNo, style:'regular'},
+            {type : 'paper', title: 'date', state : quoteNo, style:'regular'},
+        ],
+        [
+            {type : 'Input', size : 2, title: 'customer', state : quoteNo, style:'regular'},
+            {type : 'paper', title: 'supplierName', state : quoteNo, style:'regular'},
+        ]
     ]
 
     return(
