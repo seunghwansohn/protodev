@@ -6,7 +6,7 @@ const About = () => {
     }
     return (
         <div>
-            어바웃
+            어바웃feffefef
             <button onClick = {check}>체크</button>
         </div>
     )
