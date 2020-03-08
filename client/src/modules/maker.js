@@ -35,7 +35,7 @@ const deleteSaga    = createRequestSaga(SET_DELETE, maker.del);
 export const setHeader          = createAction(SET_HEADER, columns => columns)
 export const setAdd             = createAction(SET_ADD, info => info)
 export const setLoad            = createAction(SET_LOAD)
-export const setUpdate          = createAction(SET_UPDATE, info => info)
+export const setUpdate          = createAction(SET_UPDATE, arr => arr)
 export const updateChange       = createAction(SET_UPDATE_CHANGE, ox => ox)
 export const setClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
 export const setDelete          = createAction(SET_DELETE, (type, code) => ({type, code}))
@@ -43,7 +43,7 @@ export const setDelete          = createAction(SET_DELETE, (type, code) => ({typ
 export function* makerSaga() {
     yield takeLatest(SET_ADD,    addSaga);
     yield takeLatest(SET_LOAD,   loadSaga);
-    yield takeLatest(SET_UPDATE, updateSaga);
+    yield takeEvery(SET_UPDATE, updateSaga);
     yield takeEvery (SET_DELETE, deleteSaga);
 }
 

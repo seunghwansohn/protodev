@@ -45,24 +45,38 @@ const Maker = props => {
         })
     }
 
-    console.log(rawData)
     const onDelete = async (codes) =>{
-        console.log(codes)
-        console.log(type)
         await codes.map(code => {
             dispatch(setDelete(type, code.makerCode))
         })
         await setUpdated(true)
         await setSelected([])
-            // axios.post('/api/' + type + '/delete', {makerCode : code.makerCode}).then(res =>{
-            //     getRawData()
-            // })
     }
 
     const onSubmitNewAdded = async (addedNew) => {
         await dispatch(setAdd(addedNew))
         await getRawData()
         await setAddedNew([])
+    }
+
+    const onSubmitUpdatedVals = async (fixedVals) => {
+        console.log(fixedVals)
+        await fixedVals.map(arr => {
+            console.log(arr)
+            dispatch(setUpdate(arr))
+        })
+        await setUpdated(true)
+        await setFixedVals([])
+    }
+
+    const checkOpened = (title) => {
+        let result = ''
+        opened.map(array => {
+            if (array.type == title){
+                result = array.ox
+            }
+        })
+        return result
     }
 
     useEffect(() => {
@@ -101,6 +115,7 @@ const Maker = props => {
 
     const stateAttr = {
         makerCode : {
+            primary : true,
             fixable : false,
             defaultHided : false
         },
@@ -122,21 +137,7 @@ const Maker = props => {
         }
     }
 
-    const onSubmitUpdatedVals = async (fixedVals) => {
-        await dispatch(setUpdate(fixedVals))
-        await setRawData()
-        await setFixedVals([])
-    }
 
-    const checkOpened = (title) => {
-        let result = ''
-        opened.map(array => {
-            if (array.type == title){
-                result = array.ox
-            }
-        })
-        return result
-    }
 
     const funcs = {
         load : getRawData,

@@ -55,10 +55,6 @@ const Supplier = props => {
         await setSelected([])
     }
 
-    // useEffect(async () => {
-    //     await getSuppliers()
-    // },[])
-
     useEffect(() => {
         setUpdated(true)
     },[suppliers])
@@ -77,6 +73,7 @@ const Supplier = props => {
     }
 
     const onSubmitUpdatedVals = async (fixedVals) => {
+        console.log(fixedVals)
         await dispatch(setSupplierUpdate(fixedVals))
         await getSuppliers()
         await setFixedVals([])

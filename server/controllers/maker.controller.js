@@ -41,3 +41,25 @@ exports.delete = async (req, res) => {
         res.status(200).send('deleted Successfully')
     });
 };
+
+exports.update = async (req, res) => {
+    let data = req.body
+    let { ref,vals } = data
+    console.log(ref)
+    console.log(vals)
+    try {
+        const draft = await Maker.findOne({where:ref})
+        console.log(draft.makerName)
+        keys = await Object.keys(vals)
+
+        keys.map(async key => {
+            console.log(key)
+            console.log(vals[key])
+            draft[key] = vals[key]
+        })
+        await draft.save()
+    }
+    catch (err) {
+
+    }
+};

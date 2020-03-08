@@ -100,6 +100,7 @@ const STTable = ({
 
   const [hided, setHided]                     = useState([]);
   const [fixableCols, setFixableCols]         = useState([]);
+  const [primaryKey, setPrimaryKey]         = useState('');
 
   const [order, setOrder]                     = useState('asc');
   const [orderBy, setOrderBy]                 = useState('calories');
@@ -145,6 +146,7 @@ const STTable = ({
   },[updated])
   
   useEffect(() => {
+    let tmpPrimaryKey = ''
     let tmpDefaultHided = []
     let tempFixableCols = []
     Object.keys(stateAttr).map(key => {
@@ -154,12 +156,15 @@ const STTable = ({
       if(stateAttr[key].fixable){
         tempFixableCols.push(key)
       }
+      if(stateAttr[key].primary){
+        tmpPrimaryKey = key
+      }
     })
     setHided(tmpDefaultHided)
     setFixableCols(tempFixableCols)
+    setPrimaryKey(tmpPrimaryKey)
   },[])
 
-  
   const isChecked     = name => selected.indexOf(name)    !== -1;
   const isHidedCulumn = name => hided.indexOf(name)       !== -1;
   const isFixable     = name => fixableCols.indexOf(name) !== -1;
@@ -220,9 +225,10 @@ const STTable = ({
       const temp = {}
       setFixableCells(temp)
       let temp1 = {}
-      temp1[header] = e.target.value
-      temp1.index = index
-      temp1.code = tableVals[index].supplierCode
+      temp1.ref = {}
+      temp1.vals = {}
+      temp1.ref[primaryKey] = tableVals[index][primaryKey]
+      temp1.vals[header] = e.target.value
       setFixedVals(
         produce(fixedVals, draft => {
           draft.push(temp1)
