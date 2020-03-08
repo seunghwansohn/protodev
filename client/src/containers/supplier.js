@@ -42,6 +42,10 @@ const Supplier = props => {
             setSuppliers(res.data)
         })
     }
+
+    useEffect(() => {
+        getSuppliers()
+    },[])
     
     const onDelete = async (Arr) => {
         await Arr.map(obj => {
@@ -51,9 +55,9 @@ const Supplier = props => {
         await setSelected([])
     }
 
-    useEffect(async () => {
-        await getSuppliers()
-    },[])
+    // useEffect(async () => {
+    //     await getSuppliers()
+    // },[])
 
     useEffect(() => {
         setUpdated(true)
@@ -165,6 +169,7 @@ const Supplier = props => {
     return(
         <>
             <button onClick = {getSuppliers}> 체크</button>
+
             <Table 
                 type        = {type}
                 tableArr    = {suppliers.data}  

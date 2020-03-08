@@ -45,6 +45,7 @@ const Maker = props => {
         })
     }
 
+    console.log(rawData)
     const onDelete = async (codes) =>{
         console.log(codes)
         console.log(type)
@@ -64,8 +65,8 @@ const Maker = props => {
         await setAddedNew([])
     }
 
-    useEffect(async () => {
-        await getRawData()
+    useEffect(() => {
+        getRawData()
     },[])
 
     if (update) {

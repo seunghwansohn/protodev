@@ -7,6 +7,7 @@ import ClientPage from './pages/clientPage'
 import TestPage from './pages/TestPage'
 import SuppliersPage from './pages/SuppliersPage'
 import RegisterPage from './pages/RegisterPage';
+import MakersPage from './pages/MakersPage';
 
 import About from './containers/About'
 import {
@@ -31,7 +32,7 @@ function App() {
                   <Route path = "/login" >
                       <LoginPages></LoginPages>
                   </Route>
-                  
+
                   <Route path = "/register" >
                       <RegisterPage></RegisterPage>
                   </Route>
@@ -43,10 +44,12 @@ function App() {
                   <Route path = "/suppliers" >
                     <SuppliersPage></SuppliersPage>
                   </Route>
-                  
-                  <Route component = {ClientPage} path = "/client" exact/>
 
-                  
+                  <Route path = "/makers" >
+                    <MakersPage></MakersPage>
+                  </Route>
+
+                  <Route component = {ClientPage} path = "/client" exact/>
           </div>
     </div>
   );
