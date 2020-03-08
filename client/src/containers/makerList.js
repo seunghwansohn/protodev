@@ -60,12 +60,9 @@ const Maker = props => {
     }
 
     const onSubmitUpdatedVals = async (fixedVals) => {
-        console.log(fixedVals)
         await fixedVals.map(arr => {
-            console.log(arr)
             dispatch(setUpdate(arr))
         })
-        await setUpdated(true)
         await setFixedVals([])
     }
 

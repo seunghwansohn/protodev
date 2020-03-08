@@ -190,10 +190,10 @@ const STTable = ({
     }
     return ox
   }
-  const checkColFixed = (index, header) => {
+  const checkCellFixed = (index, header) => {
     let ox = false
     fixedVals.map(obj => {
-      if (obj.index == index && Object.keys(obj)[0] == header) {
+      if (obj.location.index == index && Object.keys(obj.vals).includes(header)) {
         ox = true
       }
     })
@@ -227,6 +227,7 @@ const STTable = ({
       let temp1 = {}
       temp1.ref = {}
       temp1.vals = {}
+      temp1.location = {index : index, header, header}
       temp1.ref[primaryKey] = tableVals[index][primaryKey]
       temp1.vals[header] = e.target.value
       setFixedVals(
@@ -402,7 +403,7 @@ const STTable = ({
                     </StyledTableCell>
                     {tableHeaderVals.map(header => {
                       let fixable = checkColFixable(index, header)
-                      let fixed = checkColFixed(index, header)
+                      let fixed = checkCellFixed(index, header)
                       let isfixableCol = isFixable(header)
                       const isColumnHided = isHidedCulumn(header)
                       if (!isColumnHided) {
@@ -416,6 +417,7 @@ const STTable = ({
                           )
                         }else{
                           if (fixed) {
+                            console.log('픽스드')
                             return(
                               <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], index, header)}}>
                                 {row[header]}
