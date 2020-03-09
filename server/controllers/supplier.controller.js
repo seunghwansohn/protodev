@@ -55,7 +55,7 @@ exports.loadNotes = (req, res) => {
 };
 
 
-exports.loadSuppliers = (req, res) => {
+exports.load = (req, res) => {
     Supplier.findAll()
         .then(suppliers => {
             result = suppliers
@@ -64,18 +64,25 @@ exports.loadSuppliers = (req, res) => {
     })
 };
   
-exports.updateSuppliers = (req, res) => {
+exports.update = async (req, res) => {
     let data = req.body
-    data.map(async (obj) => {
-        let draft = await Supplier.findOne({where:{supplierCode : obj['code']}})
-        draft.supplierName = await obj['supplierName']
-        await draft.save()
-    }).then(
-        res.status(200).send('Update Successfully')
-    )
+    let { ref,vals } = data
+    try {
+        const draft = await Supplier.findOne({where:ref})
+        keys = await Object.keys(vals)
+
+        keys.map(async key => {
+            draft[key] = vals[key]
+        })
+        await draft.save().then(() => {
+            res.status(200).send('updated Successfully')
+        })
+    }
+    catch (err) {
+    }
 };
 
-exports.querySuppliers = (req, res) => {
+exports.query = (req, res) => {
 
     const header = req.body.header
     const tempObj = {}
@@ -88,7 +95,7 @@ exports.querySuppliers = (req, res) => {
     }).then(() => res.status(200).send(result) )
 };
   
-exports.deleteSuppliers = async (req, res) => {
+exports.delete = async (req, res) => {
     console.log(req.body)
     let draft = await Supplier.findOne({where:req.body})
     await draft.destroy();

@@ -8,7 +8,7 @@ import SupplierQuery from '../containers/SupplierQuery'
 import axios from '../lib/api/axios'
 
 import {
-    setSupplierUpdate, 
+    setUpdate, 
     updateChange, 
     setClickedTableCol,
     setSupplierAdd,
@@ -37,16 +37,12 @@ const Supplier = props => {
 
     const type = 'supplier'
 
-    const getSuppliers = async () => {
+    const getRawData = async () => {
         await axios.get('/api/supplier/load').then(res => {
             setSuppliers(res.data)
         })
     }
 
-    useEffect(() => {
-        getSuppliers()
-    },[])
-    
     const onDelete = async (Arr) => {
         await Arr.map(obj => {
             dispatch(setSupplierDelete(obj.supplierCode))
@@ -55,6 +51,34 @@ const Supplier = props => {
         await setSelected([])
     }
 
+    const onSubmitNewAdded = async (addedNew) => {
+        await dispatch(setSupplierAdd(addedNew))
+        await getRawData()
+        await setAddedNew([])
+    }
+
+    const onSubmitUpdatedVals = async (fixedVals) => {
+        await fixedVals.map(arr => {
+            dispatch(setUpdate(arr))
+        })
+        await setFixedVals([])
+    }
+
+
+    const checkOpened = (title) => {
+        let result = ''
+        opened.map(array => {
+            if (array.type == title){
+                result = array.ox
+            }
+        })
+        return result
+    }
+
+    useEffect(() => {
+        getRawData()
+    },[])
+    
     useEffect(() => {
         setUpdated(true)
     },[suppliers])
@@ -67,32 +91,9 @@ const Supplier = props => {
     },[clickedCol])
     
     if (update) {
-        getSuppliers()
+        getRawData()
         dispatch(updateChange(false))
         setUpdated(true)
-    }
-
-    const onSubmitUpdatedVals = async (fixedVals) => {
-        console.log(fixedVals)
-        await dispatch(setSupplierUpdate(fixedVals))
-        await getSuppliers()
-        await setFixedVals([])
-    }
-
-    const onSubmitNewAdded = async (addedNew) => {
-        await dispatch(setSupplierAdd(addedNew))
-        await getSuppliers()
-        await setAddedNew([])
-    }
-
-    const checkOpened = (title) => {
-        let result = ''
-        opened.map(array => {
-            if (array.type == title){
-                result = array.ox
-            }
-        })
-        return result
     }
 
     const states = {
@@ -113,6 +114,7 @@ const Supplier = props => {
 
     const stateAttr = {
         supplierCode : {
+            primary : true,
             fixable : false,
             defaultHided : false
         },
@@ -147,7 +149,7 @@ const Supplier = props => {
     }
 
     const funcs = {
-        load : getSuppliers,
+        load : getRawData,
         onSubmitUpdatedVals : onSubmitUpdatedVals,
         onDialogOpen : onDialogOpen,
         onDelete : onDelete,
@@ -165,7 +167,7 @@ const Supplier = props => {
 
     return(
         <>
-            <button onClick = {getSuppliers}> 체크</button>
+            <button onClick = {getRawData}> 체크</button>
 
             <Table 
                 type        = {type}

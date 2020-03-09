@@ -20,8 +20,8 @@ export const SET_CLICKED_TABLE_COL  = 'supplier/SET_CLICKED_TABLE_COL'
 
 const [SET_SUPPLIER_ADD, SET_SUPPLIER_ADD_SUCCESS, SET_SUPPLIER_ADD_FAILURE ] 
 = createRequestActionTypes('supplier/SET_SUPPLIER_ADD');
-const [SET_UPDATE_SUPPLIERS, SET_UPDATE_SUPPLIERS_SUCCESS, SET_UPDATE_SUPPLIERS_FAILURE ] 
-= createRequestActionTypes('supplier/SET_UPDATE_SUPPLIERS');
+const [SET_UPDATE, SET_UPDATE_SUCCESS, SET_UPDATE_FAILURE ] 
+= createRequestActionTypes('supplier/SET_UPDATE');
 const [SET_LOAD, SET_LOAD_SUCCESS, SET_LOAD_ADD_FAILURE ] 
 = createRequestActionTypes('supplier/SET_LOAD');
 const [SET_SUPPLIER_DELETE, SET_SUPPLIER_DELETE_SUCCESS, SET_SUPPLIER_DELETE_FAILURE ] 
@@ -29,13 +29,13 @@ const [SET_SUPPLIER_DELETE, SET_SUPPLIER_DELETE_SUCCESS, SET_SUPPLIER_DELETE_FAI
 
 const supplierAddSaga       = createRequestSaga(SET_SUPPLIER_ADD, supplier.addNew);
 const supplierLoadSaga      = createRequestSaga(SET_LOAD, supplier.load);
-const supplierUpdateSaga    = createRequestSaga(SET_UPDATE_SUPPLIERS, supplier.update);
+const supplierUpdateSaga    = createRequestSaga(SET_UPDATE, supplier.update);
 const supplierDeleteSaga    = createRequestSaga(SET_SUPPLIER_DELETE, supplier.del);
 
 export const setHeader          = createAction(SET_HEADER, columns => columns)
 export const setSupplierAdd     = createAction(SET_SUPPLIER_ADD, info => info)
 export const setSupplierLoad    = createAction(SET_LOAD)
-export const setSupplierUpdate  = createAction(SET_UPDATE_SUPPLIERS, info => info)
+export const setUpdate  = createAction(SET_UPDATE, arr => arr)
 export const updateChange       = createAction(SET_UPDATE_CHANGE, ox => ox)
 export const setClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
 export const setSupplierDelete = createAction(SET_SUPPLIER_DELETE, code => code)
@@ -43,7 +43,7 @@ export const setSupplierDelete = createAction(SET_SUPPLIER_DELETE, code => code)
 export function* supplierSaga() {
     yield takeLatest(SET_SUPPLIER_ADD, supplierAddSaga);
     yield takeLatest(SET_LOAD, supplierLoadSaga);
-    yield takeLatest(SET_UPDATE_SUPPLIERS, supplierUpdateSaga);
+    yield takeLatest(SET_UPDATE, supplierUpdateSaga);
     yield takeEvery(SET_SUPPLIER_DELETE, supplierDeleteSaga);
 }
 
@@ -67,7 +67,7 @@ function reducer (state = initialState, action) {
             return produce(state, draft => {
                 console.log(action.payload)
             })
-        case SET_UPDATE_SUPPLIERS_SUCCESS:
+        case SET_UPDATE_SUCCESS:
             return produce(state, draft => {
                 draft.table.update = true
             })

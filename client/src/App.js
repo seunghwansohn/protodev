@@ -8,6 +8,8 @@ import TestPage from './pages/TestPage'
 import SuppliersPage from './pages/SuppliersPage'
 import RegisterPage from './pages/RegisterPage';
 import MakersPage from './pages/MakersPage';
+import QuotesPage from './pages/quotesPage';
+
 
 import About from './containers/About'
 import {
@@ -47,6 +49,10 @@ function App() {
 
                   <Route path = "/makers" >
                     <MakersPage></MakersPage>
+                  </Route>
+
+                  <Route path = "/quotes" >
+                    <QuotesPage></QuotesPage>
                   </Route>
 
                   <Route component = {ClientPage} path = "/client" exact/>

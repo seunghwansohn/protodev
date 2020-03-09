@@ -13,10 +13,10 @@ module.exports = function(app) {
   app.post("/api/supplier/addNotes", controller.addNotes)
   app.get("/api/supplier/loadNotes/:id", controller.loadNotes);
 
-  app.get("/api/supplier/load/", controller.loadSuppliers);
-  app.post("/api/supplier/update/", controller.updateSuppliers);
-  app.post("/api/supplier/query/", controller.querySuppliers);
-  app.post("/api/supplier/delete/", controller.deleteSuppliers);
+  app.get("/api/supplier/load/", controller.load);
+  app.post("/api/supplier/update/", controller.update);
+  app.post("/api/supplier/query/", controller.query);
+  app.post("/api/supplier/delete/", controller.delete);
 };
 
 

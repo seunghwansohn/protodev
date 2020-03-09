@@ -14,7 +14,7 @@ import {
     setClickedTableCol,
     setAdd,
     setDelete
-}                            from '../modules/maker'
+}                            from '../modules/quotes'
 
 import { onDialogOpen }      from '../modules/dialogs'
 
@@ -23,7 +23,7 @@ const tableAttr = {
     flag : true,
 }
 
-const Maker = props => {
+const Quotes = props => {
     const dispatch = useDispatch()
 
     const type = 'maker'
@@ -166,13 +166,13 @@ const Maker = props => {
                 stateAttr   = {stateAttr}
             ></Table>
 
-            <DialogST attr = {DialogsAttr.supplierQuery}>
+            {/* <DialogST attr = {DialogsAttr.supplierQuery}>
                 <SupplierQuery loadReqData = {clickedCol}
                 ></SupplierQuery>
-            </DialogST>
+            </DialogST> */}
             
         </>
     )
 }   
 
-export default Maker
+export default Quotes

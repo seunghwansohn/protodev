@@ -78,6 +78,11 @@ const MainHeader = () => {
                 <li>
                     <Link to="/register">register</Link>
                 </li>
+
+                <li>
+                    <Link to="/quotes">Quotes</Link>
+                </li>
+
                 <li><button onClick = {onSignIn}>확인</button></li>
                 Login: {user ? user.username : '없음'}
                 <Button onClick = {onLogout}>로그아웃</Button>
