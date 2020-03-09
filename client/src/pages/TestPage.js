@@ -3,7 +3,8 @@ import SupplierQuery from '../containers/SupplierQuery';
 import MakerList from '../containers/makerList';
 import axios from 'axios';
 
-
+import {useCallback} from 'react'
+import {useDropzone} from 'react-dropzone'
 
 const TestPage = () => {
   const [file, setFile]           = useState()
@@ -27,8 +28,10 @@ const TestPage = () => {
   const addFiles = () => {
       const url = '/api/addfiles';
       const formData = new FormData();
-
-      formData.append('image', file)
+      console.log(file)
+      file.map(file => {
+        formData.append('image', file)
+      })
       
       const config = {
         headers: {
@@ -38,10 +41,7 @@ const TestPage = () => {
     return axios.post(url, formData, config)
   }
     
-    
 
-  console.log(file)
-  console.log(fileName)
 
     
   const handleFileInput = e => {
@@ -59,6 +59,12 @@ const TestPage = () => {
     // })
   }
 
+  const onDrop = useCallback(acceptedFiles => {
+    console.log('파일드롬됨')
+    setFile(acceptedFiles)
+  }, [])
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+
   return (
     <React.Fragment>
       <form onSubmit = {handleFormSubmit}>
@@ -66,6 +72,14 @@ const TestPage = () => {
         {/* <input type = "flie" name = "file" onChange = {e=> handleFileInput(e)}></input> */}
         <button type="submit">추가하기</button>
       </form>
+      <div {...getRootProps()}>
+        <input {...getInputProps()} />
+        {
+          isDragActive ?
+            <p>Drop the files here ...</p> :
+            <p>Drag 'n' drop some files here, or click to select files</p>
+        }
+      </div>
 
     </React.Fragment>
   );
