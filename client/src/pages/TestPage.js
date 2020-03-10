@@ -64,7 +64,7 @@ const TestPage = () => {
     setFile(acceptedFiles)
   }, [])
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
-
+  console.log(file)
   return (
     <React.Fragment>
       <form onSubmit = {handleFormSubmit}>
@@ -72,6 +72,7 @@ const TestPage = () => {
         {/* <input type = "flie" name = "file" onChange = {e=> handleFileInput(e)}></input> */}
         <button type="submit">추가하기</button>
       </form>
+      {file && file.length > 0 ? <img src = {URL.createObjectURL(file[0])}></img> : ''}
       <div {...getRootProps()}>
         <input {...getInputProps()} />
         {
