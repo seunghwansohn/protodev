@@ -12,7 +12,7 @@ var storage = multer.diskStorage({
     }
 })
    
-var upload = multer({ storage: storage })
+var upload = multer({ storage: storage });
 
   
 module.exports = function(app) {
@@ -23,15 +23,16 @@ module.exports = function(app) {
     );
     next();
   });
-  app.post("/api/addfiles", upload.single('image'), (req, res) => {
 
-    const file = req.file
-    if (!file) {
-      const error = new Error('Please upload a file')
-      error.httpStatusCode = 400
-      return next(error)
-    }
-      res.send(file)
+  app.post("/api/addfiles", upload.array('images', 10), (req, res) => {
+    // const file = req.file
+    console.log(req.files)
+    // if (!file) {
+    //   const error = new Error('Please upload a file')
+    //   error.httpStatusCode = 400
+    //   return next(error)
+    // }
+    //   res.send(file)
     
   })
 

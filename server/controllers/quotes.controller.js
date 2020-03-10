@@ -18,7 +18,8 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 
 exports.addFiles = (req, res) => {
-    upload()
+  console.log(req.body)
+    // upload()
 };
 
     

@@ -1,14 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import SupplierQuery from '../containers/SupplierQuery';
 import MakerList from '../containers/makerList';
 import axios from 'axios';
+import pdf from 'pdf-thumbnail';
 
 import {useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
 
+// const pdfBuffer = require('fs').readFileSync('/some/path/example.pdf');
+
+
 const TestPage = () => {
-  const [file, setFile]           = useState()
+  const [file, setFile]           = useState([])
   const [fileName, setFileName]           = useState()
+
+  // const pdfBuffer = fs.readFileSync('/SuppliersPage.js')
 
 
   const handleFormSubmit = (e) => {
@@ -27,12 +33,11 @@ const TestPage = () => {
     
   const addFiles = () => {
       const url = '/api/addfiles';
-      const formData = new FormData();
+      var formData = new FormData();
       console.log(file)
-      file.map(file => {
-        formData.append('image', file)
-      })
-      
+
+      file.map(a => {formData.append(`images`, a)})
+      console.log(formData.entries())
       const config = {
         headers: {
           'content-type': 'multipart/form-data'
@@ -72,7 +77,15 @@ const TestPage = () => {
         {/* <input type = "flie" name = "file" onChange = {e=> handleFileInput(e)}></input> */}
         <button type="submit">추가하기</button>
       </form>
+
+      {file.map(file => {
+        return (
+          <img src = {URL.createObjectURL(file)}></img>
+        )
+      })}
+
       {file && file.length > 0 ? <img src = {URL.createObjectURL(file[0])}></img> : ''}
+
       <div {...getRootProps()}>
         <input {...getInputProps()} />
         {
