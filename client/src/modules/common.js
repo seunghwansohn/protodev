@@ -1,6 +1,6 @@
 import produce from 'immer'
 import { createAction, handleActions } from 'redux-actions';
-import { takeLatest, call }                           from 'redux-saga/effects';
+import { takeLatest, takeEvery, call }                           from 'redux-saga/effects';
 import createRequestSaga, {createRequestActionTypes } from '../lib/createRequestSaga';
 import * as common                                    from '../lib/api/common';
 
@@ -15,7 +15,7 @@ const [SET_LOAD_NOTES, SET_LOAD_NOTES_SUCCESS, SET_LOAD_NOTES_FAILURE ]
 = createRequestActionTypes('notes/SET_LOAD_NOTES');
 
 
-const addNotesSaga = createRequestSaga(SET_ADD_NOTES, common.addNotes);
+const addNotesSaga  = createRequestSaga(SET_ADD_NOTES, common.addNotes);
 const loadNotesSaga = createRequestSaga(SET_LOAD_NOTES, common.loadNotes);
 
 
@@ -24,7 +24,7 @@ export const setLoadNotes = createAction(SET_LOAD_NOTES, (type) => (type))
 
 
 export function* commonSaga() {
-    yield takeLatest(SET_ADD_NOTES, addNotesSaga)
+    yield takeEvery(SET_ADD_NOTES, addNotesSaga)
     yield takeLatest(SET_LOAD_NOTES, loadNotesSaga)
 
 }

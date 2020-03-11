@@ -24,39 +24,39 @@ function App() {
   let match = useRouteMatch();
   return (
     <div className="App">
-          <div>
-            <MainHeader></MainHeader>
-                  <Route path = "/about">
-                      <About></About>
-                  </Route>
-                  <Route component = {ItemListPage} path = "/" exact/>
-          
-                  <Route path = "/login" >
-                      <LoginPages></LoginPages>
-                  </Route>
+      <div>
+        <MainHeader></MainHeader>
+              <Route path = "/about">
+                  <About></About>
+              </Route>
+              <Route component = {ItemListPage} path = "/" exact/>
+      
+              <Route path = "/login" >
+                  <LoginPages></LoginPages>
+              </Route>
 
-                  <Route path = "/register" >
-                      <RegisterPage></RegisterPage>
-                  </Route>
+              <Route path = "/register" >
+                  <RegisterPage></RegisterPage>
+              </Route>
 
-                  <Route path = "/test" >
-                      <TestPage></TestPage>
-                  </Route>
+              <Route path = "/test" >
+                  <TestPage></TestPage>
+              </Route>
 
-                  <Route path = "/suppliers" >
-                    <SuppliersPage></SuppliersPage>
-                  </Route>
+              <Route path = "/suppliers" >
+                <SuppliersPage></SuppliersPage>
+              </Route>
 
-                  <Route path = "/makers" >
-                    <MakersPage></MakersPage>
-                  </Route>
+              <Route path = "/makers" >
+                <MakersPage></MakersPage>
+              </Route>
 
-                  <Route path = "/quotes" >
-                    <QuotesPage></QuotesPage>
-                  </Route>
+              <Route path = "/quotes" >
+                <QuotesPage></QuotesPage>
+              </Route>
 
-                  <Route component = {ClientPage} path = "/client" exact/>
-          </div>
+              <Route component = {ClientPage} path = "/client" exact/>
+      </div>
     </div>
   );
 }

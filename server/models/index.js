@@ -33,6 +33,7 @@ db.itemPRice = require("../models/item.Price.model.js")(sequelize, Sequelize);
 db.supplier = require("../models/supplier.model.js")(sequelize, Sequelize);
 db.supplierNote = require("../models/supplier.notes.model.js")(sequelize, Sequelize);
 db.maker = require("../models/maker.model.js")(sequelize, Sequelize);
+db.makerNote = require("../models/maker.notes.model.js")(sequelize, Sequelize);
 
 
 
@@ -58,6 +59,10 @@ db.client.belongsTo(db.clientRate,
 
 db.supplier.belongsTo(db.supplierNote, 
     {as : "note", through: "supplier_supplierNote", foreignKey: 'supplierCode', targetKey: 'supplierCode'})
+        
+db.maker.belongsTo(db.makerNote, 
+    {as : "note", through: "supplier_makerNote", foreignKey: 'makerCode', targetKey: 'makerCode'})
+        
         
 db.ROLES = ["user", "admin", "moderator"];
 

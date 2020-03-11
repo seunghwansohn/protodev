@@ -8,13 +8,12 @@ import FormControl                              from '@material-ui/core/FormCont
 import Input                                    from '@material-ui/core/Input';
 import InputLabel                               from '@material-ui/core/InputLabel';
 import Button                                   from '@material-ui/core/Button';
-
-import Paper from '@material-ui/core/Paper';
-
+import Paper                                    from '@material-ui/core/Paper';
 
 import {setAddNotes}                            from '../../modules/common';
 
-import axios                            from '../../lib/api/axios';
+import axios                                    from '../../lib/api/axios';
+import produce                                  from 'immer'
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -32,35 +31,73 @@ const useStyles = makeStyles(theme => ({
 
 let Notes = props => {
 
-    const classes = useStyles();
-    const blankNotes = [[]];
-    const dispatch = useDispatch();
+    const classes     = useStyles();
+    const dispatch    = useDispatch();
+    
     const {type, primaryKey, primaryCode} = props
-  
-    const [notesArr, setNotesArr]         = React.useState([...blankNotes]);
+
+    const blankNotes  = [[]];
+
+    const [newNotesArr, setNewNotesArr]       = React.useState(['']);
     const [existNotes, setExistNotes]         = React.useState([]);
+    const [title, setTitle]                   = React.useState('');
+    const [deletedJustNow, setDeletedJustNow] = React.useState(false);
+
 
     const loadNotes = () => {
-      axios.get('/api/supplier/loadNotes/' + primaryCode).then(res => {
-        console.log(res)
-        setExistNotes(res)
+      if (primaryCode) {
+        axios.get('/api/supplier/loadNotes/' + primaryCode).then(res => {
+          setExistNotes(res)
+        })
+      }
+    }
+
+    const onDeleteNewNote = (i) => {
+
+      console.log(i)
+      const filteredArr = newNotesArr.filter((val, index) => {
+          return index !== i
+      })
+
+      setNewNotesArr(filteredArr)
+
+    }
+
+    const handleArrChange = (e, index) => {
+      setNewNotesArr(
+        produce(newNotesArr, draft => {
+          draft[index] = e.target.value
+        })
+      );
+    };
+
+
+    const onAddBlankNote = () => {
+      setNewNotesArr([...newNotesArr,  [...blankNotes] ]);
+    };
+
+    const onSubmit = () => {
+      newNotesArr.map(note => {
+        if (note !== null && note !== undefined && note !== [] && note !== '') {
+          dispatch(setAddNotes({type, primaryCode, note}))
+        }
       })
     }
-    console.log(existNotes)
-    const handleArrChange = e => {
-      const updatedArr = [...notesArr];
-      updatedArr[e.target.id] = e.target.value;
-      setNotesArr(updatedArr);
-    };
-    console.log(primaryKey, primaryCode)
-
-    const addNote = () => {
-      setNotesArr([...notesArr,  [...blankNotes] ]);
-    };
 
     useEffect(() => {
       loadNotes()
-    },[])
+    },[primaryCode])
+
+    useEffect(() => {
+      const arrLength = newNotesArr.length
+      if (newNotesArr[arrLength -1].length == 1) {
+        setNewNotesArr(
+          produce(newNotesArr, draft => {
+            draft.push('')
+          })
+        );
+      }
+    },[newNotesArr[newNotesArr.length - 1]])
 
     const ExistNotesTable = () => {
       return(
@@ -78,41 +115,28 @@ let Notes = props => {
       )
     }
 
-    const addNotesFragment = (val, idx) => {
-      return( 
-        <React.Fragment>
-            <React.Fragment>
-                <Grid item xs = {11}>
-                <FormControl key = {idx} className = {classes.fieldItem}>
-                    <InputLabel>{'notes ' + idx}</InputLabel>
-                    <Input type = 'text' id={idx} value={notesArr[idx]} onChange={handleArrChange} />
-                </FormControl>
-                </Grid>
-            </React.Fragment>
-            {idx == 0 ? 
-                <React.Fragment>
-                <Button variant="contained" color="primary" onClick = {addNote}>
-                    Add
-                </Button>
-                </React.Fragment>
-                : ''
-            }
-        </React.Fragment>
-      )
-    }
-
-    const onSubmit = () => {
-        dispatch(setAddNotes({type, primaryCode, notesArr}))
-    }
-
     return (
       <React.Fragment>
+        {title}
         <Grid container xs = {12} className = {classes.grid} spacing={0}>
-          {notesArr.map((val, idx) => {
+          {newNotesArr.map((val, index) => {
             return (
-              addNotesFragment(val, idx)
+            <React.Fragment>
+              <Grid item xs = {11}>
+                <FormControl key = {index} className = {classes.fieldItem}>
+                  <InputLabel>{'notes ' + (index)}</InputLabel>
+                  <Input type = 'text' id={index} value={newNotesArr[index]} onChange={e => handleArrChange(e, index)}/>
+                </FormControl>
+              </Grid>
+              <Grid item xs = {1}>
+                <Button variant="contained"  id={index} color="primary" onClick = {() => onDeleteNewNote(index)}>
+                  Delete
+                </Button>
+              </Grid>
+            </React.Fragment>
             )
           })}
+
           <ExistNotesTable></ExistNotesTable>
         </Grid>
         <Button variant="contained" color="primary" onClick = {onSubmit}>

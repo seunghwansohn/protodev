@@ -1,6 +1,8 @@
 const db = require("../models");
 const config = require("../config/auth.config");
 const Maker = db.maker;
+const MakerNote = db.makerNote;
+
 
 const Op = db.Sequelize.Op;
 
@@ -72,5 +74,27 @@ exports.query = (req, res) => {
         console.log(res)
         result = res.dataValues
     }).then(() => res.status(200).send(result) )
+};
+  
+exports.addNotes = (req, res) => {
+    const {obj} = req.body
+    console.log(obj)
+    if (!obj.note == [] || !obj.note == undefined || !obj.note == null) {
+        try {
+            MakerNote.create({
+                note: obj.note,
+                makerCode : obj.primaryCode
+            }).then(() => {
+                res.send({ message: "supplier added successfully" });
+            })
+        }
+        catch (err) {
+            res.status(500).send({message:err.message})
+            console.log(err.message)
+        }
+    } else {
+        res.send('empty request')
+    }
+
 };
   

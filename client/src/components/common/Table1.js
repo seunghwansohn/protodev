@@ -238,8 +238,6 @@ const STTable = ({
     }
   }
 
-  console.log(fixedVals)
-
   const handleChangeInput = (e, index, header) => {
     setTableVals(
       produce(tableVals, draft => {
