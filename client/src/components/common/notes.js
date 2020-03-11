@@ -76,10 +76,12 @@ let Notes = props => {
       setNewNotesArr([...newNotesArr,  [...blankNotes] ]);
     };
 
-    const onSubmit = () => {
-      newNotesArr.map(note => {
+    const onSubmit = async () => {
+      await newNotesArr.map(note => {
         if (note !== null && note !== undefined && note !== [] && note !== '') {
           dispatch(setAddNotes({type, primaryCode, note}))
+        } else {
+          console.log('코드눌입')
         }
       })
     }

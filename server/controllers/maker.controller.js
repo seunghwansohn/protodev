@@ -79,22 +79,17 @@ exports.query = (req, res) => {
 exports.addNotes = (req, res) => {
     const {obj} = req.body
     console.log(obj)
-    if (!obj.note == [] || !obj.note == undefined || !obj.note == null) {
-        try {
-            MakerNote.create({
-                note: obj.note,
-                makerCode : obj.primaryCode
-            }).then(() => {
-                res.send({ message: "supplier added successfully" });
-            })
-        }
-        catch (err) {
-            res.status(500).send({message:err.message})
-            console.log(err.message)
-        }
-    } else {
-        res.send('empty request')
+    try {
+        MakerNote.create({
+            note: obj.note,
+            makerCode : obj.primaryCode
+        }).then(() => {
+            res.send({ message: "Notes added successfully" });
+        })
     }
-
+        catch (err) {
+            res.status(500).send({type: obj.type}, {message:err.message})
+            console.log(err.message)
+    }
 };
   
