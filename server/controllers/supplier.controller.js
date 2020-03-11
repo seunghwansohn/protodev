@@ -46,13 +46,13 @@ exports.addNotes = (req, res) => {
 
 exports.loadNotes = (req, res) => {
     console.log(req.params)
-    SupplierNote.findAll({where : {supplierCode : 'fefef'}}
+    SupplierNote.findAll({where : {supplierCode : req.params.id}}
     ).then(suppliers => {
         result = suppliers
     }).then(() => {
         res.status(200).send(result);
     })
-};
+};  
 
 
 exports.load = (req, res) => {

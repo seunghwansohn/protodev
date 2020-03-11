@@ -60,3 +60,17 @@ exports.update = async (req, res) => {
 
     }
 };
+
+exports.query = (req, res) => {
+
+    const header = req.body.header
+    const tempObj = {}
+    tempObj[header] = req.body.value
+
+    Maker.findOne({where:tempObj})
+    .then(res => {
+        console.log(res)
+        result = res.dataValues
+    }).then(() => res.status(200).send(result) )
+};
+  

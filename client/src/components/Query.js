@@ -11,6 +11,8 @@ import Divider          from '@material-ui/core/Divider';
 import Typography       from '@material-ui/core/Typography';
 import Button       from '@material-ui/core/Button';
 
+import Notes from './common/notes'
+
 import styled           from "styled-components";
 
 import InputST          from './common/Input'
@@ -19,20 +21,41 @@ const useStyles = makeStyles(theme => ({
 
 }))
 
-const Query = ({loadedTempData, queryFormType, queryProps}) => {
+const Query = ({loadedTempData, type, queryProps}) => {
   const [fixMode, setFixMode] = useState(false)
   const [lodedData, setLodedData] = useState([])
   const [fixedData, setFixedData] = useState([])
+  const [primaryKey, setPrimaryKey] = useState('')
+  const [primaryCode, setPrimaryCode] = useState('')
 
-	const inputAttr = {
+
+  const inputAttr = {
 			normal : {
 					unit : '',
 					unitPosition : 'end',
 			}
   }
   const classes = useStyles();
+
   const onModeChange = () => {
     fixMode == false ? setFixMode(true) : setFixMode(false)
+  }
+
+  const getPrimaryKey = () => {
+    queryProps.map(obj => {
+      if (obj.type == 'primary') {
+          setPrimaryKey(obj.title)
+          setPrimaryCode(obj.state)
+        }
+      })
+  }
+
+  const getPrimaryCode = () => {
+    queryProps.map(obj => {
+      if (obj.type == 'primary') {
+          setPrimaryCode(obj.title)
+        }
+      })
   }
 
   useEffect(() => {
@@ -44,7 +67,10 @@ const Query = ({loadedTempData, queryFormType, queryProps}) => {
     })
   },[loadedTempData])
 
-  console.log(lodedData)
+  useEffect(() => {
+    getPrimaryKey()
+  },[queryProps])
+
   return (
       <React.Fragment>
         <Grid container>
@@ -83,6 +109,8 @@ const Query = ({loadedTempData, queryFormType, queryProps}) => {
             }
           })}
         </Grid>
+
+        <Notes type = {type} primaryKey = {primaryKey} primaryCode = {primaryCode}></Notes>
         <Button onClick = {onModeChange}>모드 변경</Button>
 
       </React.Fragment>

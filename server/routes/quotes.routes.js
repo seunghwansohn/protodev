@@ -25,14 +25,13 @@ module.exports = function(app) {
   });
 
   app.post("/api/addfiles", upload.array('images', 10), (req, res) => {
-    // const file = req.file
-    console.log(req.files)
-    // if (!file) {
-    //   const error = new Error('Please upload a file')
-    //   error.httpStatusCode = 400
-    //   return next(error)
-    // }
-    //   res.send(file)
+    const file = req.files
+    if (file == [] || file == undefined) {
+      const error = new Error('Please upload a file')
+      error.httpStatusCode = 400
+      return next(error)
+    }
+      res.send('upload Succeccfully')
     
   })
 

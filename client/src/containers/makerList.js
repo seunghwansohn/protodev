@@ -3,7 +3,7 @@ import { connect, useSelector, useDispatch } from 'react-redux';
 
 import Table    from '../components/common/Table1'
 import DialogST from '../components/common/DialogST'
-import SupplierQuery from '../containers/SupplierQuery'
+import MakerQuery from './MakerQuery'
 
 
 import axios from '../lib/api/axios'
@@ -154,6 +154,7 @@ const Maker = props => {
         }
     }
 
+   
     return(
         <>
             <Table 
@@ -166,9 +167,9 @@ const Maker = props => {
                 stateAttr   = {stateAttr}
             ></Table>
 
-            <DialogST attr = {DialogsAttr.supplierQuery}>
-                <SupplierQuery loadReqData = {clickedCol}
-                ></SupplierQuery>
+            <DialogST attr = {DialogsAttr.makerQuery}>
+                <MakerQuery reqCode = {clickedCol}
+                ></MakerQuery>
             </DialogST>
             
         </>

@@ -30,37 +30,37 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-
-
 let Notes = props => {
 
     const classes = useStyles();
     const blankNotes = [[]];
     const dispatch = useDispatch();
-    const {code, type} = props
+    const {type, primaryKey, primaryCode} = props
   
     const [notesArr, setNotesArr]         = React.useState([...blankNotes]);
     const [existNotes, setExistNotes]         = React.useState([]);
 
     const loadNotes = () => {
-      axios.get('/api/notes/load').then(res => {
+      axios.get('/api/supplier/loadNotes/' + primaryCode).then(res => {
+        console.log(res)
         setExistNotes(res)
       })
     }
-    
-  
+    console.log(existNotes)
     const handleArrChange = e => {
       const updatedArr = [...notesArr];
       updatedArr[e.target.id] = e.target.value;
       setNotesArr(updatedArr);
     };
-    console.log(existNotes)
-
+    console.log(primaryKey, primaryCode)
 
     const addNote = () => {
       setNotesArr([...notesArr,  [...blankNotes] ]);
     };
 
+    useEffect(() => {
+      loadNotes()
+    },[])
 
     const ExistNotesTable = () => {
       return(
@@ -102,10 +102,8 @@ let Notes = props => {
     }
 
     const onSubmit = () => {
-        dispatch(setAddNotes({type, code, notesArr}))
+        dispatch(setAddNotes({type, primaryCode, notesArr}))
     }
-
-
 
     return (
       <React.Fragment>
