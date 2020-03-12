@@ -10,34 +10,13 @@ import InputLabel                               from '@material-ui/core/InputLab
 import Button                                   from '@material-ui/core/Button';
 import Paper                                    from '@material-ui/core/Paper';
 
-import {setAddNotes, setUpdated}                            from '../../modules/common';
+import {setAddNotes, setUpdated}                from '../../modules/common';
+
+import {convertSeqDateTime}                     from '../../lib/deSequelize';
+import {generateRandom}                         from '../../lib/common';
 
 import axios                                    from '../../lib/api/axios';
 import produce                                  from 'immer'
-
-
-const convertSeqDateTime = (str) => {
-  const regexp = /([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2})/
-  const result = str.match(regexp)
-  const obj = {}
-  obj.yyyy = result[1]
-  obj.yy = result[1].slice(0,2)
-  obj.mm = result[2]
-  obj.dd = result[3]
-  obj.hh = result[4]
-  obj.mn = result[5]
-  obj.yymmdd = obj.yy + '.' + obj.mm + '.' + obj.dd
-  obj.ddmmyy = obj.dd + '.' + obj.mm + '.' + obj.yy
-
-  obj.hhmn = obj.hh + ':' + obj.mn
-  
-  return obj
-}
-
-var generateRandom = function (min, max) {
-  var ranNum = Math.floor(Math.random()*(max-min+1)) + min;
-  return ranNum;
-}
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -73,7 +52,6 @@ let Notes = props => {
     const loadNotes = () => {
       if (primaryCode) {
         axios.get('/api/' + type + '/notes/load/' + primaryCode).then(res => {
-          console.log(res.data)
           setExistNotes(res.data)
         })
       }
@@ -82,7 +60,6 @@ let Notes = props => {
     useEffect(() => {
       if (update[type+randomNo]) {
         const typeRandomNumbered = type + randomNo
-        console.log('트루임')
         loadNotes()
         dispatch(setUpdated({type : typeRandomNumbered, ox : false}))
       }

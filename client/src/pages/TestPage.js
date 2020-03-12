@@ -1,102 +1,190 @@
 import React, { useState, useEffect } from 'react';
-import SupplierQuery from '../containers/SupplierQuery';
-import MakerList from '../containers/makerList';
-import axios from 'axios';
-import pdf from 'pdf-thumbnail';
-
-import {useCallback} from 'react'
-import {useDropzone} from 'react-dropzone'
-
-// const pdfBuffer = require('fs').readFileSync('/some/path/example.pdf');
-
-
-const TestPage = () => {
-  const [file, setFile]           = useState([])
-  const [fileName, setFileName]           = useState()
-
-  // const pdfBuffer = fs.readFileSync('/SuppliersPage.js')
+import { makeStyles } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText from '@material-ui/core/ListItemText';
+import Checkbox from '@material-ui/core/Checkbox';
+import IconButton from '@material-ui/core/IconButton';
+import CommentIcon from '@material-ui/icons/Comment';
+import Input                                    from '@material-ui/core/Input';
 
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault()
-    addFiles()
-    .then((response) => {
-      console.log(response.data);
-    })
-  }
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import DraftsIcon from '@material-ui/icons/Drafts';
+import SendIcon from '@material-ui/icons/Send';
 
-  const handleFileChange = e => {
-    setFileName(e.target.value)
-    console.log(e.target)
-    setFile(e.target.files[0])
-  }
-    
-  const addFiles = () => {
-      const url = '/api/addfiles';
-      var formData = new FormData();
-      console.log(file)
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
-      file.map(a => {formData.append(`images`, a)})
-      console.log(formData.entries())
-      const config = {
-        headers: {
-          'content-type': 'multipart/form-data'
-        }
+import produce                                  from 'immer'
+
+const StyledMenu = withStyles({
+  paper: {
+    border: '1px solid #d3d4d5',
+  },
+})(props => (
+  <Menu
+    elevation={0}
+    getContentAnchorEl={null}
+    anchorOrigin={{
+      vertical: 'bottom',
+      horizontal: 'center',
+    }}
+    transformOrigin={{
+      vertical: 'top',
+      horizontal: 'center',
+    }}
+    {...props}
+  />
+));
+
+
+const useStyles = makeStyles(theme => ({
+  root: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+}));
+
+const basicBlankTask = {title:'', type : 'basic', urgent : false, staffCode : ''}
+
+const StyledMenuItem = withStyles(theme => ({
+  root: {
+    '&:focus': {
+      backgroundColor: theme.palette.primary.main,
+      '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
+        color: theme.palette.common.white,
+      },
+    },
+  },
+}))(MenuItem);
+
+export default function CheckboxList() {
+  const classes = useStyles();
+  const [checked, setChecked] = React.useState([0]);
+  const [taskArr, setTaskArr] = React.useState([basicBlankTask]);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+
+  const openMenu = event => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleToggle = value => () => {
+    const currentIndex = checked.indexOf(value);
+    const newChecked = [...checked];
+
+    if (currentIndex === -1) {
+      newChecked.push(value);
+    } else {
+      newChecked.splice(currentIndex, 1);
+    }
+    setChecked(newChecked);
+  };
+
+  useEffect(() => {
+    const arrLength = taskArr.length
+      console.log(taskArr[arrLength -1].title)
+    if (taskArr[arrLength -1].title.length == 1) {
+      setTaskArr(
+        produce(taskArr, draft => {
+          draft.push(basicBlankTask)
+        })
+      );
+    }
+  },[taskArr[taskArr.length - 1]])
+
+  console.log(taskArr[taskArr.length - 1])
+
+  console.log(taskArr.length)
+
+  const handleArrChange = (e, index) => {
+    setTaskArr(
+      produce(taskArr, draft => {
+        draft[index].title = e.target.value
       }
-    return axios.post(url, formData, config)
-  }
-    
-
-
-    
-  const handleFileInput = e => {
-    setFile(e.target.files[0])
+    ))
   }
 
-  const handlePost = ()=>{
-    const formData = new FormData();
-    formData.append('file', file);
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-    // return axios.post("/api/upload", formData).then(res => {
-    //   alert('성공')
-    // }).catch(err => {
-    //   alert('실패')
-    // })
+  const handleKeyPress = (e, index)=> {
+    if (e.key ==='Tab') {
+      e.preventDefault()
+      console.log('탭키다운')
+      setAnchorEl(e.currentTarget);
+      // setTaskArr(
+      //   produce(taskArr, draft => {
+      //     draft[index].type = 'checkBox'
+      //   }
+      // ))
+    }
+    console.log(e.key)
   }
+  console.log(taskArr)
 
-  const onDrop = useCallback(acceptedFiles => {
-    console.log('파일드롬됨')
-    setFile(acceptedFiles)
-  }, [])
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
-  console.log(file)
   return (
     <React.Fragment>
-      <form onSubmit = {handleFormSubmit}>
-        프로필 이미지: <input type="file" name="file" file={file} value = {fileName} onChange={handleFileChange}></input>
-        {/* <input type = "flie" name = "file" onChange = {e=> handleFileInput(e)}></input> */}
-        <button type="submit">추가하기</button>
-      </form>
+      <StyledMenu
+        id="customized-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        <StyledMenuItem>
+          <ListItemIcon>
+            <SendIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Sent mail" />
+        </StyledMenuItem>
+        <StyledMenuItem>
+          <ListItemIcon>
+            <DraftsIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Drafts" />
+        </StyledMenuItem>
+        <StyledMenuItem>
+          <ListItemIcon>
+            <InboxIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Inbox" />
+        </StyledMenuItem>
+      </StyledMenu>
+      <List className={classes.root}>
+        {taskArr.map((obj,index) => {
+          const labelId = `checkbox-list-label-${obj.id}`;
 
-      {file.map(file => {
-        return (
-          <img src = {URL.createObjectURL(file)}></img>
-        )
-      })}
+          return (
+            <ListItem key={obj.id} role={undefined} dense button onClick={handleToggle(obj.id)}>
+              {obj.type == 'checkBox' ?               
+              <Checkbox
+                  edge="start"
+                  checked={checked.indexOf(obj.title) !== -1}
+                  tabIndex={-1}
+                  disableRipple
+                  inputProps={{ 'aria-labelledby': labelId }}
+                /> : ''
+              }
 
-      {file && file.length > 0 ? <img src = {URL.createObjectURL(file[0])}></img> : ''}
-
-      <div {...getRootProps()}>
-        <input {...getInputProps()} />
-        {
-          isDragActive ?
-            <p>Drop the files here ...</p> :
-            <p>Drag 'n' drop some files here, or click to select files</p>
-        }
-      </div>
-
+              <Input type = 'text' id={index} value={obj.title} onKeyDown = {e => handleKeyPress(e, index)} onChange={e => handleArrChange(e, index)}/>
+              <ListItemSecondaryAction>
+                <IconButton edge="end" aria-label="comments">
+                  <CommentIcon />
+                </IconButton>
+              </ListItemSecondaryAction>
+            </ListItem>
+          );
+        })}
+      </List>
     </React.Fragment>
   );
 }
 
-export default TestPage;
