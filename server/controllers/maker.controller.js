@@ -92,4 +92,15 @@ exports.addNotes = (req, res) => {
             console.log(err.message)
     }
 };
+
+exports.loadNotes = (req, res) => {
+    console.log('레큐파람은 ', req.params.id)
+    MakerNote.findAll({where : {makerCode : req.params.id}}
+    ).then(notes => {
+        console.log(notes)
+        result = notes
+    }).then(() => {
+        res.status(200).send(result);
+    })
+};  
   

@@ -14,7 +14,7 @@ module.exports = function(app) {
   app.post("/api/maker/update/", controller.update);
   app.post("/api/maker/query/", controller.query);
   app.post("/api/maker/notes/add", controller.addNotes);
-
+  app.get("/api/maker/notes/load/:id", controller.loadNotes);
 
   // app.post("/api/supplier/addNotes", controller.addNotes)
   // app.get("/api/supplier/loadNotes/:id", controller.loadNotes);

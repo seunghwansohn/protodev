@@ -46,11 +46,14 @@ let Notes = props => {
 
     const loadNotes = () => {
       if (primaryCode) {
-        axios.get('/api/supplier/loadNotes/' + primaryCode).then(res => {
-          setExistNotes(res)
+        axios.get('/api/' + type + '/notes/load/' + primaryCode).then(res => {
+          console.log(res.data)
+          setExistNotes(res.data)
         })
       }
     }
+
+    console.log(type)
 
     const onDeleteNewNote = (i) => {
 
@@ -81,7 +84,7 @@ let Notes = props => {
         if (note !== null && note !== undefined && note !== [] && note !== '') {
           dispatch(setAddNotes({type, primaryCode, note}))
         } else {
-          console.log('코드눌입')
+          console.log('눌값존재')
         }
       })
     }
@@ -104,11 +107,11 @@ let Notes = props => {
     const ExistNotesTable = () => {
       return(
       <React.Fragment>
-          {existNotes.data ? existNotes.data.map(noteArr => {
+          {existNotes ? existNotes.map(noteObj => {
             return(
             <Grid item xs = {12}>
               <Paper>
-                  {noteArr.notes}
+                  {noteObj.note}
               </Paper>
             </Grid>
             )
