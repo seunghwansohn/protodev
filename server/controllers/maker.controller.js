@@ -84,11 +84,11 @@ exports.addNotes = (req, res) => {
             note: obj.note,
             makerCode : obj.primaryCode
         }).then(() => {
-            res.send({ message: "Notes added successfully" });
+            res.send({type: obj.type + obj.randomNo, message: "Notes added successfully" });
         })
     }
         catch (err) {
-            res.status(500).send({type: obj.type}, {message:err.message})
+            res.status(500).send({message:err.message})
             console.log(err.message)
     }
 };

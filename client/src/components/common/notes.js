@@ -10,10 +10,34 @@ import InputLabel                               from '@material-ui/core/InputLab
 import Button                                   from '@material-ui/core/Button';
 import Paper                                    from '@material-ui/core/Paper';
 
-import {setAddNotes}                            from '../../modules/common';
+import {setAddNotes, setUpdated}                            from '../../modules/common';
 
 import axios                                    from '../../lib/api/axios';
 import produce                                  from 'immer'
+
+
+const convertSeqDateTime = (str) => {
+  const regexp = /([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2})/
+  const result = str.match(regexp)
+  const obj = {}
+  obj.yyyy = result[1]
+  obj.yy = result[1].slice(0,2)
+  obj.mm = result[2]
+  obj.dd = result[3]
+  obj.hh = result[4]
+  obj.mn = result[5]
+  obj.yymmdd = obj.yy + '.' + obj.mm + '.' + obj.dd
+  obj.ddmmyy = obj.dd + '.' + obj.mm + '.' + obj.yy
+
+  obj.hhmn = obj.hh + ':' + obj.mn
+  
+  return obj
+}
+
+var generateRandom = function (min, max) {
+  var ranNum = Math.floor(Math.random()*(max-min+1)) + min;
+  return ranNum;
+}
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -42,7 +66,9 @@ let Notes = props => {
     const [existNotes, setExistNotes]         = React.useState([]);
     const [title, setTitle]                   = React.useState('');
     const [deletedJustNow, setDeletedJustNow] = React.useState(false);
+    const [randomNo, setRandomNo]             = React.useState(Math.floor(Math.random() * 10) + 1);
 
+    const { update } = useSelector(({ common }) => ({ update : common.update }));
 
     const loadNotes = () => {
       if (primaryCode) {
@@ -53,11 +79,22 @@ let Notes = props => {
       }
     }
 
-    console.log(type)
+    useEffect(() => {
+      if (update[type+randomNo]) {
+        const typeRandomNumbered = type + randomNo
+        console.log('트루임')
+        loadNotes()
+        dispatch(setUpdated({type : typeRandomNumbered, ox : false}))
+      }
+    },[update])
+
+    useEffect(() => {
+      setRandomNo(generateRandom(1001,9999))
+    },[])
+
 
     const onDeleteNewNote = (i) => {
 
-      console.log(i)
       const filteredArr = newNotesArr.filter((val, index) => {
           return index !== i
       })
@@ -74,7 +111,7 @@ let Notes = props => {
       );
     };
 
-
+    console.log(update)
     const onAddBlankNote = () => {
       setNewNotesArr([...newNotesArr,  [...blankNotes] ]);
     };
@@ -82,7 +119,7 @@ let Notes = props => {
     const onSubmit = async () => {
       await newNotesArr.map(note => {
         if (note !== null && note !== undefined && note !== [] && note !== '') {
-          dispatch(setAddNotes({type, primaryCode, note}))
+          dispatch(setAddNotes({type, primaryCode, note, randomNo}))
         } else {
           console.log('눌값존재')
         }
@@ -108,10 +145,13 @@ let Notes = props => {
       return(
       <React.Fragment>
           {existNotes ? existNotes.map(noteObj => {
+
+            const yymmdd = convertSeqDateTime(noteObj.createdAt).yymmdd
+
             return(
             <Grid item xs = {12}>
               <Paper>
-                  {noteObj.note}
+                  {noteObj.note}{yymmdd}
               </Paper>
             </Grid>
             )
