@@ -23,7 +23,14 @@ module.exports = (sequelize, Sequelize) => {
     },
     estimatedTime: {
       type : Sequelize.NUMBER
+    },
+    shortDesc: {
+      type : Sequelize.STRING
+    },
+    desc: {
+      type : Sequelize.STRING
     }
+
   });
   return Project;
 };

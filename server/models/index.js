@@ -35,6 +35,7 @@ db.supplierNote = require("../models/supplier.notes.model.js")(sequelize, Sequel
 db.maker        = require("../models/maker.model.js")(sequelize, Sequelize);
 db.makerNote    = require("../models/maker.notes.model.js")(sequelize, Sequelize);
 db.project      = require("../models/project.model.js")(sequelize, Sequelize);
+db.projectNote  = require("../models/project.notes.model.js")(sequelize, Sequelize);
 
 
 db.role.belongsToMany(db.user, {
@@ -62,7 +63,10 @@ db.supplier.belongsTo(db.supplierNote,
         
 db.maker.belongsTo(db.makerNote, 
     {as : "note", through: "supplier_makerNote", foreignKey: 'makerCode', targetKey: 'makerCode'})
-        
+
+db.project.belongsTo(db.projectNote, 
+    {as : "note", through: "project_Note", foreignKey: 'projectCode', targetKey: 'projectCode'})
+    
         
 db.ROLES = ["user", "admin", "moderator"];
 

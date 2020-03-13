@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
-    const Supplier = sequelize.define("supplier_note", {
-      supplierCode : {
+    const supplierNote = sequelize.define("project_note", {
+      projectCode : {
         type: Sequelize.STRING,
         allowNull: false,
       },
@@ -9,5 +9,5 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
       },
     });
-  return Supplier;
+  return supplierNote;
 };

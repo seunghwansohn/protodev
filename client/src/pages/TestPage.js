@@ -24,6 +24,10 @@ import SendIcon from '@material-ui/icons/Send';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
+import ExpantionPane from '../components/common/expantionPane';
+
+import axios from '../lib/api/axios'
+
 import produce                                  from 'immer'
 
 const StyledMenu = withStyles({
@@ -89,6 +93,8 @@ export default function CheckboxList() {
   const [checked, setChecked] = React.useState([0]);
   const [taskArr, setTaskArr] = React.useState([basicBlankTask]);
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [projects, setProjects] = React.useState([]);
+
 
 
   const openMenu = event => {
@@ -154,8 +160,37 @@ export default function CheckboxList() {
   }
   console.log(taskArr)
 
+  const getProjectData = async () => {
+    await axios.get('/api/' + 'project' + '/load').then(res => {
+        setProjects(res.data)
+    })
+  }
+
+  useEffect(() => {
+    getProjectData()
+  },[])
+
+  console.log(projects)
+
   return (
     <React.Fragment>
+      {projects.length > 0 ? 
+        projects.map(project => {
+          const {projectName, shortDesc, desc} = project
+          return (
+            <ExpantionPane 
+              title = {projectName} 
+              shortDesc = {shortDesc} 
+              desc = {desc}
+            >
+              메에롱개새끼야
+            </ExpantionPane>
+
+          )
+        }
+          
+        ) : ''}
+
 
       <StyledMenu
         id="customized-menu"

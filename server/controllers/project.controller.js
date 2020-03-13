@@ -1,18 +1,16 @@
 const db = require("../models");
 const config = require("../config/auth.config");
-const Project = db.project;
-// const ProjectNote = db.projectNote;
-
+const Main = db.project;
+const Note = db.projectNote;
 
 const Op = db.Sequelize.Op;
-
 
 exports.addNew = (req, res) => {
     const Arr = req.body
     console.log(Arr)
     try {
       Arr.map(obj => {
-        Project.create({
+        Main.create({
             projectCode: obj.projectCode,
             projectName: obj.projectName,
             client : obj.client,
@@ -28,8 +26,9 @@ exports.addNew = (req, res) => {
 };
 
 exports.load = (req, res) => {
-    Project.findAll()
-        .then(project => {
+    Main.findAll({
+      include:[{model : Note, as : 'note'}]
+    }).then(project => {
             result = project
         }).then(() => {
             res.status(200).send(result);
@@ -38,7 +37,7 @@ exports.load = (req, res) => {
 
 exports.delete = async (req, res) => {
     console.log(req.body)
-    let draft = await Project.findOne({where:{projectCode :req.body.code}})
+    let draft = await Main.findOne({where:{projectCode :req.body.code}})
     await draft.destroy().then(()=> {
         res.status(200).send('deleted Successfully')
     });
@@ -48,7 +47,7 @@ exports.update = async (req, res) => {
     let data = req.body
     let { ref,vals } = data
     try {
-        const draft = await Project.findOne({where:ref})
+        const draft = await Main.findOne({where:ref})
         keys = await Object.keys(vals)
 
         keys.map(async key => {
@@ -69,7 +68,7 @@ exports.query = (req, res) => {
     const tempObj = {}
     tempObj[header] = req.body.value
 
-    Project.findOne({where:tempObj})
+    Main.findOne({where:tempObj})
     .then(res => {
         console.log(res)
         result = res.dataValues
@@ -80,7 +79,7 @@ exports.addNotes = (req, res) => {
     const {obj} = req.body
     console.log(obj)
     try {
-        ProjectNote.create({
+        Note.create({
             note: obj.note,
             projectCode : obj.primaryCode
         }).then(() => {
@@ -95,7 +94,7 @@ exports.addNotes = (req, res) => {
 
 exports.loadNotes = (req, res) => {
     console.log('레큐파람은 ', req.params.id)
-    ProjectNote.findAll({where : {projectCode : req.params.id}}
+    Note.findAll({where : {projectCode : req.params.id}}
     ).then(notes => {
         console.log(notes)
         result = notes
