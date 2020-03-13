@@ -29,6 +29,7 @@ import ExpantionPane from '../components/common/expantionPane';
 import axios from '../lib/api/axios'
 
 import produce                                  from 'immer'
+import { setAddNotes } from '../modules/common';
 
 const StyledMenu = withStyles({
   paper: {
@@ -94,8 +95,7 @@ export default function CheckboxList() {
   const [taskArr, setTaskArr] = React.useState([basicBlankTask]);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [projects, setProjects] = React.useState([]);
-
-
+  const [notes, setNotes] = React.useState([]);
 
   const openMenu = event => {
     setAnchorEl(event.currentTarget);

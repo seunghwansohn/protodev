@@ -25,7 +25,7 @@ exports.addNew = (req, res) => {
     }
 };
 
-exports.load = (req, res) => {
+exports.load1 = (req, res) => {
     Main.findAll({
       include:[{model : Note, as : 'note'}]
     }).then(project => {
@@ -33,6 +33,16 @@ exports.load = (req, res) => {
         }).then(() => {
             res.status(200).send(result);
     })
+};
+
+exports.load = (req, res) => {
+  Note.findAll({
+    include:[{model : Main, as : 'notes'}]
+  }).then(project => {
+          result = project
+      }).then(() => {
+          res.status(200).send(result);
+  })
 };
 
 exports.delete = async (req, res) => {

@@ -17,7 +17,7 @@ module.exports = function(app) {
   app.get("/api/project/notes/load/:id", controller.loadNotes);
 
   // app.post("/api/supplier/addNotes", controller.addNotes)
-  // app.get("/api/supplier/loadNotes/:id", controller.loadNotes);
+  app.get("/api/supplier/notes/load/:id", controller.loadNotes);
 };
 
 

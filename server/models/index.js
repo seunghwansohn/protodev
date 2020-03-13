@@ -64,9 +64,8 @@ db.supplier.belongsTo(db.supplierNote,
 db.maker.belongsTo(db.makerNote, 
     {as : "note", through: "supplier_makerNote", foreignKey: 'makerCode', targetKey: 'makerCode'})
 
-db.project.belongsTo(db.projectNote, 
-    {as : "note", through: "project_Note", foreignKey: 'projectCode', targetKey: 'projectCode'})
-    
+db.projectNote.hasMany(db.project, 
+    {as : "notes", foreignKey: 'projectCode', sourceKey: 'projectCode'})
         
 db.ROLES = ["user", "admin", "moderator"];
 
