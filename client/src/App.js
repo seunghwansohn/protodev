@@ -9,6 +9,8 @@ import SuppliersPage from './pages/SuppliersPage'
 import RegisterPage from './pages/RegisterPage';
 import MakersPage from './pages/MakersPage';
 import QuotesPage from './pages/quotesPage';
+import ProjectPage from './pages/projectPage';
+
 
 
 import About from './containers/About'
@@ -53,6 +55,10 @@ function App() {
 
               <Route path = "/quotes" >
                 <QuotesPage></QuotesPage>
+              </Route>
+
+              <Route path = "/project" >
+                <ProjectPage></ProjectPage>
               </Route>
 
               <Route component = {ClientPage} path = "/client" exact/>

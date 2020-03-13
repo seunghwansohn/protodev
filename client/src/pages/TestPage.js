@@ -4,11 +4,15 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
+import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import CommentIcon from '@material-ui/icons/Comment';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 import Input                                    from '@material-ui/core/Input';
+
+import Grid             from '@material-ui/core/Grid';
 
 
 import { withStyles } from '@material-ui/core/styles';
@@ -48,6 +52,22 @@ const useStyles = makeStyles(theme => ({
     width: '100%',
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
+  },
+  grid: {
+    padding: theme.spacing(0),
+    textAlign: 'left',
+    alignContent: 'center',
+    justifyContent : 'center',
+    display: 'flex',
+    backgroundColor : '#ecdfed',
+  },
+  paperAlignCenter : {
+    padding: theme.spacing(0),
+    color : 'black',
+    backgroundColor: '#efdbfd',
+    justifyContent: 'center',
+    display: 'flex',
+    fontSize : '18px'
   },
 }));
 
@@ -111,6 +131,9 @@ export default function CheckboxList() {
     ))
   }
 
+  const onClickMenus = () => {
+    console.log('메뉴클릭드')
+  }
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -120,11 +143,12 @@ export default function CheckboxList() {
       e.preventDefault()
       console.log('탭키다운')
       setAnchorEl(e.currentTarget);
-      // setTaskArr(
-      //   produce(taskArr, draft => {
-      //     draft[index].type = 'checkBox'
-      //   }
-      // ))
+    }
+
+    if (e.key ==='`') {
+      e.preventDefault()
+      console.log('`키다운`')
+      setAnchorEl(e.currentTarget);
     }
     console.log(e.key)
   }
@@ -132,6 +156,7 @@ export default function CheckboxList() {
 
   return (
     <React.Fragment>
+
       <StyledMenu
         id="customized-menu"
         anchorEl={anchorEl}
@@ -139,18 +164,20 @@ export default function CheckboxList() {
         open={Boolean(anchorEl)}
         onClose={handleClose}
       >
+        <StyledMenuItem onClick = {onClickMenus}>
+          <ListItemIcon>
+            <CheckBoxIcon fontSize="small" />
+          </ListItemIcon>
+          <ListItemText primary="Add Check Box" />
+        </StyledMenuItem>
+
         <StyledMenuItem>
           <ListItemIcon>
-            <SendIcon fontSize="small" />
+            <FormatListNumberedIcon fontSize="small" />
           </ListItemIcon>
-          <ListItemText primary="Sent mail" />
+          <ListItemText primary="Add Numbered Lists" />
         </StyledMenuItem>
-        <StyledMenuItem>
-          <ListItemIcon>
-            <DraftsIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Drafts" />
-        </StyledMenuItem>
+
         <StyledMenuItem>
           <ListItemIcon>
             <InboxIcon fontSize="small" />
@@ -158,32 +185,39 @@ export default function CheckboxList() {
           <ListItemText primary="Inbox" />
         </StyledMenuItem>
       </StyledMenu>
-      <List className={classes.root}>
+
+      <Grid Container Item xs = {12} className = {classes.grid}>
+        <Grid item xs = {7} className = {classes.paperAlignCenter}>notes</Grid>
+        <Grid item xs = {1} className = {classes.paperAlignCenter}>Brian</Grid>
+        <Grid item xs = {1} className = {classes.paperAlignCenter}>Tuyen</Grid>
+        <Grid item xs = {1} className = {classes.paperAlignCenter}>Jenny</Grid>
+      </Grid>
         {taskArr.map((obj,index) => {
           const labelId = `checkbox-list-label-${obj.id}`;
 
           return (
-            <ListItem key={obj.id} role={undefined} dense button onClick={handleToggle(obj.id)}>
-              {obj.type == 'checkBox' ?               
-              <Checkbox
-                  edge="start"
-                  checked={checked.indexOf(obj.title) !== -1}
-                  tabIndex={-1}
-                  disableRipple
-                  inputProps={{ 'aria-labelledby': labelId }}
-                /> : ''
-              }
+            <React.Fragment>
+                <Grid Container Item xs = {12} className = {classes.grid}>
+                  {obj.type == 'checkBox' ?               
+                  <Checkbox
+                      edge="start"
+                      checked={checked.indexOf(obj.title) !== -1}
+                      tabIndex={-1}
+                      disableRipple
+                      inputProps={{ 'aria-labelledby': labelId }}
+                    /> : ''
+                  }
 
-              <Input type = 'text' id={index} value={obj.title} onKeyDown = {e => handleKeyPress(e, index)} onChange={e => handleArrChange(e, index)}/>
-              <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="comments">
-                  <CommentIcon />
-                </IconButton>
-              </ListItemSecondaryAction>
-            </ListItem>
+                  <Grid item xs = {7} className = {classes.paperAlignCenter}>
+                    <Input type = 'text' id={index} value={obj.title} onKeyDown = {e => handleKeyPress(e, index)} onChange={e => handleArrChange(e, index)}/>
+                  </Grid>
+                  <Grid item xs = {1} className = {classes.paperAlignCenter}>Brian</Grid>
+                  <Grid item xs = {1} className = {classes.paperAlignCenter}>Tuyen</Grid>
+                  <Grid item xs = {1} className = {classes.paperAlignCenter}>Jenny</Grid>
+                </Grid>
+            </React.Fragment>
           );
         })}
-      </List>
     </React.Fragment>
   );
 }

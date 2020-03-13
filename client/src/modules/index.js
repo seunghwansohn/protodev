@@ -13,6 +13,8 @@ import user, { userSaga }       from './user';
 import table, { tableSaga }     from './test';
 import maker, { makerSaga }     from './maker';
 import query, { querySaga }     from './query';
+import project, { projectSaga } from './project';
+
 import common, { commonSaga}                   from './common';
 
 
@@ -37,7 +39,8 @@ const rootReducer = combineReducers({
     supplier,
     query,
     common,
-    maker
+    maker,
+    project
 });
 
 export function* rootSaga () {
@@ -53,7 +56,8 @@ export function* rootSaga () {
         supplierSaga(),
         querySaga(),
         commonSaga(),
-        makerSaga()
+        makerSaga(),
+        projectSaga()
     ])
 }
 

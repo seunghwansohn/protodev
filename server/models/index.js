@@ -23,18 +23,18 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
-db.user = require("../models/user.model.js")(sequelize, Sequelize);
-db.role = require("../models/role.model.js")(sequelize, Sequelize);
-db.item = require("../models/item.model.js")(sequelize, Sequelize);
-db.quote = require("../models/quote.model.js")(sequelize, Sequelize);
-db.client = require("../models/client.model.js")(sequelize, Sequelize);
-db.clientRate = require("../models/client.rate.model.js")(sequelize, Sequelize);
-db.itemPRice = require("../models/item.Price.model.js")(sequelize, Sequelize);
-db.supplier = require("../models/supplier.model.js")(sequelize, Sequelize);
+db.user         = require("../models/user.model.js")(sequelize, Sequelize);
+db.role         = require("../models/role.model.js")(sequelize, Sequelize);
+db.item         = require("../models/item.model.js")(sequelize, Sequelize);
+db.quote        = require("../models/quote.model.js")(sequelize, Sequelize);
+db.client       = require("../models/client.model.js")(sequelize, Sequelize);
+db.clientRate   = require("../models/client.rate.model.js")(sequelize, Sequelize);
+db.itemPRice    = require("../models/item.Price.model.js")(sequelize, Sequelize);
+db.supplier     = require("../models/supplier.model.js")(sequelize, Sequelize);
 db.supplierNote = require("../models/supplier.notes.model.js")(sequelize, Sequelize);
-db.maker = require("../models/maker.model.js")(sequelize, Sequelize);
-db.makerNote = require("../models/maker.notes.model.js")(sequelize, Sequelize);
-
+db.maker        = require("../models/maker.model.js")(sequelize, Sequelize);
+db.makerNote    = require("../models/maker.notes.model.js")(sequelize, Sequelize);
+db.project      = require("../models/project.model.js")(sequelize, Sequelize);
 
 
 db.role.belongsToMany(db.user, {

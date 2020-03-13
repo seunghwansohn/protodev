@@ -43,7 +43,7 @@ require('./routes/supplier.routes')(app)
 require('./routes/common.routes')(app)
 require('./routes/maker.routes')(app)
 require('./routes/quotes.routes')(app)
-
+require('./routes/project.routes')(app)
 
 
 const port = process.env.PORT || 5000;

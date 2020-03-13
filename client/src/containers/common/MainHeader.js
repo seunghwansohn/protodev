@@ -83,6 +83,10 @@ const MainHeader = () => {
                     <Link to="/quotes">Quotes</Link>
                 </li>
 
+                <li>
+                    <Link to="/project">Project</Link>
+                </li>
+
                 <li><button onClick = {onSignIn}>확인</button></li>
                 Login: {user ? user.username : '없음'}
                 <Button onClick = {onLogout}>로그아웃</Button>

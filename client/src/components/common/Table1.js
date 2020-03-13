@@ -93,7 +93,7 @@ const STTable = ({
   const {setRawData, setUpdated, setClickedCol, setAddedNew, setSelected}     = setStates
   const {load, onSubmitUpdatedVals, onDialogOpen, onDelete, onSubmitNewAdded} = funcs
 
-  let headers = rawData && rawData.length > 1 ? Object.keys(rawData[0]) : []
+  let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
 
   const [tableHeaderVals, setTableHeaderVals] = useState([]);
   const [tableVals, setTableVals]             = useState(rawData);
@@ -133,6 +133,11 @@ const STTable = ({
     })
     setTableHeaderVals(headers)
   },[rawData])
+
+
+  console.log(rawData[0])
+  console.log(headers)
+
 
   useEffect(() => {
     if (updated) {
@@ -199,6 +204,7 @@ const STTable = ({
     })
     return ox
   }
+  
   
   const onSetfixMode = () => {
     fixMode ? setFixMode(false) : setFixMode(true)
