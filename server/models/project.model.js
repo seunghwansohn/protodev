@@ -1,17 +1,29 @@
 module.exports = (sequelize, Sequelize) => {
-    const Project = sequelize.define("project", {
-      projectCode: {
+  const Project = sequelize.define("project", {
+    projectCode: {
         type: Sequelize.STRING,
         unique: true,
-      },
-      projectName: {
+    },
+    projectName: {
         type: Sequelize.STRING,
         allowNull: false
-      },
-      client: {
+    },
+    client: {
         type: Sequelize.STRING,
         allowNull: true
-      },
-    });
-    return Project;
+    },
+    estimatedAmount : {
+        type : Sequelize.NUMBER,
+    },
+    stage : {
+        type : Sequelize.NUMBER,
+    },
+    light : {
+      type : Sequelize.NUMBER,
+    },
+    estimatedTime: {
+      type : Sequelize.NUMBER
+    }
+  });
+  return Project;
 };

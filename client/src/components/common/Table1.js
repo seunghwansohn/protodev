@@ -112,7 +112,6 @@ const STTable = ({
   const [fixMode, setFixMode]                 = useState(false);
   const [fixableCells, setFixableCells]       = useState({});
 
-
   const [fixedVals, setFixedVals]             = useState([]);
 
   const [showUpdatedSign, setShowUpdatedSign] = useState(false);
@@ -478,8 +477,8 @@ const STTable = ({
           onChangeRowsPerPage={handleChangeRowsPerPage}/>
 
       <Button onClick = {onAddNewBlank}>add New</Button>
-      <Button onClick = {() => onSubmitNewAdded(addedNew)}>Submit New</Button>
-      <Button onClick = {() => onSubmitUpdatedVals(fixedVals)}>Submit</Button>
+      <Button onClick = {() => onSubmitNewAdded(addedNew)}>     Submit New </Button>
+      <Button onClick = {() => onSubmitUpdatedVals(fixedVals)}> Submit     </Button>
       {selected && selected.length !== 0 ? <Button onClick = {() => {onDelete(selected)}}>Delete</Button> :''}
 
     </React.Fragment>

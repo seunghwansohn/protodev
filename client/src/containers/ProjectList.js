@@ -3,7 +3,7 @@ import { connect, useSelector, useDispatch } from 'react-redux';
 
 import Table    from '../components/common/Table1'
 import DialogST from '../components/common/DialogST'
-// import MakerQuery from './MakerQuery'
+import ProjectQuery from './ProjectQuery'
 
 
 import axios from '../lib/api/axios'
@@ -167,10 +167,10 @@ const Project = props => {
                 stateAttr   = {stateAttr}
             ></Table>
 
-            {/* <DialogST attr = {DialogsAttr.projectQuery}>
+            <DialogST attr = {DialogsAttr.projectQuery}>
                 <ProjectQuery reqCode = {clickedCol}
                 ></ProjectQuery>
-            </DialogST> */}
+            </DialogST>
             
         </>
     )

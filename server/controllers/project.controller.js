@@ -69,7 +69,7 @@ exports.query = (req, res) => {
     const tempObj = {}
     tempObj[header] = req.body.value
 
-    project.findOne({where:tempObj})
+    Project.findOne({where:tempObj})
     .then(res => {
         console.log(res)
         result = res.dataValues
