@@ -1,25 +1,21 @@
 const db = require("../models");
 const config = require("../config/auth.config");
-const Maker = db.maker;
-const MakerNote = db.makerNote;
-
+const Task = db.task;
 
 const Op = db.Sequelize.Op;
 
 
 exports.addNew = (req, res) => {
 
-    const Arr = req.body
-    console.log(Arr)
+    const obj = req.body
+    console.log(obj)
     try {
-      Arr.map(obj => {
-        Maker.create({
-            makerCode: obj.makerCode,
-            makerName: obj.makerName,
-            origin: obj.origin,
-        }).then(() => {
-            res.send({ message: "supplier added successfully" });
-        })
+      Task.create({
+          projectCode: obj.project,
+          idx: obj.idx,
+          desc: obj.desc,
+      }).then(() => {
+          res.send({ message: "supplier added successfully" });
       })
     }
     catch (err) {

@@ -22,26 +22,19 @@ import MenuItem                 from '@material-ui/core/MenuItem';
 import Popover                  from '@material-ui/core/Popover';
 import Paper                    from '@material-ui/core/Paper';
 
-import Dialog                   from '@material-ui/core/Dialog';
-import DialogActions            from '@material-ui/core/DialogActions';
-import DialogContent            from '@material-ui/core/DialogContent';
-import DialogContentText        from '@material-ui/core/DialogContentText';
-import DialogTitle              from '@material-ui/core/DialogTitle';
-
 import FormControl              from '@material-ui/core/FormControl';
 
 import styled, { keyframes } from 'styled-components';
 
 import TextField from '@material-ui/core/TextField';
 
-import Draggable from 'react-draggable';
 
 import { withStyles } from '@material-ui/core/styles';
 
 import ExpantionPane          from '../components/common/expantionPane';
 import SingleTask             from '../components/singleTask';
-import STTable             from '../components/common/Table1';
-
+import STTable                from '../components/common/Table1';
+import CommentDialog          from '../components/common/CommentDialog';
 
 import { setAddNotes }        from '../modules/common';
 import { setFinishTask }      from '../modules/task';
@@ -50,14 +43,6 @@ import { setFinishTask }      from '../modules/task';
 import axios                  from '../lib/api/axios'
 
 import produce                from 'immer'
-
-function DraggableDialog(props) {
-  return (
-    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
-      <Paper {...props} />
-    </Draggable>
-  );
-}
 
 const StyledMenu = withStyles({
   paper: {
@@ -119,12 +104,12 @@ const StyledMenuItem = withStyles(theme => ({
 
 export const ProjectTaskList = () => {
   const classes = useStyles();
-  const [checked, setChecked]           = React.useState([0]);
-  const [taskArr, setTaskArr]           = React.useState([basicBlankTask]);
-  const [anchorEl, setAnchorEl]         = React.useState(null);
-  const [projects, setProjects]         = React.useState([]);
-  const [notes, setNotes]               = React.useState([]);
-  const [checkedArr, setCheckedArr]     = React.useState([]);
+  const [checked, setChecked]           = useState([0]);
+  const [taskArr, setTaskArr]           = useState([basicBlankTask]);
+  const [anchorEl, setAnchorEl]         = useState(null);
+  const [projects, setProjects]         = useState([]);
+  const [notes, setNotes]               = useState([]);
+  const [checkedArr, setCheckedArr]     = useState([]);
   const [dialogOpen, setDialogOpen]     = useState(false)
   const [comment, setComment]           = useState('')
   const [checkedNow, setCheckedNow]     = useState({})
@@ -152,14 +137,12 @@ export const ProjectTaskList = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   const handleKeyPress = (e, index)=> {
     if (e.key ==='Tab') {
       e.preventDefault()
       console.log('탭키다운')
       setAnchorEl(e.currentTarget);
     }
-
     if (e.key ==='`') {
       e.preventDefault()
       console.log('`키다운`')
@@ -174,7 +157,6 @@ export const ProjectTaskList = () => {
       }
     ))
   }
-
 
   const getProjectTaskListData = async () => {
     await axios.get('/api/' + 'project' + '/load').then(res => {
@@ -214,32 +196,34 @@ export const ProjectTaskList = () => {
     return ox
   }
 
-  const onDialogClose = () => {
-    setDialogOpen(false)
-    console.log(comment)
-  }
-
-  const onDialogOpen = () => {
-    // setDialogOpen(true);
-  };
-
   const onSubmitComment = (event) => {
     event.preventDefault()
     console.log(comment)
   }
   
-  const onChangeComment = (e) => {
-    setComment(e.target.value)
+  const dialogStates = {
+    open : dialogOpen
   }
 
-  const onSolved = () => {
-    let tempObj =  checkedNow
-    tempObj.comment = comment
-    console.log(comment)
-    setDialogOpen(false)
-    dispatch(setFinishTask(tempObj))
+  const dialogSetStates = {
   }
 
+  const dialogFuncs = {
+    onChangeComment : function (e) {
+      setComment(e.target.value)
+    },
+    onSolved : function () {
+      let tempObj =  checkedNow
+      tempObj.comment = comment
+      console.log(comment)
+      setDialogOpen(false)
+      dispatch(setFinishTask(tempObj))
+    },
+    onDialogClose : function () {
+      setDialogOpen(false)
+      console.log(comment)
+    }
+  }
 
   useEffect(() => {
     getProjectTaskListData()
@@ -260,50 +244,18 @@ export const ProjectTaskList = () => {
     setDialogOpen(checkIfCheckedBox())
   },[checkedArr])
 
-
   return (
     <React.Fragment>
 
-      <Dialog
-        open={dialogOpen}
-        onClose={handleClose}
-        maxWidth = 'sm'
-        fullWidth
-        aria-describedby="alert-dialog-description"
-        PaperComponent = {DraggableDialog}
-        aria-labelledby="draggable-dialog-title"
-      >
-        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-          Result?
-        </DialogTitle>        
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            type="email"
-            fullWidth
-            onChange = {(e) => onChangeComment(e)}
-          />
-        </DialogContent>
-        <Grid Container className = {classes.grid}>
-          <Grid item xs = {6}>
-            <Button onClick={onSolved} color="primary">
-              Solved!
-            </Button>
-          </Grid>
-          <Grid item xs = {6}>
-            <Button onClick={onDialogClose} color="primary">
-              Cancel
-            </Button>
-          </Grid>
-        </Grid>
-      </Dialog>
+      <CommentDialog
+        states    = {dialogStates}
+        setStates = {dialogSetStates}
+        funcs     = {dialogFuncs}
+      ></CommentDialog>
 
       {projects.length > 0 ? 
-        projects.map(project => {
+        projects.map((project, index) => {
           const {projectName, shortDesc, desc, notes} = project
-          console.log(notes)
           return (
             <React.Fragment>
               <ExpantionPane 
@@ -311,10 +263,23 @@ export const ProjectTaskList = () => {
                 shortDesc = {shortDesc} 
                 desc = {desc}
               >
-                {notes.length > 0 ? 
-                  <SingleTask
-                    className = {classes.grid}
-                  ></SingleTask>
+                {notes.length > 0 ? (function () {
+                  return (
+                    notes.map(note => {
+                      console.log(note)
+                      return (
+                        <SingleTask
+                          type        = {projectName}
+                          idx         = {index}
+                          onchecked   = {onchecked}
+                          className   = {classes.grid}
+                          rawData     = {note.note}
+                        ></SingleTask>
+                      )
+                    })
+                  )
+                })()
+
                 :'노트없음'}
               </ExpantionPane>
 
@@ -322,9 +287,6 @@ export const ProjectTaskList = () => {
           )
         })
       :''}
-
-
-
 
       <StyledMenu
         id="customized-menu"

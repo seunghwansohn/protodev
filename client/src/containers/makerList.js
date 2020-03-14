@@ -111,6 +111,14 @@ const Maker = props => {
         setSelected     : setSelected
     }
 
+    const funcs = {
+        load : getRawData,
+        onSubmitUpdatedVals : onSubmitUpdatedVals,
+        onDialogOpen : onDialogOpen,
+        onDelete : onDelete,
+        onSubmitNewAdded : onSubmitNewAdded
+    }
+
     const stateAttr = {
         makerCode : {
             primary : true,
@@ -135,16 +143,6 @@ const Maker = props => {
         }
     }
 
-
-
-    const funcs = {
-        load : getRawData,
-        onSubmitUpdatedVals : onSubmitUpdatedVals,
-        onDialogOpen : onDialogOpen,
-        onDelete : onDelete,
-        onSubmitNewAdded : onSubmitNewAdded
-    }
-
     const DialogsAttr = {
         makerQuery : {
             title : 'maker',
@@ -154,7 +152,6 @@ const Maker = props => {
         }
     }
 
-   
     return(
         <>
             <Table 

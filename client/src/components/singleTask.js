@@ -36,17 +36,17 @@ const useStyles = makeStyles(theme => ({
 
 
 
-const SingleTask = ({type, idx, setChecked}) => {
+const SingleTask = ({type, idx, onchecked, rawData}) => {
   const classes     = useStyles();
 
   const onCheckBox = (e, index) => {
     console.log(index, type, idx)
-    setChecked(index, type, idx)
+    onchecked(index, type, idx)
   }
-
+  console.log(rawData)
   return (
-    <div className = {classes.root}>
-      <Grid container xs = {12}>
+    <React.Fragment>
+      <Grid container item xs = {12}>
         <Grid item xs = {11} className = {classes.grid}>
             <Checkbox idx = {idx} onChange = {(e, index) => onCheckBox(e, index)}>
             </Checkbox>
@@ -56,6 +56,8 @@ const SingleTask = ({type, idx, setChecked}) => {
               placeholder=""
               fullWidth
               margin="dense"
+              value = {rawData}
+              disabled
             />
         </Grid>
         <Grid item xs = {1} className = {classes.grid}>
@@ -64,7 +66,7 @@ const SingleTask = ({type, idx, setChecked}) => {
           </Button>
         </Grid>
       </Grid>
-    </div>
+    </React.Fragment>
   )
 }
 
