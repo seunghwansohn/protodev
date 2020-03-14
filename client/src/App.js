@@ -10,8 +10,7 @@ import RegisterPage from './pages/RegisterPage';
 import MakersPage from './pages/MakersPage';
 import QuotesPage from './pages/quotesPage';
 import ProjectPage from './pages/projectPage';
-
-
+import TaskPage from './pages/TaskPage';
 
 import About from './containers/About'
 import {
@@ -59,6 +58,10 @@ function App() {
 
               <Route path = "/project" >
                 <ProjectPage></ProjectPage>
+              </Route>
+
+              <Route path = "/task" >
+                <TaskPage></TaskPage>
               </Route>
 
               <Route component = {ClientPage} path = "/client" exact/>

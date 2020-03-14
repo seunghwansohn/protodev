@@ -9,6 +9,8 @@ module.exports = function(app) {
     next();
   });
   app.get("/api/project/load/", controller.load);
+  app.get("/api/project/loadDefault/", controller.loadDefault);
+
   app.post("/api/project/addNew", controller.addNew)
   app.post("/api/project/delete/", controller.delete);
   app.post("/api/project/update/", controller.update);

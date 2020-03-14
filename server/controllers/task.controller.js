@@ -25,7 +25,7 @@ exports.addNew = (req, res) => {
 };
 
 exports.load = (req, res) => {
-    Maker.findAll()
+    Task.findAll()
         .then(makers => {
             result = makers
         }).then(() => {

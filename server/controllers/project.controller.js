@@ -45,6 +45,15 @@ exports.load1 = (req, res) => {
   })
 };
 
+exports.loadDefault = (req, res) => {
+    Main.findAll({
+    }).then(project => {
+            result = project
+        }).then(() => {
+            res.status(200).send(result);
+    })
+};
+
 exports.delete = async (req, res) => {
     console.log(req.body)
     let draft = await Main.findOne({where:{projectCode :req.body.code}})

@@ -3,7 +3,7 @@ import { connect, useSelector, useDispatch } from 'react-redux';
 
 import Table    from '../components/common/Table1'
 import DialogST from '../components/common/DialogST'
-import ProjectQuery from './ProjectQuery'
+// import MakerQuery from './MakerQuery'
 
 
 import axios from '../lib/api/axios'
@@ -14,7 +14,7 @@ import {
     setClickedTableCol,
     setAdd,
     setDelete
-}                            from '../modules/project'
+}                            from '../modules/task'
 
 import { onDialogOpen }      from '../modules/dialogs'
 
@@ -23,10 +23,10 @@ const tableAttr = {
     flag : true,
 }
 
-const Project = props => {
+const TaskList = props => {
     const dispatch = useDispatch()
 
-    const type = 'project'
+    const type = 'task'
 
     const [rawData, setRawData]           = useState([])
     const [fixedVals, setFixedVals]     = useState([]);
@@ -35,21 +35,19 @@ const Project = props => {
     const [addedNew, setAddedNew]       = useState([]);
     const [selected, setSelected]       = useState([]);
 
-    const { update } = useSelector(({ project }) => ({ update : project.table.update }));
+    const { update } = useSelector(({ maker }) => ({ update : maker.table.update }));
     const opened = useSelector(state => state.dialogs.opened)
 
 
     const getRawData = async () => {
-        await axios.get('/api/' + type + '/loadDefault').then(res => {
+        await axios.get('/api/' + type + '/load').then(res => {
             setRawData(res.data)
         })
     }
 
-    console.log(rawData)
-
     const onDelete = async (codes) =>{
         await codes.map(code => {
-            dispatch(setDelete(type, code.projectCode))
+            dispatch(setDelete(type, code.makerCode))
         })
         await setUpdated(true)
         await setSelected([])
@@ -113,17 +111,25 @@ const Project = props => {
         setSelected     : setSelected
     }
 
+    const funcs = {
+        load : getRawData,
+        onSubmitUpdatedVals : onSubmitUpdatedVals,
+        onDialogOpen : onDialogOpen,
+        onDelete : onDelete,
+        onSubmitNewAdded : onSubmitNewAdded
+    }
+
     const stateAttr = {
-        projectCode : {
+        makerCode : {
             primary : true,
             fixable : false,
             defaultHided : false
         },
-        projectName : {
+        makerName : {
             fixable : true,
             defaultHided : false
         },
-        client : {
+        origin : {
             fixable : true,
             defaultHided : false
         },
@@ -137,26 +143,15 @@ const Project = props => {
         }
     }
 
-
-
-    const funcs = {
-        load : getRawData,
-        onSubmitUpdatedVals : onSubmitUpdatedVals,
-        onDialogOpen : onDialogOpen,
-        onDelete : onDelete,
-        onSubmitNewAdded : onSubmitNewAdded
-    }
-
     const DialogsAttr = {
-        projectQuery : {
-            title : 'project',
+        makerQuery : {
+            title : 'maker',
             maxWidth : 'xl' ,
             funcs : funcs,
-            open : checkOpened('project')
+            open : checkOpened('maker')
         }
     }
 
-   
     return(
         <>
             <Table 
@@ -169,13 +164,13 @@ const Project = props => {
                 stateAttr   = {stateAttr}
             ></Table>
 
-            {/* <DialogST attr = {DialogsAttr.projectQuery}>
-                <ProjectQuery reqCode = {clickedCol}
-                ></ProjectQuery>
-            </DialogST> */}
+            <DialogST attr = {DialogsAttr.makerQuery}>
+                {/* <MakerQuery reqCode = {clickedCol}
+                ></MakerQuery> */}
+            </DialogST>
             
         </>
     )
 }   
 
-export default Project
+export default TaskList
