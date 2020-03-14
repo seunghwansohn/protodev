@@ -14,6 +14,8 @@ import table, { tableSaga }     from './test';
 import maker, { makerSaga }     from './maker';
 import query, { querySaga }     from './query';
 import project, { projectSaga } from './project';
+import task, { taskSaga }       from './task';
+
 
 import common, { commonSaga}                   from './common';
 
@@ -40,7 +42,8 @@ const rootReducer = combineReducers({
     query,
     common,
     maker,
-    project
+    project,
+    task
 });
 
 export function* rootSaga () {
@@ -57,7 +60,8 @@ export function* rootSaga () {
         querySaga(),
         commonSaga(),
         makerSaga(),
-        projectSaga()
+        projectSaga(),
+        taskSaga()
     ])
 }
 

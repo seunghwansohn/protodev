@@ -1,35 +1,63 @@
 import React, { useState, useEffect } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction';
-import FormatListNumberedIcon from '@material-ui/icons/FormatListNumbered';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
-import IconButton from '@material-ui/core/IconButton';
-import CommentIcon from '@material-ui/icons/Comment';
-import CheckBoxIcon from '@material-ui/icons/CheckBox';
-import Input                                    from '@material-ui/core/Input';
+import { connect, useSelector, useDispatch } from 'react-redux';
 
-import Grid             from '@material-ui/core/Grid';
 
+import { makeStyles }           from '@material-ui/core/styles';
+import List                     from '@material-ui/core/List';
+import ListItem                 from '@material-ui/core/ListItem';
+import ListItemIcon             from '@material-ui/core/ListItemIcon';
+import ListItemSecondaryAction  from '@material-ui/core/ListItemSecondaryAction';
+import ListItemText             from '@material-ui/core/ListItemText';
+import FormatListNumberedIcon   from '@material-ui/icons/FormatListNumbered';
+import Checkbox                 from '@material-ui/core/Checkbox';
+import CheckBoxIcon             from '@material-ui/icons/CheckBox';
+import Input                    from '@material-ui/core/Input';
+import Grid                     from '@material-ui/core/Grid';
+import Button                   from '@material-ui/core/Button';
+import InboxIcon                from '@material-ui/icons/MoveToInbox';
+import DraftsIcon               from '@material-ui/icons/Drafts';
+import SendIcon                 from '@material-ui/icons/Send';
+import Menu                     from '@material-ui/core/Menu';
+import MenuItem                 from '@material-ui/core/MenuItem';
+import Popover                  from '@material-ui/core/Popover';
+import Paper                    from '@material-ui/core/Paper';
+
+import Dialog                   from '@material-ui/core/Dialog';
+import DialogActions            from '@material-ui/core/DialogActions';
+import DialogContent            from '@material-ui/core/DialogContent';
+import DialogContentText        from '@material-ui/core/DialogContentText';
+import DialogTitle              from '@material-ui/core/DialogTitle';
+
+import FormControl              from '@material-ui/core/FormControl';
+
+import styled, { keyframes } from 'styled-components';
+
+import TextField from '@material-ui/core/TextField';
+
+import Draggable from 'react-draggable';
 
 import { withStyles } from '@material-ui/core/styles';
-import Button from '@material-ui/core/Button';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
 
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import ExpantionPane          from '../components/common/expantionPane';
+import SingleTask             from '../components/singleTask';
+import STTable             from '../components/common/Table1';
 
-import ExpantionPane from '../components/common/expantionPane';
 
-import axios from '../lib/api/axios'
+import { setAddNotes }        from '../modules/common';
+import { setFinishTask }      from '../modules/task';
 
-import produce                                  from 'immer'
-import { setAddNotes } from '../modules/common';
+
+import axios                  from '../lib/api/axios'
+
+import produce                from 'immer'
+
+function DraggableDialog(props) {
+  return (
+    <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
+      <Paper {...props} />
+    </Draggable>
+  );
+}
 
 const StyledMenu = withStyles({
   paper: {
@@ -89,13 +117,19 @@ const StyledMenuItem = withStyles(theme => ({
   },
 }))(MenuItem);
 
-export default function CheckboxList() {
+export const ProjectTaskList = () => {
   const classes = useStyles();
-  const [checked, setChecked] = React.useState([0]);
-  const [taskArr, setTaskArr] = React.useState([basicBlankTask]);
-  const [anchorEl, setAnchorEl] = React.useState(null);
-  const [projects, setProjects] = React.useState([]);
-  const [notes, setNotes] = React.useState([]);
+  const [checked, setChecked]           = React.useState([0]);
+  const [taskArr, setTaskArr]           = React.useState([basicBlankTask]);
+  const [anchorEl, setAnchorEl]         = React.useState(null);
+  const [projects, setProjects]         = React.useState([]);
+  const [notes, setNotes]               = React.useState([]);
+  const [checkedArr, setCheckedArr]     = React.useState([]);
+  const [dialogOpen, setDialogOpen]     = useState(false)
+  const [comment, setComment]           = useState('')
+  const [checkedNow, setCheckedNow]     = useState({})
+
+  const dispatch = useDispatch();
 
   const openMenu = event => {
     setAnchorEl(event.currentTarget);
@@ -104,7 +138,6 @@ export default function CheckboxList() {
   const handleToggle = value => () => {
     const currentIndex = checked.indexOf(value);
     const newChecked = [...checked];
-
     if (currentIndex === -1) {
       newChecked.push(value);
     } else {
@@ -112,30 +145,6 @@ export default function CheckboxList() {
     }
     setChecked(newChecked);
   };
-
-  useEffect(() => {
-    const arrLength = taskArr.length
-      console.log(taskArr[arrLength -1].title)
-    if (taskArr[arrLength -1].title.length == 1) {
-      setTaskArr(
-        produce(taskArr, draft => {
-          draft.push(basicBlankTask)
-        })
-      );
-    }
-  },[taskArr[taskArr.length - 1]])
-
-  console.log(taskArr[taskArr.length - 1])
-
-  console.log(taskArr.length)
-
-  const handleArrChange = (e, index) => {
-    setTaskArr(
-      produce(taskArr, draft => {
-        draft[index].title = e.target.value
-      }
-    ))
-  }
 
   const onClickMenus = () => {
     console.log('메뉴클릭드')
@@ -156,40 +165,165 @@ export default function CheckboxList() {
       console.log('`키다운`')
       setAnchorEl(e.currentTarget);
     }
-    console.log(e.key)
   }
-  console.log(taskArr)
 
-  const getProjectData = async () => {
+  const handleArrChange = (e, index) => {
+    setTaskArr(
+      produce(taskArr, draft => {
+        draft[index].title = e.target.value
+      }
+    ))
+  }
+
+
+  const getProjectTaskListData = async () => {
     await axios.get('/api/' + 'project' + '/load').then(res => {
         setProjects(res.data)
     })
   }
 
+  const onchecked = (ox, project, idx) => {
+    console.log(ox, project, idx)
+    if (ox) {
+      setDialogOpen(true)
+      setCheckedNow({ox : ox, project : project, idx : idx})
+      setCheckedArr(
+        produce(checkedArr, draft => {
+          const tempObj = {project : project, idx : idx, submitted : false}
+          draft.push(tempObj)
+        }
+      ))
+    } else if (!ox) {
+      const tempArr = checkedArr.filter(function(obj) {
+        let temp = null
+        if(obj.project !== project || obj.idx !== idx) {
+          temp = obj
+        }
+        console.log(temp)
+        return temp
+      })
+      setCheckedArr(tempArr)
+    }
+  }
+  
+  const checkIfCheckedBox = () => {
+    let ox = false
+    if (checkedArr.length > 0){
+      ox = true
+    }
+    return ox
+  }
+
+  const onDialogClose = () => {
+    setDialogOpen(false)
+    console.log(comment)
+  }
+
+  const onDialogOpen = () => {
+    // setDialogOpen(true);
+  };
+
+  const onSubmitComment = (event) => {
+    event.preventDefault()
+    console.log(comment)
+  }
+  
+  const onChangeComment = (e) => {
+    setComment(e.target.value)
+  }
+
+  const onSolved = () => {
+    let tempObj =  checkedNow
+    tempObj.comment = comment
+    console.log(comment)
+    setDialogOpen(false)
+    dispatch(setFinishTask(tempObj))
+  }
+
+
   useEffect(() => {
-    getProjectData()
+    getProjectTaskListData()
   },[])
 
-  console.log(projects)
+  useEffect(() => {
+    const arrLength = taskArr.length
+    if (taskArr[arrLength -1].title.length == 1) {
+      setTaskArr(
+        produce(taskArr, draft => {
+          draft.push(basicBlankTask)
+        })
+      );
+    }
+  },[taskArr[taskArr.length - 1]])
+
+  useEffect(() => {
+    setDialogOpen(checkIfCheckedBox())
+  },[checkedArr])
+
 
   return (
     <React.Fragment>
+
+      <Dialog
+        open={dialogOpen}
+        onClose={handleClose}
+        maxWidth = 'sm'
+        fullWidth
+        aria-describedby="alert-dialog-description"
+        PaperComponent = {DraggableDialog}
+        aria-labelledby="draggable-dialog-title"
+      >
+        <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
+          Result?
+        </DialogTitle>        
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="name"
+            type="email"
+            fullWidth
+            onChange = {(e) => onChangeComment(e)}
+          />
+        </DialogContent>
+        <Grid Container className = {classes.grid}>
+          <Grid item xs = {6}>
+            <Button onClick={onSolved} color="primary">
+              Solved!
+            </Button>
+          </Grid>
+          <Grid item xs = {6}>
+            <Button onClick={onDialogClose} color="primary">
+              Cancel
+            </Button>
+          </Grid>
+        </Grid>
+      </Dialog>
+
       {projects.length > 0 ? 
         projects.map(project => {
-          const {projectName, shortDesc, desc} = project
+          const {projectName, shortDesc, desc, notes} = project
+          console.log(notes)
           return (
-            <ExpantionPane 
-              title = {projectName} 
-              shortDesc = {shortDesc} 
-              desc = {desc}
-            >
-              메에롱개새끼야
-            </ExpantionPane>
+            <React.Fragment>
+              <ExpantionPane 
+                title = {projectName} 
+                shortDesc = {shortDesc} 
+                desc = {desc}
+              >
+                {notes.length > 0 ? 
+                  <SingleTask
+                    className = {classes.grid}
+                  ></SingleTask>
+                :'노트없음'}
+              </ExpantionPane>
 
+            </React.Fragment>
           )
-        }
-          
-        ) : ''}
+        })
+      :''}
+
+
 
 
       <StyledMenu
@@ -211,7 +345,7 @@ export default function CheckboxList() {
             <FormatListNumberedIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText primary="Add Numbered Lists" />
-        </StyledMenuItem>
+        </StyledMenuItem>T
 
         <StyledMenuItem>
           <ListItemIcon>
@@ -221,39 +355,9 @@ export default function CheckboxList() {
         </StyledMenuItem>
       </StyledMenu>
 
-      <Grid Container Item xs = {12} className = {classes.grid}>
-        <Grid item xs = {7} className = {classes.paperAlignCenter}>notes</Grid>
-        <Grid item xs = {1} className = {classes.paperAlignCenter}>Brian</Grid>
-        <Grid item xs = {1} className = {classes.paperAlignCenter}>Tuyen</Grid>
-        <Grid item xs = {1} className = {classes.paperAlignCenter}>Jenny</Grid>
-      </Grid>
-        {taskArr.map((obj,index) => {
-          const labelId = `checkbox-list-label-${obj.id}`;
-
-          return (
-            <React.Fragment>
-                <Grid Container Item xs = {12} className = {classes.grid}>
-                  {obj.type == 'checkBox' ?               
-                  <Checkbox
-                      edge="start"
-                      checked={checked.indexOf(obj.title) !== -1}
-                      tabIndex={-1}
-                      disableRipple
-                      inputProps={{ 'aria-labelledby': labelId }}
-                    /> : ''
-                  }
-
-                  <Grid item xs = {7} className = {classes.paperAlignCenter}>
-                    <Input type = 'text' id={index} value={obj.title} onKeyDown = {e => handleKeyPress(e, index)} onChange={e => handleArrChange(e, index)}/>
-                  </Grid>
-                  <Grid item xs = {1} className = {classes.paperAlignCenter}>Brian</Grid>
-                  <Grid item xs = {1} className = {classes.paperAlignCenter}>Tuyen</Grid>
-                  <Grid item xs = {1} className = {classes.paperAlignCenter}>Jenny</Grid>
-                </Grid>
-            </React.Fragment>
-          );
-        })}
     </React.Fragment>
   );
 }
 
+
+export default ProjectTaskList

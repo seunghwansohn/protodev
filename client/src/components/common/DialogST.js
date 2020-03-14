@@ -34,12 +34,15 @@ export default function MaxWidthDialog(props) {
   const [fullWidth, setFullWidth] = React.useState(true);
 
   const {attr} = props
-  const {open, type, funcs, maxWidth, title, scroll} = attr
+  const {open, type, funcs, maxWidth, title, scroll, onClose} = attr
 
   const handleClose = () => {
     const ox = false
     const type = camelize(title)
     dispatch(onDialogOpen(ox,type))
+    if (onClose !== undefined) {
+      onClose()
+    }
   };
   
 
