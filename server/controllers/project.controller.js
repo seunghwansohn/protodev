@@ -25,9 +25,9 @@ exports.addNew = (req, res) => {
     }
 };
 
-exports.load1 = (req, res) => {
+exports.load = (req, res) => {
     Main.findAll({
-      include:[{model : Note, as : 'note'}]
+      include:[{model : Note, as : 'notes'}]
     }).then(project => {
             result = project
         }).then(() => {
@@ -35,7 +35,7 @@ exports.load1 = (req, res) => {
     })
 };
 
-exports.load = (req, res) => {
+exports.load1 = (req, res) => {
   Note.findAll({
     include:[{model : Main, as : 'notes'}]
   }).then(project => {
