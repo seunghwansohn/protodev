@@ -21,15 +21,12 @@ import Menu                     from '@material-ui/core/Menu';
 import MenuItem                 from '@material-ui/core/MenuItem';
 import Popover                  from '@material-ui/core/Popover';
 import Paper                    from '@material-ui/core/Paper';
-
+import TextField                from '@material-ui/core/TextField';
 import FormControl              from '@material-ui/core/FormControl';
 
-import styled, { keyframes } from 'styled-components';
+import { withStyles }           from '@material-ui/core/styles';
 
-import TextField from '@material-ui/core/TextField';
-
-
-import { withStyles } from '@material-ui/core/styles';
+import styled, { keyframes }    from 'styled-components';
 
 import ExpantionPane          from '../components/common/expantionPane';
 import SingleTask             from '../components/singleTask';
@@ -38,7 +35,6 @@ import CommentDialog          from '../components/common/CommentDialog';
 
 import { setAddNotes }        from '../modules/common';
 import { setFinishTask }      from '../modules/task';
-
 
 import axios                  from '../lib/api/axios'
 
@@ -63,7 +59,6 @@ const StyledMenu = withStyles({
     {...props}
   />
 ));
-
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -102,17 +97,24 @@ const StyledMenuItem = withStyles(theme => ({
   },
 }))(MenuItem);
 
+
 export const ProjectTaskList = () => {
   const classes = useStyles();
+
+  const [projects, setProjects]         = useState([]);
+  const [tmpRawData, setTmpRawData]     = useState([]);
+
   const [checked, setChecked]           = useState([0]);
   const [taskArr, setTaskArr]           = useState([basicBlankTask]);
   const [anchorEl, setAnchorEl]         = useState(null);
-  const [projects, setProjects]         = useState([]);
   const [notes, setNotes]               = useState([]);
   const [checkedArr, setCheckedArr]     = useState([]);
   const [dialogOpen, setDialogOpen]     = useState(false)
   const [comment, setComment]           = useState('')
   const [checkedNow, setCheckedNow]     = useState({})
+
+  const [addedNewTask, setAddedNewTask]     = useState([])
+
 
   const dispatch = useDispatch();
 
@@ -161,11 +163,11 @@ export const ProjectTaskList = () => {
   const getProjectTaskListData = async () => {
     await axios.get('/api/' + 'project' + '/load').then(res => {
         setProjects(res.data)
+        setTmpRawData(res.data)
     })
   }
 
   const onchecked = (ox, project, idx) => {
-    console.log(ox, project, idx)
     if (ox) {
       setDialogOpen(true)
       setCheckedNow({ox : ox, project : project, idx : idx})
@@ -198,9 +200,19 @@ export const ProjectTaskList = () => {
 
   const onSubmitComment = (event) => {
     event.preventDefault()
-    console.log(comment)
+    // console.log(comment)
   }
   
+  const addSubTask = (type, idx, id) => {
+    // console.log('서브태스크추가', type, idx, id)
+    setAddedNewTask(
+      produce(addedNewTask, draft => {
+        draft.push({type : type, idx : idx, belongedId : id, value : null})
+      })
+    )
+  }
+
+
   const dialogStates = {
     open : dialogOpen
   }
@@ -215,13 +227,13 @@ export const ProjectTaskList = () => {
     onSolved : function () {
       let tempObj =  checkedNow
       tempObj.comment = comment
-      console.log(comment)
+      // console.log(comment)
       setDialogOpen(false)
       dispatch(setFinishTask(tempObj))
     },
     onDialogClose : function () {
       setDialogOpen(false)
-      console.log(comment)
+      // console.log(comment)
     }
   }
 
@@ -253,8 +265,8 @@ export const ProjectTaskList = () => {
         funcs     = {dialogFuncs}
       ></CommentDialog>
 
-      {projects.length > 0 ? 
-        projects.map((project, index) => {
+      {tmpRawData.length > 0 ? 
+        tmpRawData.map((project, index) => {
           const {projectName, shortDesc, desc, notes} = project
           return (
             <React.Fragment>
@@ -262,25 +274,46 @@ export const ProjectTaskList = () => {
                 title = {projectName} 
                 shortDesc = {shortDesc} 
                 desc = {desc}
+                addSubTask = {addSubTask}
               >
                 {notes.length > 0 ? (function () {
                   return (
-                    notes.map(note => {
-                      console.log(note)
+                    notes.map((note, index) => {
+                      let matchCount = 0
+                      let ArrMatched = []
+                      addedNewTask.map(obj => {
+                        if (obj.belongedId == note.id) {
+                          matchCount = matchCount + 1
+                          ArrMatched.push(obj)
+                        }
+                      })
                       return (
                         <SingleTask
                           type        = {projectName}
-                          idx         = {index}
+                          idx         = {index +1}
                           onchecked   = {onchecked}
                           className   = {classes.grid}
-                          rawData     = {note.note}
+                          rawData     = {note}
+                          showData    = {note.note}
+                          id          = {note.id}
+                          addSub      = {addSubTask}
+                          subArr      = {ArrMatched}
                         ></SingleTask>
                       )
                     })
                   )
                 })()
-
                 :'노트없음'}
+                {addedNewTask.map(obj => {
+                  return (
+                    <SingleTask
+                      rawData = {obj}
+                    >
+
+                    </SingleTask>
+                  )
+                })}
+
               </ExpantionPane>
 
             </React.Fragment>

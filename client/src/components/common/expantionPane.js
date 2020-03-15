@@ -5,6 +5,10 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import AddIcon from '@material-ui/icons/Add';
+import Button                   from '@material-ui/core/Button';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,10 +23,14 @@ const useStyles = makeStyles(theme => ({
     fontSize: theme.typography.pxToRem(15),
     color: theme.palette.text.secondary,
   },
+  addButton: {
+    fontSize: theme.typography.pxToRem(15),
+    color: theme.palette.text.secondary,
+  },
 }));
 
 const ControlledExpansionPanels = (props) => {
-  const {title, shortDesc, desc} = props
+  const {title, shortDesc, desc, addSubTask} = props
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -30,16 +38,29 @@ const ControlledExpansionPanels = (props) => {
     setExpanded(isExpanded ? panel : false);
   };
 
+  const addSub = (event) => {
+    event.stopPropagation()
+    addSubTask()
+  }
+
   return (
     <div className={classes.root}>
-      <ExpansionPanel expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
+      <ExpansionPanel>
         <ExpansionPanelSummary
           expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1bh-content"
-          id="panel1bh-header"
+          aria-label="Expand"
+          aria-controls="additional-actions1-content"
+          id="additional-actions1-header"
         >
+          <FormControlLabel
+            aria-label="Acknowledge"
+            onClick={event => addSub(event)}
+            onFocus={event => event.stopPropagation()}
+            control={<Button><AddIcon></AddIcon></Button>}
+          />
           <Typography className={classes.heading}>{title}</Typography>
           <Typography className={classes.secondaryHeading}>{shortDesc}</Typography>
+
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
           <Typography>

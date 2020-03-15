@@ -8,6 +8,10 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      belongedId : {
+        type: Sequelize.NUMBER,
+        allowNull: false,
+      }
     });
   return supplierNote;
 };
