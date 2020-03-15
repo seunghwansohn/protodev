@@ -36,33 +36,26 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-
-
 const SingleTask = ({
   projectCode, 
-  level, 
-  idx, 
-  belongedIdx, 
   onchecked, 
-  showData, 
-  rawData, 
   addSub, 
-  id, 
   children, 
-  rawArr
+  rawArr,
+  level
 }) => {
 
   const classes     = useStyles();
   const projectName = projectCode
 
-  const onCheckBox = (e, index) => {
-    onchecked(index, projectCode, idx)
-  }
+  // const onCheckBox = (e, index) => {
+  //   onchecked(index, projectCode, idx)
+  // }
 
-  const onAddSub = () => {
-    addSub(projectCode, level, belongedIdx, idx)
-  }
-  // console.log('rawArr은 ',  rawArr)
+  // const onAddSub = () => {
+  //   addSub(projectCode, level, belongedIdx, idx)
+  // }
+  // // console.log('rawArr은 ',  rawArr)
 
   const numberFormat = () => {
     let format = ''
@@ -85,31 +78,31 @@ const SingleTask = ({
     return tempArr
   }
 
-  let matchedSubArr = () => {
-    let tempArr = []
-    rawArr.map(obj => {
-      if (obj.level >= level + 1 && obj.belongedIdx == idx) {
-        tempArr.push(obj)
-      }    
-    })
-    return tempArr
-  }
-
-  console.log(matchedArr())
-  console.log(matchedSubArr())
-
   return (
-    matchedArr().map(obj => {
+    matchedArr().map((obj,index) => {
+
+      let matchedSubArr = () => {
+        let tempArr = []
+        rawArr.map(subObj => {
+          if (subObj.level >= obj.level + 1 && subObj.belongedIdx == obj.idx) {
+            tempArr.push(subObj)
+          }    
+        })
+        return tempArr
+      }
+
+      console.log(matchedSubArr())
+
       return(
         <React.Fragment>
           <Grid container item xs = {12}>
             <Grid item xs = {11} className = {classes.grid}>
-              <Checkbox idx = {idx} onChange = {(e, index) => onCheckBox(e, index)}>
+              <Checkbox>
               </Checkbox>
 
               <Button 
                 size = 'small'
-                onClick = {onAddSub}
+                // onClick = {onAddSub}
               >
                 <AddIcon fontSize = 'small'></AddIcon>
               </Button>
@@ -130,6 +123,14 @@ const SingleTask = ({
               </Button>
             </Grid>
           </Grid>
+          <SingleTask
+            key         = {index}
+            level       = {level + 1}
+            projectCode = {projectName}
+            onchecked   = {onchecked}
+            rawArr      = {matchedSubArr()}
+          >
+          </SingleTask>
         </React.Fragment>
       )
     })

@@ -203,7 +203,6 @@ export const ProjectTaskList = () => {
   useEffect(() => {
     setDialogOpen(checkIfCheckedBox())
   },[checkedArr])
-  console.log(tmpRawData)
   return (
     <React.Fragment>
 
@@ -230,32 +229,14 @@ export const ProjectTaskList = () => {
                   let ArrSubLevel = []
                   let idx = ''
                   return (
-                    tasks.map((task, index) => {
-                      let matchCount = 0
-                      let ArrMatched = []
-                      idx = task.idx
-                      addedNewTask.map((obj, index) => {
-                        if (obj.belongedIdx == task.idx) {
-                          matchCount = matchCount + 1
-                          ArrMatched.push(obj)
-                        }
-                      })                   
-                      return (
-                        <SingleTask
-                          key         = {index}
-                          projectCode = {projectName}
-                          idx         = {task.idx}
-                          belongedIdx = {task.belongedIdx}
-                          onchecked   = {onchecked}
-                          level       = {task.level}
-                          rawData     = {task}
-                          showData    = {task.note}
-                          id          = {task.id}
-                          addSub      = {addSubTask}
-                          rawArr      = {tasks}
-                        ></SingleTask>
-                      )
-                    })
+                    <SingleTask
+                      key         = {index}
+                      level       = {level}
+                      projectCode = {projectName}
+                      onchecked   = {onchecked}
+                      addSub      = {addSubTask}
+                      rawArr      = {tasks}
+                    ></SingleTask>
                   )
                 })()
                 :'노트없음'}
