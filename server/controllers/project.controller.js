@@ -27,7 +27,7 @@ exports.addNew = (req, res) => {
 
 exports.load = (req, res) => {
     Main.findAll({
-      include:[{model : Note, as : 'notes'}]
+      include:[{model : Note, as : 'tasks'}]
     }).then(project => {
             result = project
         }).then(() => {

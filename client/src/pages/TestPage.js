@@ -89,7 +89,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const basicBlankTask = {title:'', type : 'basic', urgent : false, staffCode : ''}
+const basicBlankTask = {title:'', projectCode : 'basic', urgent : false, staffCode : ''}
 
 const StyledMenuItem = withStyles(theme => ({
   root: {
@@ -140,7 +140,6 @@ export const ProjectTaskList = () => {
         if(obj.project !== project || obj.idx !== idx) {
           temp = obj
         }
-        console.log(temp)
         return temp
       })
       setCheckedArr(tempArr)
@@ -160,15 +159,17 @@ export const ProjectTaskList = () => {
     // console.log(comment)
   }
   
-  const addSubTask = (type, idx, id) => {
-    // console.log('서브태스크추가', type, idx, id)
+  const addSubTask = (projectCode, level, belongedIdx, idx) => {
+    console.log(projectCode, level, belongedIdx, idx)
     setAddedNewTask(
       produce(addedNewTask, draft => {
-        draft.push({type : type, idx : idx, belongedId : id, value : null})
+        draft.push({projectCode : projectCode, level : level, idx : idx, belongedIdx : idx, value : ''})
       })
     )
   }
 
+  // console.log(tmpRawData)
+  // console.log(addedNewTask)
 
   const dialogStates = {
     open : dialogOpen
@@ -202,7 +203,7 @@ export const ProjectTaskList = () => {
   useEffect(() => {
     setDialogOpen(checkIfCheckedBox())
   },[checkedArr])
-
+  console.log(tmpRawData)
   return (
     <React.Fragment>
 
@@ -214,53 +215,50 @@ export const ProjectTaskList = () => {
 
       {tmpRawData.length > 0 ? 
         tmpRawData.map((project, index) => {
-          const {projectName, shortDesc, desc, notes} = project
+          const {projectName, shortDesc, desc, tasks} = project
+          const level = 0
           return (
-            <React.Fragment>
+            <React.Fragment key = {index}>
               <ExpantionPane 
+                key   = {index}
                 title = {projectName} 
                 shortDesc = {shortDesc} 
                 desc = {desc}
                 addSubTask = {addSubTask}
               >
-                {notes.length > 0 ? (function () {
+                {tasks.length > 0 ? (function () {
+                  let ArrSubLevel = []
+                  let idx = ''
                   return (
-                    notes.map((note, index) => {
+                    tasks.map((task, index) => {
                       let matchCount = 0
                       let ArrMatched = []
-                      addedNewTask.map(obj => {
-                        if (obj.belongedId == note.id) {
+                      idx = task.idx
+                      addedNewTask.map((obj, index) => {
+                        if (obj.belongedIdx == task.idx) {
                           matchCount = matchCount + 1
                           ArrMatched.push(obj)
                         }
-                      })
+                      })                   
                       return (
                         <SingleTask
-                          type        = {projectName}
-                          idx         = {index +1}
+                          key         = {index}
+                          projectCode = {projectName}
+                          idx         = {task.idx}
+                          belongedIdx = {task.belongedIdx}
                           onchecked   = {onchecked}
-                          className   = {classes.grid}
-                          rawData     = {note}
-                          showData    = {note.note}
-                          id          = {note.id}
+                          level       = {task.level}
+                          rawData     = {task}
+                          showData    = {task.note}
+                          id          = {task.id}
                           addSub      = {addSubTask}
-                          subArr      = {ArrMatched}
+                          rawArr      = {tasks}
                         ></SingleTask>
                       )
                     })
                   )
                 })()
                 :'노트없음'}
-                {addedNewTask.map(obj => {
-                  return (
-                    <SingleTask
-                      rawData = {obj}
-                    >
-
-                    </SingleTask>
-                  )
-                })}
-
               </ExpantionPane>
 
             </React.Fragment>

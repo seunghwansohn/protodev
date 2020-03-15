@@ -38,65 +38,101 @@ const useStyles = makeStyles(theme => ({
 
 
 
-const SingleTask = ({type, idx, onchecked, showData, rawData, addSub, id, subArr, children}) => {
+const SingleTask = ({
+  projectCode, 
+  level, 
+  idx, 
+  belongedIdx, 
+  onchecked, 
+  showData, 
+  rawData, 
+  addSub, 
+  id, 
+  children, 
+  rawArr
+}) => {
+
   const classes     = useStyles();
+  const projectName = projectCode
 
   const onCheckBox = (e, index) => {
-    onchecked(index, type, idx)
+    onchecked(index, projectCode, idx)
   }
 
   const onAddSub = () => {
-    addSub(type, idx, id)
+    addSub(projectCode, level, belongedIdx, idx)
+  }
+  // console.log('rawArr은 ',  rawArr)
+
+  const numberFormat = () => {
+    let format = ''
+    if (level == 0) {
+      format = '.'
+    }
+    if (level == 1) {
+      format = ')'
+    }
+    return format
   }
 
-  console.log(subArr)
+  let matchedArr = () => {
+    let tempArr = []
+    rawArr.map(obj => {
+      if (obj.level == level) {
+        tempArr.push(obj)
+      }    
+    })
+    return tempArr
+  }
+
+  let matchedSubArr = () => {
+    let tempArr = []
+    rawArr.map(obj => {
+      if (obj.level >= level + 1 && obj.belongedIdx == idx) {
+        tempArr.push(obj)
+      }    
+    })
+    return tempArr
+  }
+
+  console.log(matchedArr())
+  console.log(matchedSubArr())
+
   return (
-    <React.Fragment>
-      {children}
-      <Grid container item xs = {12}>
-        <Grid item xs = {11} className = {classes.grid}>
-            <Checkbox idx = {idx} onChange = {(e, index) => onCheckBox(e, index)}>
-            </Checkbox>
+    matchedArr().map(obj => {
+      return(
+        <React.Fragment>
+          <Grid container item xs = {12}>
+            <Grid item xs = {11} className = {classes.grid}>
+              <Checkbox idx = {idx} onChange = {(e, index) => onCheckBox(e, index)}>
+              </Checkbox>
 
-            <Button 
-              size = 'small'
-              onClick = {onAddSub}
-            >
-              <AddIcon fontSize = 'small'></AddIcon>
-            </Button>
+              <Button 
+                size = 'small'
+                onClick = {onAddSub}
+              >
+                <AddIcon fontSize = 'small'></AddIcon>
+              </Button>
 
-            {rawData.belongedId == null ? idx +'.' : ''}
-            <TextField
-              id="standard-full-width"
-              style={{ width : 1000 }}
-              placeholder=""
-              fullWidth
-              margin="dense"
-              value = {showData}
-              disabled
-            />
-        </Grid>
-        <Grid item xs = {1} className = {classes.grid}>
-          <Button >
-            <DeleteIcon></DeleteIcon>
-          </Button>
-        </Grid>
-      </Grid>
-      {subArr && subArr.length > 0 ? 
-        <SubSingleTask
-        // type        = {projectName}
-        // idx         = {index +1}
-        // onchecked   = {onchecked}
-        // className   = {classes.grid}
-        rawData     = {subArr}
-        // showData    = {note.note}
-        // id          = {note.id}
-        // addSub      = {addSubTask}
-        // subArr      = {ArrMatched}
-      >푸하하하하</SubSingleTask>
-      :''}
-
-    </React.Fragment>
+              {/* {rawData.belongedId == null ? idx + numberFormat() : ''} */}
+              <TextField
+                id="standard-full-width"
+                style={{ width : 1000 }}
+                placeholder=""
+                fullWidth
+                margin="dense"
+                value = {obj.note}
+              />
+            </Grid>
+            <Grid item xs = {1} className = {classes.grid}>
+              <Button >
+                <DeleteIcon></DeleteIcon>
+              </Button>
+            </Grid>
+          </Grid>
+        </React.Fragment>
+      )
+    })
   )
 }
 

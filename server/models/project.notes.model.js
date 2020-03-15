@@ -8,7 +8,15 @@ module.exports = (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      belongedId : {
+      belongedIdx : {
+        type: Sequelize.NUMBER,
+        allowNull: false,
+      },
+      level : {
+        type: Sequelize.NUMBER,
+        allowNull: false,
+      },
+      idx : {
         type: Sequelize.NUMBER,
         allowNull: false,
       }
