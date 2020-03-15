@@ -77,7 +77,15 @@ const SingleTask = ({
     })
     return tempArr
   }
-
+  
+  const indent = (count) =>{
+    let blank = `　`
+    for (let i=0; i < count; i++) {
+      blank = blank + blank
+    }
+    return blank
+  }
+  console.log('레벨은 ', level)
   return (
     matchedArr().map((obj,index) => {
 
@@ -106,7 +114,7 @@ const SingleTask = ({
               >
                 <AddIcon fontSize = 'small'></AddIcon>
               </Button>
-
+              {level > 0 ? indent(level - 0) : ''}
               {/* {rawData.belongedId == null ? idx + numberFormat() : ''} */}
               <TextField
                 id="standard-full-width"
