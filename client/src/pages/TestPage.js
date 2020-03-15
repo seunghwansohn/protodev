@@ -100,65 +100,17 @@ const StyledMenuItem = withStyles(theme => ({
 
 export const ProjectTaskList = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
   const [projects, setProjects]         = useState([]);
   const [tmpRawData, setTmpRawData]     = useState([]);
 
-  const [checked, setChecked]           = useState([0]);
-  const [taskArr, setTaskArr]           = useState([basicBlankTask]);
-  const [anchorEl, setAnchorEl]         = useState(null);
-  const [notes, setNotes]               = useState([]);
   const [checkedArr, setCheckedArr]     = useState([]);
+  const [checkedNow, setCheckedNow]     = useState({})
   const [dialogOpen, setDialogOpen]     = useState(false)
   const [comment, setComment]           = useState('')
-  const [checkedNow, setCheckedNow]     = useState({})
 
   const [addedNewTask, setAddedNewTask]     = useState([])
-
-
-  const dispatch = useDispatch();
-
-  const openMenu = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleToggle = value => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-    setChecked(newChecked);
-  };
-
-  const onClickMenus = () => {
-    console.log('메뉴클릭드')
-  }
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-  const handleKeyPress = (e, index)=> {
-    if (e.key ==='Tab') {
-      e.preventDefault()
-      console.log('탭키다운')
-      setAnchorEl(e.currentTarget);
-    }
-    if (e.key ==='`') {
-      e.preventDefault()
-      console.log('`키다운`')
-      setAnchorEl(e.currentTarget);
-    }
-  }
-
-  const handleArrChange = (e, index) => {
-    setTaskArr(
-      produce(taskArr, draft => {
-        draft[index].title = e.target.value
-      }
-    ))
-  }
 
   const getProjectTaskListData = async () => {
     await axios.get('/api/' + 'project' + '/load').then(res => {
@@ -241,16 +193,6 @@ export const ProjectTaskList = () => {
     getProjectTaskListData()
   },[])
 
-  useEffect(() => {
-    const arrLength = taskArr.length
-    if (taskArr[arrLength -1].title.length == 1) {
-      setTaskArr(
-        produce(taskArr, draft => {
-          draft.push(basicBlankTask)
-        })
-      );
-    }
-  },[taskArr[taskArr.length - 1]])
 
   useEffect(() => {
     setDialogOpen(checkIfCheckedBox())
@@ -320,36 +262,6 @@ export const ProjectTaskList = () => {
           )
         })
       :''}
-
-      <StyledMenu
-        id="customized-menu"
-        anchorEl={anchorEl}
-        keepMounted
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
-        <StyledMenuItem onClick = {onClickMenus}>
-          <ListItemIcon>
-            <CheckBoxIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Add Check Box" />
-        </StyledMenuItem>
-
-        <StyledMenuItem>
-          <ListItemIcon>
-            <FormatListNumberedIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Add Numbered Lists" />
-        </StyledMenuItem>T
-
-        <StyledMenuItem>
-          <ListItemIcon>
-            <InboxIcon fontSize="small" />
-          </ListItemIcon>
-          <ListItemText primary="Inbox" />
-        </StyledMenuItem>
-      </StyledMenu>
-
     </React.Fragment>
   );
 }
