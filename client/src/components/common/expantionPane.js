@@ -63,9 +63,7 @@ const ControlledExpansionPanels = (props) => {
 
         </ExpansionPanelSummary>
         <ExpansionPanelDetails>
-          <Typography>
-            {props.children}
-          </Typography>
+          <div>{props.children}</div>
         </ExpansionPanelDetails>
       </ExpansionPanel>
     </div>
