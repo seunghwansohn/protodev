@@ -15,6 +15,8 @@ import { makeStyles }                           from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import AddIcon from '@material-ui/icons/Add';
 
+import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRight';
+
 import SubSingleTask from './singleTask'
 
 const useStyles = makeStyles(theme => ({
@@ -42,7 +44,8 @@ const SingleTask = ({
   addSub, 
   children, 
   rawArr,
-  level
+  level,
+  setAddSub
 }) => {
 
   const classes     = useStyles();
@@ -85,6 +88,11 @@ const SingleTask = ({
     }
     return blank
   }
+
+  const onAddSub = (obj) =>{
+    setAddSub(obj)
+  }
+
   console.log('레벨은 ', level)
   return (
     matchedArr().map((obj,index) => {
@@ -114,6 +122,9 @@ const SingleTask = ({
               >
                 <AddIcon fontSize = 'small'></AddIcon>
               </Button>
+              <Button onClick = {(e) => setAddSub(obj)}>
+                <SubdirectoryArrowRightIcon></SubdirectoryArrowRightIcon>
+              </Button>
               {level > 0 ? indent(level - 0) : ''}
               {/* {rawData.belongedId == null ? idx + numberFormat() : ''} */}
               <TextField
@@ -137,6 +148,7 @@ const SingleTask = ({
             projectCode = {projectName}
             onchecked   = {onchecked}
             rawArr      = {matchedSubArr()}
+            setAddSub    = {onAddSub}
           >
           </SingleTask>
         </React.Fragment>

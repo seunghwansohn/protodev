@@ -44,6 +44,7 @@ import { setFinishTask }      from '../modules/task';
 import axios                  from '../lib/api/axios'
 
 import produce                from 'immer'
+import { NoMeetingRoom } from '@material-ui/icons';
 
 const StyledMenu = withStyles({
   paper: {
@@ -154,6 +155,38 @@ export const ProjectTaskList = () => {
     return ox
   }
 
+  const onAddSub = (obj) => {
+    console.log(tmpRawData)
+    let arrNo = null
+    let idxArr = []
+    tmpRawData.map((rawObj, index) => {
+      if (rawObj.projectCode == obj.projectCode) {
+        arrNo = index
+        rawObj.tasks.map(task => {
+          if (obj.level + 1 == task.level) {
+            idxArr.push(task.idx)
+          }
+        })
+      }
+    })
+    console.log(arrNo)
+    console.log(idxArr)
+
+    const lastNo = () => {
+      return Math.max.apply(null,idxArr)
+    }
+
+    let newObj = {projectCode : obj.projectCode, note : null, belongedIdx : obj.idx, idx: lastNo() + 1, level : obj.level + 1}
+    console.log(newObj)
+
+    setTmpRawData(
+      produce(tmpRawData, draft => {
+        draft[arrNo].tasks.push(newObj)
+      }
+    ))
+    // console.log(obj)
+  }
+
   const onSubmitComment = (event) => {
     event.preventDefault()
     // console.log(comment)
@@ -236,6 +269,7 @@ export const ProjectTaskList = () => {
                       onchecked   = {onchecked}
                       addSub      = {addSubTask}
                       rawArr      = {tasks}
+                      setAddSub    = {onAddSub}
                     ></SingleTask>
                   )
                 })()
