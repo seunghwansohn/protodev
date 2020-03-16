@@ -13,6 +13,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles }                           from '@material-ui/core/styles';
 
 import TextField from '@material-ui/core/TextField';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import returnSpecialChr       from '../lib/returnSpecialChr'
+
+
 import AddIcon from '@material-ui/icons/Add';
 
 import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRight';
@@ -96,9 +100,11 @@ const SingleTask = ({
   }
 
   console.log('레벨은 ', level)
-  return (
-    matchedArr().map((obj,index) => {
 
+  //여기서부터 리액트 콤포넌트 리턴
+  return (
+
+    matchedArr().map((obj,index) => {
       let matchedSubArr = () => {
         let tempArr = []
         rawArr.map(subObj => {
@@ -108,8 +114,6 @@ const SingleTask = ({
         })
         return tempArr
       }
-
-      console.log(matchedSubArr())
 
       return(
         <React.Fragment>
@@ -128,15 +132,21 @@ const SingleTask = ({
                 <SubdirectoryArrowRightIcon></SubdirectoryArrowRightIcon>
               </Button>
               {level > 0 ? indent(level - 0) : ''}
-              {/* {rawData.belongedId == null ? idx + numberFormat() : ''} */}
               <TextField
                 id="standard-full-width"
                 style={{ width : 1000 }}
                 placeholder=""
                 fullWidth
                 margin="dense"
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">
+                    {obj.belongedId == null ? (obj.idx +1)  + numberFormat() : ''}
+                    {'①'}
+                  </InputAdornment>,
+                }}
                 value = {obj.note}
-              />
+              >
+              </TextField>
             </Grid>
             <Grid item xs = {1} className = {classes.grid}>
               <Button >
