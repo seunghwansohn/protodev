@@ -155,7 +155,7 @@ export const ProjectTaskList = () => {
     return ox
   }
 
-  const onAddSub = (obj) => {
+  const onAddBlank = (obj) => {
     console.log(tmpRawData)
     let arrNo = null
     let idxArr = []
@@ -269,7 +269,8 @@ export const ProjectTaskList = () => {
                       onchecked   = {onchecked}
                       addSub      = {addSubTask}
                       rawArr      = {tasks}
-                      setAddSub    = {onAddSub}
+                      setAddBlank = {onAddBlank}
+                      onAddBlank  = {onAddBlank}
                     ></SingleTask>
                   )
                 })()

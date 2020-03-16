@@ -45,7 +45,8 @@ const SingleTask = ({
   children, 
   rawArr,
   level,
-  setAddSub
+  setAddBlank,
+  onAddBlank
 }) => {
 
   const classes     = useStyles();
@@ -82,15 +83,16 @@ const SingleTask = ({
   }
   
   const indent = (count) =>{
-    let blank = `　`
+    let blank = ''
     for (let i=0; i < count; i++) {
-      blank = blank + blank
+      blank = blank + '　'
     }
     return blank
   }
 
+  
   const onAddSub = (obj) =>{
-    setAddSub(obj)
+    setAddBlank(obj)
   }
 
   console.log('레벨은 ', level)
@@ -122,7 +124,7 @@ const SingleTask = ({
               >
                 <AddIcon fontSize = 'small'></AddIcon>
               </Button>
-              <Button onClick = {(e) => setAddSub(obj)}>
+              <Button onClick = {(e) => onAddSub(obj)}>
                 <SubdirectoryArrowRightIcon></SubdirectoryArrowRightIcon>
               </Button>
               {level > 0 ? indent(level - 0) : ''}
@@ -148,7 +150,8 @@ const SingleTask = ({
             projectCode = {projectName}
             onchecked   = {onchecked}
             rawArr      = {matchedSubArr()}
-            setAddSub    = {onAddSub}
+            setAddBlank = {onAddBlank}
+            onAddBlank  = {onAddBlank}
           >
           </SingleTask>
         </React.Fragment>
