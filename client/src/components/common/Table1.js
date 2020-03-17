@@ -18,6 +18,8 @@ import List             from '@material-ui/core/List';
 import ListItemText     from '@material-ui/core/ListItemText';
 import ListSubheader    from '@material-ui/core/ListSubheader';
 import TablePagination  from '@material-ui/core/TablePagination';
+import InputDialog      from '../common/InputDialog';
+
 
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
@@ -118,6 +120,12 @@ const STTable = ({
 
   const [menuActivated, setMenuActivated]     = useState('');
   const [menuAnchoredEl, setMenuAnchoredEl]   = useState(null);
+
+  const [addCopiedNewDialogOpen, 
+        setAddCopiedNewDialogOpen]          = useState(false)
+
+  const [howManyCopiedNew, 
+        setHowManyCopiedNew]        = useState(null)
 
   const dispatch = useDispatch()
   
@@ -272,6 +280,8 @@ const STTable = ({
     )
   }
 
+
+
   const onKeyPressOnNewAddedInput = (e, header) => {
     console.log(e.target.value, header)
   }
@@ -328,8 +338,51 @@ const STTable = ({
     setPage(0);
   };
 
+  const setAddCopiedNew = (qty) => {
+    setHowManyCopiedNew(qty)
+    console.log(howManyCopiedNew)
+
+    let tempObj = {}
+    Object.keys(selected[0]).map(header => {
+      tempObj[header] = selected[0][header]
+    })
+
+    console.log(tempObj)
+    let tempArr = []
+    for (let i = 0; i < qty; i++) {
+      tempArr.push(tempObj)
+    }
+    console.log(tempArr)
+    setAddedNew(tempArr)
+    //   produce(addedNew, draft => {
+    //     draft = tempArr
+    //   })
+    // )
+  }
+  
+  console.log(addedNew)
+  console.log(selected)
+  const onClickCopiedNew = () => {
+    console.log(selected)
+    setAddCopiedNewDialogOpen(true)
+  }
+
+  const addCopiedNewNoDialogAttr = {
+    question : 'How many new copied?',
+    openState : addCopiedNewDialogOpen,
+    setOpenState : setAddCopiedNewDialogOpen,
+    answer : howManyCopiedNew,
+    setAnswer : setAddCopiedNew
+  }
+
+  console.log(howManyCopiedNew)
   return (
     <React.Fragment>
+
+      <InputDialog
+        attr = {addCopiedNewNoDialogAttr}
+      ></InputDialog>
+
       <div>
         {hided.map(columns => {
           return(
@@ -453,7 +506,8 @@ const STTable = ({
                   if (!isColumnHided && header !== 'id') {
                     return(
                       <StyledTableCell>
-                        <Input 
+                        <Input
+                          value      = {row[header]} 
                           onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                           onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}/>
                       </StyledTableCell>
@@ -480,6 +534,7 @@ const STTable = ({
       <Button onClick = {() => onSubmitNewAdded(addedNew)}>     Submit New </Button>
       <Button onClick = {() => onSubmitUpdatedVals(fixedVals)}> Submit     </Button>
       {selected && selected.length !== 0 ? <Button onClick = {() => {onDelete(selected)}}>Delete</Button> :''}
+      {selected && selected.length !== 0 ? <Button onClick = {() => {onClickCopiedNew(selected)}}>Copied New</Button> :''}
 
     </React.Fragment>
   )

@@ -17,7 +17,7 @@ exports.addNew = (req, res) => {
             makerName: obj.makerName,
             origin: obj.origin,
         }).then(() => {
-            res.send({ message: "supplier added successfully" });
+            res.send({ message: "Maker added successfully" });
         })
       })
     }
