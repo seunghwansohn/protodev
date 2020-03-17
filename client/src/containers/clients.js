@@ -4,7 +4,7 @@ import { connect, useSelector, useDispatch } from 'react-redux';
 import ClientMain from '../components/clientMain'
 import {setClientLoad} from '../modules/clients'
 import {setInsertClient} from '../modules/quote'
-import Table from '../components/common/Table'
+import Table from '../components/common/Table1'
 import ContactForm from '../components/clientAdd'
 import DialogST from '../components/common/DialogST'
 import ClientAdd from '../components/clientAdd'

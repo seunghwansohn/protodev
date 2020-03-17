@@ -141,7 +141,7 @@ const STTable = ({
     setTableHeaderVals(headers)
   },[rawData])
 
-
+  console.log(tableArr)
   console.log(rawData[0])
   console.log(headers)
 
@@ -354,14 +354,8 @@ const STTable = ({
     }
     console.log(tempArr)
     setAddedNew(tempArr)
-    //   produce(addedNew, draft => {
-    //     draft = tempArr
-    //   })
-    // )
   }
   
-  console.log(addedNew)
-  console.log(selected)
   const onClickCopiedNew = () => {
     console.log(selected)
     setAddCopiedNewDialogOpen(true)

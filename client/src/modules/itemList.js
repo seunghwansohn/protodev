@@ -1,169 +1,87 @@
-import produce                                        from 'immer'
+import produce from 'immer'
 import { createAction, handleActions }                from 'redux-actions';
-import { takeLatest, call }                           from 'redux-saga/effects';
+import { takeLatest, takeEvery, call }                from 'redux-saga/effects';
 import createRequestSaga, {createRequestActionTypes } from '../lib/createRequestSaga';
-import * as item                                      from '../lib/api/item';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import monolizeObj from '../lib/monolizeObj'
+import * as item                                     from '../lib/api/item';
 
-toast.configure()
-
-const [APILOAD, APILOAD_SUCCESS, APILOAD_FAILURE ] 
-= createRequestActionTypes('itemList/APILOAD');
-const [NEWITEM, NEWITEM_SUCCESS, NEWITEM_FAILURE ] 
-= createRequestActionTypes('itemList/NEWITEM');
-const [NEWCOPIED, NEWCOPIED_SUCCESS, NEWCOPIED_FAILURE ] 
-= createRequestActionTypes('itemList/NEWCOPIED');
-const [SETSUBMITADDITEM, SETSUBMITADDITEM_SUCCESS, SETSUBMITADDITEM_FAILURE ] 
-= createRequestActionTypes('itemList/SETSUBMITADDITEM');
-
-const apiLoadSaga   = createRequestSaga(APILOAD, item.load);
-const newItemSaga   = createRequestSaga(NEWITEM, item.newItem);
-const newCopiedSaga = createRequestSaga(NEWCOPIED, item.newCopied);
-const addItemSaga   = createRequestSaga(SETSUBMITADDITEM, item.addItem);
-
-export const CLICK_BUTTON_HEADER      = 'item/CLICK_BUTTON_HEADER'
-export const IS_THERE_SELECTED        = 'item/IS_THERE_SELECTED'
-export const SELECT_ITEMS             = 'item/SELECT_ITEMS'
-export const CHANGE_NEW_ITEM_SPECS    = 'item/CHANGE_NEW_ITEM_SPECS'
-export const SET_HEADER               = 'item/SET_HEADER'
-export const SET_SELECTED_ITEMS       = 'item/SET_SELECTED_ITEMS'
-export const SET_ITEM_QUERY_INIT_LOAD = 'item/SET_ITEM_QUERY_INIT_LOAD'
-
-export const setApiLoad         = createAction(APILOAD)
-export const setNewItem         = createAction(NEWITEM, (newItemValues) => (newItemValues))
-export const checkedItem        = createAction(NEWCOPIED, itemCode => itemCode)
-export const IsThereSelected    = createAction(IS_THERE_SELECTED, ox => ox)
-export const selectItems        = createAction(SELECT_ITEMS, newSelected => newSelected)
-export const clickButtonHeader  = createAction(CLICK_BUTTON_HEADER, type => type)
-export const changeNewItemSpecs = createAction(CHANGE_NEW_ITEM_SPECS, spec => spec)
-export const setHeader          = createAction(SET_HEADER, columns => columns)
-export const setSelectedItems   = createAction(SET_SELECTED_ITEMS, items => items)
-export const setSubmitAddItem   = createAction(SETSUBMITADDITEM, item => item)
-
-export function* itemsSaga() {
-  yield takeLatest(APILOAD, apiLoadSaga);
-  yield takeLatest(NEWITEM, newItemSaga);
-  yield takeLatest(NEWCOPIED, newCopiedSaga);
-  yield takeLatest(SETSUBMITADDITEM, addItemSaga);
-}
 
 const initialState = {
-    pickedCount: 0,
-    pdfWorks : 
-      {
-        pdfBlobUrl : ''
-      },
-    quoteList:{
-      SelectedCustomerCode : 'sdfsdf'
-    },
-    addItem : {
-      copiedItem : ''
-    },
-    headerButton : {
-      clicked : '',
-    },
-    dialogs : {
-      opened : [],
-      closed : []
-    },
     table : {
-      contents: [],
-      header: [],
-      isThereSelected : '',
-      selectedItem : []
-    },
-};
+        header : [],
+        contents : [],
+        update : false
+    }
+}
+
+export const SET_HEADER             = 'item/SET_HEADER'
+export const SET_INPUT_CHANGE       = 'item/SET_INPUT_CHANGE'
+export const SET_UPDATE_CHANGE      = 'item/SET_UPDATE_CHANGE'
+export const SET_CLICKED_TABLE_COL  = 'item/SET_CLICKED_TABLE_COL'
+
+const [SET_ADD, SET_ADD_SUCCESS, SET_ADD_FAILURE ] 
+= createRequestActionTypes('item/SET_ADD');
+const [SET_UPDATE, SET_UPDATE_SUCCESS, SET_UPDATE_FAILURE ] 
+= createRequestActionTypes('item/SET_UPDATE');
+const [SET_LOAD, SET_LOAD_SUCCESS, SET_LOAD_ADD_FAILURE ] 
+= createRequestActionTypes('item/SET_LOAD');
+const [SET_DELETE, SET_DELETE_SUCCESS, SET_DELETE_FAILURE ] 
+= createRequestActionTypes('item/SET_DELETE');
+
+const addSaga       = createRequestSaga(SET_ADD, item.addNew);
+const loadSaga      = createRequestSaga(SET_LOAD, item.load);
+const updateSaga    = createRequestSaga(SET_UPDATE, item.update);
+const deleteSaga    = createRequestSaga(SET_DELETE, item.del);
+
+export const setHeader          = createAction(SET_HEADER, columns => columns)
+export const setAdd             = createAction(SET_ADD, info => info)
+export const setLoad            = createAction(SET_LOAD)
+export const setUpdate          = createAction(SET_UPDATE, arr => arr)
+export const updateChange       = createAction(SET_UPDATE_CHANGE, ox => ox)
+export const setClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
+export const setDelete          = createAction(SET_DELETE, (type, code) => ({type, code}))
+
+export function* itemSaga() {
+    yield takeLatest(SET_ADD,    addSaga);
+    yield takeLatest(SET_LOAD,   loadSaga);
+    yield takeEvery(SET_UPDATE, updateSaga);
+    yield takeEvery (SET_DELETE, deleteSaga);
+}
+
 
 function reducer (state = initialState, action) {
-  switch (action.type) {
-
-      case APILOAD_SUCCESS:
-        const newItemListArr = []
-        const itemListArr = action.payload
-        itemListArr.map(itemList => {
-          let newItemList = monolizeObj(itemList)
-          newItemListArr.push(newItemList)
-        })
-        return produce(state, draft =>{
-          draft.table.contents = newItemListArr
-        })
-
-      case CLICK_BUTTON_HEADER:
-        const type = action.payload
-        switch(type) {
-          case 'itemAdd' :
-            return produce(state, draft =>{
-              if (!draft.dialogs.opened.includes(type)) {
-                draft.dialogs.opened.push(type)
-              }
-                draft.headerButton.clicked = type
+    switch (action.type) {
+        case SET_UPDATE_CHANGE:
+            return produce(state, draft => {
+                draft.table.update = action.payload
             })
-          case 'check' :
-            return produce(state, draft =>{
-              if (!draft.dialogs.opened.includes(type)) {
-                draft.dialogs.opened.push(type)
-              }
-                draft.headerButton.clicked = type
+        case SET_HEADER:
+            return produce(state, draft => {
+                draft.table.header = action.payload
             })
-        default: 
+        case SET_ADD_SUCCESS:
+            return produce(state, draft => {
+                draft.table.header = action.payload
+                draft.table.update = true
+            })
+        case SET_UPDATE_SUCCESS:
+            return produce(state, draft => {
+                draft.table.update = true
+            })
+        case SET_DELETE_SUCCESS:
+            return produce(state, draft => {
+                draft.table.header = action.payload
+                draft.table.update = true
+            })
+        case SET_CLICKED_TABLE_COL:
+            return produce(state, draft => {
+                console.log(action.payload)
+            })
+        case SET_DELETE:
+            return produce(state, draft => {
+                console.log(action.payload)
+            })
+        default:
             return state;
-        }
-      
-      case NEWCOPIED_SUCCESS:
-        return produce(state, draft => {
-          draft.addItem.copiedItem = action.payload
-        })
-
-      case NEWITEM_SUCCESS:
-        if (action.meta.data.error.length > 0){
-          toast(action.meta.data.error[0].message)
-        }
-        return produce(state, draft => {
-          if (action.payload == '성공') {
-            toast('New item successfully added!')
-          }
-        })
-
-      case NEWITEM_FAILURE:
-        return produce(state, draft => {
-          if (action.payload == '성공') {
-            toast('New item successfully added!')
-          }
-        }) 
-      
-      case IS_THERE_SELECTED:
-        return produce(state, draft =>{
-          draft.table.isThereSelected = action.payload})
-
-      case SELECT_ITEMS:
-        return produce(state, draft => {
-          draft.table.selectedItem = action.payload})
-
-      case CHANGE_NEW_ITEM_SPECS:
-        return produce(state, draft => {
-          draft.addItem.copiedItem = action.payload
-        })
-      
-      case SET_HEADER:
-        return produce(state, draft => {
-          draft.table.header = action.payload
-        })
-
-      case SET_SELECTED_ITEMS:
-        return produce(state, draft => {
-          draft.table.selectedItem = action.payload
-        })
-      case SETSUBMITADDITEM_SUCCESS:
-        return produce(state, draft => {
-        })
-      case SETSUBMITADDITEM_FAILURE:
-        return produce(state, draft => {
-        })
-  
-      default:
-        return state;
     } 
 }
 

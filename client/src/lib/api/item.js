@@ -1,24 +1,11 @@
 import axios from './axios';
 
 // 로그인
-export const load = () => axios.get('/api/item/all');
 
-export const newItem = (submitValues) => {
-  return axios.post('/api/item/new', submitValues)
-}
+export const addNew = (info) => axios.post('/api/item/addNew', info);
 
-export const newCopied = (itemCode) => axios.post('/api/item/newCopied', {itemCode:itemCode})
+export const load = () => axios.get('/api/item/load');
 
-// 회원가입
-export const register = ({ username, password }) =>
-  axios.post('/api/auth/signin', { username, password });
+export const update = (info) => axios.post('/api/item/update', info);
 
-// 로그인 상태 확인
-export const check = () => axios.get('/api/auth/check');
-
-// 로그아웃
-export const logout = () => axios.post('/api/auth/logout');
-
-export const checkExistInDatabase = (table, checkVal) => axios.post('/api/item/checkExist', {table:table, checkVal:checkVal});
-
-export const addItem = (item) => axios.post('/api/item/add', {item:item});
+export const del = (obj) => axios.post('/api/' + obj.type + '/delete', obj);

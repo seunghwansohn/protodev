@@ -2,7 +2,7 @@ import React        from 'react'
 import TableContainer from '@material-ui/core/TableContainer';
 import TableRow     from '@material-ui/core/TableRow';
 import TableCell    from '@material-ui/core/TableCell';
-import Table from './common/Table'
+import Table from './common/Table1'
 import TableHead    from '@material-ui/core/TableHead';
 import TableBody    from '@material-ui/core/TableBody';
 import Viewer       from './viewer'

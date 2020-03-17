@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { connect, useSelector, useDispatch } from 'react-redux';
 
 import QuoteListComponent from '../components/quoteList'
-import Table from '../components/common/Table'
+import Table from '../components/common/Table1'
 import QueryHeader from '../components/common/queryHeader'
 import DialogST from '../components/common/DialogST'
 

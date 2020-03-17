@@ -1,7 +1,7 @@
 import { combineReducers }  from 'redux';
 import {all}                from 'redux-saga/effects'
 
-import itemList, {itemsSaga}    from './itemList'
+import item, {itemSaga}    from './itemList'
 import quoteList, {quoteSaga}   from './quote'
 import mainSearch               from './mainSearch'
 import clients, {clientsSaga}   from './clients'
@@ -26,7 +26,7 @@ import { reducer as formReducer } from 'redux-form'
 import reduxFormInit from './reduxForm'
 
 const rootReducer = combineReducers({
-    itemList,
+    item,
     quoteList,
     mainSearch,
     loading,
@@ -50,7 +50,7 @@ export function* rootSaga () {
     yield all([
         authSaga(),
         userSaga(),
-        itemsSaga(),
+        itemSaga(),
         tableSaga(),
         authtestSaga(),
         quoteSaga(),

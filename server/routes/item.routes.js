@@ -12,7 +12,7 @@ module.exports = function(app) {
     next();
   });
 
-  app.get("/api/item/all", controller.itemLoad);
+  app.get("/api/item/load", controller.itemLoad);
   app.get("/api/item/VNSelling", controller.VNSellingItemLoad);
   app.post("/api/item/new", controller.newItem)
   app.post("/api/item/newCopied", controller.newCopied)
@@ -20,4 +20,6 @@ module.exports = function(app) {
   app.post("/api/item/checkExist", controller.check)
   app.post("/api/item/add", controller.newItem)
   app.post("/api/item/query", controller.query)
+  app.post("/api/item/delete/", controller.delete);
+
 };

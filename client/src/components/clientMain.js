@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types';
-import Table from './common/Table'
+import Table from './common/Table1'
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';

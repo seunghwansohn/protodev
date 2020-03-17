@@ -23,6 +23,14 @@ exports.itemLoad = (req, res) => {
       })
 };
 
+exports.delete = async (req, res) => {
+  console.log(req.body)
+  let draft = await Item.findOne({where:{itemCode :req.body.code}})
+  await draft.destroy().then(()=> {
+      res.status(200).send('deleted Successfully')
+  });
+};
+
 exports.VNSellingItemLoad = (req, res) => {
   let items = ''
   Item.findAll().then(users => {
