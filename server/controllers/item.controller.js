@@ -9,6 +9,42 @@ const Role = db.role;
 
 const Op = db.Sequelize.Op;
 
+exports.addNew = (req, res) => {
+  const Arr = req.body
+  console.log(Arr)
+  try {
+    Arr.map(obj => {
+      console.log(obj)
+      Item.create(obj).then(() => {
+          res.send({ message: "item added successfully" });
+      })
+    })
+  }
+  catch (err) {
+    res.status(500).send({message:err.message})
+    console.log(err.message)
+  }
+};
+
+exports.update = async (req, res) => {
+  let data = req.body
+  let { ref,vals } = data
+  try {
+      const draft = await Item.findOne({where:ref})
+      keys = await Object.keys(vals)
+
+      keys.map(async key => {
+          draft[key] = vals[key]
+      })
+      await draft.save().then(() => {
+          res.status(200).send('updated Successfully')
+      })
+  }
+  catch (err) {
+
+  }
+};
+
 exports.itemLoad = (req, res) => {
     let result = ''
     const includingKey = 'Price'

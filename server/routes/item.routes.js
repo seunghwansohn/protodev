@@ -21,5 +21,6 @@ module.exports = function(app) {
   app.post("/api/item/add", controller.newItem)
   app.post("/api/item/query", controller.query)
   app.post("/api/item/delete/", controller.delete);
-
+  app.post("/api/item/update/", controller.update);
+  app.post("/api/item/addNew", controller.addNew)
 };
