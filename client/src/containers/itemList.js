@@ -1,34 +1,30 @@
-import React, { useState, useEffect } from 'react'
-import { connect, useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect }           from 'react'
+import { connect, useSelector, useDispatch }    from 'react-redux';
 
-import {checkedItem, IsThereSelected} from '../modules/itemList'
-import { setSearchKeyword } from '../modules/mainSearch'
-import { onAlreadyPickedCheck } from '../modules/quote'
-import { setAuthReset } from '../modules/auth'
-import { onDialogOpen } from '../modules/dialogs'
-
+import {checkedItem, IsThereSelected}   from '../modules/itemList'
+import { setSearchKeyword }             from '../modules/mainSearch'
+import { onAlreadyPickedCheck }         from '../modules/quote'
+import { setAuthReset }                 from '../modules/auth'
+import { onDialogOpen }                 from '../modules/dialogs'
+import { getExchangeRate }              from '../modules/basicInfo'
 import {
-    setUpdate, 
-    updateChange, 
-    setClickedTableCol,
-    setAdd,
-    setDelete
-}                            from '../modules/itemList'
+    actUpdate, 
+    actUpdateChange, 
+    actClickedTableCol,
+    actAdd,
+    actDelete
+}                                       from '../modules/itemList'
 
-import { getExchangeRate } from '../modules/basicInfo'
-
-import SearchAppBar from '../components/common/appBar'
-import DialogST from '../components/common/DialogST'
-import Table from '../components/common/Table1'
+import DialogST     from '../components/common/DialogST'
+import Table        from '../components/common/Table1'
 import ButtonHeader from '../components/common/ButtonHeader'
 // // import ItemAdd from '../components/ItemAdd'
 // import ItemQuery from '../components/ItemQuery'
 // import SupplierAdd from '../components/supplierAdd'
 
-import axios from '../lib/api/axios'
-
-import spacelize from '../lib/spacelize'
-import {getIncludingKeys, withoutIncludingKeys }from '../lib/common'
+import axios                from '../lib/api/axios'
+import {getIncludingKeys,
+    withoutIncludingKeys }  from '../lib/common'
 
 
 const tableAttr = {
@@ -37,7 +33,6 @@ const tableAttr = {
 
 const ItemListContainer = () => {
     const dispatch = useDispatch();
-
 
     const type = 'item'
     const [rawData, setRawData]         = useState([])
@@ -49,11 +44,9 @@ const ItemListContainer = () => {
     const [primaryKey, setPrimaryKey]   = useState([]);
     const [includingKeys, 
         setIncludingKeys]               = useState([]);
-
     
     const {update} = useSelector(({ item }) => ({ update : item.table.update }));
-
-    const opened = useSelector(state => state.dialogs.opened)
+    const dialogOpened   = useSelector(state => state.dialogs.opened)
 
 
     const getRawData = async () => {
@@ -63,11 +56,10 @@ const ItemListContainer = () => {
             setRawData(withoutIncludingKeys(res.data.result))
         })
     }
-
-    console.log(primaryKey)
-    const onDelete = async (codes) =>{
+    
+    const setDelete = async (codes) =>{
         await codes.map(code => {
-            dispatch(setDelete(type, code.itemCode))
+            dispatch(actDelete(type, code.itemCode))
         })
         await setUpdated(true)
         await setSelected([])
@@ -75,21 +67,21 @@ const ItemListContainer = () => {
 
     const onSubmitNewAdded = async () => {
         // let obj = {addedNew :}
-        await dispatch(setAdd(addedNew, includingKeys))
+        await dispatch(actAdd(addedNew, includingKeys))
         await getRawData()
         await setAddedNew([])
     }
 
     const onSubmitUpdatedVals = async (fixedVals) => {
         await fixedVals.map(arr => {
-            dispatch(setUpdate(arr))
+            dispatch(actUpdate(arr))
         })
         await setFixedVals([])
     }
 
     const checkOpened = (title) => {
         let result = ''
-        opened.map(array => {
+        dialogOpened.map(array => {
             if (array.type == title){
                 result = array.ox
             }
@@ -101,18 +93,16 @@ const ItemListContainer = () => {
         getRawData()
     },[])
 
-
-
     useEffect(() => {
         if (Object.keys(clickedCol).length > 0) {
-            dispatch(setClickedTableCol(clickedCol))
+            dispatch(actClickedTableCol(clickedCol))
             dispatch(onDialogOpen(true, type, clickedCol))
         } 
     },[clickedCol])
     
     if (update) {
         getRawData()
-        dispatch(updateChange(false))
+        dispatch(actUpdateChange(false))
         setUpdated(true)
     }
 
@@ -136,7 +126,7 @@ const ItemListContainer = () => {
         load : getRawData,
         onSubmitUpdatedVals : onSubmitUpdatedVals,
         onDialogOpen : onDialogOpen,
-        onDelete : onDelete,
+        onDelete : setDelete,
         onSubmitNewAdded : onSubmitNewAdded
     }
 

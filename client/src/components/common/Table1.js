@@ -2,31 +2,41 @@ import React, {useEffect, useState} from 'react';
 import {useDispatch}                from 'react-redux';
 
 import { makeStyles }   from '@material-ui/core/styles';
+
 import Table            from '@material-ui/core/Table';
 import TableBody        from '@material-ui/core/TableBody';
 import TableCell        from '@material-ui/core/TableCell';
-import Button           from '@material-ui/core/Button';
 import TableContainer   from '@material-ui/core/TableContainer';
 import TableHead        from '@material-ui/core/TableHead';
 import TableRow         from '@material-ui/core/TableRow';
+import TablePagination  from '@material-ui/core/TablePagination';
+
 import Checkbox         from '@material-ui/core/Checkbox';
 import Input            from '@material-ui/core/Input';
+
 import Menu             from '@material-ui/core/Menu';
 import MenuItem         from '@material-ui/core/MenuItem';
+
+import Button           from '@material-ui/core/Button';
 import IconButton       from '@material-ui/core/IconButton';
+
 import List             from '@material-ui/core/List';
 import ListItemText     from '@material-ui/core/ListItemText';
 import ListSubheader    from '@material-ui/core/ListSubheader';
-import TablePagination  from '@material-ui/core/TablePagination';
+
+import { ExpandLess, 
+  ExpandMore }          from '@material-ui/icons';
+
 import InputDialog      from '../common/InputDialog';
 
 
-import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
-import {selectMultipleStates, unSelectMultipleStates}       from '../../lib/tableFuncs'
+import spacelize              from '../../lib/spacelize'
+import {selectMultipleStates, 
+  unSelectMultipleStates}     from '../../lib/tableFuncs'
 
-import styled from "styled-components";
-import produce from 'immer'
+import styled   from "styled-components";
+import produce  from 'immer'
 
 const useStyles = makeStyles({
   root: {
@@ -102,7 +112,7 @@ const STTable = ({
 
   const [hided, setHided]                     = useState([]);
   const [fixableCols, setFixableCols]         = useState([]);
-  const [primaryKey, setPrimaryKey]         = useState('');
+  const [primaryKey, setPrimaryKey]           = useState('');
 
   const [order, setOrder]                     = useState('asc');
   const [orderBy, setOrderBy]                 = useState('calories');

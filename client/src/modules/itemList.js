@@ -32,13 +32,13 @@ const loadSaga      = createRequestSaga(SET_LOAD, item.load);
 const updateSaga    = createRequestSaga(SET_UPDATE, item.update);
 const deleteSaga    = createRequestSaga(SET_DELETE, item.del);
 
-export const setHeader          = createAction(SET_HEADER, columns => columns)
-export const setAdd             = createAction(SET_ADD, (addedNew, includingKeys) => ({addedNew, includingKeys}))
-export const setLoad            = createAction(SET_LOAD)
-export const setUpdate          = createAction(SET_UPDATE, arr => arr)
-export const updateChange       = createAction(SET_UPDATE_CHANGE, ox => ox)
-export const setClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
-export const setDelete          = createAction(SET_DELETE, (type, code) => ({type, code}))
+export const actHeader          = createAction(SET_HEADER, columns => columns)
+export const actAdd             = createAction(SET_ADD, (addedNew, includingKeys) => ({addedNew, includingKeys}))
+export const actLoad            = createAction(SET_LOAD)
+export const actUpdate          = createAction(SET_UPDATE, arr => arr)
+export const actUpdateChange    = createAction(SET_UPDATE_CHANGE, ox => ox)
+export const actClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
+export const actDelete          = createAction(SET_DELETE, (type, code) => ({type, code}))
 
 export function* itemSaga() {
     yield takeLatest(SET_ADD,    addSaga);
