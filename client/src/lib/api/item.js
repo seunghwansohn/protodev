@@ -2,7 +2,7 @@ import axios from './axios';
 
 // 로그인
 
-export const addNew = (info) => axios.post('/api/item/addNew', info);
+export const addNew = (obj) => axios.post('/api/item/addNew', obj);
 
 export const load = () => axios.get('/api/item/load');
 

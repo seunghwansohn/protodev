@@ -99,7 +99,6 @@ const SingleTask = ({
     setAddBlank(obj)
   }
 
-  console.log('레벨은 ', level)
 
   //여기서부터 리액트 콤포넌트 리턴
   return (

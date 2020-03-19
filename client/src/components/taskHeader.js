@@ -41,7 +41,6 @@ const TaskHeader = ({type, idx, setChecked}) => {
   const classes     = useStyles();
 
   const onCheckBox = (e, index) => {
-    console.log(index, type, idx)
     setChecked(index, type, idx)
   }
 

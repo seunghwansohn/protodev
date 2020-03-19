@@ -88,7 +88,6 @@ let Notes = props => {
       );
     };
 
-    console.log(update)
     const onAddBlankNote = () => {
       setNewNotesArr([...newNotesArr,  [...blankNotes] ]);
     };

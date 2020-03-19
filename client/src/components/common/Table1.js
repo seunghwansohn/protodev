@@ -141,10 +141,6 @@ const STTable = ({
     setTableHeaderVals(headers)
   },[rawData])
 
-  console.log(tableArr)
-  console.log(rawData[0])
-  console.log(headers)
-
 
   useEffect(() => {
     if (updated) {
@@ -283,7 +279,6 @@ const STTable = ({
 
 
   const onKeyPressOnNewAddedInput = (e, header) => {
-    console.log(e.target.value, header)
   }
 
   const onMouseHover = (event, header) => {
@@ -292,7 +287,6 @@ const STTable = ({
   }
 
   const openMenu = (e, header) =>{
-    console.log(header)
   }
 
   const checkMenuActivated = (header) => {
@@ -340,24 +334,20 @@ const STTable = ({
 
   const setAddCopiedNew = (qty) => {
     setHowManyCopiedNew(qty)
-    console.log(howManyCopiedNew)
 
     let tempObj = {}
     Object.keys(selected[0]).map(header => {
       tempObj[header] = selected[0][header]
     })
 
-    console.log(tempObj)
     let tempArr = []
     for (let i = 0; i < qty; i++) {
       tempArr.push(tempObj)
     }
-    console.log(tempArr)
     setAddedNew(tempArr)
   }
   
   const onClickCopiedNew = () => {
-    console.log(selected)
     setAddCopiedNewDialogOpen(true)
   }
 
@@ -369,7 +359,6 @@ const STTable = ({
     setAnswer : setAddCopiedNew
   }
 
-  console.log(howManyCopiedNew)
   return (
     <React.Fragment>
 

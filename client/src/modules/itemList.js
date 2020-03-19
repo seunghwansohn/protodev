@@ -33,7 +33,7 @@ const updateSaga    = createRequestSaga(SET_UPDATE, item.update);
 const deleteSaga    = createRequestSaga(SET_DELETE, item.del);
 
 export const setHeader          = createAction(SET_HEADER, columns => columns)
-export const setAdd             = createAction(SET_ADD, info => info)
+export const setAdd             = createAction(SET_ADD, (addedNew, includingKeys) => ({addedNew, includingKeys}))
 export const setLoad            = createAction(SET_LOAD)
 export const setUpdate          = createAction(SET_UPDATE, arr => arr)
 export const updateChange       = createAction(SET_UPDATE_CHANGE, ox => ox)

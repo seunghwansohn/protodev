@@ -2,6 +2,7 @@ const db = require("../models");
 const config = require("../config/auth.config");
 const monolize = require("../lib/monolizeSequel");
 const calPrice = require("../lib/calPrice");
+const rmTimeFromReq = require("../lib/sequelMiddleWares");
 
 const Item = db.item;
 const ItemPrice = db.itemPRice
@@ -9,13 +10,54 @@ const Role = db.role;
 
 const Op = db.Sequelize.Op;
 
+const primaryKey   = 'itemCode'
+
 exports.addNew = (req, res) => {
-  const Arr = req.body
-  console.log(Arr)
+  console.log(req.body)
+  const {addedNew, includingKeys} = req.body
+  console.log('웨에야?', addedNew)
+  console.log('웨fe에야?', includingKeys)
+
   try {
-    Arr.map(obj => {
-      console.log(obj)
-      Item.create(obj).then(() => {
+    addedNew.map(obj => {
+      const includings = {}
+      newObj = rmTimeFromReq(obj)
+      const primaryCode = obj[primaryKey]
+      
+      const deleteIncludings = (obj, includingKeys) => {
+        includingKeys.map(key => {
+          if (key !== primaryKey) {
+            includings[key] = obj[key]
+            delete obj[key]
+          }
+        })
+        return obj
+      }
+
+      newObj = deleteIncludings(obj, includingKeys)
+      // console.log(newObj)
+      
+      const fixIncludings = (includings) => {
+        delete includings.id
+        includings[primaryKey] = primaryCode
+        return includings
+      }
+      
+      // newObj.VNPrice = {
+      //   VNPrice: req.body.item.VNPrice,
+      //   itemCode : req.body.item.itemCode,
+      //   importRate: req.body
+      // }
+      // item.findOne({where: obj}).then(res => {
+      //   console.log(res)
+      // })
+      const asString = 'Price'
+
+      newObj[asString] = fixIncludings(includings)
+
+      console.log(newObj)
+      
+      Item.create(newObj, {include:[{model:ItemPrice, as:asString}]}).then(() => {
           res.send({ message: "item added successfully" });
       })
     })
@@ -25,6 +67,20 @@ exports.addNew = (req, res) => {
     console.log(err.message)
   }
 };
+
+
+// VNPrice : {
+//   VNPrice: req.body.item.VNPrice,
+//   itemCode : req.body.item.itemCode,
+//   importRate: req.body
+// }
+// },
+// {include:[{model:ItemVNPrice, as:'VNPrice'}]})
+// .then(result => {
+//   console.log('리절트', result)
+//   res.status(200).send('성공')
+// })
+
 
 exports.update = async (req, res) => {
   let data = req.body
@@ -49,12 +105,15 @@ exports.itemLoad = (req, res) => {
     let result = ''
     const includingKey = 'Price'
     Item.findAll(
-      {include: [{model:ItemPrice, as: includingKey}] }
+      {include: [{model:ItemPrice, plain : true, as: includingKey}]}
       ).then(items => {
+        // console.log(items)
         result = monolize(items, includingKey)
+        // console.log(result)
+        result = {primaryKey : primaryKey, result : result}
       }).then(() => {
-        calPrice.VNSellP(result)
-
+        // calPrice.VNSellP(result)
+        // console.log(result)
         res.status(200).send(result);
       })
 };
@@ -95,7 +154,7 @@ exports.newItem = (req, res) => {
       importRate: req.body
     }
   },
-  {include:[{model:ItemVNPrice, as:'VNPrice'}]})
+  {include:[{model:ItemPrice, plain : true, as:'VNPrice'}]})
     .then(result => {
       console.log('리절트', result)
       res.status(200).send('성공')

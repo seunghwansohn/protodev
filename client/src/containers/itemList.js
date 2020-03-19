@@ -28,6 +28,8 @@ import ButtonHeader from '../components/common/ButtonHeader'
 import axios from '../lib/api/axios'
 
 import spacelize from '../lib/spacelize'
+import {getIncludingKeys, withoutIncludingKeys }from '../lib/common'
+
 
 const tableAttr = {
     flag : true,
@@ -44,6 +46,10 @@ const ItemListContainer = () => {
     const [clickedCol, setClickedCol]   = useState({});
     const [addedNew, setAddedNew]       = useState([]);
     const [selected, setSelected]       = useState([]);
+    const [primaryKey, setPrimaryKey]   = useState([]);
+    const [includingKeys, 
+        setIncludingKeys]               = useState([]);
+
     
     const {update} = useSelector(({ item }) => ({ update : item.table.update }));
 
@@ -52,10 +58,13 @@ const ItemListContainer = () => {
 
     const getRawData = async () => {
         await axios.get('/api/' + type + '/load').then(res => {
-            setRawData(res.data)
+            setPrimaryKey(res.data.primaryKey)
+            setIncludingKeys(getIncludingKeys(res.data.result))
+            setRawData(withoutIncludingKeys(res.data.result))
         })
     }
 
+    console.log(primaryKey)
     const onDelete = async (codes) =>{
         await codes.map(code => {
             dispatch(setDelete(type, code.itemCode))
@@ -64,8 +73,9 @@ const ItemListContainer = () => {
         await setSelected([])
     }
 
-    const onSubmitNewAdded = async (addedNew) => {
-        await dispatch(setAdd(addedNew))
+    const onSubmitNewAdded = async () => {
+        // let obj = {addedNew :}
+        await dispatch(setAdd(addedNew, includingKeys))
         await getRawData()
         await setAddedNew([])
     }
