@@ -34,7 +34,6 @@ const tableAttr = {
 const ItemListContainer = () => {
     const dispatch = useDispatch();
 
-    const type = 'item'
     const [rawData, setRawData]         = useState([])
     const [fixedVals, setFixedVals]     = useState([]);
     const [updated, setUpdated]         = useState(false);
@@ -48,6 +47,7 @@ const ItemListContainer = () => {
     const {update} = useSelector(({ item }) => ({ update : item.table.update }));
     const dialogOpened   = useSelector(state => state.dialogs.opened)
 
+    const type = 'item'
 
     const getRawData = async () => {
         await axios.get('/api/' + type + '/load').then(res => {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect }        from 'react'
 import { connect, useSelector, useDispatch } from 'react-redux';
 
 import ClientMain from '../components/clientMain'
@@ -11,22 +11,65 @@ import ClientAdd from '../components/clientAdd'
 import ButtonHeader from '../components/common/ButtonHeader'
 import { onDialogOpen } from '../modules/dialogs'
 
+import axios                from '../lib/api/axios'
+
+import {getIncludingKeys,
+    withoutIncludingKeys }  from '../lib/common'
+
 import { 
     onAlreadyPickedCheck,
     onSetClose,
     onSetItemListHeader,
     setHeader,
     setInputChange,
+    actUpdate, 
+    actUpdateChange, 
+    actClickedTableCol,
+    actAdd,
+    actDelete
  } from '../modules/clients'
 
-const Client = props => {
+const tableAttr = {
+    flag : true,
+}
+
+const Client = () => {
     
     const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(setClientLoad())
-    }, []);
+
+    const [rawData, setRawData]         = useState([])
+    const [fixedVals, setFixedVals]     = useState([]);
+    const [updated, setUpdated]         = useState(false);
+    const [clickedCol, setClickedCol]   = useState({});
+    const [addedNew, setAddedNew]       = useState([]);
+    const [selected, setSelected]       = useState([]);
+    const [primaryKey, setPrimaryKey]   = useState([]);
+    const [includingKeys, 
+        setIncludingKeys]               = useState([]);
+
 
     const type = 'client'
+
+    const {update} = useSelector(({ item }) => ({ update : item.table.update }));
+    const dialogOpened   = useSelector(state => state.dialogs.opened)
+
+    const getRawData = async () => {
+        await axios.get('/api/' + type + '/load').then(res => {
+            console.log(res)
+            setPrimaryKey(res.data.primaryKey)
+            setIncludingKeys(getIncludingKeys(res.data.result))
+            setRawData(withoutIncludingKeys(res.data.result))
+        })
+    }
+    
+    console.log(rawData)
+    const setDelete = async (codes) =>{
+        await codes.map(code => {
+            dispatch(actDelete(type, code.itemCode))
+        })
+        await setUpdated(true)
+        await setSelected([])
+    }
 
     const onSetHeader = (arrangedColumns) => {
         dispatch(setHeader(arrangedColumns))
@@ -41,6 +84,20 @@ const Client = props => {
     }
 
     const onSelectButton = (items) => {
+    }
+
+    const onSubmitNewAdded = async () => {
+        // let obj = {addedNew :}
+        await dispatch(actAdd(addedNew, includingKeys))
+        await getRawData()
+        await setAddedNew([])
+    }
+
+    const onSubmitUpdatedVals = async (fixedVals) => {
+        await fixedVals.map(arr => {
+            dispatch(actUpdate(arr))
+        })
+        await setFixedVals([])
     }
 
     const recordToDB = () => {
@@ -59,13 +116,96 @@ const Client = props => {
     ]
 
     
+    const states = {
+        rawData     : rawData,
+        updated     : updated,
+        clickedCol  : clickedCol,
+        addedNew    : addedNew,
+        selected    : selected
+    }
+
+    const setStates = {
+        setRawData      : setRawData,
+        setUpdated      : setUpdated,
+        setClickedCol   : setClickedCol,
+        setAddedNew     : setAddedNew,
+        setSelected     : setSelected
+    }
+
     const funcs = {
-        onSetHeader : onSetHeader,
-        onSetSeletedItems : onSetSelectedItems,
-        onChangeInput : onChangeInput,
-        recordToDB : recordToDB,
-        onSelectButton : onSelectButton,
-        onInsertButton : onInsertButton
+        load : getRawData,
+        onSubmitUpdatedVals : onSubmitUpdatedVals,
+        onDialogOpen : onDialogOpen,
+        onDelete : setDelete,
+        onSubmitNewAdded : onSubmitNewAdded
+    }
+
+    const stateAttr = {
+        itemCode : {
+            primary : true,
+            fixable : false,
+            defaultHided : false
+        },
+        itemName : {
+            fixable : true,
+            defaultHided : false
+        },
+        description : {
+            fixable : true,
+            defaultHided : true
+        },
+        weight : {
+            fixable : true,
+            defaultHided : true
+        },
+        width : {
+            fixable : true,
+            defaultHided : true
+        },
+        depth : {
+            fixable : true,
+            defaultHided : true
+        },
+        height : {
+            fixable : true,
+            defaultHided : true
+        },
+        importTaxRate : {
+            fixable : true,
+            defaultHided : false
+        },
+        maker : {
+            fixable : true,
+            defaultHided : false
+        },
+        supplierCode : {
+            fixable : true,
+            defaultHided : false
+        },
+        makerModelNo : {
+            fixable : true,
+            defaultHided : false
+        },
+        VNPrice : {
+            fixable : true,
+            defaultHided : false
+        },
+        stkVVar : {
+            fixable : true,
+            defaultHided : true
+        },
+        stkCVar : {
+            fixable : true,
+            defaultHided : true
+        },
+        createdAt : {
+            fixable : false,
+            defaultHided : true
+        },
+        updatedAt : {
+            fixable : false,
+            defaultHided : true
+        }
     }
     
     let colTypes = {
@@ -120,17 +260,23 @@ const Client = props => {
         },
     }
 
+    useEffect(() => {
+        getRawData()
+    },[])
+    
     return(
         <>
             <ClientMain></ClientMain>
             <ButtonHeader type = {type} onHeaderButton = { onHeaderButton }></ButtonHeader>
             {table.contents.length !== 0 ? 
             <Table
-                type = {type}
-                table = {table}
-                funcs = {funcs}
-                arrangeRules = {arrangeRules}
-                colTypes = {colTypes}
+                type        = {type}
+                tableArr    = {rawData.data}  
+                attr        = {tableAttr}
+                funcs       = {funcs}
+                states      = {states}
+                setStates   = {setStates}
+                stateAttr   = {stateAttr}
             >
             </Table> : ''}
 

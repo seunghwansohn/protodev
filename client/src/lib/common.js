@@ -4,7 +4,11 @@ export var generateRandom = function (min, max) {
 }
 
 export const getIncludingKeys = (arr) => {
-    return arr[0].includingKeys
+    let tempArr = []
+    if (arr && arr.length > 0) {
+        tempArr = arr[0].includingKeys
+    }
+    return tempArr
 }
 
 export const withoutIncludingKeys = (arr) => {

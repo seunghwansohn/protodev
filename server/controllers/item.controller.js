@@ -13,11 +13,7 @@ const Op = db.Sequelize.Op;
 const primaryKey   = 'itemCode'
 
 exports.addNew = (req, res) => {
-  console.log(req.body)
   const {addedNew, includingKeys} = req.body
-  console.log('웨에야?', addedNew)
-  console.log('웨fe에야?', includingKeys)
-
   try {
     addedNew.map(obj => {
       const includings = {}
