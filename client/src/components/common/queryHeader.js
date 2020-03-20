@@ -7,6 +7,9 @@ import Input from '@material-ui/core/Input';
 
 import Box from '@material-ui/core/Box';
 
+import styled   from "styled-components";
+
+
 const useStyles = makeStyles(theme => ({
     root: {
       flexGrow: 1,
@@ -20,24 +23,41 @@ const useStyles = makeStyles(theme => ({
         display: 'flex'
 
     },
+    buttonRight:{
+      alignItems: 'flex-end',
+    }
 }));
+
+
+const QueryPaper = styled(Paper)`
+  background-color: tomato;
+  width : '10%';
+  height : 37px;
+  /* border-style : ${props => props.updated ? 'ridge':'none'}; */
+  color : 'white';
+  display: 'flex';
+  text-align : 'left';
+  &:hover {
+    background-color : #eef534;
+  }
+`
 
 const QueryHeader = ({quoteNo, type, funcs, queryHeaderProps}) => {
   const classes = useStyles();
 
-  const { onQuerySubmit } = funcs
-
   const [newColCount, setNewColCount] = React.useState(0);
-  const [newColNo, setNewColNo] = React.useState(0);
+  const [newColNo, setNewColNo]       = React.useState(0);
 
-
-  const [clientName, setClientName] = React.useState(null);
+  const [clientName, setClientName]   = React.useState(null);
 
   const {selectedClientName, selectedClientRate} = useSelector(({quoteList}) => ({
       selectedClientName : quoteList.query.clients.result.clientName,
       selectedClientRate : quoteList.query.clients.result.clientRate
 
   }))
+
+  console.log(queryHeaderProps)
+  const { onQuerySubmit,  submitChanged, headerInputChanged, onKeyPressOnForms} = funcs
 
   useEffect(() => {
     let tempArr = []
@@ -48,7 +68,6 @@ const QueryHeader = ({quoteNo, type, funcs, queryHeaderProps}) => {
     })
     setNewColNo(tempArr)
   },[])
-  console.log(newColNo)
 
   const onClientSubmit = (e) => {
       e.preventDefault()
@@ -72,41 +91,46 @@ const QueryHeader = ({quoteNo, type, funcs, queryHeaderProps}) => {
   return (
     <div className = {classes.root}>
 
-    <Grid container spacing={0}>
-      {(function(){
-        let returnArr = []
-        queryHeaderProps.map(arr => {
-          let returnChildren = []
-          arr.map(obj => {
-            returnChildren.push(
-              <Paper className={classes.paper}>
-                {obj.title}
-              </Paper>
+      <Grid container>
+        {(function(){
+          let returnArr = []
+          queryHeaderProps.map(arr => {
+            let returnChildren = []
+            arr.map(obj => {
+              if (obj.type == 'paper') {
+                returnChildren.push(
+                  <QueryPaper>
+                    {obj.title}
+                  </QueryPaper>
+                )
+              } else if (obj.type == 'input') {
+                returnChildren.push(
+                  <QueryPaper>
+                    <Grid Container className = {classes.root}>
+                      <Grid item xs = {5}>
+                        {obj.title}
+                      </Grid>
+                      <Grid item xs = {1}>
+                        :
+                      </Grid>
+                      <Grid item xs = {6}>
+                        <Input className = {classes.buttonRight} onKeyPress = {(e) => {onKeyPressOnForms(obj.title, e)}} onChange = {e => {headerInputChanged(obj.title, e)}}>find</Input>
+                      </Grid>
+                    </Grid>
+                  </QueryPaper>
+                )
+              }
+            })
+            returnArr.push(
+              <Grid xs = {arr[0].size}>
+                {returnChildren}
+              </Grid>
             )
           })
-          returnArr.push(
-            <Grid xs = {arr[0].size}>
-              {returnChildren}
-            </Grid>
-          )
-        })
-        return returnArr
-      })()}
-
-      <Grid item xs = {3}> 
-        <Paper className={classes.paper}> 
-          Customer: <input type = 'text' onClick = {onClientSubmit} value = {selectedClientName}/>
-        </Paper>
-        <Paper className={classes.paper}> 
-          Customer Rate: {selectedClientRate}
-        </Paper>
+          return returnArr
+        })()}
       </Grid>
-
-      <Grid item xs = {3}> 
-      </Grid>
-      <Grid item xs = {3}> 
-      </Grid>
-    </Grid>
+    
     </div>
   )
 }

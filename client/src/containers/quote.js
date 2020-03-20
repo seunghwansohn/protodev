@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { connect, useSelector, useDispatch } from 'react-redux';
 
 import QuoteListComponent from '../components/quoteList'
@@ -20,7 +20,8 @@ import {
     setHeader,
     setInputChange,
     recordQuote,
-    querySubmit
+    querySubmit,
+    actSubmit
  } from '../modules/quote'
  import { onDialogOpen } from '../modules/dialogs'
 
@@ -28,6 +29,7 @@ import {
 import TableContainer from '@material-ui/core/TableContainer';
 import Button from "@material-ui/core/Button";
 import { makeStyles } from '@material-ui/core/styles';
+import {produce} from 'immer'
 
 
 const useStyles = makeStyles(theme => ({
@@ -43,6 +45,13 @@ const QuoteContainer = () => {
     const quoteProp = useSelector(state => state.quoteList)
     const opened = useSelector(state => state.dialogs.opened)
     
+    const [date, setDate]                     = useState('');
+    const [customer, setCustomer]             = useState('');
+    const [customerRate, setCustomerRate]     = useState('');
+
+    const [changedHeaderInput, setChangedHeaderInput]     = useState({});
+
+    console.log(changedHeaderInput)
     const type = 'quoteList'
     
     const funcs = () => {
@@ -68,14 +77,33 @@ const QuoteContainer = () => {
             await dispatch(querySubmit({type, payload}))
             await dispatch(onDialogOpen(true, type))
         }
+        const headerInputChanged = (title, e) => {
+            setChangedHeaderInput(
+                produce(changedHeaderInput, draft => {
+                    draft[title] = e.target.value
+                }
+            ))
+        }
+
+        const onKeyPressOnForms = (title, e) => {
+            if (e.key === 'Enter') {
+                let tempObj = {}
+                tempObj[title] = changedHeaderInput[title]
+                dispatch(actSubmit(tempObj))
+            }
+        }
+
         const funcsObj = {
             onSetClose : onSetClose,
             onSetHeader : onSetHeader,
             onSetSeletedItems : onSetSelectedItems,
             onChangeInput : onChangeInput,
             onRecordToDB : onRecordToDB,
-            onQuerySubmit : onQuerySubmit
+            onQuerySubmit : onQuerySubmit,
+            headerInputChanged : headerInputChanged,
+            onKeyPressOnForms : onKeyPressOnForms
         }
+        
         return funcsObj
     }
 
@@ -89,7 +117,6 @@ const QuoteContainer = () => {
         return result
     }
 
-    
     const defaultHideCols = [
         'width',
         'depth',
@@ -101,6 +128,7 @@ const QuoteContainer = () => {
     ]
 
     const quoteNo = quoteProp.table.info.date + '-' + quoteProp.table.info.quoteLastNo
+
     let colTypes = {
         priceRate : {
             style : 'input',
@@ -111,8 +139,6 @@ const QuoteContainer = () => {
             type : 'number'
         },
     }
-    
-
 
     const arrangeRules = [   //헤더 순서를 정하려면 여기다가 배열값 추가 하면 됨.
         ['importRate', 'description'],
@@ -146,12 +172,12 @@ const QuoteContainer = () => {
 
     const queryHeaderProps = [
         [
-            {type : 'paper', size : 2, title: 'quoteNo', state : quoteNo, style:'regular'},
-            {type : 'paper', title: 'date', state : quoteNo, style:'regular'},
+            {type : 'paper', size : 3, title: 'quoteNo', state : quoteNo, style:'regular'},
+            {type : 'paper', title: 'date', state : date, style:'regular'},
         ],
         [
-            {type : 'Input', size : 2, title: 'customer', state : quoteNo, style:'regular'},
-            {type : 'paper', title: 'supplierName', state : quoteNo, style:'regular'},
+            {type : 'input', size : 3, title: 'customer', state : customer, setState: setCustomer, style:'regular'},
+            {type : 'paper', title: 'customerRate', state : customerRate, setState : setCustomerRate, style:'regular'},
         ]
     ]
 
@@ -164,6 +190,7 @@ const QuoteContainer = () => {
         },
     ]
         
+
 
     return(
         <div className = {classes.root}> 

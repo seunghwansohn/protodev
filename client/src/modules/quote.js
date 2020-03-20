@@ -21,6 +21,8 @@ export const SET_SELECTED_ITEMS = 'quoteList/SET_SELECTED_ITEMS'
 export const SET_INPUT_CHANGE = 'quoteList/SET_INPUT_CHANGE'
 export const QUERY_SUBMIT = 'quoteList/QUERY_SUBMIT'
 export const SET_INSERT_CLIENT = 'quoteList/SET_INSERT_CLIENT'
+export const SET_SUBMIT = 'quoteList/SET_SUBMIT'
+
 
 const [RECORD_QUOTE, RECORD_QUOTE_SUCCESS, RECORD_QUOTE_FAILURE ] = createRequestActionTypes('quoteList/RECORD_QUOTE');
 
@@ -34,6 +36,7 @@ export const setInputChange = createAction(SET_INPUT_CHANGE, ({id, name, value})
 export const recordQuote = createAction(RECORD_QUOTE)
 export const querySubmit = createAction(QUERY_SUBMIT, ({type, payload})=> ({type, payload}))
 export const setInsertClient = createAction(SET_INSERT_CLIENT, clientCode => clientCode)
+export const actSubmit = createAction(SET_SUBMIT, obj => obj)
 
 const recordQuoteSaga = createRequestSaga(RECORD_QUOTE, quote.recordQuote);
 
@@ -225,6 +228,11 @@ function reducer (state = initialState, action) {
         case SET_INSERT_CLIENT:
           return produce(state, draft => {
             draft.query.clients.result = action.payload
+          })
+        case SET_SUBMIT:
+          return produce(state, draft => {
+            draft.selected = action.payload
+            console.log(action.payload)
           })
         default:
           return state;
