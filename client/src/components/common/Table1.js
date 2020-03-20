@@ -98,7 +98,8 @@ const STTable = ({
   funcs, 
   states, 
   setStates, 
-  stateAttr
+  stateAttr,
+  tableButton
 }) => {
   
   const {rawData, updated, clickedCol, addedNew, selected}                    = states
@@ -369,6 +370,7 @@ const STTable = ({
     answer : howManyCopiedNew,
     setAnswer : setAddCopiedNew
   }
+  console.log(tableButton)
 
   return (
     <React.Fragment>
@@ -428,6 +430,14 @@ const STTable = ({
                   )
                 }
               }) : ''}
+              {tableButton ? tableButton.map(obj => {
+                return(
+                  <TableCell>
+                    {obj.title}
+                  </TableCell>
+                )
+              }):''}
+
             </TableRow>
           </StyledTableHeader>
           
@@ -485,6 +495,15 @@ const STTable = ({
                         }
                     }
                     })}
+                    {tableButton ? tableButton.map(obj => {
+                      return(
+                        <StyledTableCell>
+                          <button onClick = {e => obj.func(row, index)}>
+                            {obj.title}
+                          </button>
+                        </StyledTableCell>
+                      )
+                    }):''}
                   </TableRow>
               )
             }) :''}

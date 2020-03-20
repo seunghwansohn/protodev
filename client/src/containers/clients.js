@@ -33,7 +33,9 @@ const tableAttr = {
     flag : true,
 }
 
-const Client = () => {
+
+
+const Client = ({tableButton}) => {
     
     const dispatch = useDispatch();
 
@@ -47,9 +49,9 @@ const Client = () => {
     const [includingKeys, 
         setIncludingKeys]               = useState([]);
 
-
     const type = 'client'
 
+    console.log(tableButton)
     const {update} = useSelector(({ item }) => ({ update : item.table.update }));
     const dialogOpened   = useSelector(state => state.dialogs.opened)
 
@@ -278,6 +280,7 @@ const Client = () => {
                 states      = {states}
                 setStates   = {setStates}
                 stateAttr   = {stateAttr}
+                tableButton = {tableButton}
             >
             </Table>
 

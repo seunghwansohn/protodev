@@ -155,6 +155,16 @@ const QuoteContainer = () => {
         ]
     ]
 
+    const clientTableButton = [
+        {
+            title : 'insert',
+            func : function(row, index){
+                console.log(row, index)
+            }
+        },
+    ]
+        
+
     return(
         <div className = {classes.root}> 
         
@@ -168,7 +178,7 @@ const QuoteContainer = () => {
             </QueryHeader>
 
             <DialogST attr = {DialogsAttr.clients}>
-                <Client></Client>
+                <Client tableButton = {clientTableButton}></Client>
             </DialogST>
 
             <TableContainer>
