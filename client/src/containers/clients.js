@@ -14,7 +14,7 @@ import { onDialogOpen } from '../modules/dialogs'
 import axios                from '../lib/api/axios'
 
 import {getIncludingKeys,
-    withoutIncludingKeys }  from '../lib/common'
+    withoutIncludingKeys}  from '../lib/common'
 
 import { 
     onAlreadyPickedCheck,
@@ -62,6 +62,10 @@ const Client = () => {
         })
     }
     
+    useEffect(() => {
+        getRawData()
+    },[])
+
     console.log(rawData)
     const setDelete = async (codes) =>{
         await codes.map(code => {
@@ -221,9 +225,9 @@ const Client = () => {
         ['notes', 'amount'],
     ]
 
-    const table = useSelector(state => state.clients.table)
-    const dialogs = useSelector(state => state.dialogs)
-    const {opened} = dialogs
+    const table     = useSelector(state => state.clients.table)
+    const dialogs   = useSelector(state => state.dialogs)
+    const {opened}  = dialogs
 
     const checkOpened = (title) => {
         let result = ''
@@ -260,25 +264,22 @@ const Client = () => {
         },
     }
 
-    useEffect(() => {
-        getRawData()
-    },[])
+
     
     return(
         <>
             <ClientMain></ClientMain>
             <ButtonHeader type = {type} onHeaderButton = { onHeaderButton }></ButtonHeader>
-            {table.contents.length !== 0 ? 
             <Table
                 type        = {type}
-                tableArr    = {rawData.data}  
+                tableArr    = {rawData}  
                 attr        = {tableAttr}
                 funcs       = {funcs}
                 states      = {states}
                 setStates   = {setStates}
                 stateAttr   = {stateAttr}
             >
-            </Table> : ''}
+            </Table>
 
             <DialogST attr = {DialogsAttr.addClient}>
                 <ClientAdd title = {DialogsAttr.addClient.title}></ClientAdd>

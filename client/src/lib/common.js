@@ -19,3 +19,31 @@ export const withoutIncludingKeys = (arr) => {
     })
     return tempArr
 }
+
+
+
+export const getIncludingKeys1 = (arr) => {
+    let tempArr = []
+    arr.map(obj => {
+        console.log(obj)
+        delete obj.includingKeys
+        tempArr.push(obj)
+    })
+    return tempArr
+}
+
+// export const withoutIncludingKeys1 = (arr) => {
+//     let tempArr = []
+//     arr.map(obj => {
+//         Object.keys(obj).map(key => 
+//             {
+//                 if (string.include(key)) {
+
+//                 }
+//             }
+//         )
+//         delete obj.includingKeys
+//         tempArr.push(obj)
+//     })
+//     return tempArr
+// }

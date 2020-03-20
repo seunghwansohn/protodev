@@ -31,7 +31,7 @@ export const SET_CLICKED_TABLE_COL  = 'clients/SET_CLICKED_TABLE_COL'
 
 
 
-export const setHeader = createAction(SET_HEADER, columns => columns)
+export const setHeader      = createAction(SET_HEADER, columns => columns)
 export const setInputChange = createAction(SET_INPUT_CHANGE, ({id, name, value}) => ({id, name, value}))
 
 export const actHeader          = createAction(SET_HEADER, columns => columns)

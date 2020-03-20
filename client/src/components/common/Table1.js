@@ -143,6 +143,7 @@ const STTable = ({
     setTableVals(rawData)
   },[rawData])
 
+  console.log(rawData)
   useEffect(() => {
     const deleteKey = 'id'
     headers = headers.filter(function (el) {

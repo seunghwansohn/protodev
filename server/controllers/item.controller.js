@@ -1,4 +1,4 @@
-const db = require("../models");
+  const db = require("../models");
 const config = require("../config/auth.config");
 const monolize = require("../lib/monolizeSequel");
 const calPrice = require("../lib/calPrice");
@@ -20,7 +20,7 @@ exports.addNew = (req, res) => {
       newObj = rmTimeFromReq(obj)
       const primaryCode = obj[primaryKey]
       
-      const deleteIncludings = (obj, includingKeys) => {
+      const putOutIncludings = (obj, includingKeys) => {
         includingKeys.map(key => {
           if (key !== primaryKey) {
             includings[key] = obj[key]
@@ -29,9 +29,7 @@ exports.addNew = (req, res) => {
         })
         return obj
       }
-
-      newObj = deleteIncludings(obj, includingKeys)
-      // console.log(newObj)
+      newObj = putOutIncludings(obj, includingKeys)
       
       const fixIncludings = (includings) => {
         delete includings.id
@@ -39,20 +37,9 @@ exports.addNew = (req, res) => {
         return includings
       }
       
-      // newObj.VNPrice = {
-      //   VNPrice: req.body.item.VNPrice,
-      //   itemCode : req.body.item.itemCode,
-      //   importRate: req.body
-      // }
-      // item.findOne({where: obj}).then(res => {
-      //   console.log(res)
-      // })
       const asString = 'Price'
-
       newObj[asString] = fixIncludings(includings)
 
-      console.log(newObj)
-      
       Item.create(newObj, {include:[{model:ItemPrice, as:asString}]}).then(() => {
           res.send({ message: "item added successfully" });
       })
