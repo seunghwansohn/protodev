@@ -229,11 +229,13 @@ function reducer (state = initialState, action) {
           return produce(state, draft => {
             draft.query.clients.result = action.payload
           })
+
         case SET_SUBMIT:
           return produce(state, draft => {
             draft.selected = action.payload
             console.log(action.payload)
           })
+          
         default:
           return state;
     } 

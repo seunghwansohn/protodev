@@ -42,7 +42,7 @@ const QueryPaper = styled(Paper)`
   }
 `
 
-const QueryHeader = ({quoteNo, type, funcs, queryHeaderProps}) => {
+const QueryHeader = ({quoteNo, funcs, queryHeaderProps, mother, randomNo}) => {
   const classes = useStyles();
 
   const [newColCount, setNewColCount] = React.useState(0);
@@ -55,6 +55,10 @@ const QueryHeader = ({quoteNo, type, funcs, queryHeaderProps}) => {
       selectedClientRate : quoteList.query.clients.result.clientRate
 
   }))
+
+  const type = 'queryHeaderComponent'
+  const componentNo = type + '_' + randomNo
+  
 
   console.log(queryHeaderProps)
   const { onQuerySubmit,  submitChanged, headerInputChanged, onKeyPressOnForms} = funcs
@@ -69,6 +73,7 @@ const QueryHeader = ({quoteNo, type, funcs, queryHeaderProps}) => {
     setNewColNo(tempArr)
   },[])
 
+  console.log(mother, randomNo)
   const onClientSubmit = (e) => {
       e.preventDefault()
       const type = 'clients'
@@ -114,7 +119,7 @@ const QueryHeader = ({quoteNo, type, funcs, queryHeaderProps}) => {
                         :
                       </Grid>
                       <Grid item xs = {6}>
-                        <Input className = {classes.buttonRight} onKeyPress = {(e) => {onKeyPressOnForms(obj.title, e)}} onChange = {e => {headerInputChanged(obj.title, e)}}>find</Input>
+                        <Input className = {classes.buttonRight} onKeyPress = {(e) => {onKeyPressOnForms(componentNo, obj.title, randomNo, e)}} onChange = {e => {headerInputChanged(obj.title, e)}}>find</Input>
                       </Grid>
                     </Grid>
                   </QueryPaper>

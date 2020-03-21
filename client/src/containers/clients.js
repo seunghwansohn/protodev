@@ -35,7 +35,7 @@ const tableAttr = {
 
 
 
-const Client = ({tableButton}) => {
+const Client = ({attr}) => {
     
     const dispatch = useDispatch();
 
@@ -50,6 +50,9 @@ const Client = ({tableButton}) => {
         setIncludingKeys]               = useState([]);
 
     const type = 'client'
+
+    const {tableButton, open} = attr
+    console.log(attr)
 
     console.log(tableButton)
     const {update} = useSelector(({ item }) => ({ update : item.table.update }));
@@ -265,7 +268,7 @@ const Client = ({tableButton}) => {
             open : checkOpened('addClient')
         },
     }
-
+    console.log(tableButton)
 
     
     return(

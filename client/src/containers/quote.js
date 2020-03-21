@@ -25,6 +25,7 @@ import {
  } from '../modules/quote'
  import { onDialogOpen } from '../modules/dialogs'
 
+import {generateRandom}                         from '../lib/common';
 
 import TableContainer from '@material-ui/core/TableContainer';
 import Button from "@material-ui/core/Button";
@@ -44,16 +45,23 @@ const QuoteContainer = () => {
 
     const quoteProp = useSelector(state => state.quoteList)
     const opened = useSelector(state => state.dialogs.opened)
+    const selected = useSelector(state => state.quoteList.selected)
     
-    const [date, setDate]                     = useState('');
-    const [customer, setCustomer]             = useState('');
-    const [customerRate, setCustomerRate]     = useState('');
 
-    const [changedHeaderInput, setChangedHeaderInput]     = useState({});
+    console.log(selected)
+    const [date, setDate]                   = useState('');
+    const [client, setClient]           = useState('');
+    const [clientRate, setClientRate]   = useState('');
+    const [randomNo, setRandomNo]           = useState(generateRandom());
+    const [changedHeaderInput, 
+        setChangedHeaderInput]              = useState({});
 
     console.log(changedHeaderInput)
+
     const type = 'quoteList'
+    const containerNo = type + '_' + randomNo
     
+    console.log(containerNo)
     const funcs = () => {
         const onSetClose = (type) => {
             if (type == 'quoteList') {
@@ -85,11 +93,15 @@ const QuoteContainer = () => {
             ))
         }
 
-        const onKeyPressOnForms = (title, e) => {
+        const onKeyPressOnForms = (componentNo, title, randomNo, e) => {
             if (e.key === 'Enter') {
                 let tempObj = {}
-                tempObj[title] = changedHeaderInput[title]
+                const daialogNo = title + '_' + randomNo
+                tempObj[componentNo] = {}
+                tempObj[componentNo][title] = changedHeaderInput[title]
+                console.log(tempObj)
                 dispatch(actSubmit(tempObj))
+                dispatch(onDialogOpen(true, daialogNo))
             }
         }
 
@@ -108,6 +120,7 @@ const QuoteContainer = () => {
     }
 
     const checkOpened = (title) => {
+        console.log(title)
         let result = ''
         opened.map(array => {
             if (array.type == title){
@@ -151,18 +164,26 @@ const QuoteContainer = () => {
     ]
 
     const DialogsAttr = {
-        clients : {
-            title : 'Clients',
+        client : {
+            title : 'client_' + randomNo,
             maxWidth : 'xl' ,
             funcs : funcs,
-            open : checkOpened('clients')
+            open : checkOpened('client_' + randomNo),
+            tableButton : [{
+                    title : 'insert',
+                    func : function(row, index, containerNo){
+                        console.log(row, index, containerNo)
+                    },
+                    mother : containerNo
+
+            }]
         }
     }
 
     const queryHeaderElAttr = {
         customer : {
             title : 'customer',
-            type : 'form'
+            type : 'form',
         },
         customerRate : {
             title : 'customerRate',
@@ -176,21 +197,20 @@ const QuoteContainer = () => {
             {type : 'paper', title: 'date', state : date, style:'regular'},
         ],
         [
-            {type : 'input', size : 3, title: 'customer', state : customer, setState: setCustomer, style:'regular'},
-            {type : 'paper', title: 'customerRate', state : customerRate, setState : setCustomerRate, style:'regular'},
+            {type : 'input', size : 3, title: 'client', state : client, setState: setClient, style:'regular'},
+            {type : 'paper', title: 'clientRate', state : clientRate, setState : setClientRate, style:'regular'},
         ]
     ]
 
     const clientTableButton = [
         {
             title : 'insert',
-            func : function(row, index){
-                console.log(row, index)
-            }
+            func : function(row, index, containerNo){
+                console.log(row, index, containerNo)
+            },
+            mother : containerNo
         },
     ]
-        
-
 
     return(
         <div className = {classes.root}> 
@@ -198,14 +218,16 @@ const QuoteContainer = () => {
         <h1>Quote List</h1>
             <QueryHeader
                 quoteNo = {quoteNo}
-                type = {type}
+                // type = {type}
+                mother = {containerNo}
+                randomNo = {randomNo}
                 funcs = {funcs()}
                 queryHeaderProps = {queryHeaderProps}
             >
             </QueryHeader>
 
-            <DialogST attr = {DialogsAttr.clients}>
-                <Client tableButton = {clientTableButton}></Client>
+            <DialogST attr = {DialogsAttr.client}>
+                <Client attr = {DialogsAttr.client}></Client>
             </DialogST>
 
             <TableContainer>

@@ -66,7 +66,7 @@ let Notes = props => {
     },[update])
 
     useEffect(() => {
-      setRandomNo(generateRandom(1001,9999))
+      setRandomNo(generateRandom())
     },[])
 
 
