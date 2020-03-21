@@ -67,7 +67,7 @@ export default function MaxWidthDialog(props) {
       >
         <DialogTitle id="max-width-dialog-title">{props.title}</DialogTitle>
         <DialogContent>
-            {props.children}
+            {props.children} 
 
           <DialogContentText>
           </DialogContentText>

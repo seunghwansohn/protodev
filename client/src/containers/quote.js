@@ -62,6 +62,7 @@ const QuoteContainer = () => {
     const containerNo = type + '_' + randomNo
     
     console.log(containerNo)
+
     const funcs = () => {
         const onSetClose = (type) => {
             if (type == 'quoteList') {
@@ -169,27 +170,18 @@ const QuoteContainer = () => {
             maxWidth : 'xl' ,
             funcs : funcs,
             open : checkOpened('client_' + randomNo),
-            tableButton : [{
+            tableButton : [
+                {
                     title : 'insert',
                     func : function(row, index, containerNo){
                         console.log(row, index, containerNo)
                     },
                     mother : containerNo
-
-            }]
+                }
+            ]
         }
     }
 
-    const queryHeaderElAttr = {
-        customer : {
-            title : 'customer',
-            type : 'form',
-        },
-        customerRate : {
-            title : 'customerRate',
-            type : 'paper'
-        }
-    }
 
     const queryHeaderProps = [
         [
@@ -202,15 +194,6 @@ const QuoteContainer = () => {
         ]
     ]
 
-    const clientTableButton = [
-        {
-            title : 'insert',
-            func : function(row, index, containerNo){
-                console.log(row, index, containerNo)
-            },
-            mother : containerNo
-        },
-    ]
 
     return(
         <div className = {classes.root}> 
@@ -218,7 +201,6 @@ const QuoteContainer = () => {
         <h1>Quote List</h1>
             <QueryHeader
                 quoteNo = {quoteNo}
-                // type = {type}
                 mother = {containerNo}
                 randomNo = {randomNo}
                 funcs = {funcs()}
