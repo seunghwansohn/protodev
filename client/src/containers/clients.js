@@ -14,7 +14,8 @@ import { onDialogOpen } from '../modules/dialogs'
 import axios                from '../lib/api/axios'
 
 import {getIncludingKeys,
-    withoutIncludingKeys}  from '../lib/common'
+    withoutIncludingKeys,
+    generateRandom}         from '../lib/common'
 
 import { 
     onAlreadyPickedCheck,
@@ -29,9 +30,7 @@ import {
     actDelete
  } from '../modules/clients'
 
-const tableAttr = {
-    flag : true,
-}
+
 
 
 
@@ -48,16 +47,90 @@ const Client = ({attr}) => {
     const [primaryKey, setPrimaryKey]   = useState([]);
     const [includingKeys, 
         setIncludingKeys]               = useState([]);
+    const [randomNo, setRandomNo]       = useState(generateRandom());
 
+        
     const type = 'client'
 
     const {tableButton, open} = attr
-    console.log(attr)
-
-    console.log(tableButton)
+    const containerNo = attr.title ? attr.title : type + randomNo
+    console.log(containerNo)
     const {update} = useSelector(({ item }) => ({ update : item.table.update }));
     const dialogOpened   = useSelector(state => state.dialogs.opened)
+    const filter   = useSelector(state => state.clients.table.filter)
 
+    const tableAttr = {
+        flag : true,
+        colAttr :   {
+            itemCode : {
+                primary : true,
+                fixable : false,
+                defaultHided : false
+            },
+            itemName : {
+                fixable : true,
+                defaultHided : false
+            },
+            description : {
+                fixable : true,
+                defaultHided : true
+            },
+            weight : {
+                fixable : true,
+                defaultHided : true
+            },
+            width : {
+                fixable : true,
+                defaultHided : true
+            },
+            depth : {
+                fixable : true,
+                defaultHided : true
+            },
+            height : {
+                fixable : true,
+                defaultHided : true
+            },
+            importTaxRate : {
+                fixable : true,
+                defaultHided : false
+            },
+            maker : {
+                fixable : true,
+                defaultHided : false
+            },
+            supplierCode : {
+                fixable : true,
+                defaultHided : false
+            },
+            makerModelNo : {
+                fixable : true,
+                defaultHided : false
+            },
+            VNPrice : {
+                fixable : true,
+                defaultHided : false
+            },
+            stkVVar : {
+                fixable : true,
+                defaultHided : true
+            },
+            stkCVar : {
+                fixable : true,
+                defaultHided : true
+            },
+            createdAt : {
+                fixable : false,
+                defaultHided : true
+            },
+            updatedAt : {
+                fixable : false,
+                defaultHided : true
+            }
+        }
+    }
+
+    console.log(filter)
     const getRawData = async () => {
         await axios.get('/api/' + type + '/load').then(res => {
             console.log(res)
@@ -149,7 +222,7 @@ const Client = ({attr}) => {
         onSubmitNewAdded : onSubmitNewAdded
     }
 
-    const stateAttr = {
+    const colAttr = {
         itemCode : {
             primary : true,
             fixable : false,
@@ -268,13 +341,14 @@ const Client = ({attr}) => {
             open : checkOpened('addClient')
         },
     }
-    console.log(tableButton)
+    console.log(tableAttr)
 
     
     return(
         <>
             <ClientMain></ClientMain>
             <ButtonHeader type = {type} onHeaderButton = { onHeaderButton }></ButtonHeader>
+
             <Table
                 type        = {type}
                 tableArr    = {rawData}  
@@ -282,7 +356,6 @@ const Client = ({attr}) => {
                 funcs       = {funcs}
                 states      = {states}
                 setStates   = {setStates}
-                stateAttr   = {stateAttr}
                 tableButton = {tableButton}
             >
             </Table>

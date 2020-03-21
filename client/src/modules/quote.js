@@ -232,7 +232,7 @@ function reducer (state = initialState, action) {
 
         case SET_SUBMIT:
           return produce(state, draft => {
-            draft.selected = action.payload
+            draft.requested = action.payload
             console.log(action.payload)
           })
           

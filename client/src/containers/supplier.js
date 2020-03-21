@@ -112,7 +112,7 @@ const Supplier = props => {
         setSelected : setSelected
     }
 
-    const stateAttr = {
+    const colAttr = {
         supplierCode : {
             primary : true,
             fixable : false,
@@ -176,7 +176,7 @@ const Supplier = props => {
                 funcs       = {funcs}
                 states      = {states}
                 setStates   = {setStates}
-                stateAttr   = {stateAttr}
+                colAttr   = {colAttr}
             ></Table>
 
             <DialogST attr = {DialogsAttr.supplierQuery}>

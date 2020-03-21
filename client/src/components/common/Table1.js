@@ -93,18 +93,17 @@ const StyledInput = styled(Input)`
 
 const STTable = ({
   type,
-  tableArr, 
   attr, 
-  funcs, 
   states, 
   setStates, 
-  stateAttr,
+  funcs, 
   tableButton
 }) => {
   
   const {rawData, updated, clickedCol, addedNew, selected}                    = states
   const {setRawData, setUpdated, setClickedCol, setAddedNew, setSelected}     = setStates
   const {load, onSubmitUpdatedVals, onDialogOpen, onDelete, onSubmitNewAdded} = funcs
+  const {colAttr} = attr
 
   let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
 
@@ -136,10 +135,13 @@ const STTable = ({
         setAddCopiedNewDialogOpen]          = useState(false)
 
   const [howManyCopiedNew, 
-        setHowManyCopiedNew]        = useState(null)
+        setHowManyCopiedNew]                = useState(null)
+
+  console.log(attr)
 
   const dispatch = useDispatch()
-  
+  console.log(colAttr)
+
   useEffect(() => {
     setTableVals(rawData)
   },[rawData])
@@ -169,14 +171,14 @@ const STTable = ({
     let tmpPrimaryKey = ''
     let tmpDefaultHided = []
     let tempFixableCols = []
-    Object.keys(stateAttr).map(key => {
-      if(stateAttr[key].defaultHided){
+    Object.keys(colAttr).map(key => {
+      if(colAttr[key].defaultHided){
         tmpDefaultHided.push(key)
       }
-      if(stateAttr[key].fixable){
+      if(colAttr[key].fixable){
         tempFixableCols.push(key)
       }
-      if(stateAttr[key].primary){
+      if(colAttr[key].primary){
         tmpPrimaryKey = key
       }
     })
@@ -185,6 +187,7 @@ const STTable = ({
     setPrimaryKey(tmpPrimaryKey)
   },[])
 
+  console.log(colAttr)
   const isChecked     = name => selected.indexOf(name)    !== -1;
   const isHidedCulumn = name => hided.indexOf(name)       !== -1;
   const isFixable     = name => fixableCols.indexOf(name) !== -1;

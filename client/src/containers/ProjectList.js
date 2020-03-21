@@ -113,7 +113,7 @@ const Project = props => {
         setSelected     : setSelected
     }
 
-    const stateAttr = {
+    const colAttr = {
         projectCode : {
             primary : true,
             fixable : false,
@@ -166,7 +166,7 @@ const Project = props => {
                 funcs       = {funcs}
                 states      = {states}
                 setStates   = {setStates}
-                stateAttr   = {stateAttr}
+                colAttr   = {colAttr}
             ></Table>
 
             {/* <DialogST attr = {DialogsAttr.projectQuery}>

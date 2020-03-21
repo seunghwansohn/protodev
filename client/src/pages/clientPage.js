@@ -7,7 +7,7 @@ const ClientPage = props => {
 
   return (
     <>
-      <Clients></Clients>
+      <Clients attr = {''}></Clients>
     </>
   );
 };

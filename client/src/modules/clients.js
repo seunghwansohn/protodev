@@ -9,7 +9,10 @@ import {unSequelizeKeys, unSequelizify}                                      fro
 const initialState = {
     table : {
         header : [],
-        contents : []
+        contents : [],
+        filter : {
+            keyword : ''
+        }
     }
 }
 
@@ -28,8 +31,7 @@ export const SET_HEADER             = 'clients/SET_HEADER'
 export const SET_INPUT_CHANGE       = 'clients/SET_INPUT_CHANGE'
 export const SET_UPDATE_CHANGE      = 'clients/SET_UPDATE_CHANGE'
 export const SET_CLICKED_TABLE_COL  = 'clients/SET_CLICKED_TABLE_COL'
-
-
+export const SET_FILTER             = 'clients/SET_SET_FILTER'
 
 export const setHeader      = createAction(SET_HEADER, columns => columns)
 export const setInputChange = createAction(SET_INPUT_CHANGE, ({id, name, value}) => ({id, name, value}))
@@ -41,8 +43,7 @@ export const actUpdate          = createAction(SET_UPDATE, arr => arr)
 export const actUpdateChange    = createAction(SET_UPDATE_CHANGE, ox => ox)
 export const actClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
 export const actDelete          = createAction(SET_DELETE, (type, code) => ({type, code}))
-
-
+export const actSetFilter       = createAction(SET_FILTER, (compNo, filterKeyword) => (compNo, filterKeyword))
 
 export function* clientsSaga() {
 }
@@ -61,6 +62,11 @@ function reducer (state = initialState, action) {
             return produce(state, draft => {
                 draft.table.header = action.payload
             })
+        case SET_FILTER:
+            return produce(state, draft => {
+                draft.table.filter.keyword = action.payload
+            })
+    
 
         default:
             return state;

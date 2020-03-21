@@ -25,6 +25,9 @@ import {
  } from '../modules/quote'
  import { onDialogOpen } from '../modules/dialogs'
 
+ import { actSetFilter } from '../modules/clients'
+
+
 import {generateRandom}                         from '../lib/common';
 
 import TableContainer from '@material-ui/core/TableContainer';
@@ -40,53 +43,43 @@ const useStyles = makeStyles(theme => ({
 }))
 const QuoteContainer = () => {
     const classes = useStyles();
-
     const dispatch = useDispatch();
 
     const quoteProp = useSelector(state => state.quoteList)
-    const opened = useSelector(state => state.dialogs.opened)
-    const selected = useSelector(state => state.quoteList.selected)
-    
+    const opened    = useSelector(state => state.dialogs.opened)
+    const selected  = useSelector(state => state.quoteList.selected)
+    const requested = useSelector(state => state.quoteList.requested)
 
-    console.log(selected)
-    const [date, setDate]                   = useState('');
-    const [client, setClient]           = useState('');
-    const [clientRate, setClientRate]   = useState('');
+
     const [randomNo, setRandomNo]           = useState(generateRandom());
+
+    const [date, setDate]                   = useState('');
+
+    const [client, setClient]               = useState('');
+    const [clientRate, setClientRate]       = useState('');
+
     const [changedHeaderInput, 
         setChangedHeaderInput]              = useState({});
-
-    console.log(changedHeaderInput)
-
+    
+    console.log(requested)
     const type = 'quoteList'
     const containerNo = type + '_' + randomNo
     
-    console.log(containerNo)
+    const quoteNo = quoteProp.table.info.date + '-' + quoteProp.table.info.quoteLastNo
 
-    const funcs = () => {
+    const queryHeaderfuncs = () => {
         const onSetClose = (type) => {
             if (type == 'quoteList') {
             }
             const ox = false
             dispatch(onFuncsDialog.onDialogOpen(ox,type))
         }
-        const onSetHeader = (arrangedColumns) => {
-            dispatch(setHeader(arrangedColumns))
-        }
-        const onSetSelectedItems = (items) => {
-            dispatch(setSelectedItems(items))
-        }
-        const onChangeInput = (id, name, value) => {
-            dispatch(setInputChange({id, name, value}))
-        }
+
         const onRecordToDB = () => {
             dispatch(recordQuote(quoteProp.table))
         }
-        const onQuerySubmit = async (type, payload) => {
-            await dispatch(querySubmit({type, payload}))
-            await dispatch(onDialogOpen(true, type))
-        }
-        const headerInputChanged = (title, e) => {
+
+        const onQueryheaderInputChange = (title, e) => {
             setChangedHeaderInput(
                 produce(changedHeaderInput, draft => {
                     draft[title] = e.target.value
@@ -94,7 +87,7 @@ const QuoteContainer = () => {
             ))
         }
 
-        const onKeyPressOnForms = (componentNo, title, randomNo, e) => {
+        const onQueryHeaderKeyPress = (componentNo, title, randomNo, e) => {
             if (e.key === 'Enter') {
                 let tempObj = {}
                 const daialogNo = title + '_' + randomNo
@@ -102,19 +95,16 @@ const QuoteContainer = () => {
                 tempObj[componentNo][title] = changedHeaderInput[title]
                 console.log(tempObj)
                 dispatch(actSubmit(tempObj))
+                dispatch(actSetFilter(componentNo, title))
                 dispatch(onDialogOpen(true, daialogNo))
             }
         }
 
         const funcsObj = {
             onSetClose : onSetClose,
-            onSetHeader : onSetHeader,
-            onSetSeletedItems : onSetSelectedItems,
-            onChangeInput : onChangeInput,
             onRecordToDB : onRecordToDB,
-            onQuerySubmit : onQuerySubmit,
-            headerInputChanged : headerInputChanged,
-            onKeyPressOnForms : onKeyPressOnForms
+            headerInputChanged : onQueryheaderInputChange,
+            onKeyPressOnForms : onQueryHeaderKeyPress
         }
         
         return funcsObj
@@ -141,7 +131,6 @@ const QuoteContainer = () => {
         'itemCode'
     ]
 
-    const quoteNo = quoteProp.table.info.date + '-' + quoteProp.table.info.quoteLastNo
 
     let colTypes = {
         priceRate : {
@@ -168,7 +157,7 @@ const QuoteContainer = () => {
         client : {
             title : 'client_' + randomNo,
             maxWidth : 'xl' ,
-            funcs : funcs,
+            funcs : queryHeaderfuncs(),
             open : checkOpened('client_' + randomNo),
             tableButton : [
                 {
@@ -181,7 +170,6 @@ const QuoteContainer = () => {
             ]
         }
     }
-
 
     const queryHeaderProps = [
         [
@@ -203,20 +191,23 @@ const QuoteContainer = () => {
                 quoteNo = {quoteNo}
                 mother = {containerNo}
                 randomNo = {randomNo}
-                funcs = {funcs()}
+                funcs = {queryHeaderfuncs()}
                 queryHeaderProps = {queryHeaderProps}
             >
             </QueryHeader>
 
             <DialogST attr = {DialogsAttr.client}>
-                <Client attr = {DialogsAttr.client}></Client>
+                <Client 
+                    attr = {DialogsAttr.client} 
+                    tableButton = {DialogsAttr.client.tableButton}
+                ></Client>
             </DialogST>
 
-            <TableContainer>
+            {/* <TableContainer>
                 {quoteProp.table.contents.length !== 0 ? 
                     <Table 
                         table = { quoteProp.table } 
-                        funcs = {funcs()}
+                        // funcs = {funcs()}
                         type = 'quoteList'
                         defaultHideCols = {defaultHideCols}
                         arrangeRules = {arrangeRules}
@@ -224,7 +215,7 @@ const QuoteContainer = () => {
                         quoteNo = {quoteNo}
                     >
                     </Table> : ''}
-            </TableContainer>
+            </TableContainer> */}
         </div>
     )
 }   

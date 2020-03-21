@@ -29,6 +29,73 @@ import {getIncludingKeys,
 
 const tableAttr = {
     flag : true,
+    colAttr : {
+        itemCode : {
+            primary : true,
+            fixable : false,
+            defaultHided : false
+        },
+        itemName : {
+            fixable : true,
+            defaultHided : false
+        },
+        description : {
+            fixable : true,
+            defaultHided : true
+        },
+        weight : {
+            fixable : true,
+            defaultHided : true
+        },
+        width : {
+            fixable : true,
+            defaultHided : true
+        },
+        depth : {
+            fixable : true,
+            defaultHided : true
+        },
+        height : {
+            fixable : true,
+            defaultHided : true
+        },
+        importTaxRate : {
+            fixable : true,
+            defaultHided : false
+        },
+        maker : {
+            fixable : true,
+            defaultHided : false
+        },
+        supplierCode : {
+            fixable : true,
+            defaultHided : false
+        },
+        makerModelNo : {
+            fixable : true,
+            defaultHided : false
+        },
+        VNPrice : {
+            fixable : true,
+            defaultHided : false
+        },
+        stkVVar : {
+            fixable : true,
+            defaultHided : true
+        },
+        stkCVar : {
+            fixable : true,
+            defaultHided : true
+        },
+        createdAt : {
+            fixable : false,
+            defaultHided : true
+        },
+        updatedAt : {
+            fixable : false,
+            defaultHided : true
+        }
+    }
 }
 
 const ItemListContainer = () => {
@@ -130,7 +197,7 @@ const ItemListContainer = () => {
         onSubmitNewAdded : onSubmitNewAdded
     }
 
-    const stateAttr = {
+    const colAttr = {
         itemCode : {
             primary : true,
             fixable : false,
@@ -216,7 +283,7 @@ const ItemListContainer = () => {
                 funcs       = {funcs}
                 states      = {states}
                 setStates   = {setStates}
-                stateAttr   = {stateAttr}
+                colAttr     = {colAttr}
             ></Table>
 
             {/* <DialogST attr = {DialogsAttr.itemQuery}>
