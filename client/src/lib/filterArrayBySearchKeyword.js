@@ -1,7 +1,7 @@
 
-const filterArrayBySearchKeyword = (searchKeyword, itemListArr) => {
+const filterArrayBySearchKeyword = (searchKeyword, itemListArr, primaryKey) => {
     var result = [];
-    var matchedid = [];
+    var matchedKey = [];
     itemListArr.map (function(num) {
         var values = Object.values(num);
         var joinedString = values.join(',');
@@ -21,27 +21,26 @@ const filterArrayBySearchKeyword = (searchKeyword, itemListArr) => {
         else {matchedTrue = false} 
         }
         if (matchedTrue === true) {
-        matchedid.push(num.id);   //matchedid라는 미리 선언된 배열변수에, 검색어를 포함한 아이템들의 id값만 담음.
+        matchedKey.push(num[primaryKey]);   //matchedKey라는 미리 선언된 배열변수에, 검색어를 포함한 아이템들의 id값만 담음.
         }
     })
+    console.log(matchedKey)
+
     var returnWords = function(){
         var matchedData = [];
         var findDataId = '';
-            for (var i=0; i < matchedid.length; i++){
-                findDataId = matchedid[i];
-                function searchMatchedData(id, itemListArr) {
-                    for (var i = 0; i < itemListArr.length; i++) {
-                        if (itemListArr[i].id === id)  {
-                        return itemListArr[i];
-                        }
-                    }
+        matchedKey.map(key => {
+            console.log(key)
+            itemListArr.map(obj => {
+                if (obj[primaryKey] === key)
+                {
+                    matchedData.push(obj)
                 }
-                result.push(searchMatchedData(findDataId, itemListArr))
-
-                matchedData.push(itemListArr[matchedid[i]])
-            }
-        return result;
+            })
+        })
+        return matchedData;
     }
+    console.log(returnWords())
     return returnWords();
 }
 export default filterArrayBySearchKeyword

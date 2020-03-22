@@ -29,9 +29,11 @@ import { ExpandLess,
 
 import InputDialog      from '../common/InputDialog';
 
+import TextField from '@material-ui/core/TextField';
 
 
 import spacelize              from '../../lib/spacelize'
+import filterArrayBySearchKeyword              from '../../lib/filterArrayBySearchKeyword'
 import {selectMultipleStates, 
   unSelectMultipleStates}     from '../../lib/tableFuncs'
 
@@ -109,8 +111,10 @@ const STTable = ({
   let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
 
   const [tableHeaderVals, setTableHeaderVals] = useState([]);
-  const [tableVals, setTableVals]             = useState(rawData);
+  const [filteredData, setFilteredData]       = useState(rawData);
+  const [filterKeyword, setFilterKeyword]       = useState(filter);
 
+  console.log(filter)
   const [hided, setHided]                     = useState([]);
   const [fixableCols, setFixableCols]         = useState([]);
   const [primaryKey, setPrimaryKey]           = useState('');
@@ -138,17 +142,13 @@ const STTable = ({
   const [howManyCopiedNew, 
         setHowManyCopiedNew]                = useState(null)
 
-  console.log(attr)
-  console.log(filter)
 
   const dispatch = useDispatch()
-  console.log(colAttr)
 
   useEffect(() => {
-    setTableVals(rawData)
+    setFilteredData(rawData)
   },[rawData])
 
-  console.log(rawData)
   useEffect(() => {
     const deleteKey = 'id'
     headers = headers.filter(function (el) {
@@ -157,6 +157,14 @@ const STTable = ({
     setTableHeaderVals(headers)
   },[rawData])
 
+
+  useEffect(() => {
+    if (filterKeyword !== null && filterKeyword !== undefined && filterKeyword !== ''){
+      setFilteredData(filterArrayBySearchKeyword(filterKeyword, rawData, primaryKey))
+    } else {
+      setFilteredData(rawData)
+    }
+  },[filterKeyword])
 
   useEffect(() => {
     if (updated) {
@@ -254,7 +262,7 @@ const STTable = ({
       temp1.ref = {}
       temp1.vals = {}
       temp1.location = {index : index, header, header}
-      temp1.ref[primaryKey] = tableVals[index][primaryKey]
+      temp1.ref[primaryKey] = filteredData[index][primaryKey]
       temp1.vals[header] = e.target.value
       setFixedVals(
         produce(fixedVals, draft => {
@@ -264,9 +272,10 @@ const STTable = ({
     }
   }
 
+  
   const handleChangeInput = (e, index, header) => {
-    setTableVals(
-      produce(tableVals, draft => {
+    setFilteredData(
+      produce(filteredData, draft => {
         draft[index][header] = e.target.value
       })
     )
@@ -375,7 +384,23 @@ const STTable = ({
     answer : howManyCopiedNew,
     setAnswer : setAddCopiedNew
   }
-  console.log(tableButton)
+
+  const onInputFilterKeyword = (e) => {
+    e.preventDefault(); 
+    console.log(e.target.value)
+    setFilterKeyword(e.target.value)
+  }
+
+  // const SearchBar = () => {
+  //   return (
+  //     <Input 
+  //       id = 'sea'
+  //       label  = 'dfe'
+  //       onChange = {(e) => {onInputFilterKeyword(e)}}
+  //       value    = {filterKeyword}
+  //     ></Input>
+  //   )
+  // }
 
   return (
     <React.Fragment>
@@ -391,6 +416,14 @@ const STTable = ({
           )
         })}
       </div>
+      {/* <SearchBar> */}
+        <Input 
+          id = 'sea'
+          label  = 'dfe'
+          onChange = {(e) => {onInputFilterKeyword(e)}}
+          value    = {filterKeyword}
+        ></Input>
+      {/* </SearchBar> */}
       <button onClick = { onSetfixMode }>fixmode</button>
       <TableContainer>
         <StyledTable size = {'small'}>
@@ -447,7 +480,7 @@ const STTable = ({
           </StyledTableHeader>
           
           <StyledTableBody>
-            {tableVals ? stableSort(tableVals, getComparator(order, orderBy))
+            {filteredData ? stableSort(filteredData, getComparator(order, orderBy))
              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
              .map((row, index) => {
               const isItemSelected = isChecked(row)
@@ -479,7 +512,7 @@ const STTable = ({
                             <Input 
                             onChange = {(event) => handleChangeInput(event, index, header)} 
                             key = {header }
-                            value = {tableVals[index][header]} 
+                            value = {filteredData[index][header]} 
                             onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}/>
                           )
                         }else{
@@ -542,7 +575,7 @@ const STTable = ({
       <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={tableVals.length}
+          count={filteredData.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
