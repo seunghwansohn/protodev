@@ -112,7 +112,7 @@ const STTable = ({
 
   const [tableHeaderVals, setTableHeaderVals] = useState([]);
   const [filteredData, setFilteredData]       = useState(rawData);
-  const [filterKeyword, setFilterKeyword]       = useState(filter);
+  const [filterKeyword, setFilterKeyword]     = useState(filter);
 
   console.log(filter)
   const [hided, setHided]                     = useState([]);

@@ -20,6 +20,29 @@ import { onDialogOpen }      from '../modules/dialogs'
 
 const tableAttr = {
     flag : true,
+    colAttr : {
+        makerCode : {
+            primary : true,
+            fixable : false,
+            defaultHided : false
+        },
+        makerName : {
+            fixable : true,
+            defaultHided : false
+        },
+        origin : {
+            fixable : true,
+            defaultHided : false
+        },
+        createdAt : {
+            fixable : false,
+            defaultHided : true
+        },
+        updatedAt : {
+            fixable : false,
+            defaultHided : true
+        }
+    }
 }
 
 const Maker = props => {
@@ -118,30 +141,6 @@ const Maker = props => {
         onSubmitNewAdded : onSubmitNewAdded
     }
 
-    const colAttr = {
-        makerCode : {
-            primary : true,
-            fixable : false,
-            defaultHided : false
-        },
-        makerName : {
-            fixable : true,
-            defaultHided : false
-        },
-        origin : {
-            fixable : true,
-            defaultHided : false
-        },
-        createdAt : {
-            fixable : false,
-            defaultHided : true
-        },
-        updatedAt : {
-            fixable : false,
-            defaultHided : true
-        }
-    }
-
     const DialogsAttr = {
         makerQuery : {
             title : 'maker',
@@ -160,7 +159,6 @@ const Maker = props => {
                 funcs       = {funcs}
                 states      = {states}
                 setStates   = {setStates}
-                colAttr   = {colAttr}
             ></Table>
 
             <DialogST attr = {DialogsAttr.makerQuery}>

@@ -19,6 +19,41 @@ import { onDialogOpen }      from '../modules/dialogs'
 
 const tableAttr = {
     flag : true,
+    colAttr : {
+        supplierCode : {
+            primary : true,
+            fixable : false,
+            defaultHided : false
+        },
+        supplierName : {
+            fixable : true,
+            defaultHided : false
+        },
+        country : {
+            fixable : true,
+            defaultHided : false
+        },
+        ceo : {
+            fixable : true,
+            defaultHided : true
+        },
+        taxCode : {
+            fixable : true,
+            defaultHided : true
+        },
+        notes : {
+            fixable : true,
+            defaultHided : false
+        },
+        createdAt : {
+            fixable : false,
+            defaultHided : true
+        },
+        updatedAt : {
+            fixable : false,
+            defaultHided : true
+        }
+    }
 }
 
 const Supplier = props => {
@@ -112,42 +147,6 @@ const Supplier = props => {
         setSelected : setSelected
     }
 
-    const colAttr = {
-        supplierCode : {
-            primary : true,
-            fixable : false,
-            defaultHided : false
-        },
-        supplierName : {
-            fixable : true,
-            defaultHided : false
-        },
-        country : {
-            fixable : true,
-            defaultHided : false
-        },
-        ceo : {
-            fixable : true,
-            defaultHided : true
-        },
-        taxCode : {
-            fixable : true,
-            defaultHided : true
-        },
-        notes : {
-            fixable : true,
-            defaultHided : false
-        },
-        createdAt : {
-            fixable : false,
-            defaultHided : true
-        },
-        updatedAt : {
-            fixable : false,
-            defaultHided : true
-        }
-    }
-
     const funcs = {
         load : getRawData,
         onSubmitUpdatedVals : onSubmitUpdatedVals,
@@ -176,7 +175,6 @@ const Supplier = props => {
                 funcs       = {funcs}
                 states      = {states}
                 setStates   = {setStates}
-                colAttr   = {colAttr}
             ></Table>
 
             <DialogST attr = {DialogsAttr.supplierQuery}>
