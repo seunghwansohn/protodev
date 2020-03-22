@@ -65,8 +65,7 @@ function reducer (state = initialState, action) {
         case SET_FILTER:
             return produce(state, draft => {
                 draft.table.filter[action.payload.compNo] = {}
-                draft.table.filter[action.payload.compNo].type = action.payload.type
-                draft.table.filter[action.payload.compNo].value = action.payload.value
+                draft.table.filter[action.payload.compNo][action.payload.type] = action.payload.value
             })
     
 

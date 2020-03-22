@@ -91,15 +91,15 @@ const QuoteContainer = ({motherType, motherNo}) => {
             ))
         }
 
-        const onQueryHeaderKeyPress = async (componentNo, title, frameNo, e) => {
+        const onQueryHeaderKeyPress = async (frameNo, title, e) => {
             if (e.key === 'Enter') {
                 let tempObj = {}
                 const daialogNo = title + '_' + frameNo
-                tempObj[componentNo] = {}
-                tempObj[componentNo][title] = changedHeaderInput[title]
+                tempObj[frameNo] = {}
+                tempObj[frameNo][title] = changedHeaderInput[title]
                 // await axios.post('/api/' + type )
                 dispatch(actSubmit(tempObj))
-                dispatch(actSetFilter(componentNo, title, e.target.value))
+                dispatch(actSetFilter(frameNo, title, e.target.value))
                 dispatch(onDialogOpen(true, daialogNo))
             }
         }
@@ -108,7 +108,7 @@ const QuoteContainer = ({motherType, motherNo}) => {
             onSetClose : onSetClose,
             onRecordToDB : onRecordToDB,
             headerInputChanged : onQueryheaderInputChange,
-            onKeyPressOnForms : onQueryHeaderKeyPress
+            onKeyPressOnInput : onQueryHeaderKeyPress
         }
         
         return funcsObj

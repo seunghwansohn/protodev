@@ -142,7 +142,8 @@ const STTable = ({
   const [howManyCopiedNew, 
         setHowManyCopiedNew]                = useState(null)
 
-
+  
+  console.log(initialFilter)
   const dispatch = useDispatch()
 
   useEffect(() => {
@@ -285,6 +286,8 @@ const STTable = ({
     )
   }
 
+  console.log(filteredData)
+
   const onAddNewBlank = () => {
     let tempObj = {}
     headers.map(header => {
@@ -393,6 +396,7 @@ const STTable = ({
     setFilterKeyword(e.target.value)
   }
 
+  console.log(filterKeyword)
   // const SearchBar = () => {
   //   return (
   //     <Input 

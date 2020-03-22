@@ -65,7 +65,7 @@ const QueryHeader = ({quoteNo, funcs, queryHeaderProps, motherType, motherNo}) =
 
   console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
-  const { onQuerySubmit,  submitChanged, headerInputChanged, onKeyPressOnForms} = funcs
+  const { onQuerySubmit,  submitChanged, headerInputChanged, onKeyPressOnInput} = funcs
 
   useEffect(() => {
     let tempArr = []
@@ -122,7 +122,7 @@ const QueryHeader = ({quoteNo, funcs, queryHeaderProps, motherType, motherNo}) =
                         :
                       </Grid>
                       <Grid item xs = {6}>
-                        <Input className = {classes.buttonRight} onKeyPress = {(e) => {onKeyPressOnForms(componentNo, obj.title, frameNo, e)}} onChange = {e => {headerInputChanged(obj.title, e)}}>find</Input>
+                        <Input className = {classes.buttonRight} onKeyPress = {(e) => {onKeyPressOnInput(frameNo, obj.title, e)}} onChange = {e => {headerInputChanged(obj.title, e)}}>find</Input>
                       </Grid>
                     </Grid>
                   </QueryPaper>

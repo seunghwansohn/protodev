@@ -50,14 +50,16 @@ const Client = ({attr, motherType, motherNo}) => {
 
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
     const type = 'clientContainer'
+    const dataType = 'client'
     const containerNo = type + '_' + frameNo
     console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 (', motherType, ', ', motherNo, ')')
 
     const {tableButton, open, setFindOneResult} = attr
     const {update} = useSelector(({ item }) => ({ update : item.table.update }));
     const dialogOpened   = useSelector(state => state.dialogs.opened)
-    const filter   = useSelector(state => state.clients.table.filter)
+    const filter   = useSelector(state => state.clients.table.filter[frameNo][dataType])
 
+    console.log(filter)
     const tableAttr = {
         flag : true,
         colAttr :   {
@@ -130,7 +132,7 @@ const Client = ({attr, motherType, motherNo}) => {
     }
 
     const getRawData = async () => {
-        await axios.get('/api/' + type + '/load').then(res => {
+        await axios.get('/api/' + dataType + '/load').then(res => {
             setPrimaryKey(res.data.primaryKey)
             setIncludingKeys(getIncludingKeys(res.data.result))
             setRawData(withoutIncludingKeys(res.data.result))
@@ -338,7 +340,6 @@ const Client = ({attr, motherType, motherNo}) => {
         },
     }
 
-    
     return(
         <>
             <ClientMain></ClientMain>
