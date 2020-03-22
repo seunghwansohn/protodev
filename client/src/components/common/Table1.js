@@ -113,7 +113,7 @@ const STTable = ({
 
   const [tableHeaderVals, setTableHeaderVals] = useState([]);
   const [filteredData, setFilteredData]       = useState(rawData);
-  const [filterKeyword, setFilterKeyword]     = useState('');
+  const [filterKeyword, setFilterKeyword]     = useState(initialFilter);
 
   const [hided, setHided]                     = useState([]);
   const [fixableCols, setFixableCols]         = useState([]);
@@ -151,6 +151,10 @@ const STTable = ({
   },[rawData])
 
   useEffect(() => {
+    setFilterKeyword(initialFilter)
+  },[initialFilter])
+
+  useEffect(() => {
     const deleteKey = 'id'
     headers = headers.filter(function (el) {
       return el !== deleteKey
@@ -159,8 +163,11 @@ const STTable = ({
   },[rawData])
 
   useEffect(() => {
+    console.log('필터실행중')
     if (filterKeyword !== null && filterKeyword !== undefined && filterKeyword !== ''){
+      console.log(filterKeyword)
       setFilteredData(filterArrayBySearchKeyword(filterKeyword, rawData, primaryKey))
+      console.log(filteredData)
       if (filteredData.length == 1) {
          console.log('검색결과 하나임')
          if (setFindOneResult && typeof setFindOneResult == "function") {
@@ -168,9 +175,10 @@ const STTable = ({
          }
       }
     } else {
+      console.log('엘스실행됨')
       setFilteredData(rawData)
     }
-  },[filterKeyword])
+  },[filterKeyword, rawData])
 
   useEffect(() => {
     if (updated) {
@@ -397,17 +405,6 @@ const STTable = ({
   }
 
   console.log(filterKeyword)
-  // const SearchBar = () => {
-  //   return (
-  //     <Input 
-  //       id = 'sea'
-  //       label  = 'dfe'
-  //       onChange = {(e) => {onInputFilterKeyword(e)}}
-  //       value    = {filterKeyword}
-  //     ></Input>
-  //   )
-  // }
-
   return (
     <React.Fragment>
 

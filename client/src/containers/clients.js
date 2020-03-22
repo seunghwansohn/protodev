@@ -131,6 +131,7 @@ const Client = ({attr, motherType, motherNo}) => {
         }
     }
 
+    console.log(primaryKey)
     const getRawData = async () => {
         await axios.get('/api/' + dataType + '/load').then(res => {
             setPrimaryKey(res.data.primaryKey)
