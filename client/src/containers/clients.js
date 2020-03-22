@@ -34,7 +34,7 @@ import {
 
 
 
-const Client = ({attr, motherType, motherNo}) => {
+const Client = ({attr, motherType, motherNo, subTableAttr}) => {
     
     const dispatch = useDispatch();
 
@@ -48,13 +48,16 @@ const Client = ({attr, motherType, motherNo}) => {
     const [includingKeys, 
         setIncludingKeys]               = useState([]);
 
+    const {tableButton, setFindOneResult} = subTableAttr
+
+
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
     const type = 'clientContainer'
     const dataType = 'client'
     const containerNo = type + '_' + frameNo
     console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 (', motherType, ', ', motherNo, ')')
 
-    const {tableButton, open, setFindOneResult} = attr
+    const {open} = attr
     const {update} = useSelector(({ item }) => ({ update : item.table.update }));
     const dialogOpened   = useSelector(state => state.dialogs.opened)
     const filter   = useSelector(state => state.clients.table.filter[frameNo][dataType])
@@ -127,9 +130,14 @@ const Client = ({attr, motherType, motherNo}) => {
             updatedAt : {
                 fixable : false,
                 defaultHided : true
-            }
-        }
+            },
+
+        },
+        tableButton,
+        setFindOneResult,
     }
+
+    console.log(tableAttr)
 
     console.log(primaryKey)
     const getRawData = async () => {
@@ -353,9 +361,7 @@ const Client = ({attr, motherType, motherNo}) => {
                 funcs       = {funcs}
                 states      = {states}
                 setStates   = {setStates}
-                tableButton = {tableButton}
                 initialFilter    = {filter}
-                setFindOneResult = {setFindOneResult}
             >
             </Table>
 

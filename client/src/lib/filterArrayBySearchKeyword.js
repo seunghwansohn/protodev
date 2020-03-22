@@ -11,8 +11,6 @@ const filterArrayBySearchKeyword = (searchKeyword, originalArr, primaryKey) => {
         // var spaceCount = (code.split(" ").length - 1); //중간에 들어간 공백의 숫자
         let codeArray = searchKeyword.split(' ')
 
-        console.log(codeArray)
-
         let matchedTrue = ''
 
         for(let i=0, k = 0; i < codeArray.length; i++) {
@@ -28,7 +26,6 @@ const filterArrayBySearchKeyword = (searchKeyword, originalArr, primaryKey) => {
             } 
         }
         if (matchedTrue === true) {
-            console.log('트루임', obj)
             matchedArr.push(obj);   //matchedKey라는 미리 선언된 배열변수에, 검색어를 포함한 아이템들의 id값만 담음.
         }
     })

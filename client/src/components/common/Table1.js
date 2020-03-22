@@ -99,15 +99,13 @@ const STTable = ({
   states, 
   setStates, 
   funcs, 
-  tableButton,
   initialFilter,
-  setFindOneResult
 }) => {
   
   const {rawData, updated, clickedCol, addedNew, selected}                    = states
   const {setRawData, setUpdated, setClickedCol, setAddedNew, setSelected}     = setStates
   const {load, onSubmitUpdatedVals, onDialogOpen, onDelete, onSubmitNewAdded} = funcs
-  const {colAttr} = attr
+  const {colAttr, tableButton, setFindOneResult} = attr
 
   let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
 

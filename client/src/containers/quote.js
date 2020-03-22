@@ -162,16 +162,16 @@ const QuoteContainer = ({motherType, motherNo}) => {
             maxWidth : 'xl' ,
             funcs : queryHeaderfuncs(),
             open : checkOpened('client_' + frameNo),
-            tableButton : [
-                {
-                    title : 'insert',
-                    func : function(row, index, containerNo){
+            table : {
+                tableButton : [
+                    {
+                        title : 'insert',
+                        func : function(row, index, containerNo){
+                        },
+                        mother : containerNo
                     },
-                    mother : containerNo
-                },
-            ],
-            setFindOneResult : {
-                setFoundResult : setFoundResult
+                ],
+                setFindOneResult : setFoundResult 
             }
         }
     }
@@ -204,9 +204,8 @@ const QuoteContainer = ({motherType, motherNo}) => {
                 <Client
                     motherType          = {type}
                     motherNo            = {frameNo} 
-                    attr = {DialogsAttr.client} 
-                    subTableAttr = {DialogsAttr.client.table}
-                    motherNo = {frameNo}
+                    attr                = {DialogsAttr.client} 
+                    subTableAttr        = {DialogsAttr.client.table}
                 ></Client>
             </DialogST>
 
