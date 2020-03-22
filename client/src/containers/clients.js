@@ -357,6 +357,7 @@ const Client = ({attr}) => {
                 states      = {states}
                 setStates   = {setStates}
                 tableButton = {tableButton}
+                filter      = {filter}
             >
             </Table>
 

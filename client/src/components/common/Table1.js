@@ -97,7 +97,8 @@ const STTable = ({
   states, 
   setStates, 
   funcs, 
-  tableButton
+  tableButton,
+  filter
 }) => {
   
   const {rawData, updated, clickedCol, addedNew, selected}                    = states
@@ -138,6 +139,7 @@ const STTable = ({
         setHowManyCopiedNew]                = useState(null)
 
   console.log(attr)
+  console.log(filter)
 
   const dispatch = useDispatch()
   console.log(colAttr)

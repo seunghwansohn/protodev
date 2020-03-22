@@ -30,11 +30,11 @@ const filterArrayBySearchKeyword = (searchKeyword, itemListArr) => {
             for (var i=0; i < matchedid.length; i++){
                 findDataId = matchedid[i];
                 function searchMatchedData(id, itemListArr) {
-                for (var i = 0; i < itemListArr.length; i++) {
-                    if (itemListArr[i].id === id)  {
-                    return itemListArr[i];
+                    for (var i = 0; i < itemListArr.length; i++) {
+                        if (itemListArr[i].id === id)  {
+                        return itemListArr[i];
+                        }
                     }
-                }
                 }
                 result.push(searchMatchedData(findDataId, itemListArr))
 
