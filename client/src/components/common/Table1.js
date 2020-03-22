@@ -25,7 +25,8 @@ import ListItemText     from '@material-ui/core/ListItemText';
 import ListSubheader    from '@material-ui/core/ListSubheader';
 
 import { ExpandLess, 
-  ExpandMore }          from '@material-ui/icons';
+  ExpandMore, 
+  FilterDrama}          from '@material-ui/icons';
 
 import InputDialog      from '../common/InputDialog';
 
@@ -161,17 +162,20 @@ const STTable = ({
   },[rawData])
 
   useEffect(() => {
+    if (filteredData.length == 1) {
+      console.log('검색결과 하나임')
+      if (setFindOneResult && typeof setFindOneResult == "function") {
+         setFindOneResult(filteredData[0])
+         console.log('검색결과하나입력')
+      }
+    }
+  },[filteredData])
+
+  useEffect(() => {
     console.log('필터실행중')
     if (filterKeyword !== null && filterKeyword !== undefined && filterKeyword !== ''){
-      console.log(filterKeyword)
       setFilteredData(filterArrayBySearchKeyword(filterKeyword, rawData, primaryKey))
-      console.log(filteredData)
-      if (filteredData.length == 1) {
-         console.log('검색결과 하나임')
-         if (setFindOneResult && typeof setFindOneResult == "function") {
-            setFindOneResult(filteredData[0])
-         }
-      }
+
     } else {
       console.log('엘스실행됨')
       setFilteredData(rawData)

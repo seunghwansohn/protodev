@@ -38,13 +38,15 @@ const Client = ({attr, motherType, motherNo, subTableAttr}) => {
     
     const dispatch = useDispatch();
 
-    const [rawData, setRawData]         = useState([])
-    const [fixedVals, setFixedVals]     = useState([]);
-    const [updated, setUpdated]         = useState(false);
-    const [clickedCol, setClickedCol]   = useState({});
-    const [addedNew, setAddedNew]       = useState([]);
-    const [selected, setSelected]       = useState([]);
-    const [primaryKey, setPrimaryKey]   = useState([]);
+    const [rawData, setRawData]                 = useState([])
+    const [fixedVals, setFixedVals]             = useState([]);
+    const [updated, setUpdated]                 = useState(false);
+    const [clickedCol, setClickedCol]           = useState({});
+    const [addedNew, setAddedNew]               = useState([]);
+    const [selected, setSelected]               = useState([]);
+    const [primaryKey, setPrimaryKey]           = useState('');
+    const [defaultIdentKey, setDefaultIdentKey] = useState('clientName');
+
     const [includingKeys, 
         setIncludingKeys]               = useState([]);
 
@@ -137,9 +139,6 @@ const Client = ({attr, motherType, motherNo, subTableAttr}) => {
         setFindOneResult,
     }
 
-    console.log(tableAttr)
-
-    console.log(primaryKey)
     const getRawData = async () => {
         await axios.get('/api/' + dataType + '/load').then(res => {
             setPrimaryKey(res.data.primaryKey)

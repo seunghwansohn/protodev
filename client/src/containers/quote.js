@@ -70,6 +70,16 @@ const QuoteContainer = ({motherType, motherNo}) => {
     console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
     const quoteNo = quoteProp.table.info.date + '-' + quoteProp.table.info.quoteLastNo
+    
+    useEffect(() => {
+        if (Object.keys(foundResult).includes('clientRate')){
+            console.log('클라이언트레이트있음', foundResult.clientRate)
+            setClientRate(foundResult.clientRate)
+        }
+      },[foundResult])
+
+    console.log(clientRate)
+
 
     const queryHeaderfuncs = () => {
         const onSetClose = (type) => {

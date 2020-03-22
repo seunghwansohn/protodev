@@ -108,7 +108,17 @@ const QueryHeader = ({quoteNo, funcs, queryHeaderProps, motherType, motherNo}) =
               if (obj.type == 'paper') {
                 returnChildren.push(
                   <QueryPaper>
-                    {obj.title}
+                    <Grid Container className = {classes.root}>
+                      <Grid item xs = {5}>
+                        {obj.title}
+                      </Grid>
+                      <Grid item xs = {1}>
+                        :
+                      </Grid>
+                      <Grid item xs = {6}>
+                        {obj.state}
+                      </Grid>
+                    </Grid>
                   </QueryPaper>
                 )
               } else if (obj.type == 'input') {
