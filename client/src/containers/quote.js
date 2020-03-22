@@ -35,13 +35,15 @@ import Button from "@material-ui/core/Button";
 import { makeStyles } from '@material-ui/core/styles';
 import {produce} from 'immer'
 
+import axios                from '../lib/api/axios'
+
 
 const useStyles = makeStyles(theme => ({
     root: {
       flexGrow: 1,
     },
 }))
-const QuoteContainer = () => {
+const QuoteContainer = ({motherType, motherNo}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
@@ -50,10 +52,8 @@ const QuoteContainer = () => {
     const selected  = useSelector(state => state.quoteList.selected)
     const requested = useSelector(state => state.quoteList.requested)
 
-
-    const [randomNo, setRandomNo]           = useState(generateRandom());
-
     const [date, setDate]                   = useState('');
+
 
     const [client, setClient]               = useState('');
     const [clientRate, setClientRate]       = useState('');
@@ -61,10 +61,14 @@ const QuoteContainer = () => {
     const [changedHeaderInput, 
         setChangedHeaderInput]              = useState({});
     
-    console.log(requested)
-    const type = 'quoteList'
-    const containerNo = type + '_' + randomNo
+    const [foundResult, 
+        setFoundResult]                     = useState({});
     
+    const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
+    const type = 'quoteContainer'
+    const containerNo = type + '_' + frameNo
+    console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+
     const quoteNo = quoteProp.table.info.date + '-' + quoteProp.table.info.quoteLastNo
 
     const queryHeaderfuncs = () => {
@@ -87,15 +91,15 @@ const QuoteContainer = () => {
             ))
         }
 
-        const onQueryHeaderKeyPress = (componentNo, title, randomNo, e) => {
+        const onQueryHeaderKeyPress = async (componentNo, title, frameNo, e) => {
             if (e.key === 'Enter') {
                 let tempObj = {}
-                const daialogNo = title + '_' + randomNo
+                const daialogNo = title + '_' + frameNo
                 tempObj[componentNo] = {}
                 tempObj[componentNo][title] = changedHeaderInput[title]
-                console.log(tempObj)
+                // await axios.post('/api/' + type )
                 dispatch(actSubmit(tempObj))
-                dispatch(actSetFilter(componentNo, title))
+                dispatch(actSetFilter(componentNo, title, e.target.value))
                 dispatch(onDialogOpen(true, daialogNo))
             }
         }
@@ -111,7 +115,6 @@ const QuoteContainer = () => {
     }
 
     const checkOpened = (title) => {
-        console.log(title)
         let result = ''
         opened.map(array => {
             if (array.type == title){
@@ -155,19 +158,21 @@ const QuoteContainer = () => {
 
     const DialogsAttr = {
         client : {
-            title : 'client_' + randomNo,
+            title : 'client_' + frameNo,
             maxWidth : 'xl' ,
             funcs : queryHeaderfuncs(),
-            open : checkOpened('client_' + randomNo),
+            open : checkOpened('client_' + frameNo),
             tableButton : [
                 {
                     title : 'insert',
                     func : function(row, index, containerNo){
-                        console.log(row, index, containerNo)
                     },
                     mother : containerNo
-                }
-            ]
+                },
+            ],
+            setFindOneResult : {
+                setFoundResult : setFoundResult
+            }
         }
     }
 
@@ -182,40 +187,44 @@ const QuoteContainer = () => {
         ]
     ]
 
-
     return(
         <div className = {classes.root}> 
         
         <h1>Quote List</h1>
             <QueryHeader
-                quoteNo = {quoteNo}
-                mother = {containerNo}
-                randomNo = {randomNo}
-                funcs = {queryHeaderfuncs()}
-                queryHeaderProps = {queryHeaderProps}
+                quoteNo             = {quoteNo}
+                motherType          = {type}
+                motherNo            = {frameNo}
+                funcs               = {queryHeaderfuncs()}
+                queryHeaderProps    = {queryHeaderProps}
             >
             </QueryHeader>
 
-            <DialogST attr = {DialogsAttr.client}>
-                <Client 
+            <DialogST attr = {DialogsAttr.client} motherNo = {frameNo}>
+                <Client
+                    motherType          = {type}
+                    motherNo            = {frameNo} 
                     attr = {DialogsAttr.client} 
-                    tableButton = {DialogsAttr.client.tableButton}
+                    subTableAttr = {DialogsAttr.client.table}
+                    motherNo = {frameNo}
                 ></Client>
             </DialogST>
 
-            {/* <TableContainer>
+            <TableContainer>
                 {quoteProp.table.contents.length !== 0 ? 
                     <Table 
                         table = { quoteProp.table } 
-                        // funcs = {funcs()}
                         type = 'quoteList'
+                        motherType          = {type}
+                        motherNo            = {frameNo}
                         defaultHideCols = {defaultHideCols}
                         arrangeRules = {arrangeRules}
                         colTypes = {colTypes}
                         quoteNo = {quoteNo}
+                        motherNo = {frameNo}
                     >
                     </Table> : ''}
-            </TableContainer> */}
+            </TableContainer>
         </div>
     )
 }   

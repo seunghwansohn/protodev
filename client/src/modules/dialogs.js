@@ -26,7 +26,6 @@ function reducer (state = initialState, action) {
   switch (action.type) {
       case ON_DIALOG_OPEN:
         return produce(state, draft =>{
-            console.log(action.meta)
             const temp = {}
             if (action.meta.type == 'copyItem') {
               temp.type = 'itemAdd'

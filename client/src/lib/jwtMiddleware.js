@@ -10,7 +10,6 @@ const jwtMiddleware = async (ctx, next) => {
       _id: decoded._id,
       username: decoded.username,
     };
-    console.log(decoded)
     // 토큰 3.5일 미만 남으면 재발급
     const now = Math.floor(Date.now() / 1000);
     if (decoded.exp - now < 60 * 60 * 24 * 3.5) {

@@ -40,7 +40,6 @@ function reducer (state = initialState, action) {
 
         case SET_UPDATED:
             return produce(state, draft => {
-                console.log(action.payload)
                 draft.update[action.payload.type] = action.payload.ox
             }
         )

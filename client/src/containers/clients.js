@@ -34,7 +34,7 @@ import {
 
 
 
-const Client = ({attr}) => {
+const Client = ({attr, motherType, motherNo}) => {
     
     const dispatch = useDispatch();
 
@@ -47,14 +47,13 @@ const Client = ({attr}) => {
     const [primaryKey, setPrimaryKey]   = useState([]);
     const [includingKeys, 
         setIncludingKeys]               = useState([]);
-    const [randomNo, setRandomNo]       = useState(generateRandom());
 
-        
-    const type = 'client'
+    const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
+    const type = 'clientContainer'
+    const containerNo = type + '_' + frameNo
+    console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 (', motherType, ', ', motherNo, ')')
 
-    const {tableButton, open} = attr
-    const containerNo = attr.title ? attr.title : type + randomNo
-    console.log(containerNo)
+    const {tableButton, open, setFindOneResult} = attr
     const {update} = useSelector(({ item }) => ({ update : item.table.update }));
     const dialogOpened   = useSelector(state => state.dialogs.opened)
     const filter   = useSelector(state => state.clients.table.filter)
@@ -130,10 +129,8 @@ const Client = ({attr}) => {
         }
     }
 
-    console.log(filter)
     const getRawData = async () => {
         await axios.get('/api/' + type + '/load').then(res => {
-            console.log(res)
             setPrimaryKey(res.data.primaryKey)
             setIncludingKeys(getIncludingKeys(res.data.result))
             setRawData(withoutIncludingKeys(res.data.result))
@@ -144,7 +141,6 @@ const Client = ({attr}) => {
         getRawData()
     },[])
 
-    console.log(rawData)
     const setDelete = async (codes) =>{
         await codes.map(code => {
             dispatch(actDelete(type, code.itemCode))
@@ -341,7 +337,6 @@ const Client = ({attr}) => {
             open : checkOpened('addClient')
         },
     }
-    console.log(tableAttr)
 
     
     return(
@@ -357,7 +352,8 @@ const Client = ({attr}) => {
                 states      = {states}
                 setStates   = {setStates}
                 tableButton = {tableButton}
-                filter      = {filter}
+                initialFilter    = {filter}
+                setFindOneResult = {setFindOneResult}
             >
             </Table>
 

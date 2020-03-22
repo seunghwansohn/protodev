@@ -43,7 +43,7 @@ export const actUpdate          = createAction(SET_UPDATE, arr => arr)
 export const actUpdateChange    = createAction(SET_UPDATE_CHANGE, ox => ox)
 export const actClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
 export const actDelete          = createAction(SET_DELETE, (type, code) => ({type, code}))
-export const actSetFilter       = createAction(SET_FILTER, (compNo, filterKeyword) => (compNo, filterKeyword))
+export const actSetFilter       = createAction(SET_FILTER, (compNo, type, value) => ({compNo, type, value}))
 
 export function* clientsSaga() {
 }
@@ -64,7 +64,9 @@ function reducer (state = initialState, action) {
             })
         case SET_FILTER:
             return produce(state, draft => {
-                draft.table.filter.keyword = action.payload
+                draft.table.filter[action.payload.compNo] = {}
+                draft.table.filter[action.payload.compNo].type = action.payload.type
+                draft.table.filter[action.payload.compNo].value = action.payload.value
             })
     
 

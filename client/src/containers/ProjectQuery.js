@@ -25,7 +25,6 @@ const ProjectQuery = ({reqCode}) => {
     ]
 
     useEffect(() => {
-        console.log(reqCode)
         axios.post('/api/' + type + '/query', reqCode).then(res => {
             setLoadedData(res.data)
         })

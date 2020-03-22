@@ -32,10 +32,10 @@ import InputDialog      from '../common/InputDialog';
 import TextField from '@material-ui/core/TextField';
 
 
-import spacelize              from '../../lib/spacelize'
+import spacelize                               from '../../lib/spacelize'
 import filterArrayBySearchKeyword              from '../../lib/filterArrayBySearchKeyword'
 import {selectMultipleStates, 
-  unSelectMultipleStates}     from '../../lib/tableFuncs'
+  unSelectMultipleStates}                      from '../../lib/tableFuncs'
 
 import styled   from "styled-components";
 import produce  from 'immer'
@@ -100,7 +100,8 @@ const STTable = ({
   setStates, 
   funcs, 
   tableButton,
-  filter
+  initialFilter,
+  setFindOneResult
 }) => {
   
   const {rawData, updated, clickedCol, addedNew, selected}                    = states
@@ -112,9 +113,8 @@ const STTable = ({
 
   const [tableHeaderVals, setTableHeaderVals] = useState([]);
   const [filteredData, setFilteredData]       = useState(rawData);
-  const [filterKeyword, setFilterKeyword]     = useState(filter);
+  const [filterKeyword, setFilterKeyword]     = useState('');
 
-  console.log(filter)
   const [hided, setHided]                     = useState([]);
   const [fixableCols, setFixableCols]         = useState([]);
   const [primaryKey, setPrimaryKey]           = useState('');
@@ -157,10 +157,15 @@ const STTable = ({
     setTableHeaderVals(headers)
   },[rawData])
 
-
   useEffect(() => {
     if (filterKeyword !== null && filterKeyword !== undefined && filterKeyword !== ''){
       setFilteredData(filterArrayBySearchKeyword(filterKeyword, rawData, primaryKey))
+      if (filteredData.length == 1) {
+         console.log('검색결과 하나임')
+         if (setFindOneResult && typeof setFindOneResult == "function") {
+            setFindOneResult(filteredData[0])
+         }
+      }
     } else {
       setFilteredData(rawData)
     }
@@ -197,7 +202,6 @@ const STTable = ({
     setPrimaryKey(tmpPrimaryKey)
   },[])
 
-  console.log(colAttr)
   const isChecked     = name => selected.indexOf(name)    !== -1;
   const isHidedCulumn = name => hided.indexOf(name)       !== -1;
   const isFixable     = name => fixableCols.indexOf(name) !== -1;
@@ -372,7 +376,6 @@ const STTable = ({
     }
     setAddedNew(tempArr)
   }
-  
   const onClickCopiedNew = () => {
     setAddCopiedNewDialogOpen(true)
   }
@@ -387,7 +390,6 @@ const STTable = ({
 
   const onInputFilterKeyword = (e) => {
     e.preventDefault(); 
-    console.log(e.target.value)
     setFilterKeyword(e.target.value)
   }
 

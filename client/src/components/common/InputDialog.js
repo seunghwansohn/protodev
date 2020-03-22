@@ -61,7 +61,6 @@ const InputDialog = ({attr}) => {
     setOpenState(false)
   }
 
-  console.log(openState)
   return(
     <React.Fragment>
       <Dialog

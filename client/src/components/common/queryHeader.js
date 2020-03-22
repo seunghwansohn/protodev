@@ -9,6 +9,9 @@ import Box from '@material-ui/core/Box';
 
 import styled   from "styled-components";
 
+import {generateRandom}                         from '../../lib/common';
+
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -42,7 +45,7 @@ const QueryPaper = styled(Paper)`
   }
 `
 
-const QueryHeader = ({quoteNo, funcs, queryHeaderProps, mother, randomNo}) => {
+const QueryHeader = ({quoteNo, funcs, queryHeaderProps, motherType, motherNo}) => {
   const classes = useStyles();
 
   const [newColCount, setNewColCount] = React.useState(0);
@@ -56,11 +59,12 @@ const QueryHeader = ({quoteNo, funcs, queryHeaderProps, mother, randomNo}) => {
 
   }))
 
+  const [frameNo, setFrameNo] = useState(motherNo ? motherNo : generateRandom())
   const type = 'queryHeaderComponent'
-  const componentNo = type + '_' + randomNo
-  
+  const componentNo = type + '_' + frameNo
 
-  console.log(queryHeaderProps)
+  console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+
   const { onQuerySubmit,  submitChanged, headerInputChanged, onKeyPressOnForms} = funcs
 
   useEffect(() => {
@@ -73,7 +77,6 @@ const QueryHeader = ({quoteNo, funcs, queryHeaderProps, mother, randomNo}) => {
     setNewColNo(tempArr)
   },[])
 
-  console.log(mother, randomNo)
   const onClientSubmit = (e) => {
       e.preventDefault()
       const type = 'clients'
@@ -119,7 +122,7 @@ const QueryHeader = ({quoteNo, funcs, queryHeaderProps, mother, randomNo}) => {
                         :
                       </Grid>
                       <Grid item xs = {6}>
-                        <Input className = {classes.buttonRight} onKeyPress = {(e) => {onKeyPressOnForms(componentNo, obj.title, randomNo, e)}} onChange = {e => {headerInputChanged(obj.title, e)}}>find</Input>
+                        <Input className = {classes.buttonRight} onKeyPress = {(e) => {onKeyPressOnForms(componentNo, obj.title, frameNo, e)}} onChange = {e => {headerInputChanged(obj.title, e)}}>find</Input>
                       </Grid>
                     </Grid>
                   </QueryPaper>

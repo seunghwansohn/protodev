@@ -24,13 +24,11 @@ const filterArrayBySearchKeyword = (searchKeyword, itemListArr, primaryKey) => {
         matchedKey.push(num[primaryKey]);   //matchedKey라는 미리 선언된 배열변수에, 검색어를 포함한 아이템들의 id값만 담음.
         }
     })
-    console.log(matchedKey)
 
     var returnWords = function(){
         var matchedData = [];
         var findDataId = '';
         matchedKey.map(key => {
-            console.log(key)
             itemListArr.map(obj => {
                 if (obj[primaryKey] === key)
                 {
@@ -40,7 +38,6 @@ const filterArrayBySearchKeyword = (searchKeyword, itemListArr, primaryKey) => {
         })
         return matchedData;
     }
-    console.log(returnWords())
     return returnWords();
 }
 export default filterArrayBySearchKeyword

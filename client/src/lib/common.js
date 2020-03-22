@@ -25,7 +25,6 @@ export const withoutIncludingKeys = (arr) => {
 export const getIncludingKeys1 = (arr) => {
     let tempArr = []
     arr.map(obj => {
-        console.log(obj)
         delete obj.includingKeys
         tempArr.push(obj)
     })

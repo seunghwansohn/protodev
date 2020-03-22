@@ -45,7 +45,6 @@ const Project = props => {
         })
     }
 
-    console.log(rawData)
 
     const onDelete = async (codes) =>{
         await codes.map(code => {

@@ -31,7 +31,6 @@ function reducer (state = initialState, action) {
         })      
       case EXCHANGE_RATE_FAILURE:
         return produce(state, draft =>{
-          console.log(action.payload.rates)
         })              
       default:
         return state;
