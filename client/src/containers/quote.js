@@ -181,8 +181,9 @@ const QuoteContainer = ({motherType, motherNo}) => {
                         mother : containerNo
                     },
                 ],
-                setFindOneResult : setFoundResult 
-            }
+                setFindOneResult : setFoundResult,
+                frameNo : 'client_' + frameNo
+            },
         }
     }
 

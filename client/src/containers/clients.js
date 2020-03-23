@@ -137,6 +137,7 @@ const Client = ({attr, motherType, motherNo, subTableAttr}) => {
         },
         tableButton,
         setFindOneResult,
+        frameNo
     }
 
     const getRawData = async () => {
@@ -361,6 +362,7 @@ const Client = ({attr, motherType, motherNo, subTableAttr}) => {
                 states      = {states}
                 setStates   = {setStates}
                 initialFilter    = {filter}
+                frameNo ={frameNo}
             >
             </Table>
 

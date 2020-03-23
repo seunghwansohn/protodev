@@ -106,7 +106,7 @@ const STTable = ({
   const {rawData, updated, clickedCol, addedNew, selected}                    = states
   const {setRawData, setUpdated, setClickedCol, setAddedNew, setSelected}     = setStates
   const {load, onSubmitUpdatedVals, onDialogOpen, onDelete, onSubmitNewAdded} = funcs
-  const {colAttr, tableButton, setFindOneResult} = attr
+  const {colAttr, tableButton, setFindOneResult, frameNo} = attr
 
   let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
 
@@ -167,6 +167,7 @@ const STTable = ({
       if (setFindOneResult && typeof setFindOneResult == "function") {
          setFindOneResult(filteredData[0])
          console.log('검색결과하나입력')
+         dispatch(onDialogOpen(false, 'client_' + frameNo))
       }
     }
   },[filteredData])
