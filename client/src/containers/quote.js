@@ -48,8 +48,11 @@ const QuoteContainer = ({motherType, motherNo}) => {
     const dispatch = useDispatch();
 
     const opened    = useSelector(state => state.dialogs.opened)
-    const selected  = useSelector(state => state.quoteList.selected)
-    const requested = useSelector(state => state.quoteList.requested)
+
+    const [rawData, setRawData]         = useState([])
+
+    const querySelected  = useSelector(state => state.quoteList.selected)
+    const queryRequested = useSelector(state => state.quoteList.requested)
 
     const quoteProp = useSelector(state => state.quoteList)
 
@@ -81,6 +84,38 @@ const QuoteContainer = ({motherType, motherNo}) => {
 
     console.log(clientRate)
 
+    const getRawData = async () => {
+
+    }
+
+    //테이블 셀렉트
+    const [selected, setSelected]       = useState([]);
+    const [clickedCol, setClickedCol]   = useState({});
+
+    const states = {
+        rawData     : quoteProp.table.contents,
+        // updated     : updated,
+        // clickedCol  : clickedCol,
+        // addedNew    : addedNew,
+        selected    : selected
+    }
+
+    const setStates = {
+        setRawData      : setRawData,
+        // setUpdated      : setUpdated,
+        // setClickedCol   : setClickedCol,
+        // setAddedNew     : setAddedNew,
+        // setSelected     : setSelected
+    }
+
+    const funcs = {
+        load : getRawData,
+        // onSubmitUpdatedVals : onSubmitUpdatedVals,
+        // onDialogOpen : onDialogOpen,
+        // onDelete : setDelete,
+        // onSubmitNewAdded : onSubmitNewAdded
+    }
+    
     //   console.log(queteProp)
     const queryHeaderfuncs = () => {
         const onSetClose = (type) => {
@@ -151,7 +186,11 @@ const QuoteContainer = ({motherType, motherNo}) => {
         'id',
         'height',
         'description',
-        'itemCode'
+        'itemCode',
+        'notes',
+        'itemCode',
+        'supplierCode',
+        'makerModelNo',
     ]
 
     const arrangeRules = [   //헤더 순서를 정하려면 여기다가 배열값 추가 하면 됨.
@@ -185,6 +224,99 @@ const QuoteContainer = ({motherType, motherNo}) => {
         }
     }
 
+    const tableAttr = {
+        flag : true,
+        colAttr :   {
+            itemCode : {
+                primary : true,
+                fixable : false,
+                defaultHided : true
+            },
+            itemName : {
+                fixable : true,
+                defaultHided : false
+            },
+            description : {
+                fixable : true,
+                defaultHided : true
+            },
+            weight : {
+                fixable : true,
+                defaultHided : true
+            },
+            width : {
+                fixable : true,
+                defaultHided : true
+            },
+            depth : {
+                fixable : true,
+                defaultHided : true
+            },
+            height : {
+                fixable : true,
+                defaultHided : true
+            },
+            importTaxRate : {
+                fixable : true,
+                defaultHided : false
+            },
+            maker : {
+                fixable : true,
+                defaultHided : false
+            },
+            supplierCode : {
+                fixable : true,
+                defaultHided : false
+            },
+            notes : {
+                fixable : true,
+                defaultHided : true
+            },
+            makerModelNo : {
+                fixable : true,
+                defaultHided : true
+            },
+            VNPrice : {
+                fixable : true,
+                defaultHided : false
+            },
+            stkVVar : {
+                fixable : true,
+                defaultHided : true
+            },
+            stkCVar : {
+                fixable : true,
+                defaultHided : true
+            },
+            qty : {
+                fixable : true,
+                defaultHided : false,
+                defaultInput : true,
+                defaultValue : 0
+            },
+            amount : {
+                calValue : true,
+                value : function(index) {
+                    let result = ''
+                    if (quoteProp.table.contents[index].buyingPKR && quoteProp.table.contents[index].qty) {
+                        result = quoteProp.table.contents[index].buyingPKR * quoteProp.table.contents[index].qty
+                    }
+                    return result
+                }
+            },
+            createdAt : {
+                fixable : false,
+                defaultHided : true
+            },
+            updatedAt : {
+                fixable : false,
+                defaultHided : true
+            },
+
+        },
+    }
+
+    console.log(quoteProp)
     return(
         <div className = {classes.root}> 
         
@@ -210,12 +342,11 @@ const QuoteContainer = ({motherType, motherNo}) => {
                     <Table 
                         motherType          = {type}
                         motherNo            = {frameNo}
-                        table = { quoteProp.table } 
-                        type = 'quoteList'
-                        defaultHideCols = {defaultHideCols}
-                        arrangeRules = {arrangeRules}
-                        quoteNo = {quoteNo}
-                        motherNo = {frameNo}
+                        states      = {states}
+                        setStates   = {setStates}
+                        attr        = {tableAttr}
+                        funcs       = {funcs}
+
                     >
                     </Table> : ''}
             </TableContainer>

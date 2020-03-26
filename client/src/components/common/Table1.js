@@ -117,6 +117,9 @@ const STTable = ({
   const [hided, setHided]                     = useState([]);
   const [fixableCols, setFixableCols]         = useState([]);
   const [primaryKey, setPrimaryKey]           = useState('');
+  const [inputCols, setInputCols]             = useState([]);
+  const [calValueCols, setCalValueCols]       = useState([]);
+
 
   const [order, setOrder]                     = useState('asc');
   const [orderBy, setOrderBy]                 = useState('calories');
@@ -198,6 +201,9 @@ const STTable = ({
     let tmpPrimaryKey = ''
     let tmpDefaultHided = []
     let tempFixableCols = []
+    let tmpDefaultInput = []
+    let tmpCalValueCols = []
+
     Object.keys(colAttr).map(key => {
       if(colAttr[key].defaultHided){
         tmpDefaultHided.push(key)
@@ -208,15 +214,28 @@ const STTable = ({
       if(colAttr[key].primary){
         tmpPrimaryKey = key
       }
+      if(colAttr[key].defaultInput){
+        tmpDefaultInput.push(key)
+      }
+      if(colAttr[key].calValue){
+        tmpCalValueCols.push(key)
+      }
     })
     setHided(tmpDefaultHided)
     setFixableCols(tempFixableCols)
     setPrimaryKey(tmpPrimaryKey)
+    setInputCols(tmpDefaultInput)
+    setCalValueCols(tmpCalValueCols)
   },[])
 
+  console.log(inputCols)
   const isChecked     = name => selected.indexOf(name)    !== -1;
   const isHidedCulumn = name => hided.indexOf(name)       !== -1;
   const isFixable     = name => fixableCols.indexOf(name) !== -1;
+  const isInput       = name => inputCols.indexOf(name) !== -1;
+  const isCalValue    = name => calValueCols.indexOf(name) !== -1;
+
+
 
   const onHidedCulumn   = selectMultipleStates
   const handleClickFlag = selectMultipleStates
@@ -249,6 +268,9 @@ const STTable = ({
     return ox
   }
   
+  const checkDefaultInputCol = (header) => {
+
+  }
   
   const onSetfixMode = () => {
     fixMode ? setFixMode(false) : setFixMode(true)
@@ -511,6 +533,10 @@ const STTable = ({
                       let fixable = checkColFixable(index, header)
                       let fixed = checkCellFixed(index, header)
                       let isfixableCol = isFixable(header)
+                      let isInputCol   = isInput(header)
+                      let isCalValueCol   = isCalValue(header)
+
+                      console.log(isCalValueCol)
                       const isColumnHided = isHidedCulumn(header)
                       if (!isColumnHided) {
                         if (fixable & isfixableCol) {
@@ -521,28 +547,46 @@ const STTable = ({
                             value = {filteredData[index][header]} 
                             onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}/>
                           )
-                        }else{
-                          if (fixed) {
-                            console.log('픽스드')
+                        }else if (isInputCol) { 
+                          return (
+                            <Input 
+                              onChange = {(event) => handleChangeInput(event, index, header)} 
+                              key = {header }
+                              value = {filteredData[index][header]} 
+                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
+                            />
+                          )
+                        }else if (isCalValueCol) { 
+                          console.log(colAttr[header].value(index))
+                          console.log(header)
+                          return (
+                            <Input
+                              disable 
+                              onChange = {(event) => handleChangeInput(event, index, header)} 
+                              key = {header }
+                              value = {colAttr[header].value(index)} 
+                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
+                            />
+                          )
+                        }else if (fixed) {
                             return(
                               <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], index, header)}}>
                                 {row[header]}
                               </StyledTableCell>
                             )
-                          }else{
+                        }else if (true) {
                             return(
                               <StyledTableCell onClick = {() => {onClickCols(row[header], index, header)}}>
                                 {row[header]}
                               </StyledTableCell>
                             )
-                          }
                         }
                     }
                     })}
                     {tableButton ? tableButton.map(obj => {
                       return(
                         <StyledTableCell>
-                          <button onClick = {e => obj.func(row, index)}>
+                          <button onClick = {e => obj.func(row)}>
                             {obj.title}
                           </button>
                         </StyledTableCell>

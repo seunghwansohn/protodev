@@ -19,6 +19,8 @@ import DialogST     from '../components/common/DialogST'
 import Table        from '../components/common/Table1'
 import ButtonHeader from '../components/common/ButtonHeader'
 
+
+
 import {generateRandom}                         from '../lib/common';
 
 // // import ItemAdd from '../components/ItemAdd'
@@ -30,37 +32,66 @@ import {getIncludingKeys,
     withoutIncludingKeys }  from '../lib/common'
 
 
-
-
 const ItemListContainer = ({motherType, motherNo}) => {
     const dispatch = useDispatch();
 
-    const opened    = useSelector(state => state.dialogs.opened)
-
-    const [rawData, setRawData]         = useState([])
-    const [fixedVals, setFixedVals]     = useState([]);
-    const [updated, setUpdated]         = useState(false);
-    const [clickedCol, setClickedCol]   = useState({});
-    const [addedNew, setAddedNew]       = useState([]);
-    const [selected, setSelected]       = useState([]);
-    const [primaryKey, setPrimaryKey]   = useState([]);
-    const [includingKeys, 
-        setIncludingKeys]               = useState([]);
-    
-    const {update} = useSelector(({ item }) => ({ update : item.table.update }));
-    const dialogOpened   = useSelector(state => state.dialogs.opened)
-
-
+    //개체 기본 속성
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
     const type = 'itemListContainer'
     const containerNo = type + '_' + frameNo
     const dataType = 'item'
 
+
+    //다이얼로그 관련
+    const opened         = useSelector(state => state.dialogs.opened)
+    const dialogOpened   = useSelector(state => state.dialogs.opened)
+
+    const checkOpened = (title) => {
+        let result = ''
+        dialogOpened.map(array => {
+            if (array.type == title){
+                result = array.ox
+            }
+        })
+        return result
+    }
+
+    const DialogsAttr = {
+        itemQuery : {
+            title : type,
+            maxWidth : 'xl' ,
+            // funcs : funcs,
+            open : checkOpened(type)
+        }
+    }
+
+
+
+    //테이블 관련
+    const [tableRawData, 
+        setTableRawData]                = useState([])
+    const [primaryKey, setPrimaryKey]   = useState([]);
+    const [includingKeys, 
+        setIncludingKeys]               = useState([]);
+
+    //테이블 업데이트
+    const [fixedVals, setFixedVals]     = useState([]);
+    const [updated, setUpdated]         = useState(false);
+    const {update} = useSelector(({ item }) => ({ update : item.table.update }));
+
+    const [addedNew, setAddedNew]       = useState([]);
+
+    //테이블 셀렉트
+    const [selected, setSelected]       = useState([]);
+    const [clickedCol, setClickedCol]   = useState({});
+
+
+
     const getRawData = async () => {
         await axios.get('/api/' + dataType + '/load').then(res => {
             setPrimaryKey(res.data.primaryKey)
             setIncludingKeys(getIncludingKeys(res.data.result))
-            setRawData(withoutIncludingKeys(res.data.result))
+            setTableRawData(withoutIncludingKeys(res.data.result))
         })
     }
     
@@ -86,15 +117,7 @@ const ItemListContainer = ({motherType, motherNo}) => {
         await setFixedVals([])
     }
 
-    const checkOpened = (title) => {
-        let result = ''
-        dialogOpened.map(array => {
-            if (array.type == title){
-                result = array.ox
-            }
-        })
-        return result
-    }
+
 
     useEffect(() => {
         getRawData()
@@ -113,8 +136,10 @@ const ItemListContainer = ({motherType, motherNo}) => {
         setUpdated(true)
     }
 
-    const states = {
-        rawData     : rawData,
+
+    //table 관련 속성들
+    const tableStates = {
+        rawData     : tableRawData,
         updated     : updated,
         clickedCol  : clickedCol,
         addedNew    : addedNew,
@@ -122,7 +147,7 @@ const ItemListContainer = ({motherType, motherNo}) => {
     }
 
     const setStates = {
-        setRawData      : setRawData,
+        setTableRawData      : setTableRawData,
         setUpdated      : setUpdated,
         setClickedCol   : setClickedCol,
         setAddedNew     : setAddedNew,
@@ -137,73 +162,6 @@ const ItemListContainer = ({motherType, motherNo}) => {
         onSubmitNewAdded : onSubmitNewAdded
     }
 
-    const colAttr = {
-        itemCode : {
-            primary : true,
-            fixable : false,
-            defaultHided : false
-        },
-        itemName : {
-            fixable : true,
-            defaultHided : false
-        },
-        description : {
-            fixable : true,
-            defaultHided : true
-        },
-        weight : {
-            fixable : true,
-            defaultHided : true
-        },
-        width : {
-            fixable : true,
-            defaultHided : true
-        },
-        depth : {
-            fixable : true,
-            defaultHided : true
-        },
-        height : {
-            fixable : true,
-            defaultHided : true
-        },
-        importTaxRate : {
-            fixable : true,
-            defaultHided : false
-        },
-        maker : {
-            fixable : true,
-            defaultHided : false
-        },
-        supplierCode : {
-            fixable : true,
-            defaultHided : false
-        },
-        makerModelNo : {
-            fixable : true,
-            defaultHided : false
-        },
-        VNPrice : {
-            fixable : true,
-            defaultHided : false
-        },
-        stkVVar : {
-            fixable : true,
-            defaultHided : true
-        },
-        stkCVar : {
-            fixable : true,
-            defaultHided : true
-        },
-        createdAt : {
-            fixable : false,
-            defaultHided : true
-        },
-        updatedAt : {
-            fixable : false,
-            defaultHided : true
-        }
-    }
 
     const tableAttr = {
         flag : true,
@@ -277,32 +235,25 @@ const ItemListContainer = ({motherType, motherNo}) => {
         tableButton : [
             {
                 title : 'insert',
-                func : function(row, index, containerNo){
+                func : function(row){
+                    console.log(row)
+                    dispatch(onAlreadyPickedCheck(row))
                 },
                 mother : containerNo
             },
         ],
     }
 
-    const DialogsAttr = {
-        itemQuery : {
-            title : type,
-            maxWidth : 'xl' ,
-            funcs : funcs,
-            open : checkOpened(type)
-        }
-    }
+
 
     return(
         <>
             <Table 
                 type        = {type}
-                tableArr    = {rawData.data}  
                 attr        = {tableAttr}
                 funcs       = {funcs}
-                states      = {states}
+                states      = {tableStates}
                 setStates   = {setStates}
-                colAttr     = {colAttr}
             ></Table>
 
             {/* <DialogST attr = {DialogsAttr.itemQuery}>
