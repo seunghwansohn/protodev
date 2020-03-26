@@ -11,8 +11,6 @@ import styled   from "styled-components";
 
 import {generateRandom}                         from '../../lib/common';
 
-
-
 const useStyles = makeStyles(theme => ({
     root: {
       flexGrow: 1,
@@ -45,13 +43,13 @@ const QueryPaper = styled(Paper)`
   }
 `
 
-const QueryHeader = ({quoteNo, funcs, queryHeaderProps, motherType, motherNo}) => {
+const QueryHeader = ({motherType, motherNo, funcs, queryHeaderProps}) => {
   const classes = useStyles();
 
-  const [newColCount, setNewColCount] = React.useState(0);
-  const [newColNo, setNewColNo]       = React.useState(0);
+  const [newColCount, setNewColCount] = useState(0);
+  const [newColNo, setNewColNo]       = useState(0);
 
-  const [clientName, setClientName]   = React.useState(null);
+  const [clientName, setClientName]   = useState(null);
 
   const {selectedClientName, selectedClientRate} = useSelector(({quoteList}) => ({
       selectedClientName : quoteList.query.clients.result.clientName,
@@ -87,14 +85,6 @@ const QueryHeader = ({quoteNo, funcs, queryHeaderProps, motherType, motherNo}) =
       e.preventDefault()
       setClientName(e.target.value)
   }
-
-  // useEffect(() => {
-  //     queryHeaderProps.map(prop =>{
-  //         if (loadedTempData.hasOwnProperty(prop.title)) {
-  //             obj.setState(loadedTempData[prop.title])
-  //         }
-  //     })
-  // },[])
 
   return (
     <div className = {classes.root}>

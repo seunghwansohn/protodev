@@ -24,7 +24,6 @@ const PaginationBlock = styled.div`
     }
 `;
 
-
 const MainHeader = () => {
     const { user } = useSelector(({ user }) => ({ user: user.user }));
     const {loginJustNow} = useSelector(({ auth }) => ({ loginJustNow: auth.justNow }));

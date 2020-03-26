@@ -141,7 +141,7 @@ const STTable = ({
   const [howManyCopiedNew, 
         setHowManyCopiedNew]                = useState(null)
 
-  
+  console.log(attr)
   console.log(initialFilter)
   const dispatch = useDispatch()
 

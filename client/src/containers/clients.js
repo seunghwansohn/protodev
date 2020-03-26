@@ -30,11 +30,7 @@ import {
     actDelete
  } from '../modules/clients'
 
-
-
-
-
-const Client = ({attr, motherType, motherNo, subTableAttr}) => {
+const Client = ({motherType, motherNo, subTableAttr}) => {
     
     const dispatch = useDispatch();
 
@@ -59,7 +55,6 @@ const Client = ({attr, motherType, motherNo, subTableAttr}) => {
     const containerNo = type + '_' + frameNo
     console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 (', motherType, ', ', motherNo, ')')
 
-    const {open} = attr
     const {update} = useSelector(({ item }) => ({ update : item.table.update }));
     const dialogOpened   = useSelector(state => state.dialogs.opened)
     const filter   = useSelector(state => state.clients.table.filter[frameNo][dataType])

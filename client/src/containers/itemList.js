@@ -18,6 +18,9 @@ import {
 import DialogST     from '../components/common/DialogST'
 import Table        from '../components/common/Table1'
 import ButtonHeader from '../components/common/ButtonHeader'
+
+import {generateRandom}                         from '../lib/common';
+
 // // import ItemAdd from '../components/ItemAdd'
 // import ItemQuery from '../components/ItemQuery'
 // import SupplierAdd from '../components/supplierAdd'
@@ -27,79 +30,12 @@ import {getIncludingKeys,
     withoutIncludingKeys }  from '../lib/common'
 
 
-const tableAttr = {
-    flag : true,
-    colAttr : {
-        itemCode : {
-            primary : true,
-            fixable : false,
-            defaultHided : false
-        },
-        itemName : {
-            fixable : true,
-            defaultHided : false
-        },
-        description : {
-            fixable : true,
-            defaultHided : true
-        },
-        weight : {
-            fixable : true,
-            defaultHided : true
-        },
-        width : {
-            fixable : true,
-            defaultHided : true
-        },
-        depth : {
-            fixable : true,
-            defaultHided : true
-        },
-        height : {
-            fixable : true,
-            defaultHided : true
-        },
-        importTaxRate : {
-            fixable : true,
-            defaultHided : false
-        },
-        maker : {
-            fixable : true,
-            defaultHided : false
-        },
-        supplierCode : {
-            fixable : true,
-            defaultHided : false
-        },
-        makerModelNo : {
-            fixable : true,
-            defaultHided : false
-        },
-        VNPrice : {
-            fixable : true,
-            defaultHided : false
-        },
-        stkVVar : {
-            fixable : true,
-            defaultHided : true
-        },
-        stkCVar : {
-            fixable : true,
-            defaultHided : true
-        },
-        createdAt : {
-            fixable : false,
-            defaultHided : true
-        },
-        updatedAt : {
-            fixable : false,
-            defaultHided : true
-        }
-    }
-}
 
-const ItemListContainer = () => {
+
+const ItemListContainer = ({motherType, motherNo}) => {
     const dispatch = useDispatch();
+
+    const opened    = useSelector(state => state.dialogs.opened)
 
     const [rawData, setRawData]         = useState([])
     const [fixedVals, setFixedVals]     = useState([]);
@@ -114,10 +50,14 @@ const ItemListContainer = () => {
     const {update} = useSelector(({ item }) => ({ update : item.table.update }));
     const dialogOpened   = useSelector(state => state.dialogs.opened)
 
-    const type = 'item'
+
+    const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
+    const type = 'itemListContainer'
+    const containerNo = type + '_' + frameNo
+    const dataType = 'item'
 
     const getRawData = async () => {
-        await axios.get('/api/' + type + '/load').then(res => {
+        await axios.get('/api/' + dataType + '/load').then(res => {
             setPrimaryKey(res.data.primaryKey)
             setIncludingKeys(getIncludingKeys(res.data.result))
             setRawData(withoutIncludingKeys(res.data.result))
@@ -263,6 +203,85 @@ const ItemListContainer = () => {
             fixable : false,
             defaultHided : true
         }
+    }
+
+    const tableAttr = {
+        flag : true,
+        colAttr : {
+            itemCode : {
+                primary : true,
+                fixable : false,
+                defaultHided : false
+            },
+            itemName : {
+                fixable : true,
+                defaultHided : false
+            },
+            description : {
+                fixable : true,
+                defaultHided : true
+            },
+            weight : {
+                fixable : true,
+                defaultHided : true
+            },
+            width : {
+                fixable : true,
+                defaultHided : true
+            },
+            depth : {
+                fixable : true,
+                defaultHided : true
+            },
+            height : {
+                fixable : true,
+                defaultHided : true
+            },
+            importTaxRate : {
+                fixable : true,
+                defaultHided : false
+            },
+            maker : {
+                fixable : true,
+                defaultHided : false
+            },
+            supplierCode : {
+                fixable : true,
+                defaultHided : false
+            },
+            makerModelNo : {
+                fixable : true,
+                defaultHided : false
+            },
+            VNPrice : {
+                fixable : true,
+                defaultHided : false
+            },
+            stkVVar : {
+                fixable : true,
+                defaultHided : true
+            },
+            stkCVar : {
+                fixable : true,
+                defaultHided : true
+            },
+            createdAt : {
+                fixable : false,
+                defaultHided : true
+            },
+            updatedAt : {
+                fixable : false,
+                defaultHided : true
+            },
+        },
+        tableButton : [
+            {
+                title : 'insert',
+                func : function(row, index, containerNo){
+                },
+                mother : containerNo
+            },
+        ],
     }
 
     const DialogsAttr = {

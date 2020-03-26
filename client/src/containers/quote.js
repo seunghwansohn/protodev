@@ -47,10 +47,11 @@ const QuoteContainer = ({motherType, motherNo}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
 
-    const quoteProp = useSelector(state => state.quoteList)
     const opened    = useSelector(state => state.dialogs.opened)
     const selected  = useSelector(state => state.quoteList.selected)
     const requested = useSelector(state => state.quoteList.requested)
+
+    const quoteProp = useSelector(state => state.quoteList)
 
     const [date, setDate]                   = useState('');
 
@@ -80,11 +81,9 @@ const QuoteContainer = ({motherType, motherNo}) => {
 
     console.log(clientRate)
 
-
+    //   console.log(queteProp)
     const queryHeaderfuncs = () => {
         const onSetClose = (type) => {
-            if (type == 'quoteList') {
-            }
             const ox = false
             dispatch(onFuncsDialog.onDialogOpen(ox,type))
         }
@@ -124,6 +123,17 @@ const QuoteContainer = ({motherType, motherNo}) => {
         return funcsObj
     }
 
+    const queryHeaderProps = [
+        [
+            {type : 'paper', size : 3, title: 'quoteNo', state : quoteNo, style:'regular'},
+            {type : 'paper', title: 'date', state : date, style:'regular'},
+        ],
+        [
+            {type : 'input', size : 3, title: 'client', state : client, setState: setClient, style:'regular'},
+            {type : 'paper', title: 'clientRate', state : clientRate, setState : setClientRate, style:'regular'},
+        ]
+    ]
+
     const checkOpened = (title) => {
         let result = ''
         opened.map(array => {
@@ -143,18 +153,6 @@ const QuoteContainer = ({motherType, motherNo}) => {
         'description',
         'itemCode'
     ]
-
-
-    let colTypes = {
-        priceRate : {
-            style : 'input',
-            type : 'number',
-        },
-        qty : {
-            style : 'input',
-            type : 'number'
-        },
-    }
 
     const arrangeRules = [   //헤더 순서를 정하려면 여기다가 배열값 추가 하면 됨.
         ['importRate', 'description'],
@@ -187,23 +185,11 @@ const QuoteContainer = ({motherType, motherNo}) => {
         }
     }
 
-    const queryHeaderProps = [
-        [
-            {type : 'paper', size : 3, title: 'quoteNo', state : quoteNo, style:'regular'},
-            {type : 'paper', title: 'date', state : date, style:'regular'},
-        ],
-        [
-            {type : 'input', size : 3, title: 'client', state : client, setState: setClient, style:'regular'},
-            {type : 'paper', title: 'clientRate', state : clientRate, setState : setClientRate, style:'regular'},
-        ]
-    ]
-
     return(
         <div className = {classes.root}> 
         
         <h1>Quote List</h1>
             <QueryHeader
-                quoteNo             = {quoteNo}
                 motherType          = {type}
                 motherNo            = {frameNo}
                 funcs               = {queryHeaderfuncs()}
@@ -211,11 +197,10 @@ const QuoteContainer = ({motherType, motherNo}) => {
             >
             </QueryHeader>
 
-            <DialogST attr = {DialogsAttr.client} motherNo = {frameNo}>
+            <DialogST attr = {DialogsAttr.client} motherNo = {frameNo} motherType = {type}>
                 <Client
                     motherType          = {type}
                     motherNo            = {frameNo} 
-                    attr                = {DialogsAttr.client} 
                     subTableAttr        = {DialogsAttr.client.table}
                 ></Client>
             </DialogST>
@@ -223,13 +208,12 @@ const QuoteContainer = ({motherType, motherNo}) => {
             <TableContainer>
                 {quoteProp.table.contents.length !== 0 ? 
                     <Table 
-                        table = { quoteProp.table } 
-                        type = 'quoteList'
                         motherType          = {type}
                         motherNo            = {frameNo}
+                        table = { quoteProp.table } 
+                        type = 'quoteList'
                         defaultHideCols = {defaultHideCols}
                         arrangeRules = {arrangeRules}
-                        colTypes = {colTypes}
                         quoteNo = {quoteNo}
                         motherNo = {frameNo}
                     >
