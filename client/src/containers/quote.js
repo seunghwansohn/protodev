@@ -21,7 +21,13 @@ import {
     setInputChange,
     recordQuote,
     querySubmit,
-    actSubmit
+    actSubmit,
+    actUpdate, 
+    actUpdateChange, 
+    actClickedTableCol,
+    actAdd,
+    actDelete
+
  } from '../modules/quote'
  import { onDialogOpen } from '../modules/dialogs'
 
@@ -43,95 +49,41 @@ const useStyles = makeStyles(theme => ({
       flexGrow: 1,
     },
 }))
-const QuoteContainer = ({motherType, motherNo}) => {
+
+
+
+const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
     const classes = useStyles();
     const dispatch = useDispatch();
-
-    const opened    = useSelector(state => state.dialogs.opened)
-
-    const [rawData, setRawData]         = useState([])
-
-    const querySelected  = useSelector(state => state.quoteList.selected)
-    const queryRequested = useSelector(state => state.quoteList.requested)
-
-    const quoteProp = useSelector(state => state.quoteList)
-
-    const [date, setDate]                   = useState('');
-
-
-    const [client, setClient]               = useState('');
-    const [clientRate, setClientRate]       = useState('');
-
-    const [changedHeaderInput, 
-        setChangedHeaderInput]              = useState({});
     
-    const [filterKeyword, setFilterKeyword]     = useState('');
-
-    const [foundResult, 
-        setFoundResult]                     = useState({});
-    
+    //개체 기본 속성
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
     const type = 'quoteContainer'
     const containerNo = type + '_' + frameNo
     console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
-    const quoteNo = quoteProp.table.info.date + '-' + quoteProp.table.info.quoteLastNo
-    
-    useEffect(() => {
-        if (Object.keys(foundResult).includes('clientRate')){
-            console.log('클라이언트레이트있음', foundResult.clientRate)
-            setClientRate(foundResult.clientRate)
-        }
-      },[foundResult])
 
+    //쿼리헤더관련
+    const [foundResult, 
+        setFoundResult]                     = useState({});
 
-    const getRawData = async () => {
+    const [changedHeaderInput, 
+        setChangedHeaderInput]              = useState({});
+        
+    const querySelected     = useSelector(state => state.quoteList.selected)
+    const queryRequested    = useSelector(state => state.quoteList.requested)
 
-    }
+    const [client, setClient]               = useState('');
+    const [clientRate, setClientRate]       = useState('');
 
-    //테이블 셀렉트
-    const [selected, setSelected]       = useState([]);
-    const [clickedCol, setClickedCol]   = useState({});
-
-    const tableStates = {
-        rawData     : quoteProp.table.contents,
-        // updated     : updated,
-        // clickedCol  : clickedCol,
-        // addedNew    : addedNew,
-        selected    : selected,
-        filterKeyword   : filterKeyword
-
-    }
-
-    const setTableStates = {
-        setRawData         : setRawData,
-        // setUpdated      : setUpdated,
-        // setClickedCol   : setClickedCol,
-        // setAddedNew     : setAddedNew,
-        // setSelected     : setSelected,
-        setFilterKeyword   : setFilterKeyword
-
-    }
-
-    const funcs = {
-        load : getRawData,
-        // onSubmitUpdatedVals : onSubmitUpdatedVals,
-        // onDialogOpen : onDialogOpen,
-        // onDelete : setDelete,
-        // onSubmitNewAdded : onSubmitNewAdded
-    }
-    
-    //   console.log(queteProp)
     const queryHeaderfuncs = () => {
         const onSetClose = (type) => {
             const ox = false
             dispatch(onFuncsDialog.onDialogOpen(ox,type))
         }
-
         const onRecordToDB = () => {
             dispatch(recordQuote(quoteProp.table))
         }
-
         const onQueryheaderInputChange = (title, e) => {
             setChangedHeaderInput(
                 produce(changedHeaderInput, draft => {
@@ -139,7 +91,6 @@ const QuoteContainer = ({motherType, motherNo}) => {
                 }
             ))
         }
-
         const onQueryHeaderKeyPress = async (frameNo, title, e) => {
             if (e.key === 'Enter') {
                 let tempObj = {}
@@ -152,16 +103,147 @@ const QuoteContainer = ({motherType, motherNo}) => {
                 dispatch(onDialogOpen(true, daialogNo))
             }
         }
-
         const funcsObj = {
             onSetClose : onSetClose,
             onRecordToDB : onRecordToDB,
             headerInputChanged : onQueryheaderInputChange,
             onKeyPressOnInput : onQueryHeaderKeyPress
         }
-        
         return funcsObj
     }
+
+
+    //다이얼로그 관련
+    const opened    = useSelector(state => state.dialogs.opened)
+    const checkOpened = (title) => {
+        let result = ''
+        opened.map(array => {
+            if (array.type == title){
+                result = array.ox
+            }
+        })
+        return result
+    }
+    const DialogsAttr = {
+        client : {
+            title : 'client_' + frameNo,
+            maxWidth : 'xl' ,
+            funcs : queryHeaderfuncs(),
+            open : checkOpened('client_' + frameNo),
+            table : {
+                tableButton : [
+                    {
+                        title : 'insert',
+                        func : function(row, index, containerNo){
+                        },
+                        mother : containerNo
+                    },
+                ],
+                setFindOneResult : setFoundResult,
+                frameNo : 'client_' + frameNo,
+                initialFilter : 'll'
+            },
+        }
+    }
+
+
+    //테이블 관련
+    const [tableRawData,
+        setTableRawData]         = useState([])
+    const [primaryKey, setPrimaryKey]   = useState('');
+    const [includingKeys, 
+        setIncludingKeys]               = useState([]);
+
+    //테이블 업데이트
+    const [fixedVals, setFixedVals]             = useState([]);
+    const [updated, setUpdated]                 = useState(false);
+    const {update} = useSelector(({ item }) => ({ update : item.table.update }));
+
+    //테이블값 새로 추가
+    const [addedNew, setAddedNew]               = useState([]);
+    const onSubmitNewAdded = async () => {
+        // let obj = {addedNew :}
+        await dispatch(actAdd(addedNew, includingKeys))
+        await getRawData()
+        await setAddedNew([])
+    }
+
+    //테이블값 수정
+    const onSubmitUpdatedVals = async (fixedVals) => {
+        await fixedVals.map(arr => {
+            dispatch(actUpdate(arr))
+        })
+        await setFixedVals([])
+    }
+
+
+    //테이블값 삭제
+    const setDelete = async (codes) =>{
+        await codes.map(code => {
+            dispatch(actDelete(type, code.itemCode))
+        })
+        await setUpdated(true)
+        await setSelected([])
+    }
+    
+    //테이블 셀렉트
+    const [selected, setSelected]               = useState([]);
+    const [clickedCol, setClickedCol]           = useState({});
+
+    //테이블 필터
+    const [filterKeyword, setFilterKeyword]     = useState('');
+    const [filteredData, setFilteredData]       = useState(tableRawData);
+
+
+
+    const quoteProp         = useSelector(state => state.quoteList)
+
+    const [date, setDate]                   = useState('');
+
+    const getRawData = () => {
+
+    }
+
+    const quoteNo = quoteProp.table.info.date + '-' + quoteProp.table.info.quoteLastNo
+    
+    useEffect(() => {
+        if (Object.keys(foundResult).includes('clientRate')){
+            console.log('클라이언트레이트있음', foundResult.clientRate)
+            setClientRate(foundResult.clientRate)
+        }
+    },[foundResult])
+
+
+    const tableStates = {
+        rawData     : quoteProp.table.contents,
+        // updated     : updated,
+        // clickedCol  : clickedCol,
+        // addedNew    : addedNew,
+        selected    : selected,
+        filterKeyword   : filterKeyword,
+        filteredData    : filteredData
+    }
+
+    const setTableStates = {
+        setRawData         : setTableRawData,
+        // setUpdated      : setUpdated,
+        // setClickedCol   : setClickedCol,
+        // setAddedNew     : setAddedNew,
+        // setSelected     : setSelected,
+        setFilterKeyword   : setFilterKeyword,
+        setFilteredData     : setFilteredData
+    }
+
+    const funcs = {
+        load : getRawData,
+        // onSubmitUpdatedVals : onSubmitUpdatedVals,
+        // onDialogOpen : onDialogOpen,
+        // onDelete : setDelete,
+        // onSubmitNewAdded : onSubmitNewAdded
+    }
+    
+    //   console.log(queteProp)
+
 
     const queryHeaderProps = [
         [
@@ -174,15 +256,6 @@ const QuoteContainer = ({motherType, motherNo}) => {
         ]
     ]
 
-    const checkOpened = (title) => {
-        let result = ''
-        opened.map(array => {
-            if (array.type == title){
-                result = array.ox
-            }
-        })
-        return result
-    }
 
     const defaultHideCols = [
         'width',
@@ -208,27 +281,6 @@ const QuoteContainer = ({motherType, motherNo}) => {
         ['notes', 'amount'],
     ]
 
-    const DialogsAttr = {
-        client : {
-            title : 'client_' + frameNo,
-            maxWidth : 'xl' ,
-            funcs : queryHeaderfuncs(),
-            open : checkOpened('client_' + frameNo),
-            table : {
-                tableButton : [
-                    {
-                        title : 'insert',
-                        func : function(row, index, containerNo){
-                        },
-                        mother : containerNo
-                    },
-                ],
-                setFindOneResult : setFoundResult,
-                frameNo : 'client_' + frameNo,
-                initialFilter : 'll'
-            },
-        }
-    }
 
     const tableAttr = {
         flag : true,
@@ -304,8 +356,8 @@ const QuoteContainer = ({motherType, motherNo}) => {
                 calValue : true,
                 value : function(index) {
                     let result = ''
-                    if (quoteProp.table.contents[index].buyingPKR && quoteProp.table.contents[index].qty) {
-                        result = quoteProp.table.contents[index].buyingPKR * quoteProp.table.contents[index].qty
+                    if (filteredData[index].buyingPKR && filteredData[index].qty) {
+                        result = filteredData[index].buyingPKR * filteredData[index].qty
                     }
                     return result
                 }
@@ -322,6 +374,7 @@ const QuoteContainer = ({motherType, motherNo}) => {
         },
     }
 
+    console.log(filteredData)
     return(
         <div className = {classes.root}> 
         
@@ -345,8 +398,8 @@ const QuoteContainer = ({motherType, motherNo}) => {
             <TableContainer>
                 {quoteProp.table.contents.length !== 0 ? 
                     <Table 
-                        motherType          = {type}
-                        motherNo            = {frameNo}
+                        motherType  = {type}
+                        motherNo    = {frameNo}
                         states      = {tableStates}
                         setStates   = {setTableStates}
                         attr        = {tableAttr}

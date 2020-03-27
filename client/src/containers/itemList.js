@@ -113,6 +113,8 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     //테이블 셀렉트
     const [selected, setSelected]               = useState([]);
     const [clickedCol, setClickedCol]           = useState({});
+
+    //테이블 필터
     const [filterKeyword, setFilterKeyword]     = useState('');
     const [filteredData, setFilteredData]       = useState(tableRawData);
 
@@ -256,11 +258,12 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     return(
         <>
             <Table 
-                type        = {type}
-                attr        = {tableAttr}
-                funcs       = {funcs}
+                motherType  = {type}
+                motherNo    = {frameNo}
                 states      = {tableStates}
                 setStates   = {setTableStates}
+                attr        = {tableAttr}
+                funcs       = {funcs}
             ></Table>
 
             {/* <DialogST attr = {DialogsAttr.itemQuery}>

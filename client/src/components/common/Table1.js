@@ -136,7 +136,7 @@ const STTable = ({
     frameNo, 
     initialFilter
   }                   = attr
-  
+
 
   let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
 
@@ -566,32 +566,39 @@ const STTable = ({
                       if (!isColumnHided) {
                         if (fixable & isfixableCol) {
                           return (
-                            <Input 
-                            onChange = {(event) => handleChangeInput(event, index, header)} 
-                            key = {header }
-                            value = {filteredData[index][header]} 
-                            onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}/>
-                          )
-                        }else if (isInputCol) { 
-                          return (
-                            <Input 
+                            <StyledTableCell>
+                              <Input 
                               onChange = {(event) => handleChangeInput(event, index, header)} 
                               key = {header }
                               value = {filteredData[index][header]} 
-                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
-                            />
+                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}/>
+                            </StyledTableCell>
+                          )
+                        }else if (isInputCol) { 
+                          console.log(header, isInputCol)
+                          return (
+                            <StyledTableCell>
+                              <Input 
+                                onChange = {(event) => handleChangeInput(event, index, header)} 
+                                key = {header }
+                                value = {filteredData[index][header]} 
+                                onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
+                              />
+                            </StyledTableCell>
                           )
                         }else if (isCalValueCol) { 
                           console.log(colAttr[header].value(index))
                           console.log(header)
                           return (
-                            <Input
-                              disable 
-                              onChange = {(event) => handleChangeInput(event, index, header)} 
-                              key = {header }
-                              value = {colAttr[header].value(index)} 
-                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
-                            />
+                            <StyledTableCell>
+                              <Input
+                                disable 
+                                onChange = {(event) => handleChangeInput(event, index, header)} 
+                                key = {header }
+                                value = {colAttr[header].value(index)} 
+                                onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
+                              />
+                            </StyledTableCell>
                           )
                         }else if (fixed) {
                             return(

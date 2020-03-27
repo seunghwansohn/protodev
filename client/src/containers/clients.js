@@ -124,6 +124,9 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
     //테이블 셀렉트
     const [selected, setSelected]               = useState([]);
     const [clickedCol, setClickedCol]           = useState({});
+
+    
+    //테이블 필터
     const [filterKeyword, setFilterKeyword]     = useState('');
     const [filteredData, setFilteredData]       = useState(tableRawData);
 
@@ -318,7 +321,7 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
     }
 
 
-    
+
 
     return(
         <>

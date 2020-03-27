@@ -23,6 +23,18 @@ export const QUERY_SUBMIT = 'quoteList/QUERY_SUBMIT'
 export const SET_INSERT_CLIENT = 'quoteList/SET_INSERT_CLIENT'
 export const SET_SUBMIT = 'quoteList/SET_SUBMIT'
 
+export const SET_UPDATE_CHANGE      = 'quoteList/SET_UPDATE_CHANGE'
+export const SET_CLICKED_TABLE_COL  = 'quoteList/SET_CLICKED_TABLE_COL'
+
+
+const [SET_ADD, SET_ADD_SUCCESS, SET_ADD_FAILURE ] 
+= createRequestActionTypes('quoteList/SET_ADD');
+const [SET_UPDATE, SET_UPDATE_SUCCESS, SET_UPDATE_FAILURE ] 
+= createRequestActionTypes('quoteList/SET_UPDATE');
+const [SET_LOAD, SET_LOAD_SUCCESS, SET_LOAD_ADD_FAILURE ] 
+= createRequestActionTypes('quoteList/SET_LOAD');
+const [SET_DELETE, SET_DELETE_SUCCESS, SET_DELETE_FAILURE ] 
+= createRequestActionTypes('quoteList/SET_DELETE');
 
 const [RECORD_QUOTE, RECORD_QUOTE_SUCCESS, RECORD_QUOTE_FAILURE ] = createRequestActionTypes('quoteList/RECORD_QUOTE');
 
@@ -37,6 +49,13 @@ export const recordQuote = createAction(RECORD_QUOTE)
 export const querySubmit = createAction(QUERY_SUBMIT, ({type, payload})=> ({type, payload}))
 export const setInsertClient = createAction(SET_INSERT_CLIENT, clientCode => clientCode)
 export const actSubmit = createAction(SET_SUBMIT, obj => obj)
+
+export const actAdd             = createAction(SET_ADD, (addedNew, includingKeys) => ({addedNew, includingKeys}))
+export const actLoad            = createAction(SET_LOAD)
+export const actUpdate          = createAction(SET_UPDATE, arr => arr)
+export const actUpdateChange    = createAction(SET_UPDATE_CHANGE, ox => ox)
+export const actClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
+export const actDelete          = createAction(SET_DELETE, (type, code) => ({type, code}))
 
 const recordQuoteSaga = createRequestSaga(RECORD_QUOTE, quote.recordQuote);
 
