@@ -87,7 +87,7 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
     const [includingKeys, 
         setIncludingKeys]                = useState([]);
 
-    const {tableButton, setFindOneResult, initialFilter} = subTableAttr ? subTableAttr : ''
+    const {tableButton, setFindOneResult, initialFilter, directQuery} = subTableAttr ? subTableAttr : ''
 
     //테이블 업데이트
     const [fixedVals, setFixedVals]             = useState([]);
@@ -251,7 +251,8 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
         tableButton,
         setFindOneResult,
         frameNo,
-        initialFilter
+        initialFilter,
+        directQuery
     }
 
     const funcs = {

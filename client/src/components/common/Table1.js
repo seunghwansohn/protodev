@@ -134,9 +134,11 @@ const STTable = ({
     tableButton, 
     setFindOneResult, 
     frameNo, 
-    initialFilter
+    initialFilter,
+    directQuery
   }                   = attr
 
+  console.log(directQuery)
 
   let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
 
@@ -195,7 +197,7 @@ const STTable = ({
   useEffect(() => {
     if (filteredData.length == 1) {
       console.log('검색결과 하나임')
-      if (setFindOneResult && typeof setFindOneResult == "function") {
+      if (directQuery && setFindOneResult && typeof setFindOneResult == "function") {
          setFindOneResult(filteredData[0])
          console.log('검색결과하나입력')
          dispatch(onDialogOpen(false, 'client_' + frameNo))

@@ -150,7 +150,8 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
                 ],
                 setFindOneResult : setFoundResult,
                 frameNo : 'client_' + frameNo,
-                initialFilter : filter ? filter.client : ''
+                initialFilter : filter ? filter.client : '',
+                directQuery : true
             },
         }
     }
