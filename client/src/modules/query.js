@@ -18,6 +18,7 @@ const [INIT_LOAD, INIT_LOAD_SUCCESS, INIT_LOAD_FAILURE ]
 export const initLoad = createAction(INIT_LOAD, obj => obj)
 export const actQuery = createAction(SET_QUERY, (frameNo, type, title, value) => ({frameNo, type, title, value}))
 
+
 const apiLoadSaga = createRequestSaga(INIT_LOAD, query.load);
 
 export function* querySaga() {
@@ -40,8 +41,8 @@ function reducer (state = initialState, action) {
             return produce(state, draft =>{
                 const {frameNo, type, title, value} = action.payload
                 console.log(action)
-                draft[frameNo] = {}
-                draft[frameNo][type] = {}
+                draft[frameNo] = draft[frameNo] ? draft[frameNo] : {}
+                draft[frameNo][type]  =draft[frameNo][type] ? draft[frameNo][type] : {}
                 draft[frameNo][type][title] = value
             })
 
