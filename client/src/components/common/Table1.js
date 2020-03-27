@@ -492,13 +492,13 @@ const STTable = ({
                   return (
                     <TableCell>
                       {header}
-                      <IconButton
+                      {/* <IconButton
                         key="close"
                         aria-label="Close"
                         color="inherit"
                         onClick = {(event) => onMouseHover(event, header)}>
                         <ExpandMore />
-                      </IconButton>
+                      </IconButton> */}
                       <Menu
                         key="menu"
                         open={checkMenuActivated(header)}

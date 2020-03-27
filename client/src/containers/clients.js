@@ -125,7 +125,7 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
     const [selected, setSelected]               = useState([]);
     const [clickedCol, setClickedCol]           = useState({});
 
-    
+
     //테이블 필터
     const [filterKeyword, setFilterKeyword]     = useState('');
     const [filteredData, setFilteredData]       = useState(tableRawData);
@@ -158,12 +158,6 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
     //     dispatch(actUpdateChange(false))
     //     setUpdated(true)
     // }
-
-
-
-
-
-
 
     const recordToDB = () => {
         // dispatch(recordQuote(quoteProp.table))
@@ -264,7 +258,8 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
         load : getRawData,
         onSubmitUpdatedVals : onSubmitUpdatedVals,
         onDelete : setDelete,
-        onSubmitNewAdded : onSubmitNewAdded
+        onSubmitNewAdded : onSubmitNewAdded,
+        onDialogOpen : onDialogOpen,
     }
 
     const tableStates = {

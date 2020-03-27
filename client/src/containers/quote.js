@@ -11,6 +11,8 @@ import Client from '../containers/clients'
 import * as onFuncsDialog from '../modules/dialogs'
 import * as mainSearchAct from '../modules/mainSearch';
 import { setSearchKeyword } from '../modules/mainSearch'
+import { actQuery } from '../modules/query'
+
 import { setApiLoad } from '../modules/itemList'
 import { 
     onAlreadyPickedCheck,
@@ -72,7 +74,11 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
         
     const querySelected     = useSelector(state => state.quoteList.selected)
     const queryRequested    = useSelector(state => state.quoteList.requested)
+    const queryVars         = useSelector(state => state.query[frameNo])
 
+    const {filter} = queryVars ? queryVars : ''
+
+    console.log(filter)
     const [client, setClient]               = useState('');
     const [clientRate, setClientRate]       = useState('');
 
@@ -93,11 +99,13 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
         }
         const onQueryHeaderKeyPress = async (frameNo, title, e) => {
             if (e.key === 'Enter') {
+                let type = 'filter'
                 let tempObj = {}
                 const daialogNo = title + '_' + frameNo
                 tempObj[frameNo] = {}
                 tempObj[frameNo][title] = changedHeaderInput[title]
                 // await axios.post('/api/' + type )
+                dispatch(actQuery(frameNo, type, title, e.target.value))
                 dispatch(actSubmit(tempObj))
                 dispatch(actSetFilter(frameNo, title, e.target.value))
                 dispatch(onDialogOpen(true, daialogNo))
@@ -124,6 +132,7 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
         })
         return result
     }
+
     const DialogsAttr = {
         client : {
             title : 'client_' + frameNo,
@@ -141,7 +150,7 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
                 ],
                 setFindOneResult : setFoundResult,
                 frameNo : 'client_' + frameNo,
-                initialFilter : 'll'
+                initialFilter : filter ? filter.client : ''
             },
         }
     }
