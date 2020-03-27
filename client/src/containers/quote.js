@@ -65,6 +65,8 @@ const QuoteContainer = ({motherType, motherNo}) => {
     const [changedHeaderInput, 
         setChangedHeaderInput]              = useState({});
     
+    const [filterKeyword, setFilterKeyword]     = useState('');
+
     const [foundResult, 
         setFoundResult]                     = useState({});
     
@@ -82,7 +84,6 @@ const QuoteContainer = ({motherType, motherNo}) => {
         }
       },[foundResult])
 
-    console.log(clientRate)
 
     const getRawData = async () => {
 
@@ -92,20 +93,24 @@ const QuoteContainer = ({motherType, motherNo}) => {
     const [selected, setSelected]       = useState([]);
     const [clickedCol, setClickedCol]   = useState({});
 
-    const states = {
+    const tableStates = {
         rawData     : quoteProp.table.contents,
         // updated     : updated,
         // clickedCol  : clickedCol,
         // addedNew    : addedNew,
-        selected    : selected
+        selected    : selected,
+        filterKeyword   : filterKeyword
+
     }
 
-    const setStates = {
-        setRawData      : setRawData,
+    const setTableStates = {
+        setRawData         : setRawData,
         // setUpdated      : setUpdated,
         // setClickedCol   : setClickedCol,
         // setAddedNew     : setAddedNew,
-        // setSelected     : setSelected
+        // setSelected     : setSelected,
+        setFilterKeyword   : setFilterKeyword
+
     }
 
     const funcs = {
@@ -219,7 +224,8 @@ const QuoteContainer = ({motherType, motherNo}) => {
                     },
                 ],
                 setFindOneResult : setFoundResult,
-                frameNo : 'client_' + frameNo
+                frameNo : 'client_' + frameNo,
+                initialFilter : 'll'
             },
         }
     }
@@ -316,7 +322,6 @@ const QuoteContainer = ({motherType, motherNo}) => {
         },
     }
 
-    console.log(quoteProp)
     return(
         <div className = {classes.root}> 
         
@@ -342,8 +347,8 @@ const QuoteContainer = ({motherType, motherNo}) => {
                     <Table 
                         motherType          = {type}
                         motherNo            = {frameNo}
-                        states      = {states}
-                        setStates   = {setStates}
+                        states      = {tableStates}
+                        setStates   = {setTableStates}
                         attr        = {tableAttr}
                         funcs       = {funcs}
 

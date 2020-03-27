@@ -32,7 +32,11 @@ import {getIncludingKeys,
     withoutIncludingKeys }  from '../lib/common'
 
 
-const ItemListContainer = ({motherType, motherNo}) => {
+
+
+
+
+const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     const dispatch = useDispatch();
 
     //개체 기본 속성
@@ -70,39 +74,17 @@ const ItemListContainer = ({motherType, motherNo}) => {
     //테이블 관련
     const [tableRawData, 
         setTableRawData]                = useState([])
-    const [primaryKey, setPrimaryKey]   = useState([]);
+    const [primaryKey, setPrimaryKey]   = useState('');
     const [includingKeys, 
         setIncludingKeys]               = useState([]);
 
     //테이블 업데이트
-    const [fixedVals, setFixedVals]     = useState([]);
-    const [updated, setUpdated]         = useState(false);
+    const [fixedVals, setFixedVals]             = useState([]);
+    const [updated, setUpdated]                 = useState(false);
     const {update} = useSelector(({ item }) => ({ update : item.table.update }));
 
-    const [addedNew, setAddedNew]       = useState([]);
-
-    //테이블 셀렉트
-    const [selected, setSelected]       = useState([]);
-    const [clickedCol, setClickedCol]   = useState({});
-
-
-
-    const getRawData = async () => {
-        await axios.get('/api/' + dataType + '/load').then(res => {
-            setPrimaryKey(res.data.primaryKey)
-            setIncludingKeys(getIncludingKeys(res.data.result))
-            setTableRawData(withoutIncludingKeys(res.data.result))
-        })
-    }
-    
-    const setDelete = async (codes) =>{
-        await codes.map(code => {
-            dispatch(actDelete(type, code.itemCode))
-        })
-        await setUpdated(true)
-        await setSelected([])
-    }
-
+    //테이블값 새로 추가
+    const [addedNew, setAddedNew]               = useState([]);
     const onSubmitNewAdded = async () => {
         // let obj = {addedNew :}
         await dispatch(actAdd(addedNew, includingKeys))
@@ -110,6 +92,7 @@ const ItemListContainer = ({motherType, motherNo}) => {
         await setAddedNew([])
     }
 
+    //테이블값 수정
     const onSubmitUpdatedVals = async (fixedVals) => {
         await fixedVals.map(arr => {
             dispatch(actUpdate(arr))
@@ -118,7 +101,31 @@ const ItemListContainer = ({motherType, motherNo}) => {
     }
 
 
+    //테이블값 삭제
+    const setDelete = async (codes) =>{
+        await codes.map(code => {
+            dispatch(actDelete(type, code.itemCode))
+        })
+        await setUpdated(true)
+        await setSelected([])
+    }
 
+    //테이블 셀렉트
+    const [selected, setSelected]               = useState([]);
+    const [clickedCol, setClickedCol]           = useState({});
+    const [filterKeyword, setFilterKeyword]     = useState('');
+    const [filteredData, setFilteredData]       = useState(tableRawData);
+
+
+    //테이블 로드
+    const getRawData = async () => {
+        await axios.get('/api/' + dataType + '/load').then(res => {
+            setPrimaryKey(res.data.primaryKey)
+            setIncludingKeys(getIncludingKeys(res.data.result))
+            setTableRawData(withoutIncludingKeys(res.data.result))
+        })
+    }
+    
     useEffect(() => {
         getRawData()
     },[])
@@ -139,21 +146,23 @@ const ItemListContainer = ({motherType, motherNo}) => {
 
     //table 관련 속성들
     const tableStates = {
-        rawData     : tableRawData,
-        updated     : updated,
-        clickedCol  : clickedCol,
-        addedNew    : addedNew,
-        selected    : selected
+        rawData         : tableRawData,
+        updated         : updated,
+        clickedCol      : clickedCol,
+        addedNew        : addedNew,
+        selected        : selected,
+        filterKeyword   : filterKeyword,
+        filteredData    : filteredData
     }
-
-    const setStates = {
-        setTableRawData      : setTableRawData,
-        setUpdated      : setUpdated,
-        setClickedCol   : setClickedCol,
-        setAddedNew     : setAddedNew,
-        setSelected     : setSelected
+    const setTableStates = {
+        setTableRawData     : setTableRawData,
+        setUpdated          : setUpdated,
+        setClickedCol       : setClickedCol,
+        setAddedNew         : setAddedNew,
+        setSelected         : setSelected,
+        setFilterKeyword    : setFilterKeyword,
+        setFilteredData     : setFilteredData
     }
-
     const funcs = {
         load : getRawData,
         onSubmitUpdatedVals : onSubmitUpdatedVals,
@@ -161,8 +170,6 @@ const ItemListContainer = ({motherType, motherNo}) => {
         onDelete : setDelete,
         onSubmitNewAdded : onSubmitNewAdded
     }
-
-
     const tableAttr = {
         flag : true,
         colAttr : {
@@ -253,7 +260,7 @@ const ItemListContainer = ({motherType, motherNo}) => {
                 attr        = {tableAttr}
                 funcs       = {funcs}
                 states      = {tableStates}
-                setStates   = {setStates}
+                setStates   = {setTableStates}
             ></Table>
 
             {/* <DialogST attr = {DialogsAttr.itemQuery}>

@@ -100,19 +100,47 @@ const STTable = ({
   states, 
   setStates, 
   funcs, 
-  initialFilter,
 }) => {
   
-  const {rawData, updated, clickedCol, addedNew, selected}                    = states
-  const {setRawData, setUpdated, setClickedCol, setAddedNew, setSelected}     = setStates
-  const {load, onSubmitUpdatedVals, onDialogOpen, onDelete, onSubmitNewAdded} = funcs
-  const {colAttr, tableButton, setFindOneResult, frameNo} = attr
+  const {
+    rawData,
+    updated,
+    clickedCol,
+    addedNew, 
+    selected, 
+    filterKeyword, 
+    filteredData
+  }                   = states
+  const {
+    setRawData, 
+    setUpdated, 
+    setClickedCol, 
+    setAddedNew, 
+    setSelected, 
+    setFilterKeyword, 
+    setFilteredData
+  }                   = setStates
+
+  const {
+    load, 
+    onSubmitUpdatedVals, 
+    onDialogOpen, 
+    onDelete, 
+    onSubmitNewAdded
+  }                   = funcs
+
+  const {
+    colAttr, 
+    tableButton, 
+    setFindOneResult, 
+    frameNo, 
+    initialFilter
+  }                   = attr
+  
 
   let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
 
   const [tableHeaderVals, setTableHeaderVals] = useState([]);
-  const [filteredData, setFilteredData]       = useState(rawData);
-  const [filterKeyword, setFilterKeyword]     = useState(initialFilter);
 
   const [hided, setHided]                     = useState([]);
   const [fixableCols, setFixableCols]         = useState([]);
@@ -144,17 +172,17 @@ const STTable = ({
   const [howManyCopiedNew, 
         setHowManyCopiedNew]                = useState(null)
 
-  console.log(attr)
-  console.log(initialFilter)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    setFilteredData(rawData)
-  },[rawData])
+
 
   useEffect(() => {
     setFilterKeyword(initialFilter)
   },[initialFilter])
+
+  useEffect(() => {
+    setFilteredData(rawData)
+  },[rawData])
 
   useEffect(() => {
     const deleteKey = 'id'
@@ -319,8 +347,6 @@ const STTable = ({
     )
   }
 
-  console.log(filteredData)
-
   const onAddNewBlank = () => {
     let tempObj = {}
     headers.map(header => {
@@ -429,7 +455,6 @@ const STTable = ({
     setFilterKeyword(e.target.value)
   }
 
-  console.log(filterKeyword)
   return (
     <React.Fragment>
 
