@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { connect, useSelector, useDispatch } from 'react-redux';
 
-import QuoteListComponent from '../components/quoteList'
-import Table from '../components/common/Table1'
-import QueryHeader from '../components/common/queryHeader'
-import DialogST from '../components/common/DialogST'
+import QuoteListComponent   from '../components/quoteList'
+import Table                from '../components/common/Table1'
+import InputTable           from '../components/common/InputTable'
+import QueryHeader          from '../components/common/queryHeader'
+import DialogST             from '../components/common/DialogST'
 
 import Client from '../containers/clients'
 
@@ -294,10 +295,11 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
 
 
     const tableAttr = {
-        flag : true,
+        flagAble : true,
+        fixModeAble : false,
         colAttr :   {
             itemCode : {
-                primary : true,
+                type : true,
                 fixable : false,
                 defaultHided : true
             },
@@ -357,6 +359,12 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
                 fixable : true,
                 defaultHided : true
             },
+            priceRate : {
+                fixable : true,
+                defaultHided : false,
+                defaultInput : true,
+                defaultValue : 0
+            },
             qty : {
                 fixable : true,
                 defaultHided : false,
@@ -414,10 +422,22 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
                         setStates   = {setTableStates}
                         attr        = {tableAttr}
                         funcs       = {funcs}
-
                     >
                     </Table> : ''}
             </TableContainer>
+
+            {/* <TableContainer>
+                {quoteProp.table.contents.length !== 0 ? 
+                    <InputTable 
+                        motherType  = {type}
+                        motherNo    = {frameNo}
+                        states      = {tableStates}
+                        setStates   = {setTableStates}
+                        attr        = {tableAttr}
+                        funcs       = {funcs}
+                    >
+                    </InputTable> : ''}
+            </TableContainer> */}
         </div>
     )
 }   

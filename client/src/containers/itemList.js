@@ -20,16 +20,17 @@ import Table        from '../components/common/Table1'
 import ButtonHeader from '../components/common/ButtonHeader'
 
 
-
+import spacelize                                from '../lib/spacelize'
 import {generateRandom}                         from '../lib/common';
 
-// // import ItemAdd from '../components/ItemAdd'
+import ItemAdd      from '../components/ItemAdd'
 // import ItemQuery from '../components/ItemQuery'
 // import SupplierAdd from '../components/supplierAdd'
 
-import MakerQuery from '../containers/MakerQuery'
-import ItemQuery from '../containers/ItemQuery'
+import MakerQuery   from '../containers/MakerQuery'
+import ItemQuery    from '../containers/ItemQuery'
 
+import Button           from '@material-ui/core/Button';
 
 
 import axios                from '../lib/api/axios'
@@ -62,12 +63,20 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     }
 
     const DialogsAttr = {
-        itemQuery : {
-            title : type,
-            maxWidth : 'xl' ,
-            // funcs : funcs,
-            open : checkOpened(type)
-        }
+      itemAdd : {
+        title : 'Item Add',
+        maxWidth : 'md' ,
+        // funcs : funcs,
+        open : checkOpened('itemAdd'),
+        scroll : 'paper'
+        
+      },
+      itemQuery : {
+          title : type,
+          maxWidth : 'xl' ,
+          // funcs : funcs,
+          open : checkOpened(type)
+      }
     }
 
 
@@ -111,8 +120,15 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     }
 
     //테이블 셀렉트
-    const [selected, setSelected]               = useState([]);
-    const [clickedCol, setClickedCol]           = useState({});
+    const [selected, setSelected]         = useState([]);
+
+
+    //테이블 클릭
+    const [clickedCol, 
+      setClickedCol]     = useState({});
+    const clicked        = useSelector(state => state.item.table.clicked)
+    const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
+
 
     //테이블 필터
     const [filterKeyword, setFilterKeyword]     = useState('');
@@ -128,6 +144,9 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         })
     }
     
+    console.log(tableRawData)
+    console.log(clicked)
+    console.log(reqQueryCode)
     useEffect(() => {
         getRawData()
     },[])
@@ -146,6 +165,10 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     }
 
     console.log(clickedCol)
+
+    const test = () => {
+      dispatch(onDialogOpen(true, 'itemAdd'))
+    }
 
     //table 관련 속성들
     const tableStates = {
@@ -174,7 +197,8 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         onSubmitNewAdded : onSubmitNewAdded
     }
     const tableAttr = {
-        flag : true,
+        flagAble : true,
+        fixModeAble : true,
         colAttr : {
             itemCode : {
                 primary : true,
@@ -225,6 +249,10 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
                 fixable : true,
                 defaultHided : false
             },
+            buyingPKR : {
+                fixable : true,
+                defaultHided : false
+            },
             stkVVar : {
                 fixable : true,
                 defaultHided : true
@@ -254,28 +282,52 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         ],
     }
 
+    const arrFunc = () => {
+      let Arr = []
+      const makeFieldAttrArr = (name, component) => {
+          const obj = {
+              name : name,
+              component : component,
+              label : spacelize(name)
+          }
+          Arr.push(obj)
+      }
+      makeFieldAttrArr('firstName', 'renderTextField')
+      makeFieldAttrArr('secondName', 'renderTextField')
+      return Arr
+    }
+
     return(
         <>
-            <Table 
-                motherType  = {type}
-                motherNo    = {frameNo}
-                states      = {tableStates}
-                setStates   = {setTableStates}
-                attr        = {tableAttr}
-                funcs       = {funcs}
-            ></Table>
+          <Button onClick = {test}>푸하하</Button>
+          <DialogST attr = {DialogsAttr.itemAdd}>
+            <ItemAdd 
+              title = {DialogsAttr.itemAdd.title} 
+              fieldsAttr = {arrFunc()}
+            ></ItemAdd>
+          </DialogST>
+
+          <Table 
+              motherType  = {type}
+              motherNo    = {frameNo}
+              states      = {tableStates}
+              setStates   = {setTableStates}
+              attr        = {tableAttr}
+              funcs       = {funcs}
+          ></Table>
 {/* 
-            <DialogST attr = {DialogsAttr.itemQuery}>
-                <MakerQuery reqCode = {clickedCol}
-                ></MakerQuery>
-            </DialogST> */}
-            <DialogST attr = {DialogsAttr.itemQuery}>
-                <ItemQuery 
-                    motherType  = {type}
-                    motherNo    = {frameNo}
-                    reqCode     = {clickedCol}
-                ></ItemQuery>
-            </DialogST>
+          <DialogST attr = {DialogsAttr.itemQuery}>
+              <MakerQuery reqCode = {clickedCol}
+              ></MakerQuery>
+          </DialogST> */}
+          <DialogST attr = {DialogsAttr.itemQuery}>
+            <ItemQuery 
+              motherType  = {type}
+              motherNo    = {frameNo}
+              reqKey      = {primaryKey}
+              reqCode     = {reqQueryCode}
+            ></ItemQuery>
+          </DialogST>
         </>
     )
 }   

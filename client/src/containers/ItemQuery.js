@@ -5,7 +5,7 @@ import axios                          from 'axios';
 import {generateRandom}               from '../lib/common';
 import {actUpdate}                    from '../modules/itemList'
 
-const ItemQuery = ({motherType, motherNo, reqCode}) => {
+const ItemQuery = ({motherType, motherNo, reqKey, reqCode}) => {
     const [itemCode, setItemCode]           = useState('')
     const [itemName, setItemName]           = useState('')
     const [description, setDescription]     = useState('')
@@ -28,6 +28,12 @@ const ItemQuery = ({motherType, motherNo, reqCode}) => {
     const setUpdate = (fixedData) => {
         console.log(fixedData)
     }
+
+    const reqWhere = () =>{
+        let tempObj = {}
+        tempObj[reqKey] = reqCode
+        return tempObj
+    }
     
     const queryProps = [
         {type : 'primary', newRow : true, size : 5, title: 'itemCode', state : itemCode, setState : setItemCode, style:'regular'},
@@ -38,7 +44,7 @@ const ItemQuery = ({motherType, motherNo, reqCode}) => {
     ]
 
     useEffect(() => {
-        axios.post('/api/' + dataType + '/query', reqCode).then(res => {
+        axios.post('/api/' + dataType + '/query', reqWhere()).then(res => {
             setLoadedData(res.data[0])
         })
     },[])

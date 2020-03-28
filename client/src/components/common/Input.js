@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react'
 
-import TextField        from '@material-ui/core/TextField'
-import InputAdornment   from '@material-ui/core/InputAdornment';
-import Grid             from '@material-ui/core/Grid';
-import IconButton       from '@material-ui/core/IconButton';
-import EditIcon         from '@material-ui/icons/Edit';
+import TextField                  from '@material-ui/core/TextField'
+import InputAdornment             from '@material-ui/core/InputAdornment';
+import Grid                       from '@material-ui/core/Grid';
+import IconButton                 from '@material-ui/core/IconButton';
+import EditIcon                   from '@material-ui/icons/Edit';
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 
-import produce from 'immer'
+import produce  from 'immer'
 
-import styled from 'styled-components';
+import styled   from 'styled-components';
 
 const TextFieldST = styled(TextField)`
   background-color: 
@@ -33,7 +33,22 @@ const TextFieldST = styled(TextField)`
     }
   }      
 `
-const InputST = ({title, state, setState, attr, type, lodedData, fixMode, fixable, fixedData, setFixedData, onFixedVal}) => {
+
+
+const InputST = ({
+  title, 
+  state, 
+  setState, 
+  attr, 
+  type, 
+  lodedData, 
+  fixMode, 
+  fixable, 
+  fixedData, 
+  setFixedData, 
+  onFixedVal
+}) => {
+
   const onChangeValue = (event, func) => {
     setState(event.target.value)  
   }
@@ -43,14 +58,11 @@ const InputST = ({title, state, setState, attr, type, lodedData, fixMode, fixabl
       let temp = {}
       let tempArr = fixedData
       temp[title] = event.target.value
-      console.log(title)
-      console.log(temp[title])
       setFixedData(
         produce(fixedData, draft => {
           fixedData[title] = event.target.value
         })
       )
-      console.log(fixedData)
     }
   }
 

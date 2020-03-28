@@ -28,7 +28,7 @@ import {load, sliderStKVVar, sliderStKCVar} from '../modules/reduxForm'
 import spacelize  from '../lib/spacelize'
 import * as cal   from '../lib/calSTValues'
 
-import {setSubmitAddItem} from '../modules/itemList'
+import {actSubmitAddItem} from '../modules/itemList'
 
 toast.configure()
 
@@ -434,7 +434,7 @@ let ItemAdd = props => {
         toast(error)
       })
     } else {
-      dispatch(setSubmitAddItem(submitValues))
+      dispatch(actSubmitAddItem(submitValues))
     }
   }
 

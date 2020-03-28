@@ -126,12 +126,9 @@ const STTable = ({
     onSubmitUpdatedVals, 
     onDialogOpen, 
     onDelete, 
-    onSubmitNewAdded
   }                   = funcs
 
   const {
-    flagAble,
-    fixModeAble,
     colAttr, 
     tableButton, 
     setFindOneResult, 
@@ -139,8 +136,6 @@ const STTable = ({
     initialFilter,
     directQuery
   }                   = attr
-
-  console.log(directQuery)
 
   let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
 
@@ -178,9 +173,6 @@ const STTable = ({
 
   const dispatch = useDispatch()
 
-
-
-  console.log(primaryKey)
   useEffect(() => {
     setFilterKeyword(initialFilter)
   },[initialFilter])
@@ -261,36 +253,16 @@ const STTable = ({
     setCalValueCols(tmpCalValueCols)
   },[])
 
-  console.log(inputCols)
   const isChecked     = name => selected.indexOf(name)    !== -1;
   const isHidedCulumn = name => hided.indexOf(name)       !== -1;
   const isFixable     = name => fixableCols.indexOf(name) !== -1;
   const isInput       = name => inputCols.indexOf(name) !== -1;
   const isCalValue    = name => calValueCols.indexOf(name) !== -1;
 
-
-
   const onHidedCulumn   = selectMultipleStates
   const handleClickFlag = selectMultipleStates
   const unhide          = unSelectMultipleStates
 
-  const checkColFixablity = (key) => {
-    return {
-      'supplierCode' : true
-    }[key]
-  }
-  const checkColFixable = (index, header) => {
-    let ox = false
-    if (fixableCells.row == index){
-      if(fixableCells.header == header){
-        ox = true
-      }
-    }
-    else {
-      ox = false
-    }
-    return ox
-  }
   const checkCellFixed = (index, header) => {
     let ox = false
     fixedVals.map(obj => {
@@ -301,17 +273,10 @@ const STTable = ({
     return ox
   }
   
-  const checkDefaultInputCol = (header) => {
 
-  }
   
   const onSetfixMode = () => {
-    if (fixModeAble) {
-      fixMode ? setFixMode(false) : setFixMode(true)
-    }
-    else if (!fixModeAble) {
-      setFixMode(false)
-    }
+    fixMode ? setFixMode(false) : setFixMode(true)
   }
 
   const onClickCols = (value, row, header) => {
@@ -326,18 +291,12 @@ const STTable = ({
 
     let tempObj1 = {}
     tempObj1[primaryKey] = rawData[row][primaryKey]
-
-    let tempObj2 = {}
-    tempObj2.value  = value
-    tempObj2.row    = row
-    tempObj2.header = header
-    
     if (fixMode){
       const temp = {row : row, header : header}
       setFixableCells(temp)
     }
     else {
-      setClickedCol(tempObj2)
+      setClickedCol(tempObj1)
     }
   }
 
@@ -368,38 +327,12 @@ const STTable = ({
     )
   }
 
-  const onAddNewBlank = () => {
-    let tempObj = {}
-    headers.map(header => {
-      tempObj[header] = null
-    })
-    setAddedNew(
-      produce(addedNew, draft => {
-        draft.push(tempObj)
-      })
-    )
-  }
-
-  const handleChangeNewAddedInput = (event, index, header) => {
-    const temp = event.target.value
-    setAddedNew(
-      produce(addedNew, draft => {
-        draft[index][header] = temp
-      })
-    )
-  }
-
-
-
   const onKeyPressOnNewAddedInput = (e, header) => {
   }
 
   const onMouseHover = (event, header) => {
     setMenuAnchoredEl(event.currentTarget)
     setMenuActivated(header)
-  }
-
-  const openMenu = (e, header) =>{
   }
 
   const checkMenuActivated = (header) => {
@@ -445,32 +378,6 @@ const STTable = ({
     setPage(0);
   };
 
-  const setAddCopiedNew = (qty) => {
-    setHowManyCopiedNew(qty)
-
-    let tempObj = {}
-    Object.keys(selected[0]).map(header => {
-      tempObj[header] = selected[0][header]
-    })
-
-    let tempArr = []
-    for (let i = 0; i < qty; i++) {
-      tempArr.push(tempObj)
-    }
-    setAddedNew(tempArr)
-  }
-  const onClickCopiedNew = () => {
-    setAddCopiedNewDialogOpen(true)
-  }
-
-  const addCopiedNewNoDialogAttr = {
-    question : 'How many new copied?',
-    openState : addCopiedNewDialogOpen,
-    setOpenState : setAddCopiedNewDialogOpen,
-    answer : howManyCopiedNew,
-    setAnswer : setAddCopiedNew
-  }
-
   const onInputFilterKeyword = (e) => {
     e.preventDefault(); 
     setFilterKeyword(e.target.value)
@@ -479,10 +386,6 @@ const STTable = ({
   return (
     <React.Fragment>
 
-      <InputDialog
-        attr = {addCopiedNewNoDialogAttr}
-      ></InputDialog>
-
       <div>
         {hided.map(columns => {
           return(
@@ -490,20 +393,18 @@ const STTable = ({
           )
         })}
       </div>
-      {/* <SearchBar> */}
         <Input 
           id = 'sea'
           label  = 'dfe'
           onChange = {(e) => {onInputFilterKeyword(e)}}
           value    = {filterKeyword}
         ></Input>
-      {/* </SearchBar> */}
-      {fixModeAble ? <button onClick = { onSetfixMode }>fixmode</button> :''}
+      <button onClick = { onSetfixMode }>fixmode</button>
       <TableContainer>
         <StyledTable size = {'small'}>
           <StyledTableHeader>
             <TableRow>
-              {tableHeaderVals && attr.flagAble ? 
+              {tableHeaderVals && attr.flag ? 
                 <StyledTableCell></StyledTableCell>:''
               }
               {tableHeaderVals !== [] ? <StyledTableCell>No</StyledTableCell> : ''}  
@@ -513,13 +414,6 @@ const STTable = ({
                   return (
                     <TableCell>
                       {header}
-                      {/* <IconButton
-                        key="close"
-                        aria-label="Close"
-                        color="inherit"
-                        onClick = {(event) => onMouseHover(event, header)}>
-                        <ExpandMore />
-                      </IconButton> */}
                       <Menu
                         key="menu"
                         open={checkMenuActivated(header)}
@@ -563,7 +457,7 @@ const STTable = ({
                   <TableRow 
                     key = {tableHeaderVals[index]}
                   >
-                    {attr.flagAble ? 
+                    {attr.flag ? 
                       <TableCell padding="checkbox">
                         <StyledCheckBox
                           checked={isItemSelected}
@@ -576,26 +470,15 @@ const STTable = ({
                       {index+1}
                     </StyledTableCell>
                     {tableHeaderVals.map(header => {
-                      let fixable = checkColFixable(index, header)
                       let fixed = checkCellFixed(index, header)
                       let isfixableCol = isFixable(header)
                       let isInputCol   = isInput(header)
                       let isCalValueCol   = isCalValue(header)
 
-                      console.log(isCalValueCol)
                       const isColumnHided = isHidedCulumn(header)
                       if (!isColumnHided) {
-                        if (fixable & isfixableCol) {
-                          return (
-                            <StyledTableCell>
-                              <Input 
-                              onChange = {(event) => handleChangeInput(event, index, header)} 
-                              key = {header }
-                              value = {filteredData[index][header]} 
-                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}/>
-                            </StyledTableCell>
-                          )
-                        }else if (isInputCol) { 
+
+                        if (isInputCol) { 
                           console.log(header, isInputCol)
                           return (
                             <StyledTableCell>
@@ -662,7 +545,6 @@ const STTable = ({
                       <StyledTableCell>
                         <Input
                           value      = {row[header]} 
-                          onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                           onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}/>
                       </StyledTableCell>
                     )
@@ -682,13 +564,11 @@ const STTable = ({
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}/>
+          onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
 
-      <Button onClick = {onAddNewBlank}>add New</Button>
-      <Button onClick = {() => onSubmitNewAdded(addedNew)}>     Submit New </Button>
       <Button onClick = {() => onSubmitUpdatedVals(fixedVals)}> Submit     </Button>
       {selected && selected.length !== 0 ? <Button onClick = {() => {onDelete(selected)}}>Delete</Button> :''}
-      {selected && selected.length !== 0 ? <Button onClick = {() => {onClickCopiedNew(selected)}}>Copied New</Button> :''}
 
     </React.Fragment>
   )
