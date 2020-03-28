@@ -2,41 +2,66 @@ import React, { useState, useEffect } from 'react';
 import Query                          from '../components/Query';
 import axios                          from 'axios';
 
-const ItemQuery = ({reqCode}) => {
-    const [itemCode, setItemCode] = useState('')
-    const [supplierName, setSupplierName] = useState('')
-    const [province, setProvince] = useState('')
-    const [country, setCountry] = useState('')
-    const [ceo, setCeo] = useState('')
-    const [loadedData, setLoadedData] = useState([])
+import {generateRandom}               from '../lib/common';
+import {actUpdate}                    from '../modules/itemList'
 
-    console.log(reqCode)
-    const type = 'item'
+const ItemQuery = ({motherType, motherNo, reqCode}) => {
+    const [itemCode, setItemCode]           = useState('')
+    const [itemName, setItemName]           = useState('')
+    const [description, setDescription]     = useState('')
+
+    const [loadedData, setLoadedData]       = useState([])
+    const [primaryKey, setPrimaryKey]       = useState('');
+
+
+
+    //개체 기본 속성
+    const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
+    const type = 'itemQuery'
+    const containerNo = type + '_' + frameNo
+    const dataType = 'item'
 
     const style = {
         
     }
 
+    const setUpdate = (fixedData) => {
+        console.log(fixedData)
+    }
+    
     const queryProps = [
         {type : 'primary', newRow : true, size : 5, title: 'itemCode', state : itemCode, setState : setItemCode, style:'regular'},
-        {type : 'fixable', newRow : true, size : 7, title: 'itemName', state : supplierName, setState : setSupplierName, style:'regular'},
-        {type : 'fixable', newRow : false, size : 5, title: 'origin', state : country, setState : setCountry, style:'regular'},
+        {type : 'fixable', newRow : true, size : 7, title: 'itemName', state : itemName, setState : setItemName, style:'regular'},
+        {type : 'fixable', newRow : false, size : 5, title: 'description', state : description, setState : setDescription, style:'regular'},
         {type : 'divider', typoGraphy : 'basicInfo'},
-        {type : 'fixable', newRow : false, size : 5, title: 'ceo', state : ceo, setState : setCeo, style:'regular'},
+        // {type : 'fixable', newRow : false, size : 5, title: 'ceo', state : ceo, setState : setCeo, style:'regular'},
     ]
 
     useEffect(() => {
-        axios.post('/api/' + type + '/query', reqCode).then(res => {
-            console.log(res.data)
+        axios.post('/api/' + dataType + '/query', reqCode).then(res => {
             setLoadedData(res.data[0])
         })
     },[])
 
-    
-    console.log(loadedData)
+    useEffect(() => {
+        let tempPrimaryKey = ''
+        queryProps.map(obj => {
+            if (obj.type == 'primary') {
+                tempPrimaryKey = obj.title
+            }
+        })
+        setPrimaryKey(tempPrimaryKey)
+    },[])
+
     return(
         <React.Fragment>
-            <Query loadedTempData = {loadedData} type = {type} queryProps = {queryProps}></Query>
+            <Query
+                motherType          = {type}
+                motherNo            = {frameNo}
+                loadedTempData      = {loadedData}
+                onUpdate            = {setUpdate}
+                queryProps          = {queryProps}>
+            </Query>
         </React.Fragment>
     )
 }

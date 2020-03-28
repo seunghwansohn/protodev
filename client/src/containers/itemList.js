@@ -92,7 +92,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         await setAddedNew([])
     }
 
-    console.log(primaryKey)
     //테이블값 수정
     const onSubmitUpdatedVals = async (fixedVals) => {
         await fixedVals.map(arr => {
@@ -271,7 +270,10 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
                 ></MakerQuery>
             </DialogST> */}
             <DialogST attr = {DialogsAttr.itemQuery}>
-                <ItemQuery reqCode = {clickedCol}
+                <ItemQuery 
+                    motherType  = {type}
+                    motherNo    = {frameNo}
+                    reqCode     = {clickedCol}
                 ></ItemQuery>
             </DialogST>
         </>

@@ -67,6 +67,7 @@ exports.addNew = (req, res) => {
 
 exports.update = async (req, res) => {
   let data = req.body
+  console.log(data)
   let { ref,vals } = data
   try {
       const draft = await Item.findOne({where:ref})

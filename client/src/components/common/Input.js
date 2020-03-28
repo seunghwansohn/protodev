@@ -33,7 +33,7 @@ const TextFieldST = styled(TextField)`
     }
   }      
 `
-const InputST = ({title, state, setState, attr, type, lodedData, fixMode, fixable, fixedData, setFixedData}) => {
+const InputST = ({title, state, setState, attr, type, lodedData, fixMode, fixable, fixedData, setFixedData, onFixedVal}) => {
   const onChangeValue = (event, func) => {
     setState(event.target.value)  
   }
@@ -43,15 +43,14 @@ const InputST = ({title, state, setState, attr, type, lodedData, fixMode, fixabl
       let temp = {}
       let tempArr = fixedData
       temp[title] = event.target.value
-      fixedData.map(obj => {
-        if (Object.keys(obj).includes(title)) {
-          tempArr = tempArr.filter(function(obj) {
-            return !obj[title]
-          })
-        } 
-      })
-      tempArr.push(temp)
-      setFixedData(tempArr)
+      console.log(title)
+      console.log(temp[title])
+      setFixedData(
+        produce(fixedData, draft => {
+          fixedData[title] = event.target.value
+        })
+      )
+      console.log(fixedData)
     }
   }
 
