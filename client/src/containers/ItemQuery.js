@@ -22,18 +22,13 @@ const ItemQuery = ({motherType, motherNo, reqKey, reqCode}) => {
     const dataType = 'item'
 
     const style = {
-        
     }
 
     const setUpdate = (fixedData) => {
         console.log(fixedData)
     }
 
-    const reqWhere = () =>{
-        let tempObj = {}
-        tempObj[reqKey] = reqCode
-        return tempObj
-    }
+
     
     const queryProps = [
         {type : 'primary', newRow : true, size : 5, title: 'itemCode', state : itemCode, setState : setItemCode, style:'regular'},
@@ -43,11 +38,20 @@ const ItemQuery = ({motherType, motherNo, reqKey, reqCode}) => {
         // {type : 'fixable', newRow : false, size : 5, title: 'ceo', state : ceo, setState : setCeo, style:'regular'},
     ]
 
+    //-- api로드 부분
+    //req값을 obj값으로 만들어서 post로 api 요청하여 값을 받아옴.
+    const reqWhere = () =>{
+        let tempObj = {}
+        tempObj[reqKey] = reqCode
+        return tempObj
+    }
     useEffect(() => {
         axios.post('/api/' + dataType + '/query', reqWhere()).then(res => {
             setLoadedData(res.data[0])
         })
     },[])
+
+
 
     useEffect(() => {
         let tempPrimaryKey = ''

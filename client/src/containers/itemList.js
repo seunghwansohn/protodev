@@ -157,6 +157,15 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
             dispatch(onDialogOpen(true, type, clickedCol))
         } 
     },[clickedCol])
+
+    useEffect(() => {
+      let keys = Object.keys(clicked)
+      if (keys.length > 0) {
+        if (includingKeys.includes(clicked.header)) {
+          console.log('가격임')
+        }
+      } 
+    },[clicked])
     
     if (update) {
         getRawData()
@@ -282,6 +291,8 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         ],
     }
 
+    console.log(includingKeys)
+
     const arrFunc = () => {
       let Arr = []
       const makeFieldAttrArr = (name, component) => {
@@ -302,8 +313,8 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
           <Button onClick = {test}>푸하하</Button>
           <DialogST attr = {DialogsAttr.itemAdd}>
             <ItemAdd 
-              title = {DialogsAttr.itemAdd.title} 
-              fieldsAttr = {arrFunc()}
+              title       = {DialogsAttr.itemAdd.title} 
+              fieldsAttr  = {arrFunc()}
             ></ItemAdd>
           </DialogST>
 
@@ -315,11 +326,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
               attr        = {tableAttr}
               funcs       = {funcs}
           ></Table>
-{/* 
-          <DialogST attr = {DialogsAttr.itemQuery}>
-              <MakerQuery reqCode = {clickedCol}
-              ></MakerQuery>
-          </DialogST> */}
+
           <DialogST attr = {DialogsAttr.itemQuery}>
             <ItemQuery 
               motherType  = {type}
