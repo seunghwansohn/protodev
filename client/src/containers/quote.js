@@ -36,7 +36,9 @@ import {
  import { actSetFilter } from '../modules/clients'
 
 
-import {generateRandom}                         from '../lib/common';
+import {generateRandom}     from '../lib/common';
+import {getDateNow}     from '../lib/basicInfo';
+
 
 import TableContainer from '@material-ui/core/TableContainer';
 import Button from "@material-ui/core/Button";
@@ -78,7 +80,6 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
 
     const {filter} = queryVars ? queryVars : ''
 
-    console.log(filter)
     const [client, setClient]               = useState('');
     const [clientRate, setClientRate]       = useState('');
 
@@ -208,13 +209,13 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
 
     const quoteProp         = useSelector(state => state.quoteList)
 
-    const [date, setDate]                   = useState('');
+    const [date, setDate]                   = useState(getDateNow());
 
     const getRawData = () => {
 
     }
 
-    const quoteNo = quoteProp.table.info.date + '-' + quoteProp.table.info.quoteLastNo
+    const quoteNo = date.yymmdd + '-' + quoteProp.table.info.quoteLastNo
     
     useEffect(() => {
         if (Object.keys(foundResult).includes('clientRate')){
@@ -258,7 +259,7 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
     const queryHeaderProps = [
         [
             {type : 'paper', size : 3, title: 'quoteNo', state : quoteNo, style:'regular'},
-            {type : 'paper', title: 'date', state : date, style:'regular'},
+            {type : 'paper', title: 'date', state: date.yyyymmdd1 ,style:'regular'},
         ],
         [
             {type : 'input', size : 3, title: 'client', state : client, setState: setClient, style:'regular'},
@@ -384,7 +385,6 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
         },
     }
 
-    console.log(filteredData)
     return(
         <div className = {classes.root}> 
         

@@ -28,13 +28,6 @@ const Query = ({loadedTempData, type, queryProps}) => {
   const [primaryKey, setPrimaryKey] = useState('')
   const [primaryCode, setPrimaryCode] = useState('')
 
-
-  const inputAttr = {
-			normal : {
-					unit : '',
-					unitPosition : 'end',
-			}
-  }
   const classes = useStyles();
 
   const onModeChange = () => {
@@ -61,7 +54,10 @@ const Query = ({loadedTempData, type, queryProps}) => {
   useEffect(() => {
     setLodedData(loadedTempData)
     queryProps.map(obj => {
+      console.log(loadedTempData)
+      console.log(obj.title)
       if (loadedTempData.hasOwnProperty(obj.title)) {
+        console.log('있음')
         obj.setState(loadedTempData[obj.title])
       }
     })

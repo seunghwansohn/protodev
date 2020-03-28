@@ -178,6 +178,7 @@ const STTable = ({
 
 
 
+  console.log(primaryKey)
   useEffect(() => {
     setFilterKeyword(initialFilter)
   },[initialFilter])
@@ -307,18 +308,23 @@ const STTable = ({
   }
 
   const onClickCols = (value, row, header) => {
+    console.log(rawData[row][primaryKey])
     const tempObj = {
       value : value,
       type  : type,
       index : row,
-      header: header
+      header: header,
+      primaryKey : primaryKey
     }
+
+    let tempObj1 = {}
+    tempObj1[primaryKey] = rawData[row][primaryKey]
     if (fixMode){
       const temp = {row : row, header : header}
       setFixableCells(temp)
     }
     else {
-      setClickedCol(tempObj)
+      setClickedCol(tempObj1)
     }
   }
 

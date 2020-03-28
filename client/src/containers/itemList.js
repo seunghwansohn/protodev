@@ -27,12 +27,14 @@ import {generateRandom}                         from '../lib/common';
 // import ItemQuery from '../components/ItemQuery'
 // import SupplierAdd from '../components/supplierAdd'
 
+import MakerQuery from '../containers/MakerQuery'
+import ItemQuery from '../containers/ItemQuery'
+
+
+
 import axios                from '../lib/api/axios'
 import {getIncludingKeys,
     withoutIncludingKeys }  from '../lib/common'
-
-
-
 
 
 
@@ -44,7 +46,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     const type = 'itemListContainer'
     const containerNo = type + '_' + frameNo
     const dataType = 'item'
-
 
     //다이얼로그 관련
     const opened         = useSelector(state => state.dialogs.opened)
@@ -70,7 +71,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     }
 
 
-
     //테이블 관련
     const [tableRawData, 
         setTableRawData]                = useState([])
@@ -92,6 +92,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         await setAddedNew([])
     }
 
+    console.log(primaryKey)
     //테이블값 수정
     const onSubmitUpdatedVals = async (fixedVals) => {
         await fixedVals.map(arr => {
@@ -145,6 +146,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         setUpdated(true)
     }
 
+    console.log(clickedCol)
 
     //table 관련 속성들
     const tableStates = {
@@ -253,8 +255,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         ],
     }
 
-
-
     return(
         <>
             <Table 
@@ -265,12 +265,15 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
                 attr        = {tableAttr}
                 funcs       = {funcs}
             ></Table>
-
-            {/* <DialogST attr = {DialogsAttr.itemQuery}>
-                {/* <MakerQuery reqCode = {clickedCol}
-                ></MakerQuery> */}
-            {/* </DialogST> */}
-            
+{/* 
+            <DialogST attr = {DialogsAttr.itemQuery}>
+                <MakerQuery reqCode = {clickedCol}
+                ></MakerQuery>
+            </DialogST> */}
+            <DialogST attr = {DialogsAttr.itemQuery}>
+                <ItemQuery reqCode = {clickedCol}
+                ></ItemQuery>
+            </DialogST>
         </>
     )
 }   

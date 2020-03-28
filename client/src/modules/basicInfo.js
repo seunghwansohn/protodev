@@ -17,7 +17,7 @@ export function* basicInfoSaga() {
 }
 
 const initialState = {
-    exchangeRate : {}
+    exchangeRate : {},
 };
 
 function reducer (state = initialState, action) {

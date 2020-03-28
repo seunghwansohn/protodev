@@ -43,7 +43,8 @@ const rootReducer = combineReducers({
     common,
     maker,
     project,
-    task
+    task,
+    basicInfo
 });
 
 export function* rootSaga () {
