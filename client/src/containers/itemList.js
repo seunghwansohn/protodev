@@ -15,9 +15,13 @@ import {
     actDelete
 }                                       from '../modules/itemList'
 
+import {load as loadAccount} from '../modules/reduxForm'
+
+
 import DialogST     from '../components/common/DialogST'
 import Table        from '../components/common/Table1'
 import ButtonHeader from '../components/common/ButtonHeader'
+
 
 
 import spacelize                                from '../lib/spacelize'
@@ -180,6 +184,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     }
 
     const test = () => {
+      dispatch(loadAccount())
       dispatch(onDialogOpen(true, detailQuery, clickedCol))
     }
 
@@ -322,7 +327,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
               motherNo    = {frameNo}
               reqKey      = {primaryKey}
               reqCode     = {reqQueryCode}
-              onLoad      = {test}
             ></ItemAdd>
           </DialogST>
 

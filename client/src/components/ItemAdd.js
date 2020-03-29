@@ -394,12 +394,13 @@ let ItemAdd = props => {
   },[])
 
   // useEffect(() => {
-  //   dispatch(load())
+  //   onLoad()
+  //   loadAccount()
   // },[])
 
-  const test = () => {
-    dispatch(onLoad())
-  }
+  // const test = () => {
+  //   dispatch(onLoad())
+  // }
   const fields = () => {
     let fields = []
     if(Array.isArray(fieldsAttr) && fieldsAttr.length > 0) {
@@ -683,7 +684,7 @@ let ItemAdd = props => {
       </Grid>
       <Button variant="contained" onClick = {onSubmit}>Submit</Button>
       <Button variant="contained" onClick = {onCheck}>Check</Button>
-      <Button onClick={test}>test</Button>
+      {/* <Button onClick={test}>test</Button> */}
     </div>
   )
 }
@@ -697,7 +698,7 @@ ItemAdd = connect(
   state => ({
     initialValues: state.reduxFormInit // pull initial values from account reducer
   }),
-  {onLoad : loadAccount}
+  {onload : loadAccount}
 )(ItemAdd)
 
 export default ItemAdd
