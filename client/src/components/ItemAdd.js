@@ -23,7 +23,9 @@ import { ToastContainer, toast } from 'react-toastify';
 
 import { getExchangeRate } from '../modules/basicInfo'
 
-import {load, sliderStKVVar, sliderStKCVar} from '../modules/reduxForm'
+import {sliderStKVVar, sliderStKCVar} from '../modules/reduxForm'
+import {load as loadAccount} from '../modules/reduxForm'
+
 
 import spacelize  from '../lib/spacelize'
 import * as cal   from '../lib/calSTValues'
@@ -193,28 +195,28 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-const validate = values => {
-  const errors = {}
-  const requiredFields = [
-    'itemCode',
-    'itemName',
-  ]
-  requiredFields.forEach(field => {
-    if (!values[field]) {
-        errors[field] = 'Required'
-    }
-  })
-  return errors
-}
+// const validate = values => {
+//   const errors = {}
+//   const requiredFields = [
+//     'itemCode',
+//     'itemName',
+//   ]
+//   requiredFields.forEach(field => {
+//     if (!values[field]) {
+//         errors[field] = 'Required'
+//     }
+//   })
+//   return errors
+// }
 
-const required = value => value ? undefined : 'Required'
-const maxLength = max => value =>
-  value && value.length > max ? `Must be ${max} characters or less` : undefined
-const maxLength15 = maxLength(15)
-const number = value => value && isNaN(Number(value)) ? 'Must be a number' : undefined
-const minValue = min => value =>
-  value && value < min ? `Must be at least ${min}` : undefined
-const minValue18 = minValue(18)
+// const required = value => value ? undefined : 'Required'
+// const maxLength = max => value =>
+//   value && value.length > max ? `Must be ${max} characters or less` : undefined
+// const maxLength15 = maxLength(15)
+// const number = value => value && isNaN(Number(value)) ? 'Must be a number' : undefined
+// const minValue = min => value =>
+//   value && value < min ? `Must be at least ${min}` : undefined
+// const minValue18 = minValue(18)
 
 const renderTextField = ({
   label,
@@ -310,11 +312,15 @@ let ItemAdd = props => {
     weight
   } = formValues
 
-  const {stkVVar, stkCVar, itemName} = useSelector(state => state.reduxFormInit)
+  const {stkVVar, stkCVar} = useSelector(state => state.reduxFormInit)
+  const reduxFormInitValue = useSelector(state => state.reduxFormInit)
+
+  console.log(reduxFormInitValue)
+
 
   const exchangeRate = useSelector(state => state.basicInfo.exchangeRate)
 
-  console.log(itemName)
+  // console.log(itemName)
   const [CBM, setCBM]                       = useState(0);
   const [deliveryKorea, setDeliveryKorea]   = useState(0);
   const [seaFreight, setSeaFreight]         = useState(0);
@@ -387,9 +393,9 @@ let ItemAdd = props => {
     dispatch(getExchangeRate())
   },[])
 
-  useEffect(() => {
-    dispatch(load())
-  },[])
+  // useEffect(() => {
+  //   dispatch(load())
+  // },[])
 
   const test = () => {
     dispatch(onLoad())
@@ -423,20 +429,20 @@ let ItemAdd = props => {
   }
 
   const createField = (name, component,style, normalize) => {
-    let field = <Field name={name} component={renderTextField} label={spacelize(name)} className = {classes[style]}  normalize={normalize} validate={[ required ]}/>
+    let field = <Field name={name} component={renderTextField} label={spacelize(name)} className = {classes[style]}  normalize={normalize}/>
     return field
   }
   const onSubmit = () => {
     let submitValues = formValues
     submitValues.stkCVar = stkCVar
     submitValues.stkVVar = stkVVar
-    const required = ['itemCode', 'itemName', 'supplier', 'maker' ]
+    // const required = ['itemCode', 'itemName', 'supplier', 'maker' ]
     const error = []
-    required.map(item => {
-        if (submitValues[item] == '' || submitValues[item] == null || submitValues[item] == undefined) {
-          error.push(item + ' is required')
-        }
-    })
+    // required.map(item => {
+    //     if (submitValues[item] == '' || submitValues[item] == null || submitValues[item] == undefined) {
+    //       error.push(item + ' is required')
+    //     }
+    // })
     if (error.length !== 0) {
       error.map(error => {
         toast(error)
@@ -493,7 +499,7 @@ let ItemAdd = props => {
                   component={renderTextField} 
                   label={spacelize('buyingPrice') + ' (KRW)'} 
                   className = {classes.fieldPrice} 
-                  validate={[ number ]}
+                  // validate={[ number ]}
                   placeholder = 'buyingPrice (KRW)'>
               </Field>
             </Grid>
@@ -502,7 +508,7 @@ let ItemAdd = props => {
                   component={renderTextField} 
                   label={spacelize('importTaxRate') + ' (%)'} 
                   className = {classes.fieldPrice} 
-                  validate={[ number ]}
+                  // validate={[ number ]}
                   placeholder = 'Import Tax Rate (%)'>
                     cm
               </Field>
@@ -628,7 +634,7 @@ let ItemAdd = props => {
               component={renderTextField} 
               label={spacelize('width') + ' (cm)'} 
               className = {classes.fieledDimension} 
-              validate={[ number ]}
+              // validate={[ number ]}
               placeholder = 'width (cm)'>
                 cm
             </Field>
@@ -636,7 +642,7 @@ let ItemAdd = props => {
               component={renderTextField} 
               label={spacelize('depth') + ' (cm)'} 
               className = {classes.fieledDimension} 
-              validate={[ number ]}
+              // validate={[ number ]}
               placeholder = 'depth (cm)'>
                 cm
             </Field>
@@ -644,7 +650,7 @@ let ItemAdd = props => {
               component={renderTextField} 
               label={spacelize('height') + ' (cm)'} 
               className = {classes.fieledDimension} 
-              validate={[ number ]}
+              // validate={[ number ]}
               placeholder = 'height (cm)'>
                 cm
             </Field>
@@ -652,7 +658,7 @@ let ItemAdd = props => {
               component={renderTextField} 
               label={spacelize('weight') + ' (kg)'} 
               className = {classes.fieledDimension} 
-              validate={[ number ]}
+              // validate={[ number ]}
               placeholder = 'weight (kg)'>
                 cm
             </Field>
@@ -684,16 +690,14 @@ let ItemAdd = props => {
 
 ItemAdd = reduxForm({
   form: 'itemAdd', // a unique identifier for this form
-  validate,
+  // validate,
 })(ItemAdd)
 
 ItemAdd = connect(
   state => ({
     initialValues: state.reduxFormInit // pull initial values from account reducer
   }),
-  {
-    onLoad : load,
-  }
+  {onLoad : loadAccount}
 )(ItemAdd)
 
 export default ItemAdd

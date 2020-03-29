@@ -16,7 +16,11 @@ function reducer (state = {}, action) {
     switch (action.type) {
         case LOAD :
             return {
-                itemName : 'fklejkj'
+                itemCode : 'ㄷㅎㄷㅎ',
+                itemName : 'fklejkj',
+                supplier : 'dlkjdf',
+                maker : 'dfdf',
+                note: 'dflkjedf'
             }
         case SLIDER_STK_V_VAR :
             return produce(state, draft => {
