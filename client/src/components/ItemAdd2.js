@@ -28,6 +28,8 @@ import {load, sliderStKVVar, sliderStKCVar} from '../modules/reduxForm'
 import spacelize  from '../lib/spacelize'
 import * as cal   from '../lib/calSTValues'
 
+import InputST          from './common/Input'
+
 import {actSubmitAddItem} from '../modules/itemList'
 
 toast.configure()
@@ -41,7 +43,8 @@ const useStyles = makeStyles(theme => ({
       padding: theme.spacing(0.5),
       textAlign: 'left',
       display: 'flex',
-      backgroundColor: '#ebf2f5'
+      backgroundColor: '#ebf2f5',
+      verticalAlign:'top'
   },
   fieldInfo: {
       padding: theme.spacing(0.5),
@@ -296,6 +299,14 @@ const renderSelectField = ({
 
 
 let ItemAdd = props => {
+  const [fixMode, setFixMode]         = useState(false)
+  const [fixedData, setFixedData]     = useState([])
+
+  const [loadedData, setLoadedData]     = useState([])
+
+  const [primaryKey, setPrimaryKey]   = useState('')
+  const [primaryCode, setPrimaryCode] = useState('')
+
   const { handleSubmit, pristine, reset, submitting, fieldsAttr, onLoad, onSetStkVVar, onSetStkCVar} = props
   const classes = useStyles();
   const dispatch = useDispatch()
@@ -310,31 +321,43 @@ let ItemAdd = props => {
     weight
   } = formValues
 
-  const {stkVVar, stkCVar, itemName} = useSelector(state => state.reduxFormInit)
+  const {stkVVar, stkCVar} = useSelector(state => state.reduxFormInit)
 
   const exchangeRate = useSelector(state => state.basicInfo.exchangeRate)
 
-  console.log(itemName)
-  const [CBM, setCBM]                       = useState(0);
-  const [deliveryKorea, setDeliveryKorea]   = useState(0);
-  const [seaFreight, setSeaFreight]         = useState(0);
-  const [airFreight, setAirFreight]         = useState(0);
-  const [handCarryFee, setHandCarryFee]     = useState(0);
-  const [STKVPrice, setSTKVPrice]     = useState(0);
-  const [segeroPay, setSegeroPay]     = useState(0);
-  const [importTax, setImportTax]     = useState(0);
-  const [packingFee, setPackingFee]     = useState(0);
-  const [defaultFreight, setDefaultFreight]     = useState();
-  const [VNSellingP, setVNSellingP]     = useState(0);
-  const [buyingPriceUSD, setBuyingPriceUSD] = useState(0);
-  const [profitKR, setProfitKR] = useState(0);
-  const [profitVN, setProfitVN] = useState(0);
-  const [costKR, setCostKR] = useState(0);
-  const [costVN, setCostVN] = useState(0);
-  const [profitCostKR, setProfitCostKR] = useState(0);
-  const [profitCostVN, setProfitCostVN] = useState(0);
-  const [totalProfit, setTotalProfit] = useState(0);
+  const [CBM, setCBM]                         = useState(0);
+  const [deliveryKorea, setDeliveryKorea]     = useState(0);
+  const [seaFreight, setSeaFreight]           = useState(0);
+  const [airFreight, setAirFreight]           = useState(0);
+  const [handCarryFee, setHandCarryFee]       = useState(0);
+  const [STKVPrice, setSTKVPrice]             = useState(0);
+  const [segeroPay, setSegeroPay]             = useState(0);
+  const [importTax, setImportTax]             = useState(0);
+  const [packingFee, setPackingFee]           = useState(0);
+  const [defaultFreight, setDefaultFreight]   = useState();
+  const [VNSellingP, setVNSellingP]           = useState(0);
+  const [buyingPriceUSD, setBuyingPriceUSD]   = useState(0);
+  const [profitKR, setProfitKR]               = useState(0);
+  const [profitVN, setProfitVN]               = useState(0);
+  const [costKR, setCostKR]                   = useState(0);
+  const [costVN, setCostVN]                   = useState(0);
+  const [profitCostKR, setProfitCostKR]       = useState(0);
+  const [profitCostVN, setProfitCostVN]       = useState(0);
+  const [totalProfit, setTotalProfit]         = useState(0);
   const [totalProfitCost, setTotalProfitCost] = useState(0);
+
+  const [itemCode, setItemCode]               = useState('')
+  const [itemName, setItemName]               = useState('')
+  const [supplier, setSupplier]               = useState('')
+  const [description, setDescription]         = useState('')
+  const [maker, setMaker]                     = useState('')
+  const [makerModelNo, setMakerModelNo]       = useState('')
+
+
+
+
+
+
 
 
   useEffect(() => {
@@ -387,32 +410,23 @@ let ItemAdd = props => {
     dispatch(getExchangeRate())
   },[])
 
-  useEffect(() => {
-    dispatch(load())
-  },[])
-
-  const test = () => {
-    dispatch(onLoad())
-  }
-  const fields = () => {
-    let fields = []
-    if(Array.isArray(fieldsAttr) && fieldsAttr.length > 0) {
-      fieldsAttr.map(field => {
-        let newObj = {}
-        newObj = field
-        newObj.component = eval(field.component)
-        fields.push(newObj)
-      })
-    }
-    return fields
-  }
-
+  //슬라이더부분
   function valuetext(value) {
     dispatch(sliderStKVVar(value))
   }
-
   function onSetSTKCVar(value) {
     dispatch(sliderStKCVar(value))
+  }
+
+  const onFixedVal = (fixedArr) => {
+    let tempObj = {}
+    tempObj.ref = {}
+    tempObj.vals = {}
+    tempObj.ref[primaryKey] = primaryCode
+    Object.keys(fixedData).map(key => {
+      tempObj.vals[key] = fixedData[key]
+    })
+    // onUpdate(tempObj)
   }
 
 
@@ -423,7 +437,7 @@ let ItemAdd = props => {
   }
 
   const createField = (name, component,style, normalize) => {
-    let field = <Field name={name} component={renderTextField} label={spacelize(name)} className = {classes[style]}  normalize={normalize} validate={[ required ]}/>
+    let field = <Field name={name} component={renderTextField} label={spacelize(name)} value = {'fe'} className = {classes[style]}  normalize={normalize} validate={[ required ]}/>
     return field
   }
   const onSubmit = () => {
@@ -446,240 +460,54 @@ let ItemAdd = props => {
     }
   }
 
+  const queryProps = [
+    {type : 'primary', newRow : true, size : 5, title: 'itemCode', state : itemCode, setState : setItemCode, style:'regular'},
+    {type : 'fixable', newRow : true, size : 7, title: 'itemName', state : itemName, setState : setItemName, style:'regular'},
+    {type : 'fixable', newRow : false, size : 5, title: 'supplier', state : supplier, setState : setSupplier, style:'regular'},
+    {type : 'fixable', newRow : false, size : 7, title: 'description', state : description, setState : setDescription, style:'regular'},
+    {type : 'fixable', newRow : false, size : 5, title: 'maker', state : maker, setState : setMaker, style:'regular'},
+    {type : 'fixable', newRow : false, size : 7, title: 'makerModelNo', state : makerModelNo, setState : setMakerModelNo, style:'regular'},
+    {type : 'fixable', newRow : false, size : 5, title: 'buyingPrice', state : maker, setState : setBuyingPrice, style:'regular'},
+    {type : 'fixable', newRow : false, size : 7, title: 'importTaxRate', state : importTaxRate, setState : setImportTaxRate, style:'regular'},
+    {type : 'divider', typoGraphy : 'basicInfo'},
+    // {type : 'fixable', newRow : false, size : 5, title: 'ceo', state : ceo, setState : setCeo, style:'regular'},
+]
+
+
   return (
-    <div>
-      <Grid container xs = {12} className = {classes.grid} spacing={0}>
-        <Grid item xs = {12}>
-          <Grid container className = {classes.grid} spacing={0}>
-            <Grid item xs = {3}> {createField('itemCode', renderTextField,'fieldItem')} </Grid>
-            {/* <Grid item xs = {9}> {createField('itemName', renderTextField, 'fieldItem')} </Grid> */}
-            <Field
-              name="itemName"
-              component="input"
-              type="text"
-          />
-          </Grid>
-        </Grid>
-        <Grid item xs = {12}>
-          <Grid container className = {classes.grid} spacing={0}>
-            <Grid item xs = {3}> {createField('supplier', renderTextField, 'fieldInfo')} </Grid>
-            <Grid item xs = {9}> 
-              <Field name={'description'} 
-                component={renderTextField} 
-                label={spacelize('description')} 
-                className = {classes.fieldPrice} 
-                placeholder = 'description'>
-              </Field>
+    <>
+      <Grid container>
+      {queryProps.map(obj => {
+        if(obj.type !== 'divider') {
+          return(
+            <Grid item xs ={obj.size} className = {classes.root}>
+              <InputST
+                title         = {obj.title}
+                attr          = {'regular'}
+                type          = {obj.type}
+                fixMode       = {fixMode}
+                state         = {obj.state}
+                setState      = {obj.setState}
+                fixedData     = {fixedData}
+                setFixedData  = {setFixedData}
+                onFixedVal    = {onFixedVal}
+                loadedData     = {loadedData ? loadedData : null}
+              ></InputST>
             </Grid>
-          </Grid>
-        </Grid>
-        <Grid item xs = {12}>
-          <Grid container className = {classes.grid} spacing={0}>
-            <Grid item xs = {3}> {createField('maker', renderTextField, 'fieldInfo')} </Grid>
-            <Grid item xs = {9}> 
-              <Field name={'makerModelNo'} 
-                component={renderTextField} 
-                label={spacelize('makerModelNo')} 
-                className = {classes.fieldPrice} 
-                placeholder = {spacelize('makerModelNo')}>
-              </Field>
-            </Grid>
-          </Grid>
-        </Grid>
-    
-        <Grid container item xs = {3} className = {classes.gridPrice} spacing={0}>
-            <Grid item xs ={12}> 
-              <Field name={'buyingPrice'} 
-                  component={renderTextField} 
-                  label={spacelize('buyingPrice') + ' (KRW)'} 
-                  className = {classes.fieldPrice} 
-                  validate={[ number ]}
-                  placeholder = 'buyingPrice (KRW)'>
-              </Field>
-            </Grid>
-            <Grid item xs ={12}> 
-              <Field name={'importTaxRate'} 
-                  component={renderTextField} 
-                  label={spacelize('importTaxRate') + ' (%)'} 
-                  className = {classes.fieldPrice} 
-                  validate={[ number ]}
-                  placeholder = 'Import Tax Rate (%)'>
-                    cm
-              </Field>
-            </Grid>
-            <Grid item xs ={12}> 
-              <Typography id="discrete-slider-small-steps" gutterBottom>
-                STK V Var
-              </Typography>
-              <Slider
-                defaultValue={1.02}
-                getAriaValueText={valuetext}
-                aria-labelledby="discrete-slider-small-steps"
-                step={0.01}
-                marks
-                min={1}
-                max={1.3}
-                valueLabelDisplay="auto"
-              />
-            </Grid>
-            <Grid item xs ={12}> 
-              <Typography id="discrete-slider-small-steps" gutterBottom>
-                STK C Var
-              </Typography>
-              <Slider
-                defaultValue={1.2}
-                getAriaValueText={onSetSTKCVar}
-                aria-labelledby="discrete-slider-small-steps"
-                step={0.01}
-                marks
-                min={1}
-                max={1.5}
-                valueLabelDisplay="auto"
-              />
-            </Grid>
-        </Grid>
-        
-        <Grid container item xs = {9} spacing={0}>
-          <Grid container item xs = {6} spacing={0}>
-            <Grid item xs = {12}>
-              <Paper className={classes.paperKorea}>
-                Korea
-              </Paper>
-            </Grid>
-            <Grid item xs = {6}>
-              <Paper className={classes.revenueTitle}>
-                STK-V Price: <br></br>
-              </Paper>
-              <Paper className={classes.paperAlignRight}>
-                Default Freight: <br/> 
-                Buying Price: <br/> 
-                To Segero: <br/>
-              </Paper>
-              <Paper className={classes.paperProfitTitle}>
-                Profit: <br></br>
-                Profit/Cost: <br></br>
-              </Paper>
-            </Grid>
-            <Grid item xs = {6}>
-              <Paper className={classes.revenueAmount}>
-                {STKVPrice} USD <br></br>
-              </Paper>
-              <Paper className={classes.paperAlignLeft}>
-                {defaultFreight} USD <br/> 
-                {buyingPriceUSD} USD <br/> 
-                {segeroPay} USD<br/> 
-              </Paper>
-              <Paper className={classes.paperProfitAmount}>
-                {profitKR} USD <br></br>
-                {profitCostKR} % <br></br>
-              </Paper>
-            </Grid>
-          </Grid>
-          <Grid container item xs = {6} spacing={0}>
-            <Grid item xs = {12}>
-              <Paper className={classes.paperVietnam}>
-               Vietnam
-              </Paper>
-            </Grid>
-            <Grid item xs = {6}>
-              <Paper className={classes.revenueTitle}>
-                VN Selling Price: <br></br>
-              </Paper>
-              <Paper className={classes.paperAlignRight}>
-                Import Tax: <br/> 
-                STK-V Price: <br/> 
-                <br></br>
-              </Paper>
-              <Paper className={classes.paperProfitTitle}>
-                Profit: <br></br>
-                Profit/Cost: <br></br>
-              </Paper>
-            </Grid>
-            <Grid item xs = {6}>
-              <Paper className={classes.revenueAmount}>
-                {VNSellingP} USD <br></br>
-              </Paper>
-              <Paper className={classes.paperAlignLeft}>
-                {importTax} USD <br/> 
-                {STKVPrice} USD<br/>
-                <br></br>
-              </Paper>
-              <Paper className={classes.paperProfitAmount}>
-                {profitVN} USD <br></br>
-                {profitCostVN} % <br></br>
-              </Paper>
-            </Grid>
-
-          </Grid>
-          <Grid item xs = {12}>
-            <Paper className={classes.paperProfitTotal}>
-              Total Profit: {totalProfit} USD <br></br>
-              Total Profit/Cost = {totalProfitCost} % 
-            </Paper>
-          </Grid>
-          <Grid item xs = {3}>
-          </Grid>
-            <br></br>
-            <br></br>
-        </Grid>
-
-        <Grid item xs = {3}> 
-            <Field name={'width'} 
-              component={renderTextField} 
-              label={spacelize('width') + ' (cm)'} 
-              className = {classes.fieledDimension} 
-              validate={[ number ]}
-              placeholder = 'width (cm)'>
-                cm
-            </Field>
-            <Field name={'depth'} 
-              component={renderTextField} 
-              label={spacelize('depth') + ' (cm)'} 
-              className = {classes.fieledDimension} 
-              validate={[ number ]}
-              placeholder = 'depth (cm)'>
-                cm
-            </Field>
-            <Field name={'height'} 
-              component={renderTextField} 
-              label={spacelize('height') + ' (cm)'} 
-              className = {classes.fieledDimension} 
-              validate={[ number ]}
-              placeholder = 'height (cm)'>
-                cm
-            </Field>
-            <Field name={'weight'} 
-              component={renderTextField} 
-              label={spacelize('weight') + ' (kg)'} 
-              className = {classes.fieledDimension} 
-              validate={[ number ]}
-              placeholder = 'weight (kg)'>
-                cm
-            </Field>
-        </Grid>
-        <Grid item xs = {6}> 
-          <Paper className={classes.paperDeliveryInfo}> CBM: {CBM} </Paper>
-          <Paper className={classes.paperDeliveryInfo}> Delivery Korea: {deliveryKorea}</Paper>
-          <Paper className={classes.paperDeliveryInfo}> Packing Fee {packingFee} </Paper>
-          <Paper className={classes.paperDeliveryInfo}> Sea Freight: {seaFreight}      </Paper>
-          <Paper className={classes.paperDeliveryInfo}> Air Freight: {airFreight}      </Paper>
-          <Paper className={classes.paperDeliveryInfo}> Hand Carry Fee: {handCarryFee} </Paper>
-        </Grid>
-
-        <Grid item xs = {3}>
-              <Box bgcolor="secondary.main" color="secondary.contrastText" p={0}>
-                ExchangeRate <br></br>
-                $ 1 = KRW {Math.round(exchangeRate.KRW * 100)/100} <br></br>               
-                $ 1 = VND {Math.round(exchangeRate.VND * 100)/100}
-              </Box>
-        </Grid>
-        <Grid item xs = {12}>{createField('note', renderTextField, 'fieledNote')} </Grid>
+          )
+        }
+      })}
       </Grid>
-      <Button variant="contained" onClick = {onSubmit}>Submit</Button>
-      <Button variant="contained" onClick = {onCheck}>Check</Button>
-      <Button onClick={test}>test</Button>
-    </div>
+      <Grid container xs = {12}>
+        <Grid item xs = {5}>
+          
+        </Grid>
+      </Grid>
+    </>
+    
   )
+
+        
 }
 
 ItemAdd = reduxForm({

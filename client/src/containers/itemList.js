@@ -51,6 +51,8 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     //다이얼로그 관련
     const opened         = useSelector(state => state.dialogs.opened)
     const dialogOpened   = useSelector(state => state.dialogs.opened)
+    const simpleQuery = 'simple'
+    const detailQuery = 'detail'
 
     const checkOpened = (title) => {
         let result = ''
@@ -61,21 +63,20 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         })
         return result
     }
-
     const DialogsAttr = {
       itemAdd : {
-        title : 'Item Add',
+        title : detailQuery,
         maxWidth : 'md' ,
         // funcs : funcs,
-        open : checkOpened('itemAdd'),
+        open : checkOpened(detailQuery),
         scroll : 'paper'
         
       },
       itemQuery : {
-          title : type,
+          title : simpleQuery,
           maxWidth : 'xl' ,
           // funcs : funcs,
-          open : checkOpened(type)
+          open : checkOpened(simpleQuery)
       }
     }
 
@@ -129,6 +130,29 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     const clicked        = useSelector(state => state.item.table.clicked)
     const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
 
+    useEffect(() => {
+      if (Object.keys(clickedCol).length > 0) {
+          dispatch(actClickedTableCol(clickedCol))
+      } 
+    },[clickedCol])
+
+    useEffect(() => {
+      let keys = Object.keys(clicked)
+      if (keys.length > 0) {
+        if (includingKeys.includes(clicked.header)) {
+          console.log('가격임')
+          dispatch(actClickedTableCol(clickedCol))
+          dispatch(onDialogOpen(true, detailQuery, clickedCol))
+        }else{
+          dispatch(actClickedTableCol(clickedCol))
+          dispatch(onDialogOpen(true, simpleQuery, clickedCol))
+        }
+      } 
+    },[clicked])
+
+
+    console.log(clicked)
+    console.log(reqQueryCode)
 
     //테이블 필터
     const [filterKeyword, setFilterKeyword]     = useState('');
@@ -143,29 +167,11 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
             setTableRawData(withoutIncludingKeys(res.data.result))
         })
     }
-    
-    console.log(tableRawData)
-    console.log(clicked)
-    console.log(reqQueryCode)
     useEffect(() => {
         getRawData()
     },[])
 
-    useEffect(() => {
-        if (Object.keys(clickedCol).length > 0) {
-            dispatch(actClickedTableCol(clickedCol))
-            dispatch(onDialogOpen(true, type, clickedCol))
-        } 
-    },[clickedCol])
 
-    useEffect(() => {
-      let keys = Object.keys(clicked)
-      if (keys.length > 0) {
-        if (includingKeys.includes(clicked.header)) {
-          console.log('가격임')
-        }
-      } 
-    },[clicked])
     
     if (update) {
         getRawData()
@@ -173,10 +179,8 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         setUpdated(true)
     }
 
-    console.log(clickedCol)
-
     const test = () => {
-      dispatch(onDialogOpen(true, 'itemAdd'))
+      dispatch(onDialogOpen(true, detailQuery, clickedCol))
     }
 
     //table 관련 속성들
@@ -291,7 +295,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         ],
     }
 
-    console.log(includingKeys)
 
     const arrFunc = () => {
       let Arr = []
@@ -315,6 +318,11 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
             <ItemAdd 
               title       = {DialogsAttr.itemAdd.title} 
               fieldsAttr  = {arrFunc()}
+              motherType  = {type}
+              motherNo    = {frameNo}
+              reqKey      = {primaryKey}
+              reqCode     = {reqQueryCode}
+              onLoad      = {test}
             ></ItemAdd>
           </DialogST>
 
