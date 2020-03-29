@@ -15,13 +15,9 @@ export const sliderStKCVar = createAction(SLIDER_STK_C_VAR, value => value)
 function reducer (state = {}, action) {
     switch (action.type) {
         case LOAD :
-            return {
-                itemCode : 'ㄷㅎㄷㅎ',
-                itemName : 'fklejkj',
-                supplier : 'dlkjdf',
-                maker : 'dfdf',
-                note: 'dflkjedf'
-            }
+
+            console.log(action.payload)
+            return {itemName : 'dlfkjdf'}
         case SLIDER_STK_V_VAR :
             return produce(state, draft => {
                 draft.stkVVar = action.payload

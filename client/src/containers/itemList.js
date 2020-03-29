@@ -146,6 +146,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         if (includingKeys.includes(clicked.header)) {
           console.log('가격임')
           dispatch(actClickedTableCol(clickedCol))
+          dispatch(loadAccount(clickedCol))
           dispatch(onDialogOpen(true, detailQuery, clickedCol))
         }else{
           dispatch(actClickedTableCol(clickedCol))
