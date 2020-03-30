@@ -43,6 +43,11 @@ const useStyles = makeStyles(theme => ({
       flexGrow: 1,
       display: 'flex'
   },
+  marginBottom: {
+    flexGrow: 1,
+    display: 'flex',
+    marginBottom: '8px'
+  },
   fieldItem: {
       padding: theme.spacing(0.5),
       textAlign: 'left',
@@ -568,7 +573,7 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
       {basicInfoProps.map(obj => {
         if(obj.type !== 'divider') {
           return(
-            <Grid item xs ={obj.size} className = {classes.root}>
+            <Grid item xs ={obj.size} className = {classes.marginBottom}>
               <InputST
                 title         = {obj.title}
                 attr          = {'regular'}

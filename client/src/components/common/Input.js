@@ -20,6 +20,9 @@ const TextFieldST = styled(TextField)`
         return '#ffe6ff'}}};
   label.Mui-focused {
     color: green;
+    font-size : 18px;
+    vertical-align : text-top;
+
   }
   .MuiOutlinedInput-root {
     fieldset {
@@ -29,8 +32,11 @@ const TextFieldST = styled(TextField)`
       border-color: yellow;
     }
     &.Mui-focused fieldset {
-      border-color: green;
+      border-bottom: green;
     }
+  }
+  input:valid {
+    border-bottom: 4px solid pink;
   }      
 `
 
@@ -50,7 +56,7 @@ const InputST = ({
 }) => {
 
   const onChangeValue = (event, func) => {
-    setState(event.target.value)  
+    setState(event.target.value)    
   }
 
   const onKeyPressInput = (event) => {
@@ -73,9 +79,10 @@ const InputST = ({
         id={title}
         type = {type}
         update = {type ? true : false}
-        style={{width: "95%"}}
+        style={{width: "100%"}}
         fixMode = {fixMode}
-        variant="outlined"
+        required
+        // variant="outlined"
         value = {state}
         disabled = {type == 'fixable' && fixMode == true ? false : true}
         onChange = {(event) => onChangeValue(event, setState)}
