@@ -4,6 +4,12 @@ import { Field, reduxForm, Fields }           from 'redux-form'
 
 import axios                          from 'axios';
 
+import Table from '@material-ui/core/Table'; //material-ui의 Table ui를 불러와서 프론트엔드에 쓰이는 모든 테이블 스타일을 이 스타일로 함.
+import TableRow from '@material-ui/core/TableRow';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
+import TableContainer from '@material-ui/core/TableContainer';
 
 import Typography       from '@material-ui/core/Typography';
 import Slider           from '@material-ui/core/Slider';
@@ -307,6 +313,26 @@ const renderSelectField = ({
 }
 
 
+const TableComp = ({arr, colAttr}) => {
+  return (
+    <>
+      {arr.map(obj => {
+        return(
+          <TableRow>
+            {Object.keys(obj).map(header => {
+              return (                    
+                <TableCell style = {colAttr(obj[header])} align = {colAttr(obj[header]).align} size = 'small'>
+                  {obj[header]}
+                </TableCell>
+              )
+            })}
+          </TableRow>
+        )
+      })}
+    </>
+  )
+}
+
 let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
   const [fixMode, setFixMode]         = useState(false)
   const [fixedData, setFixedData]     = useState([])
@@ -359,7 +385,6 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
   const [importTaxRate, setImportTaxRate]     = useState('')
 
 
-  console.log(loadedData)
 
   //픽스모드 설정
   const onModeChange = () => {
@@ -563,6 +588,60 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
     {type : 'fixable', newRow : false, size : 6, title: 'weight', state : weight, setState : setWeight, style:'regular'},
   ]
 
+  const createData = (title, colon, amount, unit) => {
+    return {title, colon, amount, unit}
+  }
+
+  const createData1 = (title, colSpan, colon, amount, unit) => {
+    return {title, colSpan, colon, amount, unit}
+  }
+
+  const tableData = [
+    createData('STK-V Price', ':', STKVPrice, 'USD'),
+    createData('Default Freight', ':', defaultFreight, 'USD'),
+    createData('Buying Price', ':', buyingPrice, 'USD'),
+    createData('To Segero', ':', segeroPay, 'USD'),
+    createData('Profit', ':', profitKR, 'USD'),
+    createData('Profit/Cost', ':', profitCostKR, 'USD'),
+  ]
+
+
+  
+  console.log(tableData)
+
+  const tableData1 = [
+    {type : 'title', title :"Revenue"},
+    {type : 'detail', subject :"STK-V", middleSymbol : ':', value : '500', unit : 'USD'},
+    {type : 'detail', subject :"STK-V", middleSymbol : ':', value : '500', unit : 'USD'},
+    {type : 'detail', subject :"STK-V", middleSymbol : ':', value : '500', unit : 'USD'},
+    {type : 'detail', subject :"STK-V", middleSymbol : ':', value : '500', unit : 'USD'},
+    {type : 'detail', subject :"STK-V", middleSymbol : ':', value : '500', unit : 'USD'},
+    {type : 'detail', subject :"STK-V", middleSymbol : ':', value : '500', unit : 'USD'},
+  ]
+
+  const revenueKR = [
+    //(title, colspan, middleSymbol, Value, unit)
+    createData('Revenue'),
+    createData('STK-V Price', ':', STKVPrice, 'USD'),
+  ]
+
+  const revenueVN = [
+    createData('STK-V Price', ':', STKVPrice, 'USD'),
+  ]
+
+  // const takeLongest = () => {
+  //   createData
+  // }
+  const colAttr = (str) => {
+    let temp = ''
+    if (str ==':') {
+      temp = {width : '2px', align : 'left', padding : 0, margin : 0}
+    } else {
+      temp = {width : '75px', align : 'right', padding : 0, margin : 0}
+    }
+    return temp
+  }
+
 
   return (
     <>
@@ -591,6 +670,41 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
         }
       })}
       </Grid>
+
+      <Table>
+        <TableContainer>
+          <TableBody>
+            <TableRow>
+              <TableCell colSpan = {4} align = "center">
+                Revenueee
+              </TableCell>
+            </TableRow>
+
+            <TableComp
+              arr = {tableData}
+              colAttr = {colAttr}
+            >
+
+            </TableComp>
+
+
+            {/* {tableData.map(obj => {
+              return(
+                <TableRow>
+                  {Object.keys(obj).map(header => {
+                    return (                    
+                      <TableCell style = {colAttr(obj[header])} align = {colAttr(obj[header]).align} size = 'small'>
+                        {obj[header]}
+                      </TableCell>
+                    )
+
+                  })}
+                </TableRow>
+              )
+            })} */}
+          </TableBody>
+        </TableContainer>
+      </Table>
 
       <Grid container>
         <Grid xs = {3}>
