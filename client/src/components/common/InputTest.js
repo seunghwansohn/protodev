@@ -52,22 +52,11 @@ const InputST = ({
   fixable, 
   fixedData, 
   setFixedData, 
-
-  required,
-  variant,
-  fullWidth
+  onFixedVal
 }) => {
 
   const onChangeValue = (event, func) => {
-    setState(event.target.value)
-    let temp = {}
-    let tempArr = fixedData
-    temp[title] = event.target.value
-    setFixedData(
-      produce(fixedData, draft => {
-        fixedData[title] = event.target.value
-      })
-    )
+    setState(event.target.value)    
   }
   const onKeyPressInput = (event) => {
     if (event.key == "Enter") {
@@ -87,18 +76,15 @@ const InputST = ({
       <TextFieldST
         label={title}
         id={title}
+        type = {type}
+        update = {type ? true : false}
         style={{width: "100%"}}
-        required = {required}
-        variant= {variant}
-        fullWidth = {fullWidth}
-        size = {'small'}
+        // required
+        // variant="outlined"
         value = {state}
-        margin = {'none'}
+        disabled = {type == 'fixable' && fixMode == true ? false : true}
         onChange = {(event) => onChangeValue(event, setState)}
         onKeyPress = {(event) => onKeyPressInput(event)}
-
-        disabled = {type == 'fixable' && fixMode == true ? false : true}
-
       />
     </React.Fragment>
   )

@@ -26,7 +26,7 @@ import { makeStyles }   from '@material-ui/core/styles';
 import Grid             from '@material-ui/core/Grid';
 import Button           from '@material-ui/core/Button';
 import Paper            from '@material-ui/core/Paper';
-import Box from '@material-ui/core/Box';
+import Box              from '@material-ui/core/Box';
 import { ToastContainer, toast } from 'react-toastify';
 
 import {generateRandom}               from '../lib/common';
@@ -42,6 +42,8 @@ import InputST          from './common/Input'
 
 import {actSubmitAddItem} from '../modules/itemList'
 
+import TableWithColon from './common/TableWithColon'
+
 toast.configure()
 
 const useStyles = makeStyles(theme => ({
@@ -54,43 +56,6 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     marginBottom: '8px'
   },
-  fieldItem: {
-      padding: theme.spacing(0.5),
-      textAlign: 'left',
-      display: 'flex',
-      backgroundColor: '#ebf2f5',
-      verticalAlign:'top'
-  },
-  fieldInfo: {
-      padding: theme.spacing(0.5),
-      textAlign: 'left',
-      display: 'flex',
-      backgroundColor: '#e0eddf'
-  },
-  fieldPrice: {
-      padding: theme.spacing(0),
-      textAlign: 'left',
-      display: 'flex',
-      backgroundColor: '#ecdfed'
-  },
-  fieledDimension: {
-      padding: theme.spacing(0.5),
-      textAlign: 'left',
-      display: 'flex',
-      backgroundColor: '#f4faca'
-  },
-  fieledFreight: {
-      padding: theme.spacing(0),
-      textAlign: 'left',
-      display: 'flex',
-      backgroundColor: '#ffdbfd'
-  },
-  fieledNote: {
-      padding: theme.spacing(0),
-      textAlign: 'left',
-      display: 'flex',
-      backgroundColor: '#dbffe4'
-  },
   grid: {
       padding: theme.spacing(0),
       textAlign: 'left',
@@ -102,53 +67,6 @@ const useStyles = makeStyles(theme => ({
     textAlign: 'left',
     display: 'flex',
     backgroundColor : '#ecdfed'
-},
-  paperAlignLeft: {
-    padding: theme.spacing(1),
-    textAlign: 'left',
-    color : 'black',
-    alignItems: 'left',
-    justifyContent: 'left',
-    backgroundColor: '#ffdbfd',
-    display: 'flex',
-    fontSize : '18px'
-  },
-  revenueTitle: {
-    padding: theme.spacing(1),
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
-    color : 'black',
-    backgroundColor: '#cce6ff',
-    display: 'flex',
-    fontSize : '18px'
-  },
-  revenueAmount: {
-    padding: theme.spacing(1),
-    alignItems: 'flex-start',
-    justifyContent: 'flex-start',
-    color : 'black',
-    backgroundColor: '#cce6ff',
-    display: 'flex',
-    fontSize : '18px'
-  },
-
-  paperAlignRight: {
-    padding: theme.spacing(1),
-    textAlign: 'right',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
-    color : 'black',
-    backgroundColor: '#ffdbfd',
-    display: 'flex',
-    fontSize : '18px'
-  },
-  paperAlignCenter : {
-    padding: theme.spacing(0),
-    color : 'black',
-    backgroundColor: '#efdbfd',
-    justifyContent: 'center',
-    display: 'flex',
-    fontSize : '18px'
   },
   paperKorea : {
     padding: theme.spacing(1),
@@ -166,44 +84,10 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     fontSize : '23px',
   },
-  paperDeliveryInfo : {
-    padding: theme.spacing(0.3),
-    color : 'black',
-    backgroundColor: '#ffcc99',
-    justifyContent: 'flex-start',
-    display: 'flex',
-    fontSize : '18px',
-    textIndent : '20px'
-  },
-  importantFactor : {
+  temp : {
     padding: theme.spacing(0),
-    // textAlign: 'center',
-    color : 'black',
-    backgroundColor: '#efdbfd',
-    display: 'flex',
-    fontSize : '23px'
-  },
-  paperProfitTitle : {
-    padding: theme.spacing(1),
-    color : 'black',
-    backgroundColor: '#ffff66',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-end',
-    display: 'flex',
-    fontSize : '18px',
-  },
-  paperProfitAmount : {
-    padding: theme.spacing(1),
-    color : 'black',
-    backgroundColor: '#ffff66',
-    justifyContent: 'flex-start',
-    display: 'flex',
-    fontSize : '18px',
-  },
-  paperProfitTotal : {
-    padding: theme.spacing(1),
-    color : 'black',
-    backgroundColor: '#66ff66',
+    color : 'white',
+    backgroundColor: '#ff4d4d',
     justifyContent: 'center',
     display: 'flex',
     fontSize : '23px',
@@ -211,154 +95,31 @@ const useStyles = makeStyles(theme => ({
 
 }));
 
-const validate = values => {
-  const errors = {}
-  const requiredFields = [
-    'itemCode',
-    'itemName',
-  ]
-  requiredFields.forEach(field => {
-    if (!values[field]) {
-        errors[field] = 'Required'
-    }
-  })
-  return errors
-}
 
-const required = value => value ? undefined : 'Required'
-const maxLength = max => value =>
-  value && value.length > max ? `Must be ${max} characters or less` : undefined
-const maxLength15 = maxLength(15)
-const number = value => value && isNaN(Number(value)) ? 'Must be a number' : undefined
-const minValue = min => value =>
-  value && value < min ? `Must be at least ${min}` : undefined
-const minValue18 = minValue(18)
-
-const renderTextField = ({
-  label,
-  input,
-  meta: { touched, invalid, error },
-  ...custom
-}) => {
+const TempTest = ({infoProps, fixMode, fixedData, setFixedData, loadedData}) => {
   return (
-    <TextField
-        label={label}
-        placeholder={label}
-        error={touched && invalid}
-        helperText={touched && error}
-        {...input}
-        {...custom}
-    />
-  )
-}
-const renderCheckbox = ({ input, label }) => {
-  return (
-    <div>
-      <FormControlLabel
-      control={
-        <Checkbox
-          checked={input.value ? true : false}
-          onChange={input.onChange}
-        />
-      }
-      label={label}
-      />
-    </div>
-  )
-}
-const radioButton = ({ input, ...rest }) => {
-  return (
-    <FormControl>
-        <RadioGroup {...input} {...rest}>
-        <FormControlLabel value="female" control={<Radio />} label="Female" />
-        <FormControlLabel value="male" control={<Radio />} label="Male" />
-        <FormControlLabel value="other" control={<Radio />} label="Other" />
-        </RadioGroup>
-    </FormControl>
-  )
-}
-const renderFromHelper = ({ touched, error }) => {
-  if (!(touched && error)) {
-      return
-  } else {
-      return <FormHelperText>{touched && error}</FormHelperText>
-  }
-}
-
-const renderSelectField = ({
-  input,
-  label,
-  meta: { touched, error },
-  children,
-  ...custom
-}) => 
-{ 
-  return (
-    <FormControl error={touched && error}>
-      <InputLabel htmlFor="color-native-simple">{label}</InputLabel>
-      <Select
-      native
-      {...input}
-      {...custom}
-      inputProps={{
-          name: input.name,
-          id: 'color-native-simple'
-      }}
-      >
-      {children}
-      </Select>
-      {renderFromHelper({ touched, error })}
-    </FormControl>
-  )
-}
-
-
-const TableComp = ({arr, colAttr}) => {
-  return (
-    <>
-      {arr.map(obj => {
-        return(
-          <TableRow>
-            {Object.keys(obj).map(header => {
-              return (                    
-                <TableCell style = {colAttr(obj[header])} align = {colAttr(obj[header]).align} size = 'small'>
-                  {obj[header]}
-                </TableCell>
-              )
-            })}
-          </TableRow>
-        )
+    <Grid container>
+      {infoProps.map(obj => {
+        if(obj.type !== 'divider') {
+          return(
+            <InputST
+              title         = {obj.title}
+              attr          = {'regular'}
+              type          = {obj.type}
+              fixMode       = {fixMode}
+              state         = {obj.state}
+              setState      = {obj.setState}
+              fixedData     = {fixedData}
+              setFixedData  = {setFixedData}
+              loadedData     = {loadedData ? loadedData : null}
+            ></InputST>
+          )
+        }
       })}
-    </>
+    </Grid>
   )
 }
 
-const TableSubject = ({children}) => {
-  return (
-    <>
-          <TableRow>
-            <TableCell colSpan = {4} align = "center">
-              {children}
-            </TableCell>
-          </TableRow>
-    </>
-  )
-}
-
-const TableHaha = ({subject, arr, colAttr}) => {
-  return (
-    <>
-      <TableSubject>
-        {subject}
-      </TableSubject>
-      <TableComp
-        arr = {arr}
-        colAttr = {colAttr}
-      >
-      </TableComp>
-    </>
-  )
-}
 
 let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
   const [fixMode, setFixMode]         = useState(false)
@@ -475,7 +236,8 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
     dispatch(getExchangeRate())
   },[])
 
-  console.log(exchangeRate)
+
+
 
     //-- api로드 부분
   //req값을 obj값으로 만들어서 post로 api 요청하여 값을 받아옴.
@@ -489,6 +251,9 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
         setLoadedData(res.data[0])
     })
   },[])
+
+
+
 
   useEffect(() => {
     basicInfoProps.map(obj => {
@@ -515,6 +280,9 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
   },[loadedData])
 
 
+
+
+
   //슬라이더부분
   const onSetSTKVVar = (value) => {
     setStkVVar(value)
@@ -523,43 +291,7 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
     setStkCvar(value)
   }
 
-  const onFixedVal = (fixedArr) => {
-    let tempObj = {}
-    tempObj.ref = {}
-    tempObj.vals = {}
-    tempObj.ref[primaryKey] = primaryCode
-    Object.keys(fixedData).map(key => {
-      tempObj.vals[key] = fixedData[key]
-    })
-    // onUpdate(tempObj)
-  }
 
-
-
-
-  const createField = (name, component,style, normalize) => {
-    let field = <Field name={name} component={renderTextField} label={spacelize(name)} value = {'fe'} className = {classes[style]}  normalize={normalize} validate={[ required ]}/>
-    return field
-  }
-  // const onSubmit = () => {
-  //   let submitValues = formValues
-  //   submitValues.stkCVar = stkCVar
-  //   submitValues.stkVVar = stkVVar
-  //   const required = ['itemCode', 'itemName', 'supplier', 'maker' ]
-  //   const error = []
-  //   required.map(item => {
-  //       if (submitValues[item] == '' || submitValues[item] == null || submitValues[item] == undefined) {
-  //         error.push(item + ' is required')
-  //       }
-  //   })
-  //   if (error.length !== 0) {
-  //     error.map(error => {
-  //       toast(error)
-  //     })
-  //   } else {
-  //     dispatch(actSubmitAddItem(submitValues))
-  //   }
-  // }
 
   const basicInfoProps = [
     {type : 'primary', newRow : true, size : 5, title: 'itemCode', state : itemCode, setState : setItemCode, style:'regular'},
@@ -615,124 +347,52 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
     {type : 'fixable', newRow : false, size : 6, title: 'weight', state : weight, setState : setWeight, style:'regular'},
   ]
 
-  const createData = (title, colon, amount, unit) => {
-    return {title, colon, amount, unit}
-  }
-
-  const createData1 = (title, colSpan, colon, amount, unit) => {
-    return {title, colSpan, colon, amount, unit}
-  }
-
-  const tableData = [
-    createData('STK-V Price', ':', STKVPrice, 'USD'),
-    createData('Default Freight', ':', defaultFreight, 'USD'),
-    createData('Buying Price', ':', buyingPrice, 'USD'),
-    createData('To Segero', ':', segeroPay, 'USD'),
-    createData('Profit', ':', profitKR, 'USD'),
-    createData('Profit/Cost', ':', profitCostKR, 'USD'),
-  ]
-
-
-  
-  console.log(tableData)
-
-  const tableData1 = [
-    {type : 'title', title :"Revenue"},
-    {type : 'detail', subject :"STK-V", middleSymbol : ':', value : '500', unit : 'USD'},
-    {type : 'detail', subject :"STK-V", middleSymbol : ':', value : '500', unit : 'USD'},
-    {type : 'detail', subject :"STK-V", middleSymbol : ':', value : '500', unit : 'USD'},
-    {type : 'detail', subject :"STK-V", middleSymbol : ':', value : '500', unit : 'USD'},
-    {type : 'detail', subject :"STK-V", middleSymbol : ':', value : '500', unit : 'USD'},
-    {type : 'detail', subject :"STK-V", middleSymbol : ':', value : '500', unit : 'USD'},
-  ]
-
-  const revenueKR = [
-    //(title, colspan, middleSymbol, Value, unit)
-    createData('Revenue'),
-    createData('STK-V Price', ':', STKVPrice, 'USD'),
-  ]
-
-  const revenueVN = [
-    createData('STK-V Price', ':', STKVPrice, 'USD'),
-  ]
-
-  // const takeLongest = () => {
-  //   createData
-  // }
-  const colAttr = (str) => {
-    let temp = ''
-    if (str ==':') {
-      temp = {width : '2px', align : 'left', padding : 0, margin : 0}
-    } else {
-      temp = {width : '75px', align : 'right', padding : 0, margin : 0}
-    }
-    return temp
-  }
+  console.log(fixedData)
 
 
   return (
     <>
       <Button className = {classes.right} onClick = {onModeChange}>Fix</Button>
 
-        
       <Grid container>
-      {basicInfoProps.map(obj => {
-        if(obj.type !== 'divider') {
-          return(
-            <Grid item xs ={obj.size} className = {classes.marginBottom}>
-              <InputST
-                title         = {obj.title}
-                attr          = {'regular'}
-                type          = {obj.type}
-                fixMode       = {fixMode}
-                state         = {obj.state}
-                setState      = {obj.setState}
-                fixedData     = {fixedData}
-                setFixedData  = {setFixedData}
-                onFixedVal    = {onFixedVal}
-                loadedData     = {loadedData ? loadedData : null}
-              ></InputST>
-            </Grid>
-          )
-        }
-      })}
+        {basicInfoProps.map(obj => {
+          if(obj.type !== 'divider') {
+            return(
+              <Grid item xs ={obj.size} className = {classes.marginBottom}>
+                <InputST
+                  title         = {obj.title}
+                  attr          = {'regular'}
+                  type          = {obj.type}
+                  fixMode       = {fixMode}
+                  state         = {obj.state}
+                  setState      = {obj.setState}
+                  fixedData     = {fixedData}
+                  setFixedData  = {setFixedData}
+                  loadedData    = {loadedData ? loadedData : null}
+                ></InputST>
+              </Grid>
+            )
+          }
+        })}
       </Grid>
 
-      <Table>
-        <TableContainer>
-          <TableBody>
 
-            <TableHaha
-              subject = {'Revenue'}
-              arr = {tableData}
-              colAttr = {colAttr}            
-            ></TableHaha>
-
-          </TableBody>
-        </TableContainer>
-      </Table>
 
       <Grid container>
+
+
         <Grid xs = {3}>
+
+          <TempTest
+            infoProps     = {priceInfoProps}
+            fixMode       = {fixMode}
+            fixedData     = {fixedData}
+            setFixedData  = {setFixedData}
+            loadedData    = {loadedData}
+          >
+          </TempTest>
+
           <Grid container>
-            {priceInfoProps.map(obj => {
-              if(obj.type !== 'divider') {
-                return(
-                  <InputST
-                    title         = {obj.title}
-                    attr          = {'regular'}
-                    type          = {obj.type}
-                    fixMode       = {fixMode}
-                    state         = {obj.state}
-                    setState      = {obj.setState}
-                    fixedData     = {fixedData}
-                    setFixedData  = {setFixedData}
-                    onFixedVal    = {onFixedVal}
-                    loadedData     = {loadedData ? loadedData : null}
-                  ></InputST>
-                )
-              }
-            })}
             <Slider
               defaultValue={1.02}
               getAriaValueText={onSetSTKVVar}
@@ -754,129 +414,91 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
               valueLabelDisplay="auto"
             />
           </Grid>
+
         </Grid>
 
         <Grid xs = {9}>
           <Grid container>
-            <Grid xs = {6}>
-              <Paper className={classes.paperKorea}>Korea</Paper>
 
-              <Grid container className={classes.root}>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>STK-V Price:</Paper>
-                </Grid>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>{STKVPrice}USD</Paper>
-                </Grid>
-              </Grid>
 
-              <Grid container className={classes.root}>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>Default Freight</Paper>
-                </Grid>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>{defaultFreight}USD</Paper>
-                </Grid>
-              </Grid>
-
-              <Grid container className={classes.root}>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>BuyingPrice</Paper>
-                </Grid>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>{buyingPrice}USD</Paper>
-                </Grid>
-              </Grid>
-
-              <Grid container className={classes.root}>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>To Segero</Paper>
-                </Grid>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>{segeroPay}USD</Paper>
-                </Grid>
-              </Grid>
-
-              <Grid container className={classes.root}>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>Profit</Paper>
-                </Grid>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>{profitKR}USD</Paper>
-                </Grid>
-              </Grid>
-
-              <Grid container className={classes.root}>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>Profit/Cost</Paper>
-                </Grid>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>{profitCostKR}%</Paper>
-                </Grid>
-              </Grid>
-
-            </Grid>
 
             <Grid xs = {6}>
               <Paper className={classes.paperKorea}>Korea</Paper>
+              <Table>
+                <TableContainer>
+                  <TableBody>
+                    <TableWithColon
+                      subject = {'Revenue'}
+                      arr = {[
+                        ['STK-V Price', ':', STKVPrice, ' USD'],
+                      ]}
+                      styleAttr = {['150px', '2px,', '150px', '30px']}
+                    ></TableWithColon>
 
-              <Grid container className={classes.root}>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>VN Selling Price:</Paper>
-                </Grid>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>{VNSellingP}USD</Paper>
-                </Grid>
-              </Grid>
+                    <TableWithColon
+                      subject = {'Cost'}
+                      arr = {[
+                        ['Default Freight', ':', defaultFreight, ' USD'],
+                        ['Buying Price', ':', buyingPrice, ' USD'],
+                        ['To Segero', ':', segeroPay, ' USD'],
+                      ]}
+                      styleAttr = {['150px', '2px,', '150px', '30px']}
+                    ></TableWithColon>
 
-              <Grid container className={classes.root}>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>Import Tax</Paper>
-                </Grid>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>{importTax}USD</Paper>
-                </Grid>
-              </Grid>
+                    <TableWithColon
+                      subject = {'Summary'}
+                      arr = {[
+                        ['Profit', ':', profitKR, ' USD'],
+                        ['Profit/Cost', ':', profitCostKR, ' USD']
+                      ]}
+                      styleAttr = {['150px', '2px,', '150px', '30px']}
+                    ></TableWithColon>
 
-              <Grid container className={classes.root}>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>STK-V Price</Paper>
-                </Grid>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>{STKVPrice}USD</Paper>
-                </Grid>
-              </Grid>
-
-              <Grid container className={classes.root}>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}></Paper>
-                </Grid>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}></Paper>
-                </Grid>
-              </Grid>
-
-              <Grid container className={classes.root}>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>Profit</Paper>
-                </Grid>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>{profitVN}USD</Paper>
-                </Grid>
-              </Grid>
-
-              <Grid container className={classes.root}>
-                <Grid xs = {6}>
-                  <Paper className={classes.revenueTitle}>Profit/Cost</Paper>
-                </Grid>
-                <Grid xs = {6}>
-          <Paper className={classes.revenueTitle}>{profitCostVN}%</Paper>
-                </Grid>
-              </Grid>
+                  </TableBody>
+                </TableContainer>
+              </Table>
 
             </Grid>
 
-            <Grid xs = {6}></Grid>
+
+            <Grid xs = {6}>
+              <Paper className={classes.paperKorea}>Vietnam</Paper>
+              <Table>
+                <TableContainer>
+                  <TableBody>
+                    <TableWithColon
+                      subject = {'Revenue'}
+                      arr = {[
+                        ['VN Selling Price', ':', VNSellingP, ' USD'],
+                      ]}
+                      styleAttr = {['150px', '2px,', '150px', '30px']}
+                    ></TableWithColon>
+
+                    <TableWithColon
+                      subject = {'Cost'}
+                      arr = {[
+                        ['Import Tax', ':', importTax, ' USD'],
+                        ['STK-V Price', ':', STKVPrice, ' USD'],
+                        ['　', '', '', ''],
+                      ]}
+                      styleAttr = {['150px', '2px,', '150px', '30px']}
+                    ></TableWithColon>
+
+                    <TableWithColon
+                      subject = {'Summary'}
+                      arr = {[
+                        ['Profit', ':', profitVN, ' USD'],
+                        ['Profit/Cost', ':', profitCostVN, ' USD']
+                      ]}
+                      styleAttr = {['150px', '2px,', '150px', '30px']}
+                    ></TableWithColon>
+
+                  </TableBody>
+                </TableContainer>
+              </Table>
+            </Grid> 
+
+
           </Grid>
         </Grid>
 
@@ -885,58 +507,30 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
             {dimensionInfoProps.map(obj => {
               if(obj.type == 'fixable') {
                 return(
-                    <InputST
-                      title         = {obj.title}
-                      attr          = {'regular'}
-                      type          = {obj.type}
-                      fixMode       = {fixMode}
-                      state         = {obj.state}
-                      setState      = {obj.setState}
-                      fixedData     = {fixedData}
-                      setFixedData  = {setFixedData}
-                      onFixedVal    = {onFixedVal}
-                      loadedData     = {loadedData ? loadedData : null}
-                    ></InputST>
+                  <InputST
+                    title         = {obj.title}
+                    attr          = {'regular'}
+                    type          = {obj.type}
+                    fixMode       = {fixMode}
+                    state         = {obj.state}
+                    setState      = {obj.setState}
+                    fixedData     = {fixedData}
+                    setFixedData  = {setFixedData}
+                    loadedData     = {loadedData ? loadedData : null}
+                  ></InputST>
                 )
               }
             })}
           </Grid>
         </Grid>
 
-        <Grid xs = {5}>
-            {dimensionReportProps.map(obj => {
-              if(obj.type == 'paper') {
-                return(
-                <Grid container>
 
-                  <Grid item xs = {6}>
-                    <Paper className={classes.revenueTitle}>
-                      {obj.title}
-                    </Paper>
-                  </Grid>
-                  <Grid item xs = {6}>
-                    <Paper className={classes.revenueTitle}>
-                      {obj.state}
-                    </Paper>
-                  </Grid>
-                </Grid>
-                )
-              }
-            })}
-        </Grid>
 
       </Grid>
 
-      <Grid container xs = {12}>
-        <Grid item xs = {5}>
-          
-        </Grid>
-      </Grid>
     </>
     
   )
-
-        
 }
 
 export default ItemAdd
