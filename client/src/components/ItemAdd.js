@@ -333,6 +333,33 @@ const TableComp = ({arr, colAttr}) => {
   )
 }
 
+const TableSubject = ({children}) => {
+  return (
+    <>
+          <TableRow>
+            <TableCell colSpan = {4} align = "center">
+              {children}
+            </TableCell>
+          </TableRow>
+    </>
+  )
+}
+
+const TableHaha = ({subject, arr, colAttr}) => {
+  return (
+    <>
+      <TableSubject>
+        {subject}
+      </TableSubject>
+      <TableComp
+        arr = {arr}
+        colAttr = {colAttr}
+      >
+      </TableComp>
+    </>
+  )
+}
+
 let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
   const [fixMode, setFixMode]         = useState(false)
   const [fixedData, setFixedData]     = useState([])
@@ -674,34 +701,13 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
       <Table>
         <TableContainer>
           <TableBody>
-            <TableRow>
-              <TableCell colSpan = {4} align = "center">
-                Revenueee
-              </TableCell>
-            </TableRow>
 
-            <TableComp
+            <TableHaha
+              subject = {'Revenue'}
               arr = {tableData}
-              colAttr = {colAttr}
-            >
+              colAttr = {colAttr}            
+            ></TableHaha>
 
-            </TableComp>
-
-
-            {/* {tableData.map(obj => {
-              return(
-                <TableRow>
-                  {Object.keys(obj).map(header => {
-                    return (                    
-                      <TableCell style = {colAttr(obj[header])} align = {colAttr(obj[header]).align} size = 'small'>
-                        {obj[header]}
-                      </TableCell>
-                    )
-
-                  })}
-                </TableRow>
-              )
-            })} */}
           </TableBody>
         </TableContainer>
       </Table>
