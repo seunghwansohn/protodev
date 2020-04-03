@@ -265,7 +265,7 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
   },[])
 
 
-
+  console.log(reqWhere())
 
   useEffect(() => {
     basicInfoProps.map(obj => {

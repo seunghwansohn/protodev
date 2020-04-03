@@ -167,11 +167,13 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     //테이블 로드
     const getRawData = async () => {
         await axios.get('/api/' + dataType + '/load').then(res => {
+            console.log(res)
             setPrimaryKey(res.data.primaryKey)
-            setIncludingKeys(getIncludingKeys(res.data.result))
-            setTableRawData(withoutIncludingKeys(res.data.result))
+            setIncludingKeys(res.data.includingKeys)
+            setTableRawData(withoutIncludingKeys(res.data.vals))
         })
     }
+    console.log(includingKeys)
     useEffect(() => {
         getRawData()
     },[])

@@ -18,6 +18,6 @@ module.exports = function(originalObjArr, includingKey) {
       })  
     }
     getObjectKeys(originalObjArr)
-    // console.log(resultArr)
+    console.log(resultArr)
     return resultArr
 }

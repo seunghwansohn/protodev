@@ -53,8 +53,11 @@ db.itemPRice.belongsTo(db.item,
     {as : "specs", through: "item_Price", foreignKey: 'itemCode', targetKey: 'itemCode'})
 
 db.item.belongsTo(db.itemPRice, 
-    {as : "Price", through: "item_Price", foreignKey: 'itemCode', targetKey: 'itemCode'})
-      
+    {as : "price", through: "item_Price", foreignKey: 'itemCode', targetKey: 'itemCode'})
+
+db.item.belongsTo(db.supplier, 
+    {as : "supplier", through: "item_supplier", foreignKey: 'supplierCode', targetKey: 'supplierCode'})
+
 db.client.belongsTo(db.clientRate, 
     {as : "rate", through: "client_clientRate", foreignKey: 'clientRate', targetKey: 'clientRate'})
 

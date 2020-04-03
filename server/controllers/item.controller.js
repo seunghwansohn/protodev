@@ -3,10 +3,14 @@ const config = require("../config/auth.config");
 const monolize = require("../lib/monolizeSequel");
 const calPrice = require("../lib/calPrice");
 const rmTimeFromReq = require("../lib/sequelMiddleWares");
+const getIncludeName = require("../lib/getIncludeName");
+
 
 const Item = db.item;
 const ItemPrice = db.itemPRice
 const Role = db.role;
+const Supplier = db.supplier;
+
 
 const Op = db.Sequelize.Op;
 
@@ -37,7 +41,7 @@ exports.addNew = (req, res) => {
         return includings
       }
       
-      const asString = 'Price'
+      const asString = 'price'
       newObj[asString] = fixIncludings(includings)
 
       Item.create(newObj, {include:[{model:ItemPrice, as:asString}]}).then(() => {
@@ -51,19 +55,16 @@ exports.addNew = (req, res) => {
   }
 };
 
-
-// VNPrice : {
-//   VNPrice: req.body.item.VNPrice,
-//   itemCode : req.body.item.itemCode,
-//   importRate: req.body
-// }
-// },
-// {include:[{model:ItemVNPrice, as:'VNPrice'}]})
-// .then(result => {
-//   console.log('리절트', result)
-//   res.status(200).send('성공')
-// })
-
+exports.test = (req,res) => {
+  let primaryKey = 'itemCode'
+  let includingAttr = [
+    {model:Supplier, plain : true, raw: false, nest : false, as : 'supplier', attributes : ['supplierName']},
+    {model:ItemPrice, plain : true, raw: false, nest : false, as: 'price', attributes : ['VNPrice', 'stkVVar', 'buyingPKR', 'stkCVar']}
+  ]
+  getIncludeName(Item, Supplier, primaryKey, includingAttr).then(items => {
+    res.status(500).send(items)
+  })
+}
 
 exports.update = async (req, res) => {
   let data = req.body
@@ -87,20 +88,14 @@ exports.update = async (req, res) => {
 };
 
 exports.itemLoad = (req, res) => {
-    let result = ''
-    const includingKey = 'Price'
-    Item.findAll(
-      {include: [{model:ItemPrice, plain : true, as: includingKey}]}
-      ).then(items => {
-        // console.log(items)
-        result = monolize(items, includingKey)
-        // console.log(result)
-        result = {primaryKey : primaryKey, result : result}
-      }).then(() => {
-        // calPrice.VNSellP(result)
-        // console.log(result)
-        res.status(200).send(result);
-      })
+    let primaryKey = 'itemCode'
+    let includingAttr = [
+      {model:Supplier, plain : true, raw: false, nest : false, as : 'supplier', attributes : ['supplierName']},
+      {model:ItemPrice, plain : true, raw: false, nest : false, as: 'price', attributes : ['VNPrice', 'stkVVar', 'buyingPKR', 'stkCVar']}
+    ]
+    getIncludeName(Item, Supplier, primaryKey, includingAttr).then(items => {
+      res.status(200).send(items)
+    })
 };
 
 exports.delete = async (req, res) => {
@@ -156,13 +151,13 @@ exports.newCopied = async (req, res) => {
   await res.status(200).send(res.body)
 };
 
-exports.test = (req, res) => {
-  res.body = Item.findAll({where: req.body, include: [{model:ItemVNPrice, as: 'VNPrice'}] }).then(result =>{
-    res.status(200).send(result)
-  })
-  //include는 belongsTo등으로 연결된 모든 테이블의 값을 불러오는 옵션
-  // res.status(200).send(res.body)
-};
+// exports.test = (req, res) => {
+//   res.body = Item.findAll({where: req.body, include: [{model:ItemVNPrice, as: 'VNPrice'}] }).then(result =>{
+//     res.status(200).send(result)
+//   })
+//   //include는 belongsTo등으로 연결된 모든 테이블의 값을 불러오는 옵션
+//   // res.status(200).send(res.body)
+// };
 
 exports.check = (req, res) => {
   // console.log(req.body)
@@ -175,7 +170,7 @@ exports.query = (req, res) => {
   try {
     // console.log(req.body)
     let result = ''
-    const includingKey = 'Price'
+    const includingKey = 'price'
     Item.findAll(
       {where: req.body, include: [{model:ItemPrice, as: includingKey}] }
       ).then(items => {
