@@ -96,23 +96,27 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const TempTest = ({infoProps, fixMode, fixedData, setFixedData, loadedData}) => {
+const ProppedInput = ({infoProps, fixMode, fixedData, setFixedData}) => {
+  const classes = useStyles();
   return (
     <Grid container>
       {infoProps.map(obj => {
         if(obj.type !== 'divider') {
           return(
-            <InputST
-              title         = {obj.title}
-              attr          = {'regular'}
-              type          = {obj.type}
-              fixMode       = {fixMode}
-              state         = {obj.state}
-              setState      = {obj.setState}
-              fixedData     = {fixedData}
-              setFixedData  = {setFixedData}
-              loadedData     = {loadedData ? loadedData : null}
-            ></InputST>
+            <Grid className = {classes.marginBottom}>
+              <InputST
+                title         = {obj.title}
+                attr          = {'regular'}
+                type          = {obj.type}
+                fixMode       = {fixMode}
+                state         = {obj.state}
+                setState      = {obj.setState}
+                fixedData     = {fixedData}
+                setFixedData  = {setFixedData}
+                validation    = {obj.validation}
+              ></InputST>
+            </Grid>
+
           )
         }
       })}
@@ -306,17 +310,16 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
 
 
   const priceInfoProps = [
-    {type : 'fixable', newRow : false, size : 5, title: 'buyingPrice', state : buyingPrice, setState : setBuyingPrice, style:'regular'},
-    {type : 'fixable', newRow : false, size : 7, title: 'importTaxRate', state : importTaxRate, setState : setImportTaxRate, style:'regular'},
+    {type : 'fixable', newRow : false, size : 5, title: 'buyingPrice', state : buyingPrice, setState : setBuyingPrice, style:'regular', validation : "number"},
+    {type : 'fixable', newRow : false, size : 7, title: 'importTaxRate', state : importTaxRate, setState : setImportTaxRate, style:'regular', validation : "number"},
 
   ]
 
   const dimensionInfoProps = [
-    {type : 'fixable', newRow : false, size : 4, title: 'width', state : width, setState : setWidth, style:'regular'},
-    {type : 'fixable', newRow : false, size : 4, title: 'depth', state : depth, setState : setDepth, style:'regular'},
-    {type : 'fixable', newRow : false, size : 4, title: 'height', state : height, setState : setHeight, style:'regular'},
-    {type : 'fixable', newRow : false, size : 6, title: 'CBM', state : CBM, setState : setCBM, style:'regular'},
-    {type : 'fixable', newRow : false, size : 6, title: 'weight', state : weight, setState : setWeight, style:'regular'},
+    {type : 'fixable', newRow : false, size : 4, title: 'width', state : width, setState : setWidth, style:'regular', validation : "number"},
+    {type : 'fixable', newRow : false, size : 4, title: 'depth', state : depth, setState : setDepth, style:'regular', validation : "number"},
+    {type : 'fixable', newRow : false, size : 4, title: 'height', state : height, setState : setHeight, style:'regular', validation : "number"},
+    {type : 'fixable', newRow : false, size : 6, title: 'weight', state : weight, setState : setWeight, style:'regular', validation : "number"},
   ]
 
   const dimensionReportProps = [
@@ -347,12 +350,16 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
     {type : 'fixable', newRow : false, size : 6, title: 'weight', state : weight, setState : setWeight, style:'regular'},
   ]
 
-  console.log(fixedData)
 
+  const onSubmitUpdated = () => {
+    console.log(fixedData)
+  }
 
   return (
     <>
       <Button className = {classes.right} onClick = {onModeChange}>Fix</Button>
+      <Button className = {classes.right} onClick = {onSubmitUpdated}>제출</Button>
+
 
       <Grid container>
         {basicInfoProps.map(obj => {
@@ -368,7 +375,6 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
                   setState      = {obj.setState}
                   fixedData     = {fixedData}
                   setFixedData  = {setFixedData}
-                  loadedData    = {loadedData ? loadedData : null}
                 ></InputST>
               </Grid>
             )
@@ -383,17 +389,21 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
 
         <Grid xs = {3}>
 
-          <TempTest
+          <ProppedInput
             infoProps     = {priceInfoProps}
             fixMode       = {fixMode}
             fixedData     = {fixedData}
             setFixedData  = {setFixedData}
-            loadedData    = {loadedData}
           >
-          </TempTest>
+          </ProppedInput>
 
           <Grid container>
-            <Slider
+            <Typography id="discrete-slider-small-steps" gutterBottom>
+                STK V Var
+            </Typography>
+
+            <Slider 
+              className = {classes.marginBottom}
               defaultValue={1.02}
               getAriaValueText={onSetSTKVVar}
               aria-labelledby="discrete-slider-small-steps"
@@ -403,7 +413,11 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
               max={1.3}
               valueLabelDisplay="auto"
             />
+            <Typography id="discrete-slider-small-steps" gutterBottom>
+              STK C Var
+            </Typography>
             <Slider
+              className = {classes.marginBottom}
               defaultValue={1.2}
               getAriaValueText={onSetSTKCVar}
               aria-labelledby="discrete-slider-small-steps"
@@ -414,6 +428,16 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
               valueLabelDisplay="auto"
             />
           </Grid>
+
+
+          <ProppedInput
+            infoProps     = {dimensionInfoProps}
+            fixMode       = {fixMode}
+            fixedData     = {fixedData}
+            setFixedData  = {setFixedData}
+          >
+          </ProppedInput>
+
 
         </Grid>
 
@@ -462,7 +486,7 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
 
 
             <Grid xs = {6}>
-              <Paper className={classes.paperKorea}>Vietnam</Paper>
+              <Paper className={classes.paperVietnam}>Vietnam</Paper>
               <Table>
                 <TableContainer>
                   <TableBody>
@@ -498,31 +522,10 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
               </Table>
             </Grid> 
 
-
           </Grid>
         </Grid>
 
-        <Grid xs = {3}>
-          <Grid container>
-            {dimensionInfoProps.map(obj => {
-              if(obj.type == 'fixable') {
-                return(
-                  <InputST
-                    title         = {obj.title}
-                    attr          = {'regular'}
-                    type          = {obj.type}
-                    fixMode       = {fixMode}
-                    state         = {obj.state}
-                    setState      = {obj.setState}
-                    fixedData     = {fixedData}
-                    setFixedData  = {setFixedData}
-                    loadedData     = {loadedData ? loadedData : null}
-                  ></InputST>
-                )
-              }
-            })}
-          </Grid>
-        </Grid>
+
 
 
 

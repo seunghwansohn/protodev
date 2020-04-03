@@ -2,15 +2,22 @@ import React, {useState, useEffect}           from 'react'
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 
-const TableWithColon = ({subject, arr, colAttr, styleAttr}) => {
+import styled   from 'styled-components';
+
+const SubjectTableCell = styled(TableCell)`
+    font-size : 100em;
+    text-indent : 15px;
+`
+
+const TableWithColon = ({subject, arr, styleAttr}) => {
 
     const TableSubject = ({children}) => {
       return (
         <>
               <TableRow>
-                <TableCell colSpan = {4} align = "center">
+                <SubjectTableCell colSpan = {4} align = "left" style = {{fontSize : "1.2em"}} >
                   {children}
-                </TableCell>
+                </SubjectTableCell>
               </TableRow>
         </>
       )
@@ -56,9 +63,9 @@ const TableWithColon = ({subject, arr, colAttr, styleAttr}) => {
         <TableSubject>
           {subject}
         </TableSubject>
+
         <TableComp
           arr = {arr}
-          colAttr = {colAttr}
           styleAttr = {styleAttr}
         >
         </TableComp>

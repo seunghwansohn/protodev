@@ -47,7 +47,6 @@ const InputST = ({
   setState, 
   attr, 
   type, 
-  lodedData, 
   fixMode, 
   fixable, 
   fixedData, 
@@ -55,7 +54,9 @@ const InputST = ({
 
   required,
   variant,
-  fullWidth
+  fullWidth,
+
+  validation
 }) => {
 
   const onChangeValue = (event, func) => {
@@ -87,6 +88,7 @@ const InputST = ({
       <TextFieldST
         label={title}
         id={title}
+        type = {validation}
         style={{width: "100%"}}
         required = {required}
         variant= {variant}
