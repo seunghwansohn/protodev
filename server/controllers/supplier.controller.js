@@ -29,7 +29,7 @@ exports.addNew = (req, res) => {
 
 
 exports.addNotes = (req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
     try {
         SupplierNote.create({
             notes: req.body.note,
@@ -45,7 +45,7 @@ exports.addNotes = (req, res) => {
 };
 
 exports.loadNotes = (req, res) => {
-    console.log(req.params)
+    // console.log(req.params)
     SupplierNote.findAll({where : {supplierCode : req.params.id}}
     ).then(suppliers => {
         result = suppliers
@@ -90,13 +90,13 @@ exports.query = (req, res) => {
 
     Supplier.findOne({where:tempObj})
     .then(res => {
-        console.log(res)
+        // console.log(res)
         result = res.dataValues
     }).then(() => res.status(200).send(result) )
 };
   
 exports.delete = async (req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
     let draft = await Supplier.findOne({where:req.body})
     await draft.destroy();
 };

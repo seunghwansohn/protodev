@@ -47,7 +47,7 @@ exports.addNew = (req, res) => {
   }
   catch (err) {
     res.status(500).send({message:err.message})
-    console.log(err.message)
+    // console.log(err.message)
   }
 };
 
@@ -67,8 +67,9 @@ exports.addNew = (req, res) => {
 
 exports.update = async (req, res) => {
   let data = req.body
-  console.log(data)
+
   let { ref,vals } = data
+  
   try {
       const draft = await Item.findOne({where:ref})
       keys = await Object.keys(vals)
@@ -103,7 +104,7 @@ exports.itemLoad = (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-  console.log(req.body)
+  // console.log(req.body)
   let draft = await Item.findOne({where:{itemCode :req.body.code}})
   await draft.destroy().then(()=> {
       res.status(200).send('deleted Successfully')
@@ -119,7 +120,7 @@ exports.VNSellingItemLoad = (req, res) => {
 };
 
 exports.newItem = (req, res) => {
-  console.log('뉴아이템 콘솔레큐', req.body)
+  // console.log('뉴아이템 콘솔레큐', req.body)
   Item.create({
     itemCode : req.body.item.itemCode,
     itemName : req.body.item.itemName,
@@ -140,11 +141,11 @@ exports.newItem = (req, res) => {
   },
   {include:[{model:ItemPrice, plain : true, as:'VNPrice'}]})
     .then(result => {
-      console.log('리절트', result)
+      // console.log('리절트', result)
       res.status(200).send('성공')
     })
     .catch(err=>{
-      console.log('에러는', err)
+      // console.log('에러는', err)
       res.status(200).send({error: err.errors})
 
     })
@@ -164,15 +165,15 @@ exports.test = (req, res) => {
 };
 
 exports.check = (req, res) => {
-  console.log(req.body)
+  // console.log(req.body)
   const {table, checkVal} = req.body
-  console.log(table)
-  console.log(checkVal)
+  // console.log(table)
+  // console.log(checkVal)
 };
 
 exports.query = (req, res) => {
   try {
-    console.log(req.body)
+    // console.log(req.body)
     let result = ''
     const includingKey = 'Price'
     Item.findAll(
@@ -181,12 +182,12 @@ exports.query = (req, res) => {
         result = monolize(items, includingKey)
       }).then(() => {
         calPrice.VNSellP(result)
-        console.log(result)
+        // console.log(result)
         res.status(200).send(result);
       }) 
   }
   catch (err) {
     res.status(500).send({message:err.message})
-    console.log(err.message)
+    // console.log(err.message)
   }
 };

@@ -9,7 +9,7 @@ const Op = db.Sequelize.Op;
 
 exports.addNew = (req, res) => {
     const Arr = req.body
-    console.log(Arr)
+    // console.log(Arr)
     try {
       Arr.map(obj => {
         Maker.create({
@@ -37,7 +37,7 @@ exports.load = (req, res) => {
 };
 
 exports.delete = async (req, res) => {
-    console.log(req.body)
+    // console.log(req.body)
     let draft = await Maker.findOne({where:{makerCode :req.body.code}})
     await draft.destroy().then(()=> {
         res.status(200).send('deleted Successfully')
@@ -71,14 +71,14 @@ exports.query = (req, res) => {
 
     Maker.findOne({where:tempObj})
     .then(res => {
-        console.log(res)
+        // console.log(res)
         result = res.dataValues
     }).then(() => res.status(200).send(result) )
 };
   
 exports.addNotes = (req, res) => {
     const {obj} = req.body
-    console.log(obj)
+    // console.log(obj)
     try {
         MakerNote.create({
             note: obj.note,

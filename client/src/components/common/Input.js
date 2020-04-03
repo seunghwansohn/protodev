@@ -36,8 +36,11 @@ const TextFieldST = styled(TextField)`
     }
   }
   input:valid {
-    border-bottom: 4px solid pink;
-  }      
+    border-bottom: 5px solid green;
+  }  
+  input:invalid {
+    border-bottom: 5px solid red;
+  }   
 `
 
 
@@ -63,9 +66,11 @@ const InputST = ({
     setState(event.target.value)
     let temp = {}
     let tempArr = fixedData
+    console.log(event.target.value)
     temp[title] = event.target.value
     setFixedData(
       produce(fixedData, draft => {
+        console.log(fixedData)
         fixedData[title] = event.target.value
       })
     )

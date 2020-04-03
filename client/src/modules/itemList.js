@@ -87,6 +87,11 @@ function reducer (state = initialState, action) {
         case SET_DELETE:
             return produce(state, draft => {
             })
+        case SET_UPDATE:
+            return produce(state, draft => {
+                console.log(action.payload)
+            })
+
         default:
             return state;
     } 

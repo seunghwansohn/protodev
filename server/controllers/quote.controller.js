@@ -8,7 +8,7 @@ const Op = db.Sequelize.Op;
 exports.quoteInput = (req, res) => {
   const quoteNo = req.body.info.date + '-' + req.body.info.quoteLastNo
   const items = req.body.contents
-  console.log(items)
+  // console.log(items)
   try {
     items.map(item => {
       Quote.create({

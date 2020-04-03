@@ -8,7 +8,7 @@ module.exports = function(originalObjArr, includingKey) {
     let resultArr = []
     const getObjectKeys = (originalObjArr) => {
       originalObjArr.map(obj => {
-        console.log(obj)
+        // console.log(obj)
         let willConcatObjects = obj[includingKey].dataValues
         let includingKeys = Object.keys(rmTimeFromReq(obj[includingKey].dataValues))
         delete obj.dataValues[includingKey]

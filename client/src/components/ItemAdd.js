@@ -29,6 +29,14 @@ import Paper            from '@material-ui/core/Paper';
 import Box              from '@material-ui/core/Box';
 import { ToastContainer, toast } from 'react-toastify';
 
+import {
+  actUpdate, 
+  actUpdateChange, 
+  actClickedTableCol,
+  actAdd,
+  actDelete
+}                                       from '../modules/itemList'
+
 import {generateRandom}               from '../lib/common';
 
 import { getExchangeRate } from '../modules/basicInfo'
@@ -127,12 +135,12 @@ const ProppedInput = ({infoProps, fixMode, fixedData, setFixedData}) => {
 
 let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
   const [fixMode, setFixMode]         = useState(false)
-  const [fixedData, setFixedData]     = useState([])
+  const [fixedData, setFixedData]     = useState({})
 
   const [loadedData, setLoadedData]     = useState([])
 
-  const [primaryKey, setPrimaryKey]   = useState('')
-  const [primaryCode, setPrimaryCode] = useState('')
+  const [primaryKey, setPrimaryKey]   = useState(reqKey)
+  const [primaryCode, setPrimaryCode] = useState(reqCode)
 
   const classes = useStyles();
   const dispatch = useDispatch()
@@ -352,7 +360,12 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
 
 
   const onSubmitUpdated = () => {
-    console.log(fixedData)
+    let tempObj1 = {}
+    tempObj1[primaryKey] = primaryCode
+
+    let tempObj = {ref : tempObj1, vals : fixedData}
+    
+    dispatch(actUpdate(tempObj))
   }
 
   return (
