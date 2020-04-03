@@ -15,9 +15,9 @@
 
 
 module.exports = function (source, target, primaryKey, includingAttr) {
-  let includingKeys = []
+  let includingKeys = {}
   includingAttr.map(obj => {
-    includingKeys = includingKeys.concat(obj.attributes)
+    includingKeys[obj.as] = (obj.attributes)
   })
   return source.findAll({
     include : includingAttr

@@ -100,8 +100,11 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     //테이블값 새로 추가
     const [addedNew, setAddedNew]               = useState([]);
     const onSubmitNewAdded = async () => {
-        // let obj = {addedNew :}
-        await dispatch(actAdd(addedNew, includingKeys))
+        console.log(addedNew)
+        await addedNew.map(obj => {
+            dispatch(actAdd(obj, primaryKey, includingKeys))
+        })
+        // await dispatch(actAdd(addedNew, primaryKey, includingKeys))
         await getRawData()
         await setAddedNew([])
     }
@@ -139,11 +142,11 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
           dispatch(actClickedTableCol(clickedCol))
       } 
     },[clickedCol])
-
+    //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
     useEffect(() => {
       let keys = Object.keys(clicked)
       if (keys.length > 0) {
-        if (includingKeys.includes(clicked.header)) {
+        if (includingKeys.price.includes(clicked.header)) {
           console.log('가격임')
           dispatch(actClickedTableCol(clickedCol))
           dispatch(loadAccount(clickedCol))
@@ -155,9 +158,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
       } 
     },[clicked])
 
-
-    console.log(clicked)
-    console.log(reqQueryCode)
 
     //테이블 필터
     const [filterKeyword, setFilterKeyword]     = useState('');

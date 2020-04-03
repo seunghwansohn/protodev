@@ -37,7 +37,7 @@ const deleteSaga    = createRequestSaga(SET_DELETE, item.del);
 const addItemSaga   = createRequestSaga(SET_SUBMIT_ADD_ITEM, item.addNew);
 
 export const actHeader          = createAction(SET_HEADER, columns => columns)
-export const actAdd             = createAction(SET_ADD, (addedNew, includingKeys) => ({addedNew, includingKeys}))
+export const actAdd             = createAction(SET_ADD, (addedNew, primaryKey, includingKeys) => ({addedNew, primaryKey, includingKeys}))
 export const actLoad            = createAction(SET_LOAD)
 export const actUpdate          = createAction(SET_UPDATE, arr => arr)
 export const actUpdateChange    = createAction(SET_UPDATE_CHANGE, ox => ox)
@@ -48,7 +48,7 @@ export const actSubmitAddItem   = createAction(SET_SUBMIT_ADD_ITEM, item => item
 
 
 export function* itemSaga() {
-    yield takeLatest    (SET_ADD,    addSaga);
+    yield takeEvery    (SET_ADD,    addSaga);
     yield takeLatest    (SET_LOAD,   loadSaga);
     yield takeEvery     (SET_UPDATE, updateSaga);
     yield takeEvery     (SET_DELETE, deleteSaga);

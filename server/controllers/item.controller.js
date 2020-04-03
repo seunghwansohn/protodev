@@ -1,9 +1,11 @@
-  const db = require("../models");
+const db = require("../models");
 const config = require("../config/auth.config");
 const monolize = require("../lib/monolizeSequel");
 const calPrice = require("../lib/calPrice");
 const rmTimeFromReq = require("../lib/sequelMiddleWares");
 const getIncludeName = require("../lib/getIncludeName");
+const {produce} = require ('immer')
+
 
 
 const Item = db.item;
@@ -17,37 +19,47 @@ const Op = db.Sequelize.Op;
 const primaryKey   = 'itemCode'
 
 exports.addNew = (req, res) => {
-  const {addedNew, includingKeys} = req.body
-  try {
-    addedNew.map(obj => {
-      const includings = {}
-      newObj = rmTimeFromReq(obj)
-      const primaryCode = obj[primaryKey]
-      
-      const putOutIncludings = (obj, includingKeys) => {
-        includingKeys.map(key => {
-          if (key !== primaryKey) {
-            includings[key] = obj[key]
-            delete obj[key]
-          }
-        })
-        return obj
-      }
-      newObj = putOutIncludings(obj, includingKeys)
-      
-      const fixIncludings = (includings) => {
-        delete includings.id
-        includings[primaryKey] = primaryCode
-        return includings
-      }
-      
-      const asString = 'price'
-      newObj[asString] = fixIncludings(includings)
+  const {addedNew, primaryKey, includingKeys} = req.body
 
-      Item.create(newObj, {include:[{model:ItemPrice, as:asString}]}).then(() => {
-          res.send({ message: "item added successfully" });
+  try {
+    const includings = {}
+    let addedObj = rmTimeFromReq(addedNew)
+    // console.log(newObj)
+    const primaryCode = addedNew[primaryKey]
+    
+    // console.log(includingKeys)
+
+    const as = Object.keys(includingKeys)
+    // console.log(as)
+
+    const putOutIncludings = (addedNew, includingKeys) => {
+      console.log(addedNew)
+      as.map(asStr => {
+        console.log(asStr)
+        includingKeys[asStr].map(async key => {
+          addedNew[asStr] = addedNew[asStr] ? addedNew[asStr] : {}
+          addedNew[asStr][key] = await addedNew[key]
+          await delete addedNew[key]
+          await console.log(addedNew)
+        })
       })
-    })
+      return addedNew
+    }
+
+    let newObj = putOutIncludings(addedObj, includingKeys)
+    // // console.log(newObj)
+    // const fixIncludings = (includings) => {
+    //   delete includings.id
+    //   includings[primaryKey] = primaryCode
+    //   return includings
+    // }
+    
+    // const asString = 'price'
+    // addedObj[asString] = fixIncludings(includings)
+
+    // Item.create(newObj, {include:[{model:ItemPrice, as:asString}]}).then(() => {
+    //     res.send({ message: "item added successfully" });
+    // })
   }
   catch (err) {
     res.status(500).send({message:err.message})
@@ -168,11 +180,11 @@ exports.check = (req, res) => {
 
 exports.query = (req, res) => {
   try {
-    // console.log(req.body)
+    const where = req.body
     let result = ''
     const includingKey = 'price'
     Item.findAll(
-      {where: req.body, include: [{model:ItemPrice, as: includingKey}] }
+      {where: where, include: [{model:ItemPrice, as: includingKey}] }
       ).then(items => {
         result = monolize(items, includingKey)
       }).then(() => {
