@@ -4,7 +4,7 @@ const monolize = require("../lib/monolizeSequel");
 const calPrice = require("../lib/calPrice");
 const rmTimeFromReq = require("../lib/sequelMiddleWares");
 const getIncludeName = require("../lib/getIncludeName");
-
+const getIncludingArr = require("../lib/getIncludingArr");
 const getCreateObj = require("../lib/getCreateObj");
 
 const {produce} = require ('immer')
@@ -39,34 +39,28 @@ const primaryKey   = 'itemCode'
 exports.addNew = (req, res) => {
   const {addedNew, primaryKey, includingKeys} = req.body
 
-  try {
-    const includings = {}
-    let addedObj = rmTimeFromReq(addedNew)
-    const primaryCode = addedNew[primaryKey]
-    
-    const getInludingArr = (relAttr, includingKeys) => {
-      let tempArr = []
-      relAttr.rels.map(rel => {
-        tempArr.push(
-          {model: rel.target, as: rel.asStr, plain : true, raw: false, nest : false, attributes : includingKeys[rel.asStr]}
-        )
-      })
-      return tempArr
-    }
+  let result = ''
 
-    const includingArr = (getInludingArr(relAttr, includingKeys))
-    const createObj = getCreateObj(addedNew, includingKeys)
-    
-    createObj.then(result => console.log(result))
+  const includings = {}
+  let addedObj = rmTimeFromReq(addedNew)
+  const primaryCode = addedNew[primaryKey]
+  
 
-    // Item.create(newObj, {include:[{model:ItemPrice, as:asString}]}).then(() => {
-    //     res.send({ message: "item added successfully" });
-    // })
-  }
-  catch (err) {
+  const includingArr = (getIncludingArr(relAttr, includingKeys))
+  const createObj = getCreateObj(addedNew, includingKeys)
+  
+  createObj.then(obj => {
+    result = obj
+  }).then(() => {
+    Item.create(result, {include:includingArr}).then(() => {
+      res.status(200).send('Item Suceessfully Added')
+    }).catch((err) => {
     res.status(500).send({message:err.message})
-    // console.log(err.message)
-  }
+  })
+  .catch((err) => {
+    res.status(500).send({message:err.message})
+  })
+})
 };
 
 exports.test = (req,res) => {

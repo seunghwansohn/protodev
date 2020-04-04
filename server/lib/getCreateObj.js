@@ -44,6 +44,5 @@ module.exports = getCreateObj = async (addedNew, includingKeys) => {
         await delete addedNew[key]
       })
     })
-    // await console.log(addedNew)
     return await addedNew
 }
