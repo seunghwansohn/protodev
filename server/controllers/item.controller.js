@@ -6,6 +6,8 @@ const rmTimeFromReq = require("../lib/sequelMiddleWares");
 const getIncludeName = require("../lib/getIncludeName");
 const getIncludingArr = require("../lib/getIncludingArr");
 const getCreateObj = require("../lib/getCreateObj");
+const setNameToCode = require("../lib/setNameToCode");
+
 
 const {produce} = require ('immer')
 
@@ -39,6 +41,7 @@ const primaryKey   = 'itemCode'
 exports.addNew = (req, res) => {
   const {addedNew, primaryKey, includingKeys, findingKeys} = req.body
 
+  console.log(req.body)
   let result = ''
 
   const includings  = {}
@@ -47,13 +50,29 @@ exports.addNew = (req, res) => {
   
   const includingArr  = (getIncludingArr(relAttr, includingKeys))
   const createObj     = getCreateObj(addedNew, primaryKey, primaryCode, includingKeys, findingKeys)
+
+  const getModelFromAsStr = (relAttr, asStr) => {
+    let temp = ''
+    relAttr.rels.map(rel => {
+      if (rel.asStr == asStr) {
+        temp = rel.target
+      }
+    })
+    return temp
+  }
+  // const findingAsStr = Object.keys(findingKeys[0])[0]
   
+  // getModelFromAsStr(relAttr, findingAsStr).findOne({where:{supplierName:'ㄷㄹㄹㄹ'}}).then(result => console.log(result))
+
+  setNameToCode(relAttr, findingKeys, addedObj)
+  // .then(result => console.log(result))
+
 
   createObj.then(obj => {
     result = obj
   }).then(() => {
     // res.status(200).send(includingArr)
-    // res.status(200).send(result)
+    res.status(200).send(result)
     Item.create(result, {include:includingArr}).then(() => {
       res.status(200).send('Item Suceessfully Added')
     }).catch((err) => {

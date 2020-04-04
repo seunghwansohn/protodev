@@ -25,7 +25,8 @@ module.exports = function (source, target, primaryKey, findingAttr, includingAtt
 
   findingAttr.map(obj => {
     let tempObj = {}
-    tempObj[obj.primaryCode] = obj.attributes[0]
+    tempObj[obj.as] = {}
+    tempObj[obj.as][obj.primaryCode] = obj.attributes[0]
     findingKeys.push(tempObj)
   })
 

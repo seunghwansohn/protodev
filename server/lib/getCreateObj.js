@@ -40,6 +40,12 @@ module.exports = getCreateObj = async (addedNew, primaryKey, primaryCode, includ
 
     console.log(findingKeys)
 
+    // findingKeys.map(obj =>{
+    //   let code = Object.keys(obj)[0]
+    //   let name = obj[code]
+    //   // addedNew[name] = 
+    // })
+
     await as.map(asStr => {
       includingKeys[asStr].map(async key => {
         addedNew[asStr] = addedNew[asStr] ? addedNew[asStr] : {}
