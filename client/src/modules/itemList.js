@@ -60,7 +60,7 @@ function reducer (state = initialState, action) {
     switch (action.type) {
         case SET_UPDATE_CHANGE:
             return produce(state, draft => {
-                draft.table.update = action.payload
+                draft.table.update = action.payload 
             })
         case SET_HEADER:
             return produce(state, draft => {

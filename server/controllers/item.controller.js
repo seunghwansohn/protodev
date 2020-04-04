@@ -4,6 +4,9 @@ const monolize = require("../lib/monolizeSequel");
 const calPrice = require("../lib/calPrice");
 const rmTimeFromReq = require("../lib/sequelMiddleWares");
 const getIncludeName = require("../lib/getIncludeName");
+
+const getCreateObj = require("../lib/getCreateObj");
+
 const {produce} = require ('immer')
 
 
@@ -13,6 +16,21 @@ const ItemPrice = db.itemPRice
 const Role = db.role;
 const Supplier = db.supplier;
 
+const relAttr = {
+  source : Item,
+  rels : [
+    {
+      target: Supplier,
+      asStr : 'supplier',
+      attributes : ''
+    },
+    {
+      target: ItemPrice,
+      asStr : 'price',
+      attribues :''
+    }
+  ]
+}
 
 const Op = db.Sequelize.Op;
 
@@ -24,38 +42,22 @@ exports.addNew = (req, res) => {
   try {
     const includings = {}
     let addedObj = rmTimeFromReq(addedNew)
-    // console.log(newObj)
     const primaryCode = addedNew[primaryKey]
     
-    // console.log(includingKeys)
-
-    const as = Object.keys(includingKeys)
-    // console.log(as)
-
-    const putOutIncludings = (addedNew, includingKeys) => {
-      console.log(addedNew)
-      as.map(asStr => {
-        console.log(asStr)
-        includingKeys[asStr].map(async key => {
-          addedNew[asStr] = addedNew[asStr] ? addedNew[asStr] : {}
-          addedNew[asStr][key] = await addedNew[key]
-          await delete addedNew[key]
-          await console.log(addedNew)
-        })
+    const getInludingArr = (relAttr, includingKeys) => {
+      let tempArr = []
+      relAttr.rels.map(rel => {
+        tempArr.push(
+          {model: rel.target, as: rel.asStr, plain : true, raw: false, nest : false, attributes : includingKeys[rel.asStr]}
+        )
       })
-      return addedNew
+      return tempArr
     }
 
-    let newObj = putOutIncludings(addedObj, includingKeys)
-    // // console.log(newObj)
-    // const fixIncludings = (includings) => {
-    //   delete includings.id
-    //   includings[primaryKey] = primaryCode
-    //   return includings
-    // }
+    const includingArr = (getInludingArr(relAttr, includingKeys))
+    const createObj = getCreateObj(addedNew, includingKeys)
     
-    // const asString = 'price'
-    // addedObj[asString] = fixIncludings(includings)
+    createObj.then(result => console.log(result))
 
     // Item.create(newObj, {include:[{model:ItemPrice, as:asString}]}).then(() => {
     //     res.send({ message: "item added successfully" });
