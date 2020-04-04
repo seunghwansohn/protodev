@@ -265,25 +265,21 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
   },[])
 
 
-  console.log(reqWhere())
 
   useEffect(() => {
     basicInfoProps.map(obj => {
-      console.log(loadedData)
       if (loadedData.hasOwnProperty(obj.title)) {
         console.log('값있음')
         obj.setState(loadedData[obj.title])
       }
     })
     priceInfoProps.map(obj => {
-      console.log(loadedData)
       if (loadedData.hasOwnProperty(obj.title)) {
         console.log('값있음')
         obj.setState(loadedData[obj.title])
       }
     })
     dimensionInfoProps.map(obj => {
-      console.log(loadedData)
       if (loadedData.hasOwnProperty(obj.title)) {
         console.log('값있음')
         obj.setState(loadedData[obj.title])

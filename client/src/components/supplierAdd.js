@@ -72,15 +72,13 @@ let SupplierAdd = props => {
   const writeNote = (note, supplierCode) => {
     axios.post(`/api/supplier/addNotes`, {note:note, supplierCode : supplierCode})
     .then(res => {
-      // console.log(res);
-      // console.log(res.data);
+
     })
   }
   const loadNote = () => {
     axios.get(`/api/supplier/loadNotes/dfef`)
     .then(res => {
-      // console.log(res);
-      // console.log(res.data);
+
     })
   }
   loadNote()

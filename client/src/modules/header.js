@@ -11,18 +11,19 @@ export const headerButtonClick = createAction(HEADER_BUTTON_CLICK, ox => ox, (ox
 
 
 function reducer (state = initialState, action) {
-  switch (action.type) {
-        case HEADER_BUTTON_CLICK:
-            switch(action.meta.type) {
-                case 'Copy Item':
-                    return produce(state, draft => {
-                        const temp = {}
-                    })
-            
-            default:
-                return
-        return state;
-    } 
+    switch (action.type) {
+            case HEADER_BUTTON_CLICK:
+                switch(action.meta.type) {
+                    case 'Copy Item':
+                        return produce(state, draft => {
+                            const temp = {}
+                        })
+                
+                default:
+                    return
+            return state;
+        } 
+    }
 }
 
 export default reducer

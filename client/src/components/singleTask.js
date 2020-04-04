@@ -56,14 +56,6 @@ const SingleTask = ({
   const classes     = useStyles();
   const projectName = projectCode
 
-  // const onCheckBox = (e, index) => {
-  //   onchecked(index, projectCode, idx)
-  // }
-
-  // const onAddSub = () => {
-  //   addSub(projectCode, level, belongedIdx, idx)
-  // }
-  // // console.log('rawArr은 ',  rawArr)
 
   const numberFormat = () => {
     let format = ''

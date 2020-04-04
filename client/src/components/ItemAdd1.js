@@ -315,8 +315,6 @@ let ItemAdd = props => {
   const {stkVVar, stkCVar} = useSelector(state => state.reduxFormInit)
   const reduxFormInitValue = useSelector(state => state.reduxFormInit)
 
-  console.log(reduxFormInitValue)
-
 
   const exchangeRate = useSelector(state => state.basicInfo.exchangeRate)
 

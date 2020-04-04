@@ -254,7 +254,6 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
         // onSubmitNewAdded : onSubmitNewAdded
     }
     
-    //   console.log(queteProp)
 
 
     const queryHeaderProps = [

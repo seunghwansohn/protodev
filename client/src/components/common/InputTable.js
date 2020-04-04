@@ -280,7 +280,6 @@ const STTable = ({
   }
 
   const onClickCols = (value, row, header) => {
-    console.log(rawData[row][primaryKey])
     const tempObj = {
       value : value,
       type  : type,
@@ -479,7 +478,6 @@ const STTable = ({
                       if (!isColumnHided) {
 
                         if (isInputCol) { 
-                          console.log(header, isInputCol)
                           return (
                             <StyledTableCell>
                               <Input 
@@ -491,8 +489,6 @@ const STTable = ({
                             </StyledTableCell>
                           )
                         }else if (isCalValueCol) { 
-                          console.log(colAttr[header].value(index))
-                          console.log(header)
                           return (
                             <StyledTableCell>
                               <Input

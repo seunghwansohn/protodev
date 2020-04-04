@@ -35,13 +35,22 @@
 
 //***** premise객체로 반환됨에 유의 */
 
-module.exports = getCreateObj = async (addedNew, includingKeys) => {
+module.exports = getCreateObj = async (addedNew, primaryKey, primaryCode, includingKeys, findingKeys) => {
     const as = Object.keys(includingKeys)
+
+    console.log(findingKeys)
+
     await as.map(asStr => {
       includingKeys[asStr].map(async key => {
         addedNew[asStr] = addedNew[asStr] ? addedNew[asStr] : {}
         addedNew[asStr][key] = await addedNew[key]
+        addedNew[asStr][primaryKey] = primaryCode
         await delete addedNew[key]
+        await findingKeys.map(obj => {
+          Object.keys(obj).map(key =>{
+            delete addedNew[obj[key]]
+          })
+        })
       })
     })
     return await addedNew

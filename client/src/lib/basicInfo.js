@@ -3,7 +3,6 @@ export const getDateNow = () => {
     let dateObj = {}
     function getFormatDate(date){
         var year = date.getFullYear();              //yyyy
-        console.log(typeof year)
         let shortYear = year.toString().slice(2, 4)
         var month = (1 + date.getMonth());          //M
         month = month >= 10 ? month : '0' + month;  //month 두자리로 저장

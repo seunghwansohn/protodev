@@ -25,7 +25,6 @@ const ItemQuery = ({motherType, motherNo, reqKey, reqCode}) => {
     }
 
     const setUpdate = (fixedData) => {
-        console.log(fixedData)
     }
 
 

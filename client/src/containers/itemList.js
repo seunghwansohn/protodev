@@ -91,6 +91,8 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     const [primaryKey, setPrimaryKey]   = useState('');
     const [includingKeys, 
         setIncludingKeys]               = useState([]);
+    const [findingKeys, 
+        setFindingKeys]               = useState([]);
 
     //테이블 업데이트
     const [fixedVals, setFixedVals]             = useState([]);
@@ -100,14 +102,14 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     //테이블값 새로 추가
     const [addedNew, setAddedNew]               = useState([]);
     const onSubmitNewAdded = async () => {
-        console.log(addedNew)
         await addedNew.map(obj => {
-            dispatch(actAdd(obj, primaryKey, includingKeys))
+            dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
         })
         // await dispatch(actAdd(addedNew, primaryKey, includingKeys))
         await getRawData()
         await setAddedNew([])
     }
+
 
     //테이블값 수정
     const onSubmitUpdatedVals = async (fixedVals) => {
@@ -167,13 +169,12 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     //테이블 로드
     const getRawData = async () => {
         await axios.get('/api/' + dataType + '/load').then(res => {
-            console.log(res)
             setPrimaryKey(res.data.primaryKey)
             setIncludingKeys(res.data.includingKeys)
             setTableRawData(withoutIncludingKeys(res.data.vals))
+            setFindingKeys(res.data.findingKeys)
         })
     }
-    console.log(includingKeys)
     useEffect(() => {
         getRawData()
     },[])
@@ -295,14 +296,12 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
             {
                 title : 'insert',
                 func : function(row){
-                    console.log(row)
                     dispatch(onAlreadyPickedCheck(row))
                 },
                 mother : containerNo
             },
         ],
     }
-
 
     const arrFunc = () => {
       let Arr = []

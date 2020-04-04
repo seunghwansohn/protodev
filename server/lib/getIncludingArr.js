@@ -1,9 +1,16 @@
 module.exports = getIncludingArr = (relAttr, includingKeys) => {
     let tempArr = []
-    relAttr.rels.map(rel => {
-      tempArr.push(
-        {model: rel.target, as: rel.asStr, plain : true, raw: false, nest : false, attributes : includingKeys[rel.asStr]}
-      )
+    let {rels}  = relAttr
+
+    Object.keys(includingKeys).map(key => {
+      rels.map(rel => {
+        if (rel.asStr == key) {
+          tempArr.push(
+            {model: rel.target, as: rel.asStr}
+          )
+        }
+      })  
     })
+
     return tempArr
 }

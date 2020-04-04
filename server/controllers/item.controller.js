@@ -37,21 +37,23 @@ const Op = db.Sequelize.Op;
 const primaryKey   = 'itemCode'
 
 exports.addNew = (req, res) => {
-  const {addedNew, primaryKey, includingKeys} = req.body
+  const {addedNew, primaryKey, includingKeys, findingKeys} = req.body
 
   let result = ''
 
-  const includings = {}
-  let addedObj = rmTimeFromReq(addedNew)
+  const includings  = {}
+  let addedObj      = rmTimeFromReq(addedNew)
   const primaryCode = addedNew[primaryKey]
   
-
-  const includingArr = (getIncludingArr(relAttr, includingKeys))
-  const createObj = getCreateObj(addedNew, includingKeys)
+  const includingArr  = (getIncludingArr(relAttr, includingKeys))
+  const createObj     = getCreateObj(addedNew, primaryKey, primaryCode, includingKeys, findingKeys)
   
+
   createObj.then(obj => {
     result = obj
   }).then(() => {
+    // res.status(200).send(includingArr)
+    // res.status(200).send(result)
     Item.create(result, {include:includingArr}).then(() => {
       res.status(200).send('Item Suceessfully Added')
     }).catch((err) => {
@@ -62,6 +64,10 @@ exports.addNew = (req, res) => {
   })
 })
 };
+
+
+
+
 
 exports.test = (req,res) => {
   let primaryKey = 'itemCode'
@@ -97,11 +103,13 @@ exports.update = async (req, res) => {
 
 exports.itemLoad = (req, res) => {
     let primaryKey = 'itemCode'
+    let findingAttr = [
+      {model:Supplier, plain : true, raw: false, nest : false, as : 'supplier', attributes : ['supplierName'], primaryCode : 'supplierCode'},
+    ]
     let includingAttr = [
-      {model:Supplier, plain : true, raw: false, nest : false, as : 'supplier', attributes : ['supplierName']},
       {model:ItemPrice, plain : true, raw: false, nest : false, as: 'price', attributes : ['VNPrice', 'stkVVar', 'buyingPKR', 'stkCVar']}
     ]
-    getIncludeName(Item, Supplier, primaryKey, includingAttr).then(items => {
+    getIncludeName(Item, Supplier, primaryKey, findingAttr, includingAttr).then(items => {
       res.status(200).send(items)
     })
 };

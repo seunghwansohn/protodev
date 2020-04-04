@@ -140,7 +140,6 @@ const STTable = ({
     directQuery
   }                   = attr
 
-  console.log(directQuery)
 
   let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
 
@@ -180,7 +179,6 @@ const STTable = ({
 
 
 
-  console.log(primaryKey)
   useEffect(() => {
     setFilterKeyword(initialFilter)
   },[initialFilter])
@@ -261,7 +259,6 @@ const STTable = ({
     setCalValueCols(tmpCalValueCols)
   },[])
 
-  console.log(inputCols)
   const isChecked     = name => selected.indexOf(name)    !== -1;
   const isHidedCulumn = name => hided.indexOf(name)       !== -1;
   const isFixable     = name => fixableCols.indexOf(name) !== -1;
@@ -315,7 +312,6 @@ const STTable = ({
   }
 
   const onClickCols = (value, row, header) => {
-    console.log(rawData[row][primaryKey])
     const tempObj = {
       value : value,
       type  : type,
@@ -582,7 +578,6 @@ const STTable = ({
                       let isInputCol   = isInput(header)
                       let isCalValueCol   = isCalValue(header)
 
-                      console.log(isCalValueCol)
                       const isColumnHided = isHidedCulumn(header)
                       if (!isColumnHided) {
                         if (fixable & isfixableCol) {
@@ -596,7 +591,6 @@ const STTable = ({
                             </StyledTableCell>
                           )
                         }else if (isInputCol) { 
-                          console.log(header, isInputCol)
                           return (
                             <StyledTableCell>
                               <Input 
@@ -608,8 +602,6 @@ const STTable = ({
                             </StyledTableCell>
                           )
                         }else if (isCalValueCol) { 
-                          console.log(colAttr[header].value(index))
-                          console.log(header)
                           return (
                             <StyledTableCell>
                               <Input

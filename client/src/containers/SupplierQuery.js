@@ -26,7 +26,6 @@ const SupplierQuery = ({loadReqData}) => {
     ]
 
     useEffect(() => {
-        console.log(loadReqData)
         axios.post('/api/supplier/query', loadReqData).then(res => {
             setLoadedData(res.data)
         })
