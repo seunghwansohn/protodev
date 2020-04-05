@@ -122,7 +122,11 @@ const QueryHeader = ({motherType, motherNo, funcs, queryHeaderProps}) => {
                         :
                       </Grid>
                       <Grid item xs = {6}>
-                        <Input className = {classes.buttonRight} onKeyPress = {(e) => {onKeyPressOnInput(frameNo, obj.title, e)}} onChange = {e => {headerInputChanged(obj.title, e)}}>find</Input>
+                        <Input 
+                          className = {classes.buttonRight} 
+                          onKeyPress = {(e) => {onKeyPressOnInput(frameNo, obj.title, e)}} 
+                          onChange = {e => {headerInputChanged(obj.title, e)}}
+                        >find</Input>
                       </Grid>
                     </Grid>
                   </QueryPaper>

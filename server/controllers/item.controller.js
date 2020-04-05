@@ -62,13 +62,8 @@ exports.addNew = (req, res) => {
   }
 
 
-  setNameToCode(relAttr, findingKeys, addedObj).then(result => {console.log('우히히', result)})
-
-
-  createObj.then(obj => {
-    result = obj
-  }).then(() => {
-    res.status(200).send(result)
+  setNameToCode(relAttr, findingKeys, addedObj)
+  .then(result => {
     Item.create(result, {include:includingArr}).then(() => {
       res.status(200).send('Item Suceessfully Added')
     }).catch((err) => {
@@ -77,7 +72,22 @@ exports.addNew = (req, res) => {
   .catch((err) => {
     res.status(500).send({message:err.message})
   })
-})
+  })
+
+
+//   createObj.then(obj => {
+//     result = obj
+//   }).then(() => {
+//     res.status(200).send(result)
+//     Item.create(result, {include:includingArr}).then(() => {
+//       res.status(200).send('Item Suceessfully Added')
+//     }).catch((err) => {
+//     res.status(500).send({message:err.message})
+//   })
+//   .catch((err) => {
+//     res.status(500).send({message:err.message})
+//   })
+// })
 };
 
 

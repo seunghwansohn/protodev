@@ -181,16 +181,49 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
 
 
     
+    //Api로부터 findingKeys를 받은 뒤
+    //input을 query창으로 형성할 컬럼의 목록을 arr로
+    const [findingCols, 
+        setFindingCols]                = useState([])
+    useEffect(() => {
+        let tempArr = []
+        findingKeys.map(obj => {
+            Object.keys(obj).map(asStr => {
+                Object.keys(obj[asStr]).map(codeKey => {
+                    tempArr.push(obj[asStr][codeKey])
+                })
+            })
+        })
+        setFindingCols(tempArr)
+    },[findingKeys])
+
+
+    const getAsStrByColName = (colName) => {
+        let tempAsStr = ''
+        findingKeys.map(obj => {
+            Object.keys(obj).map(asStr => {
+                Object.keys(obj[asStr]).map(codeKey => {
+                    tempAsStr = asStr
+                })
+            })
+        })
+        return tempAsStr
+    }
+
+    const test = () => {
+        // dispatch(loadAccount())
+        // dispatch(onDialogOpen(true, detailQuery, clickedCol))
+        console.log(getAsStrByColName('supplierName'))
+    }
+
+
     if (update) {
         getRawData()
         dispatch(actUpdateChange(false))
         setUpdated(true)
     }
 
-    const test = () => {
-      dispatch(loadAccount())
-      dispatch(onDialogOpen(true, detailQuery, clickedCol))
-    }
+
 
     //table 관련 속성들
     const tableStates = {
@@ -259,13 +292,15 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
                 fixable : true,
                 defaultHided : false
             },
-            supplierCode : {
-                fixable : true,
-                defaultHided : false
-            },
             makerModelNo : {
                 fixable : true,
                 defaultHided : false
+            },
+            supplierName : {
+                fixable : true,
+                defaultHided : false,
+                query : true,
+                dialog : getAsStrByColName('supplierName')
             },
             VNPrice : {
                 fixable : true,
