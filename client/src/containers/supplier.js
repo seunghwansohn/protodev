@@ -93,6 +93,9 @@ const SupplierContainer = ({motherType, motherNo, subTableAttr}) => {
     const [findingKeys, 
         setFindingKeys]               = useState([]);
 
+    const {tableButton, setFindOneResult, initialFilter, directQuery} = subTableAttr ? subTableAttr : ''
+
+
     //테이블 업데이트
     const [fixedVals, setFixedVals]             = useState([]);
     const [updated, setUpdated]                 = useState(false);
@@ -147,15 +150,8 @@ const SupplierContainer = ({motherType, motherNo, subTableAttr}) => {
     useEffect(() => {
       let keys = Object.keys(clicked)
       if (keys.length > 0) {
-        if (includingKeys.price.includes(clicked.header)) {
-          console.log('가격임')
-          dispatch(actClickedTableCol(clickedCol))
-          dispatch(loadAccount(clickedCol))
-          dispatch(onDialogOpen(true, detailQuery, clickedCol))
-        }else{
-          dispatch(actClickedTableCol(clickedCol))
-          dispatch(onDialogOpen(true, simpleQuery, clickedCol))
-        }
+        dispatch(actClickedTableCol(clickedCol))
+        dispatch(onDialogOpen(true, simpleQuery, clickedCol))
       } 
     },[clicked])
 
@@ -326,15 +322,20 @@ const SupplierContainer = ({motherType, motherNo, subTableAttr}) => {
                 defaultHided : true
             },
         },
-        tableButton : [
-            {
-                title : 'insert',
-                func : function(row){
-                    dispatch(onAlreadyPickedCheck(row))
-                },
-                mother : containerNo
-            },
-        ],
+        // tableButton : [
+        //     {
+        //         title : 'insert',
+        //         func : function(row){
+        //             dispatch(onAlreadyPickedCheck(row))
+        //         },
+        //         mother : containerNo
+        //     },
+        // ],
+        tableButton,
+        setFindOneResult,
+        frameNo,
+        initialFilter,
+        directQuery
     }
 
     const arrFunc = () => {
