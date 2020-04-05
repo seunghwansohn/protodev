@@ -42,8 +42,10 @@ import {getIncludingKeys,
 
 
 
-const SupplierContainer = ({motherType, motherNo, subTableAttr}) => {
+const SupplierContainer = ({motherType, motherNo, reqNo, subTableAttr}) => {
     const dispatch = useDispatch();
+
+    console.log(reqNo)
 
     //개체 기본 속성
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
@@ -93,6 +95,8 @@ const SupplierContainer = ({motherType, motherNo, subTableAttr}) => {
     const [findingKeys, 
         setFindingKeys]               = useState([]);
 
+          
+    //서브컨테이너 기능 관련
     const {tableButton, setFindOneResult, initialFilter, directQuery} = subTableAttr ? subTableAttr : ''
 
 
@@ -174,6 +178,7 @@ const SupplierContainer = ({motherType, motherNo, subTableAttr}) => {
         getRawData()
     },[])
 
+    console.log(primaryKey)
 
     
     //Api로부터 findingKeys를 받은 뒤
@@ -250,10 +255,10 @@ const SupplierContainer = ({motherType, motherNo, subTableAttr}) => {
         flagAble : true,
         fixModeAble : true,
         colAttr : {
-            itemCode : {
+            supplierCode : {
                 primary : true,
                 fixable : false,
-                defaultHided : false
+                defaultHided : true
             },
             itemName : {
                 fixable : true,
@@ -335,7 +340,8 @@ const SupplierContainer = ({motherType, motherNo, subTableAttr}) => {
         setFindOneResult,
         frameNo,
         initialFilter,
-        directQuery
+        directQuery,
+        reqNo
     }
 
     const arrFunc = () => {

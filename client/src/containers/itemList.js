@@ -254,6 +254,9 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     const tableAttr = {
         flagAble : true,
         fixModeAble : true,
+        queryColSelect : function(){
+            console.log('파하하')
+        },
         colAttr : {
             itemCode : {
                 primary : true,

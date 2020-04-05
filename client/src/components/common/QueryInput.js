@@ -8,7 +8,9 @@ import IconButton                 from '@material-ui/core/IconButton';
 import EditIcon                   from '@material-ui/icons/Edit';
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Button                     from '@material-ui/core/Button';
-import { onDialogOpen }      from '../../modules/dialogs'
+import { onDialogOpen }           from '../../modules/dialogs'
+import { actSelect }               from '../../modules/query'
+
 
 
 import Supplier from '../../containers/supplier'
@@ -61,7 +63,7 @@ const QueryInput = ({
   motherNo,
   motherType,
   dialog,
-
+  selectFunc
 }) => {
   const dispatch = useDispatch()
 
@@ -69,7 +71,7 @@ const QueryInput = ({
   
   //개체 기본 속성
   const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
-  const type = 'quoteContainer'
+  const type = 'queryInputComp'
   const containerNo = type + '_' + frameNo
   const dataType = dialog
 
@@ -143,26 +145,29 @@ const QueryInput = ({
     }
     
     const DialogsAttr = {
-        supplier : {
-            title : 'supplier_' + frameNo,
-            maxWidth : 'xl' ,
-            funcs : queryHeaderfuncs(),
-            open : checkOpened('supplier_' + frameNo),
-            table : {
-                tableButton : [
-                    {
-                        title : 'insert',
-                        func : function(row, index, containerNo){
-                        },
-                        mother : containerNo
+      supplier : {
+        title : 'supplier_' + frameNo,
+        maxWidth : 'xl' ,
+        funcs : queryHeaderfuncs(),
+        open : checkOpened('supplier_' + frameNo),
+        table : {
+            tableButton : [
+                {
+                    title : 'insert',
+                    type  : 'select',
+                    func : function(frameNo, reqNo, selected){
+                      //inser버튼 클릭됐을 때 실행할 명령
+                      dispatch(actSelect(frameNo, reqNo, selected))
                     },
-                ],
-                setFindOneResult : setFoundResult,
-                frameNo : 'supplier_' + frameNo,
-                initialFilter : filter ? filter.supplier : '',
-                directQuery : true
-            },
-        }
+                    mother : containerNo
+                },
+            ],
+            setFindOneResult : setFoundResult,
+            frameNo : 'supplier_' + frameNo,
+            initialFilter : filter ? filter.supplier : '',
+            directQuery : true
+        },
+      }
     }
 
 
@@ -210,22 +215,25 @@ const QueryInput = ({
   //     )
   //   }
   // }
+  const [reqNo, setReqNo] = useState(null)
 
   const openDialog = (type, info) => {
+    setReqNo(generateRandom())
     dispatch(onDialogOpen(true, type, info))
   }
   
   return (
     <React.Fragment>
-        두두두
-        <Button onClick = {() => {openDialog(DialogsAttr.supplier.title)}}>클릭</Button>
-        <DialogST attr = {DialogsAttr.supplier} motherNo = {frameNo} motherType = {type}>
-          <Supplier
-            motherType          = {type}
-            motherNo            = {frameNo} 
-            subTableAttr        = {DialogsAttr.supplier.table}
-          ></Supplier>
-        </DialogST>
+      두두두
+      <Button onClick = {() => {openDialog(DialogsAttr.supplier.title)}}>클릭</Button>
+      <DialogST attr = {DialogsAttr.supplier} motherNo = {frameNo} motherType = {type}>
+        <Supplier
+          motherType          = {type}
+          motherNo            = {frameNo}
+          reqNo               = {reqNo}
+          subTableAttr        = {DialogsAttr.supplier.table}
+        ></Supplier>
+      </DialogST>
 
     </React.Fragment>
   )

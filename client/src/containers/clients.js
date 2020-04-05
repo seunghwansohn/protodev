@@ -86,7 +86,10 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
     const [primaryKey, setPrimaryKey]    = useState('');
     const [includingKeys, 
         setIncludingKeys]                = useState([]);
+    const [findingKeys, 
+        setFindingKeys]               = useState([]);
 
+    //서브컨테이너 기능 관련
     const {tableButton, setFindOneResult, initialFilter, directQuery} = subTableAttr ? subTableAttr : ''
 
     //테이블 업데이트

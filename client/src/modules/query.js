@@ -11,12 +11,15 @@ const initialState = {
 
 export const queryInitLoad = 'query/INIT_LOAD'
 export const SET_QUERY = 'query/SET_QUERY'
+export const SET_SELECT = 'query/SET_SELECT'
+
 
 const [INIT_LOAD, INIT_LOAD_SUCCESS, INIT_LOAD_FAILURE ] 
 = createRequestActionTypes('query/INIT_LOAD');
 
 export const initLoad = createAction(INIT_LOAD, obj => obj)
 export const actQuery = createAction(SET_QUERY, (frameNo, type, title, value) => ({frameNo, type, title, value}))
+export const actSelect = createAction(SET_SELECT, (frameNo, reqNo, selected) => ({frameNo, reqNo, selected}))
 
 
 const apiLoadSaga = createRequestSaga(INIT_LOAD, query.load);
@@ -44,6 +47,14 @@ function reducer (state = initialState, action) {
                 draft[frameNo] = draft[frameNo] ? draft[frameNo] : {}
                 draft[frameNo][type]  =draft[frameNo][type] ? draft[frameNo][type] : {}
                 draft[frameNo][type][title] = value
+            })
+        case SET_SELECT:
+            return produce(state, draft =>{
+                const {frameNo, reqNo, selected} = action.payload
+                console.log(action.payload)
+                draft[frameNo] = draft[frameNo] ? draft[frameNo] : {}
+                draft[frameNo][reqNo]  = selected ? selected : {}
+                // draft[frameNo][type][title] = value
             })
 
         default:

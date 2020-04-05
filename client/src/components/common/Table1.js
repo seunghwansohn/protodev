@@ -134,12 +134,14 @@ const STTable = ({
   const {
     flagAble,
     fixModeAble,
+    queryColSelect,
     colAttr, 
     tableButton, 
     setFindOneResult, 
     frameNo, 
     initialFilter,
-    directQuery
+    directQuery,
+    reqNo
   }                   = attr
 
   const dispatch = useDispatch()
@@ -474,8 +476,8 @@ const STTable = ({
     }
   },[filterKeyword, rawData])
 
-
-
+  console.log(filteredData)
+  console.log(reqNo)
   return (
     <React.Fragment>
 
@@ -575,7 +577,6 @@ const STTable = ({
                       let isQueryCol      = isQuery(header)
                       let isColumnHided = isHidedCulumn(header)
 
-                      console.log(isQueryCol)
                       if (!isColumnHided) {
                         if (fixable && isfixableCol) {
                           return (
@@ -625,11 +626,16 @@ const STTable = ({
                         }
                     }
                     })}
-                    {tableButton ? tableButton.map(obj => {
+                    {tableButton ? tableButton.map(button => {
+                      const {title, type, func, mother} = button
                       return(
                         <StyledTableCell>
-                          <button onClick = {e => obj.func(row)}>
-                            {obj.title}
+                          <button onClick = {e => {
+                            let selected = {}
+                            selected[primaryKey] = filteredData[index][primaryKey]
+                            button.func(frameNo, reqNo, selected)
+                          }}>
+                            {button.title}
                           </button>
                         </StyledTableCell>
                       )
@@ -659,6 +665,7 @@ const STTable = ({
                             dialog     = {colAttr[header].dialog} 
                             onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                             onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
+                            selectFunc = {queryColSelect}
                           />
                         </StyledTableCell>
                       )
