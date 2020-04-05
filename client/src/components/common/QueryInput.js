@@ -10,6 +10,7 @@ import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Button                     from '@material-ui/core/Button';
 import { onDialogOpen }           from '../../modules/dialogs'
 import { actSelect }               from '../../modules/query'
+import Input            from '@material-ui/core/Input';
 
 
 
@@ -88,6 +89,10 @@ const QueryInput = ({
   const querySelected     = useSelector(state => state.quoteList.selected)
   const queryRequested    = useSelector(state => state.quoteList.requested)
   const queryVars         = useSelector(state => state.query[frameNo])
+
+
+
+
 
   const {filter} = queryVars ? queryVars : ''
 
@@ -170,6 +175,8 @@ const QueryInput = ({
       }
     }
 
+    console.log(foundResult)
+
 
   // const reqWhere = () =>{
   //   let tempObj = {}
@@ -217,15 +224,43 @@ const QueryInput = ({
   // }
   const [reqNo, setReqNo] = useState(null)
 
+  const selected          = useSelector(state => state.query[frameNo])
+  const [isSelected, setIsSelected]               = useState(false);
+  useEffect(() => {
+    if (selected !== undefined) {
+      if(selected[reqNo] !== undefined)
+      setIsSelected(true)
+    }
+  },[selected])
+
+  console.log(selected)
+  console.log(isSelected)
+
   const openDialog = (type, info) => {
     setReqNo(generateRandom())
     dispatch(onDialogOpen(true, type, info))
   }
+
+  const handleChangeInput = (event) => {
+    setInputVal(event.target.value)
+  }
   
+  const onKeyPressOnInput = (event) => {
+    
+  }
+
+  const [inputVal, setInputVal]              = useState('');
+
+  console.log(inputVal)
   return (
     <React.Fragment>
-      두두두
       <Button onClick = {() => {openDialog(DialogsAttr.supplier.title)}}>클릭</Button>
+      <Input 
+        onChange = {(event) => handleChangeInput(event)} 
+        // key = {header }
+        value = {inputVal} 
+        onKeyPress = {(event) => onKeyPressOnInput(event)}
+      />
       <DialogST attr = {DialogsAttr.supplier} motherNo = {frameNo} motherType = {type}>
         <Supplier
           motherType          = {type}
