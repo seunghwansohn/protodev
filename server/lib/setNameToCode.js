@@ -7,6 +7,8 @@ module.exports = setNameToCode = (relAttr, findingKeys, addedObj) => {
   let relIdx = ''
 
   let targetCode = ''
+  let reqName = ''
+
 
   findingKeys.map(obj => {
     Object.keys(obj).map(asStr =>{
@@ -15,7 +17,6 @@ module.exports = setNameToCode = (relAttr, findingKeys, addedObj) => {
           
           relIdx = idx
 
-          let reqName = ''
 
           Object.keys(obj[asStr]).map(key => {
             targetCode = key
@@ -29,7 +30,10 @@ module.exports = setNameToCode = (relAttr, findingKeys, addedObj) => {
   })
 
   return rels[relIdx].target.findOne({where:where, attributes :[targetCode]}, ).then(result => {
-    return result.dataValues
+    let tempObj = Object.assign(addedObj, result.dataValues)
+    delete tempObj[reqName]
+    return tempObj
+
   })
 }
   
