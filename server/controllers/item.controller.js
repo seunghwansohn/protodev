@@ -60,18 +60,14 @@ exports.addNew = (req, res) => {
     })
     return temp
   }
-  // const findingAsStr = Object.keys(findingKeys[0])[0]
-  
-  // getModelFromAsStr(relAttr, findingAsStr).findOne({where:{supplierName:'ㄷㄹㄹㄹ'}}).then(result => console.log(result))
 
-  setNameToCode(relAttr, findingKeys, addedObj)
-  // .then(result => console.log(result))
+
+  setNameToCode(relAttr, findingKeys, addedObj).then(result => {console.log('우히히', result)})
 
 
   createObj.then(obj => {
     result = obj
   }).then(() => {
-    // res.status(200).send(includingArr)
     res.status(200).send(result)
     Item.create(result, {include:includingArr}).then(() => {
       res.status(200).send('Item Suceessfully Added')

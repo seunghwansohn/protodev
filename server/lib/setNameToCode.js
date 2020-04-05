@@ -1,32 +1,35 @@
 module.exports = setNameToCode = (relAttr, findingKeys, addedObj) => {
-  console.log('효효효', addedObj)
-  let tempArr = []
+  
   const {rels} = relAttr
+  let tempArr = []
+
+  let where = {}
+  let relIdx = ''
+
+  let targetCode = ''
 
   findingKeys.map(obj => {
     Object.keys(obj).map(asStr =>{
-      rels.map(rel =>{
-          if (rel.asStr == asStr) {
-              console.log('케케케', asStr)
-              console.log('쿄쿄쿄', obj[asStr])
-              let reqName = ''
-              Object.keys(obj[asStr]).map(key => {
-                reqName = obj[asStr][key]
-              })
-              // console.log(reqName)
-              let where = {}
-              where[reqName] = addedObj[reqName]
-              console.log('웨얼', where)
-              rel.target.findOne({where:where}).then(result => {
-                console.log('푸하하하', result)
-              })
-          }
+      rels.map((rel, idx) =>{
+        if (rel.asStr == asStr) {
+          
+          relIdx = idx
+
+          let reqName = ''
+
+          Object.keys(obj[asStr]).map(key => {
+            targetCode = key
+            reqName = obj[asStr][key]
+          })
+          where[reqName] = addedObj[reqName]
+
+        }
       })
     })
   })
 
-  // console.log(includingKeys)
-
-  return tempArr
+  return rels[relIdx].target.findOne({where:where, attributes :[targetCode]}, ).then(result => {
+    return result.dataValues
+  })
 }
   
