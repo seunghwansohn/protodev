@@ -142,54 +142,12 @@ const QueryTable = ({
     directQuery
   }                   = attr
 
-
-  let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
-
-  const [tableHeaderVals, setTableHeaderVals] = useState([]);
-
-  const [hided, setHided]                     = useState([]);
-  const [fixableCols, setFixableCols]         = useState([]);
-  const [primaryKey, setPrimaryKey]           = useState('');
-  const [inputCols, setInputCols]             = useState([]);
-  const [calValueCols, setCalValueCols]       = useState([]);
-  const [queryCols, setQueryCols]             = useState([]);
-
-  const [order, setOrder]                     = useState('asc');
-  const [orderBy, setOrderBy]                 = useState('calories');
-  const [page, setPage]                       = useState(0);
-  const [rowsPerPage, setRowsPerPage]         = useState(10);
-
-  const [allSelected, setAllselected]         = useState(false);
-
-  const [fixMode, setFixMode]                 = useState(false);
-  const [fixableCells, setFixableCells]       = useState({});
-
-  const [fixedVals, setFixedVals]             = useState([]);
-
-  const [showUpdatedSign, setShowUpdatedSign] = useState(false);
-
-  const [menuActivated, setMenuActivated]     = useState('');
-  const [menuAnchoredEl, setMenuAnchoredEl]   = useState(null);
-
-  const [addCopiedNewDialogOpen, 
-        setAddCopiedNewDialogOpen]          = useState(false)
-
-  const [howManyCopiedNew, 
-        setHowManyCopiedNew]                = useState(null)
-
   const dispatch = useDispatch()
 
-
-
-
-  useEffect(() => {
-    setFilterKeyword(initialFilter)
-  },[initialFilter])
-
-  useEffect(() => {
-    setFilteredData(rawData)
-  },[rawData])
-
+  //초기 헤더 설정 기능
+  let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
+  const [tableHeaderVals, setTableHeaderVals] = useState([]);
+  // -- 아예 삭제할 컬럼 설정
   useEffect(() => {
     const deleteKey = 'id'
     headers = headers.filter(function (el) {
@@ -198,39 +156,14 @@ const QueryTable = ({
     setTableHeaderVals(headers)
   },[rawData])
 
-  useEffect(() => {
-    if (filteredData.length == 1) {
-      console.log('검색결과 하나임')
-      if (directQuery && setFindOneResult && typeof setFindOneResult == "function") {
-         setFindOneResult(filteredData[0])
-         console.log('검색결과하나입력')
-         dispatch(onDialogOpen(false, 'client_' + frameNo))
-      }
-    }
-  },[filteredData])
 
-  useEffect(() => {
-    console.log('필터실행중')
-    if (filterKeyword !== null && filterKeyword !== undefined && filterKeyword !== ''){
-      setFilteredData(filterArrayBySearchKeyword(filterKeyword, rawData, primaryKey))
-
-    } else {
-      console.log('엘스실행됨')
-      setFilteredData(rawData)
-    }
-  },[filterKeyword, rawData])
-
-  useEffect(() => {
-    if (updated) {
-      setShowUpdatedSign(true)
-      setTimeout(() => {
-        setShowUpdatedSign(false)
-        setFixedVals([])
-      }, 3000);
-      setUpdated(false)
-    }
-  },[updated])
-  
+  //각 컬럼 성격 설정 기능
+  const [hided, setHided]                     = useState([]);
+  const [fixableCols, setFixableCols]         = useState([]);
+  const [primaryKey, setPrimaryKey]           = useState('');
+  const [inputCols, setInputCols]             = useState([]);
+  const [calValueCols, setCalValueCols]       = useState([]);
+  const [queryCols, setQueryCols]             = useState([]);
   useEffect(() => {
     let tmpPrimaryKey = ''
     let tmpDefaultHided = []
@@ -238,7 +171,6 @@ const QueryTable = ({
     let tmpDefaultInput = []
     let tmpCalValueCols = []
     let tmpQueryCols    = []
-
     Object.keys(colAttr).map(key => {
       if(colAttr[key].defaultHided){
         tmpDefaultHided.push(key)
@@ -258,7 +190,6 @@ const QueryTable = ({
       if(colAttr[key].query){
         tmpQueryCols.push(key)
       }
-
     })
     setHided(tmpDefaultHided)
     setFixableCols(tempFixableCols)
@@ -268,24 +199,66 @@ const QueryTable = ({
     setQueryCols(tmpQueryCols)
   },[])
 
+
+
+  //체크박스 체크 기능
+  const [allSelected, setAllselected]         = useState(false);
   const isChecked     = name => selected.indexOf(name)    !== -1;
+
+
+  const [showUpdatedSign, setShowUpdatedSign] = useState(false);
+
+
+  useEffect(() => {
+    setFilteredData(rawData)
+  },[rawData])
+
+
+
+  useEffect(() => {
+    if (filteredData.length == 1) {
+      console.log('검색결과 하나임')
+      if (directQuery && setFindOneResult && typeof setFindOneResult == "function") {
+         setFindOneResult(filteredData[0])
+         console.log('검색결과하나입력')
+         dispatch(onDialogOpen(false, 'client_' + frameNo))
+      }
+    }
+  },[filteredData])
+
+
+  //업데이트 기능
+  useEffect(() => {
+    if (updated) {
+      setShowUpdatedSign(true)
+      setTimeout(() => {
+        setShowUpdatedSign(false)
+        setFixedVals([])
+      }, 3000);
+      setUpdated(false)
+    }
+  },[updated])
+  
+
+
   const isHidedCulumn = name => hided.indexOf(name)       !== -1;
   const isFixable     = name => fixableCols.indexOf(name) !== -1;
   const isInput       = name => inputCols.indexOf(name) !== -1;
   const isCalValue    = name => calValueCols.indexOf(name) !== -1;
   const isQuery       = name => queryCols.indexOf(name) !== -1;
 
+  
 
-
-
-  const onHidedCulumn   = selectMultipleStates
-  const handleClickFlag = selectMultipleStates
-  const unhide          = unSelectMultipleStates
-
-  const checkColFixablity = (key) => {
-    return {
-      'supplierCode' : true
-    }[key]
+  //픽스모드 관련기능
+  const [fixMode, setFixMode]                 = useState(false);
+  const [fixableCells, setFixableCells]       = useState({});
+  const onSetfixMode = () => {
+    if (fixModeAble) {
+      fixMode ? setFixMode(false) : setFixMode(true)
+    }
+    else if (!fixModeAble) {
+      setFixMode(false)
+    }
   }
   const checkColFixable = (index, header) => {
     let ox = false
@@ -308,20 +281,10 @@ const QueryTable = ({
     })
     return ox
   }
-  
-  const checkDefaultInputCol = (header) => {
 
-  }
-  
-  const onSetfixMode = () => {
-    if (fixModeAble) {
-      fixMode ? setFixMode(false) : setFixMode(true)
-    }
-    else if (!fixModeAble) {
-      setFixMode(false)
-    }
-  }
 
+
+  //컬럼 클릭 기능
   const onClickCols = (value, row, header) => {
     const tempObj = {
       value : value,
@@ -330,7 +293,6 @@ const QueryTable = ({
       header: header,
       primaryKey : primaryKey
     }
-
     let tempObj1 = {}
     tempObj1[primaryKey] = rawData[row][primaryKey]
 
@@ -338,7 +300,6 @@ const QueryTable = ({
     tempObj2.value  = value
     tempObj2.row    = row
     tempObj2.header = header
-    
     if (fixMode){
       const temp = {row : row, header : header}
       setFixableCells(temp)
@@ -348,6 +309,11 @@ const QueryTable = ({
     }
   }
 
+
+
+
+  //값 인풋 처리 기능
+  const [fixedVals, setFixedVals]             = useState([]);
   const onKeyPressOnInput = (e, index, header) => {
     if (e.key === "Enter") {
       const temp = {}
@@ -365,8 +331,6 @@ const QueryTable = ({
       )
     }
   }
-
-  
   const handleChangeInput = (e, index, header) => {
     setFilteredData(
       produce(filteredData, draft => {
@@ -375,6 +339,9 @@ const QueryTable = ({
     )
   }
 
+
+
+  //새로운 행 추가 기능
   const onAddNewBlank = () => {
     let tempObj = {}
     headers.map(header => {
@@ -386,7 +353,6 @@ const QueryTable = ({
       })
     )
   }
-
   const handleChangeNewAddedInput = (event, index, header) => {
     const temp = event.target.value
     setAddedNew(
@@ -395,28 +361,32 @@ const QueryTable = ({
       })
     )
   }
-
-
-
   const onKeyPressOnNewAddedInput = (e, header) => {
   }
 
+
+  //헤더 메뉴 기능
+  const [menuActivated, setMenuActivated]     = useState('');
+  const [menuAnchoredEl, setMenuAnchoredEl]   = useState(null);
   const onMouseHover = (event, header) => {
     setMenuAnchoredEl(event.currentTarget)
     setMenuActivated(header)
   }
-
-  const openMenu = (e, header) =>{
-  }
-
   const checkMenuActivated = (header) => {
     return (header, menuActivated == header)
   }
-  
   const handleMenuClose = () => {
     setMenuActivated(null)
   }
+  const onHidedCulumn   = selectMultipleStates
+  const handleClickFlag = selectMultipleStates
+  const unhide          = unSelectMultipleStates
 
+
+
+  //정렬 기능
+  const [order, setOrder]                     = useState('asc');
+  const [orderBy, setOrderBy]                 = useState('calories');
   const stableSort = (array, comparator) => {
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
@@ -426,13 +396,11 @@ const QueryTable = ({
     });
     return stabilizedThis.map(el => el[0]);
   }
-
   const getComparator = (order, orderBy) => {
     return order === 'desc'
       ? (a, b) => descendingComparator(a, b, orderBy)
       : (a, b) => -descendingComparator(a, b, orderBy);
   }
-
   const descendingComparator = (a, b, orderBy) => {
     if (b[orderBy] < a[orderBy]) {
       return -1;
@@ -443,15 +411,24 @@ const QueryTable = ({
     return 0;
   }
 
+  //페이지 기능
+  const [page, setPage]                       = useState(0);
+  const [rowsPerPage, setRowsPerPage]         = useState(10);
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
-
   const handleChangeRowsPerPage = event => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
+
+
+  //CoppiedNew 기능
+  const [addCopiedNewDialogOpen, 
+    setAddCopiedNewDialogOpen]          = useState(false)
+  const [howManyCopiedNew, 
+    setHowManyCopiedNew]                = useState(null)
   const setAddCopiedNew = (qty) => {
     setHowManyCopiedNew(qty)
 
@@ -469,7 +446,6 @@ const QueryTable = ({
   const onClickCopiedNew = () => {
     setAddCopiedNewDialogOpen(true)
   }
-
   const addCopiedNewNoDialogAttr = {
     question : 'How many new copied?',
     openState : addCopiedNewDialogOpen,
@@ -478,10 +454,27 @@ const QueryTable = ({
     setAnswer : setAddCopiedNew
   }
 
+
+
+  //검색어 필터 기능
   const onInputFilterKeyword = (e) => {
     e.preventDefault(); 
     setFilterKeyword(e.target.value)
   }
+  useEffect(() => {
+    setFilterKeyword(initialFilter)
+  },[initialFilter])
+  useEffect(() => {
+    console.log('필터실행중')
+    if (filterKeyword !== null && filterKeyword !== undefined && filterKeyword !== ''){
+      setFilteredData(filterArrayBySearchKeyword(filterKeyword, rawData, primaryKey))
+    } else {
+      console.log('엘스실행됨')
+      setFilteredData(rawData)
+    }
+  },[filterKeyword, rawData])
+
+
 
   return (
     <React.Fragment>
@@ -497,14 +490,12 @@ const QueryTable = ({
           )
         })}
       </div>
-      {/* <SearchBar> */}
         <Input 
           id = 'sea'
           label  = 'dfe'
           onChange = {(e) => {onInputFilterKeyword(e)}}
           value    = {filterKeyword}
         ></Input>
-      {/* </SearchBar> */}
       {fixModeAble ? <button onClick = { onSetfixMode }>fixmode</button> :''}
       <TableContainer>
         <StyledTable size = {'small'}>
@@ -520,13 +511,6 @@ const QueryTable = ({
                   return (
                     <TableCell>
                       {header}
-                      {/* <IconButton
-                        key="close"
-                        aria-label="Close"
-                        color="inherit"
-                        onClick = {(event) => onMouseHover(event, header)}>
-                        <ExpandMore />
-                      </IconButton> */}
                       <Menu
                         key="menu"
                         open={checkMenuActivated(header)}

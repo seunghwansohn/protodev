@@ -2,6 +2,8 @@ const db = require("../models");
 const config = require("../config/auth.config");
 const Supplier = db.supplier;
 const SupplierNote = db.supplierNote;
+const getIncludeName = require("../lib/getIncludeName");
+
 
 exports.addNew = (req, res) => {
   const Arr = req.body
@@ -55,7 +57,7 @@ exports.loadNotes = (req, res) => {
 };  
 
 
-exports.load = (req, res) => {
+exports.load1 = (req, res) => {
     Supplier.findAll()
         .then(suppliers => {
             result = suppliers
@@ -64,6 +66,15 @@ exports.load = (req, res) => {
     })
 };
   
+exports.load = (req, res) => {
+    let primaryKey = 'supplierCode'
+    let findingAttr = []
+    let includingAttr = []
+    getIncludeName(Supplier, Supplier, primaryKey, findingAttr, includingAttr).then(items => {
+      res.status(200).send(items)
+    })
+};
+
 exports.update = async (req, res) => {
     let data = req.body
     let { ref,vals } = data

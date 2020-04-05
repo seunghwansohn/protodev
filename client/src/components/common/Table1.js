@@ -227,7 +227,7 @@ const STTable = ({
   },[filteredData])
 
 
-
+  //업데이트 기능
   useEffect(() => {
     if (updated) {
       setShowUpdatedSign(true)
@@ -247,16 +247,6 @@ const STTable = ({
   const isCalValue    = name => calValueCols.indexOf(name) !== -1;
   const isQuery       = name => queryCols.indexOf(name) !== -1;
 
-
-
-
-
-
- 
-  
-  const checkDefaultInputCol = (header) => {
-
-  }
   
 
   //픽스모드 관련기능
@@ -624,12 +614,6 @@ const STTable = ({
                             return(
                               <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], index, header)}}>
                                 {row[header]}
-                              </StyledTableCell>
-                            )
-                        }else if (isQueryCol) {
-                            return(
-                              <StyledTableCell onClick = {() => {onClickCols(row[header], index, header)}}>
-                                맞어맞어{row[header]}
                               </StyledTableCell>
                             )
                         }else if (true) {

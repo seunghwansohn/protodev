@@ -11,6 +11,9 @@ import Button                     from '@material-ui/core/Button';
 import { onDialogOpen }      from '../../modules/dialogs'
 
 
+import Supplier from '../../containers/supplier'
+
+
 import DialogST             from './DialogST'
 
 import {generateRandom}     from '../../lib/common';
@@ -140,11 +143,11 @@ const QueryInput = ({
     }
     
     const DialogsAttr = {
-        client : {
-            title : 'client_' + frameNo,
+        supplier : {
+            title : 'supplier_' + frameNo,
             maxWidth : 'xl' ,
             funcs : queryHeaderfuncs(),
-            open : checkOpened('client_' + frameNo),
+            open : checkOpened('supplier_' + frameNo),
             table : {
                 tableButton : [
                     {
@@ -155,8 +158,8 @@ const QueryInput = ({
                     },
                 ],
                 setFindOneResult : setFoundResult,
-                frameNo : 'client_' + frameNo,
-                initialFilter : filter ? filter.client : '',
+                frameNo : 'supplier_' + frameNo,
+                initialFilter : filter ? filter.supplier : '',
                 directQuery : true
             },
         }
@@ -215,13 +218,13 @@ const QueryInput = ({
   return (
     <React.Fragment>
         두두두
-        <Button onClick = {() => {openDialog(DialogsAttr.client.title)}}>클릭</Button>
-        <DialogST attr = {DialogsAttr.client} motherNo = {frameNo} motherType = {type}>
-          {/* <Client
-              motherType          = {type}
-              motherNo            = {frameNo} 
-              subTableAttr        = {DialogsAttr.client.table}
-          ></Client> */}
+        <Button onClick = {() => {openDialog(DialogsAttr.supplier.title)}}>클릭</Button>
+        <DialogST attr = {DialogsAttr.supplier} motherNo = {frameNo} motherType = {type}>
+          <Supplier
+            motherType          = {type}
+            motherNo            = {frameNo} 
+            subTableAttr        = {DialogsAttr.supplier.table}
+          ></Supplier>
         </DialogST>
 
     </React.Fragment>
