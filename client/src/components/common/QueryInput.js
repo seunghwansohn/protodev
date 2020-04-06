@@ -30,9 +30,9 @@ import styled   from 'styled-components';
 const TextFieldST = styled(TextField)`
   background-color: 
     ${props => {
-      if (props.type == 'fixable' && props.fixMode == false) {
+      if (props.isSelected == true) {
         return '#ffffff'
-      } else if (props.type == 'fixable' && props.fixMode == true){ 
+      } else { 
         return '#ffe6ff'}}};
   label.Mui-focused {
     color: green;
@@ -68,7 +68,6 @@ const QueryInput = ({
 }) => {
   const dispatch = useDispatch()
 
-  console.log(dialog)
   
   //개체 기본 속성
   const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
@@ -76,7 +75,7 @@ const QueryInput = ({
   const containerNo = type + '_' + frameNo
   const dataType = dialog
 
-  console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+  // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
   //쿼리헤더관련
@@ -163,6 +162,7 @@ const QueryInput = ({
                     func : function(frameNo, reqNo, selected){
                       //inser버튼 클릭됐을 때 실행할 명령
                       dispatch(actSelect(frameNo, reqNo, selected))
+                      dispatch(onDialogOpen(false, 'supplier_' + frameNo))
                     },
                     mother : containerNo
                 },
@@ -175,7 +175,6 @@ const QueryInput = ({
       }
     }
 
-    console.log(foundResult)
 
 
   // const reqWhere = () =>{
@@ -233,8 +232,8 @@ const QueryInput = ({
     }
   },[selected])
 
+
   console.log(selected)
-  console.log(isSelected)
 
   const openDialog = (type, info) => {
     setReqNo(generateRandom())
@@ -251,15 +250,15 @@ const QueryInput = ({
 
   const [inputVal, setInputVal]              = useState('');
 
-  console.log(inputVal)
   return (
     <React.Fragment>
       <Button onClick = {() => {openDialog(DialogsAttr.supplier.title)}}>클릭</Button>
-      <Input 
+      <TextFieldST 
         onChange = {(event) => handleChangeInput(event)} 
         // key = {header }
         value = {inputVal} 
         onKeyPress = {(event) => onKeyPressOnInput(event)}
+        isSelected = {isSelected}
       />
       <DialogST attr = {DialogsAttr.supplier} motherNo = {frameNo} motherType = {type}>
         <Supplier

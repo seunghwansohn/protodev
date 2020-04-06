@@ -32,18 +32,15 @@ function reducer (state = initialState, action) {
     switch (action.type) {
         case INIT_LOAD_SUCCESS:
             return produce(state, draft =>{
-                console.log()
             })
 
         case INIT_LOAD_FAILURE:
             return produce(state, draft =>{
-                console.log(action)
             })
         
         case SET_QUERY:
             return produce(state, draft =>{
                 const {frameNo, type, title, value} = action.payload
-                console.log(action)
                 draft[frameNo] = draft[frameNo] ? draft[frameNo] : {}
                 draft[frameNo][type]  =draft[frameNo][type] ? draft[frameNo][type] : {}
                 draft[frameNo][type][title] = value
@@ -51,7 +48,6 @@ function reducer (state = initialState, action) {
         case SET_SELECT:
             return produce(state, draft =>{
                 const {frameNo, reqNo, selected} = action.payload
-                console.log(action.payload)
                 draft[frameNo] = draft[frameNo] ? draft[frameNo] : {}
                 draft[frameNo][reqNo]  = selected ? selected : {}
                 // draft[frameNo][type][title] = value

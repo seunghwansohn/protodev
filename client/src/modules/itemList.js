@@ -89,7 +89,6 @@ function reducer (state = initialState, action) {
             })
         case SET_UPDATE:
             return produce(state, draft => {
-                console.log(action.payload)
             })
 
         default:

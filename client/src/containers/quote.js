@@ -65,7 +65,7 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
     const type = 'quoteContainer'
     const containerNo = type + '_' + frameNo
-    console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+    // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
     //쿼리헤더관련

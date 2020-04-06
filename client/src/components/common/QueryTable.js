@@ -575,7 +575,6 @@ const QueryTable = ({
                       let isQueryCol      = isQuery(header)
                       let isColumnHided = isHidedCulumn(header)
 
-                      console.log(isQueryCol)
                       if (!isColumnHided) {
                         if (fixable && isfixableCol) {
                           return (

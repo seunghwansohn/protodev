@@ -45,7 +45,6 @@ import {getIncludingKeys,
 const SupplierContainer = ({motherType, motherNo, reqNo, subTableAttr}) => {
     const dispatch = useDispatch();
 
-    console.log(reqNo)
 
     //개체 기본 속성
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
@@ -178,7 +177,6 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subTableAttr}) => {
         getRawData()
     },[])
 
-    console.log(primaryKey)
 
     
     //Api로부터 findingKeys를 받은 뒤

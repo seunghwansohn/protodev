@@ -476,8 +476,7 @@ const STTable = ({
     }
   },[filterKeyword, rawData])
 
-  console.log(filteredData)
-  console.log(reqNo)
+
   return (
     <React.Fragment>
 

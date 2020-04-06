@@ -66,11 +66,9 @@ const InputST = ({
     setState(event.target.value)
     let temp = {}
     let tempArr = fixedData
-    console.log(event.target.value)
     temp[title] = event.target.value
     setFixedData(
       produce(fixedData, draft => {
-        console.log(fixedData)
         fixedData[title] = event.target.value
       })
     )

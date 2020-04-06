@@ -149,7 +149,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
       let keys = Object.keys(clicked)
       if (keys.length > 0) {
         if (includingKeys.price.includes(clicked.header)) {
-          console.log('가격임')
           dispatch(actClickedTableCol(clickedCol))
           dispatch(loadAccount(clickedCol))
           dispatch(onDialogOpen(true, detailQuery, clickedCol))
@@ -255,7 +254,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         flagAble : true,
         fixModeAble : true,
         queryColSelect : function(){
-            console.log('파하하')
         },
         colAttr : {
             itemCode : {

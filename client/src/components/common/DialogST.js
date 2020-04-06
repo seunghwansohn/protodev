@@ -45,7 +45,6 @@ export default function MaxWidthDialog(props) {
     }
   };
   
-  console.log(open)
 
   const optionFunc = function () { 
     const temp = {}

@@ -40,7 +40,7 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
     const type = 'clientContainer'
     const containerNo = type + '_' + frameNo
     const dataType = 'client'
-    console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 (', motherType, ', ', motherNo, ')')
+    // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 (', motherType, ', ', motherNo, ')')
 
 
     //다이얼로그 관련
@@ -135,7 +135,6 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
 
     const getRawData = async () => {
         await axios.get('/api/' + dataType + '/load').then(res => {
-            console.log(res)
             setPrimaryKey(res.data.primaryKey)
             setIncludingKeys(getIncludingKeys(res.data.result))
             setTableRawData(withoutIncludingKeys(res.data.result))
@@ -148,7 +147,6 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
     },[])
 
 
-    console.log(tableRawData)
     useEffect(() => {
         if (Object.keys(clickedCol).length > 0) {
             dispatch(actClickedTableCol(clickedCol))
