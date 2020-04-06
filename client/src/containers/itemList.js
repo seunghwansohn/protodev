@@ -24,8 +24,8 @@ import ButtonHeader from '../components/common/ButtonHeader'
 
 
 
-import spacelize                                from '../lib/spacelize'
-import {generateRandom}                         from '../lib/common';
+import spacelize                      from '../lib/spacelize'
+import {generateRandom}               from '../lib/common';
 
 import ItemAdd      from '../components/ItemAdd'
 // import ItemQuery from '../components/ItemQuery'
@@ -275,12 +275,12 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
             weight : {
                 fixable : true,
                 defaultHided : true,
-                validate : 'number_5'
+                validate : 'number'
             },
             width : {
                 fixable : true,
                 defaultHided : true,
-                validate : 'number_5'
+                validate : 'number'
             },
             depth : {
                 fixable : true,

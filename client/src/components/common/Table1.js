@@ -38,10 +38,12 @@ import QueryInput       from './QueryInput';
 import TextField from '@material-ui/core/TextField';
 
 
-import spacelize                               from '../../lib/spacelize'
-import filterArrayBySearchKeyword              from '../../lib/filterArrayBySearchKeyword'
+import spacelize                        from '../../lib/spacelize'
+import filterArrayBySearchKeyword       from '../../lib/filterArrayBySearchKeyword'
 import {selectMultipleStates, 
-  unSelectMultipleStates}                      from '../../lib/tableFuncs'
+  unSelectMultipleStates}               from '../../lib/tableFuncs'
+  import {hasWhiteSpace}                from '../../lib/validation';
+
 
 import styled   from "styled-components";
 import produce  from 'immer'
@@ -482,7 +484,11 @@ const STTable = ({
 
   const checkValid = {
     number : value => value && isNaN(Number(value)) ? 'Must be a number' : undefined,
-    // string : value => value && 
+    code   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
+    string   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
+    percent   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
+    decimal : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined
+
   }
 
   //validation 기능
@@ -694,7 +700,7 @@ const STTable = ({
                         <StyledTableCell>
                           <Input
                             value      = {row[header]}
-                            error      = {checkValid.number(row[header])} 
+                            error      = {valid ? checkValid[valid](row[header]) : false} 
                             onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                             onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
                           />
