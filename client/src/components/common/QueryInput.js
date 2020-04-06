@@ -155,22 +155,22 @@ const QueryInput = ({
         funcs : queryHeaderfuncs(),
         open : checkOpened('supplier_' + frameNo),
         table : {
-            tableButton : [
-                {
-                    title : 'insert',
-                    type  : 'select',
-                    func : function(frameNo, reqNo, selected){
-                      //inser버튼 클릭됐을 때 실행할 명령
-                      dispatch(actSelect(frameNo, reqNo, selected))
-                      dispatch(onDialogOpen(false, 'supplier_' + frameNo))
-                    },
-                    mother : containerNo
-                },
-            ],
-            setFindOneResult : setFoundResult,
-            frameNo : 'supplier_' + frameNo,
-            initialFilter : filter ? filter.supplier : '',
-            directQuery : true
+          tableButton : [
+            {
+              title : 'insert',
+              type  : 'select',
+              func : function(frameNo, reqNo, selected){
+                //inser버튼 클릭됐을 때 실행할 명령
+                dispatch(actSelect(frameNo, reqNo, selected))
+                dispatch(onDialogOpen(false, 'supplier_' + frameNo))
+              },
+              mother : containerNo
+            },
+          ],
+          setFindOneResult : setFoundResult,
+          frameNo : 'supplier_' + frameNo,
+          initialFilter : filter ? filter.supplier : '',
+          directQuery : true
         },
       }
     }

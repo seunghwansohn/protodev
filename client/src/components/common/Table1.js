@@ -29,6 +29,9 @@ import { ExpandLess,
   FilterDrama}          from '@material-ui/icons';
 
 import InputDialog      from '../common/InputDialog';
+import STInput          from '../common/Input';
+
+
 import QueryInput       from './QueryInput';
 
 
@@ -477,6 +480,23 @@ const STTable = ({
   },[filterKeyword, rawData])
 
 
+  const checkValid = {
+    number : value => value && isNaN(Number(value)) ? 'Must be a number' : undefined,
+    // string : value => value && 
+  }
+
+  //validation 기능
+  const getValid = (header) => {
+    let valid = ''
+    Object.keys(colAttr).map(key => {
+      if(header == key) {
+        valid = colAttr[key].validate
+      }
+    })
+    return valid
+  }
+
+
   return (
     <React.Fragment>
 
@@ -654,7 +674,8 @@ const STTable = ({
                 {headers.map(header => {
                   const isColumnHided = isHidedCulumn(header)
                   let   isQueryCol    = isQuery(header)
-
+                  let   valid         = getValid(header)
+                  console.log(valid)
                   if (!isColumnHided && header !== 'id') {
                     if (isQueryCol) {
                       return(
@@ -672,7 +693,8 @@ const STTable = ({
                       return(
                         <StyledTableCell>
                           <Input
-                            value      = {row[header]} 
+                            value      = {row[header]}
+                            error      = {checkValid.number(row[header])} 
                             onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                             onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
                           />

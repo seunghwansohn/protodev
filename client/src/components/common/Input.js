@@ -58,20 +58,21 @@ const InputST = ({
   required,
   variant,
   fullWidth,
-
+  error,
   validation
 }) => {
 
   const onChangeValue = (event, func) => {
-    setState(event.target.value)
-    let temp = {}
-    let tempArr = fixedData
-    temp[title] = event.target.value
-    setFixedData(
-      produce(fixedData, draft => {
-        fixedData[title] = event.target.value
-      })
-    )
+    // setState(event.target.value)
+    // let temp = {}
+    // let tempArr = fixedData
+    // temp[title] = event.target.value
+    // setFixedData(
+    //   produce(fixedData, draft => {
+    //     fixedData[title] = event.target.value
+    //   })
+    // )
+    error(state)
   }
   const onKeyPressInput = (event) => {
     if (event.key == "Enter") {
@@ -85,6 +86,7 @@ const InputST = ({
       )
     }
   }
+
 
   return (
     <React.Fragment>
@@ -102,7 +104,7 @@ const InputST = ({
         onChange = {(event) => onChangeValue(event, setState)}
         onKeyPress = {(event) => onKeyPressInput(event)}
 
-        disabled = {type == 'fixable' && fixMode == true ? false : true}
+        // disabled = {type == 'fixable' && fixMode == true ? false : true}
 
       />
     </React.Fragment>
