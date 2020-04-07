@@ -358,7 +358,10 @@ const STTable = ({
   // const checkValid = (row, header) => {
   //   console.ro
   // }
+
+      //---HelperText 및 error 구현기능
   const [helperTexts, setHelperTexts] = useState([])
+  const [newAddedError, setNewAddedError] = useState([])
 
   const checkValid = (index, header, value) => {
     let tempArr = []
@@ -372,16 +375,36 @@ const STTable = ({
       maxValue5 : val => val && maxValue(val, 5) ? 'Value is exceed maximum' : undefined
     }
     colAttr[header].validate.map(str => {
-      tempArr.push(funcs[str](value))
+      if (funcs[str](value) !== undefined) {
+        tempArr.push(funcs[str](value))
+        setNewAddedError(    
+          produce(newAddedError, draft => {
+            draft[index][header] = true
+          })
+        )
+      } else {
+        setNewAddedError(    
+          produce(newAddedError, draft => {
+            draft[index][header] = false
+          })
+        )
+      }
+
     })
     let joinedStr = tempArr.join(', ')
-
     setHelperTexts(    
       produce(helperTexts, draft => {
         draft[index][header] = joinedStr
       })
     )
+    // setNewAddedError(    
+    //   produce(newAddedError, draft => {
+    //     draft[index][header] = true
+    //   })
+    // )
   }
+
+  console.log(newAddedError)
   const getValid = (header) => {
     let valid = ''
     Object.keys(colAttr).map(key => {
@@ -391,7 +414,7 @@ const STTable = ({
     })
     return valid
   }
-
+//  -- 빈 새열 추가 기능
   const onAddNewBlank = () => {
     let tempObj = {}
     headers.map(header => {
@@ -407,6 +430,11 @@ const STTable = ({
         draft.push({})
       })
     )
+    setNewAddedError(
+      produce(newAddedError, draft => {
+        draft.push({})
+      })
+    )
   }
   const handleChangeNewAddedInput = (event, index, header) => {
     const temp = event.target.value
@@ -415,11 +443,6 @@ const STTable = ({
         draft[index][header] = temp
       })
     )
-    // setHelperTexts(
-    //   produce(helperTexts, draft => {
-    //     draft[index][header] = checkValid(index, header, event.target.value)
-    //   })
-    // )
     checkValid(index, header, event.target.value)
   }
 
@@ -427,7 +450,6 @@ const STTable = ({
   }
 
 
-  console.log(helperTexts)
 
 
 
@@ -721,7 +743,7 @@ const STTable = ({
                 {headers.map(header => {
                   const isColumnHided = isHidedCulumn(header)
                   let   isQueryCol    = isQuery(header)
-                  // let   valid         = getValid(header)
+                  let   valid         = getValid(header)
                   if (!isColumnHided && header !== 'id') {
                     if (isQueryCol) {
                       return(
@@ -741,10 +763,10 @@ const STTable = ({
                         <StyledTableCell>
                           <MiniHelperText
                             value      = {row[header]}
-                            // error      = {valid ? checkValid[valid](row[header]) : false} 
+                            error      = {newAddedError[index][header]} 
                             onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                             onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
-                            helperText =  {helperTexts[index][header]}
+                            helperText = {helperTexts[index][header]}
 
                           />
                         </StyledTableCell>
