@@ -12,6 +12,12 @@ import { onDialogOpen }           from '../../modules/dialogs'
 import { actSelect }               from '../../modules/query'
 import Input            from '@material-ui/core/Input';
 
+import FilledInput from '@material-ui/core/FilledInput';
+import FormControl from '@material-ui/core/FormControl';
+import FormHelperText from '@material-ui/core/FormHelperText';
+import InputLabel from '@material-ui/core/InputLabel';
+import OutlinedInput from '@material-ui/core/OutlinedInput';
+
 
 
 import Supplier from '../../containers/supplier'
@@ -60,12 +66,15 @@ const TextFieldST = styled(TextField)`
 `
 
 
-const QueryInput = ({
+const BasicFormControl = ({
   motherNo,
   motherType,
   dialog,
+  value,
   selectFunc,
-  helperText
+  helperText,
+  onChange,
+  onKeyPress
 }) => {
   const dispatch = useDispatch()
 
@@ -253,27 +262,15 @@ const QueryInput = ({
 
   return (
     <React.Fragment>
-      {/* <Button onClick = {() => {openDialog(DialogsAttr.supplier.title)}}>클릭</Button> */}
-      <TextFieldST 
-        onChange = {(event) => handleChangeInput(event)} 
-        // key = {header }
-        value = {inputVal} 
-        onKeyPress = {(event) => onKeyPressOnInput(event)}
-        isSelected = {isSelected}
-        helperText = {helperText}
-      />
-      <DialogST attr = {DialogsAttr.supplier} motherNo = {frameNo} motherType = {type}>
-        <Supplier
-          motherType          = {type}
-          motherNo            = {frameNo}
-          reqNo               = {reqNo}
-          subTableAttr        = {DialogsAttr.supplier.table}
-        ></Supplier>
-      </DialogST>
+
+      <FormControl>
+        <Input id="component-disabled" value={'elkjg elkjg'}/>
+        <FormHelperText style = {{fontSize : '10px'}}>{helperText}</FormHelperText>
+      </FormControl>
 
     </React.Fragment>
   )
 }
 
 
-export default QueryInput
+export default BasicFormControl

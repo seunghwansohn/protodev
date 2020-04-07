@@ -32,6 +32,8 @@ import InputDialog      from '../common/InputDialog';
 import STInput          from '../common/Input';
 
 
+import BasicFormControl          from './BasicFormControl';
+
 import QueryInput       from './QueryInput';
 
 
@@ -98,6 +100,12 @@ const StyledInput = styled(Input)`
   width: ${props => props.width ? props.width : 'auto'};
   &:hover {
     background-color : #eef534;
+  }
+`
+const MiniHelperText = styled(TextField)`
+  .MuiFormHelperText-root {
+    font-size : 11px;
+    color : red;
   }
 `
 
@@ -392,7 +400,7 @@ const STTable = ({
     setAddedNew(
       produce(addedNew, draft => {
         draft.push(tempObj)
-      })
+      }) 
     )
     setHelperTexts(
       produce(helperTexts, draft => {
@@ -712,7 +720,6 @@ const STTable = ({
                   const isColumnHided = isHidedCulumn(header)
                   let   isQueryCol    = isQuery(header)
                   let   valid         = getValid(header)
-                  console.log(index, header)
                   if (!isColumnHided && header !== 'id') {
                     if (isQueryCol) {
                       return(
@@ -730,15 +737,25 @@ const STTable = ({
                     }else {
                       return(
                         <StyledTableCell>
-                          <TextField
+                          <MiniHelperText
                             value      = {row[header]}
                             // error      = {valid ? checkValid[valid](row[header]) : false} 
                             onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                             onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
-                            helperText =  "Incorrect entry."
+                            helperText =  {helperTexts[index][header]}
 
                           />
                         </StyledTableCell>
+                        // <StyledTableCell>
+                        //   <BasicFormControl
+                        //     value      = {row[header]}
+                        //     // error      = {valid ? checkValid[valid](row[header]) : false} 
+                        //     onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
+                        //     onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
+                        //     helperText =  {helperTexts[index][header]}
+
+                        //   />
+                        // </StyledTableCell>
                       )
                     }
                   }
