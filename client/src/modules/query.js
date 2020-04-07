@@ -58,13 +58,13 @@ function reducer (state = initialState, action) {
         case SET_FRAME:
             return produce(state, draft =>{
                 let frameNo = action.payload
-                draft[frameNo] = {}
-                draft[frameNo].newAdded = []
+                draft[frameNo] = draft[frameNo] ? draft[frameNo] :{}
+                draft[frameNo].newAdded = draft[frameNo].newAdded ? draft[frameNo].newAdded:[]
             })
         case SET_REQNO:
             return produce(state, draft =>{
                 let {frameNo, reqNo} = action.payload
-                draft[frameNo][reqNo] = {}
+                draft[frameNo][reqNo] = draft[frameNo][reqNo] ? draft[frameNo][reqNo] : {}
             })
         case SET_ADD_NEW_BLANK:
             return produce(state, draft =>{
