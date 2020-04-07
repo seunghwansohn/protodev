@@ -374,9 +374,7 @@ const STTable = ({
     colAttr[header].validate.map(str => {
       tempArr.push(funcs[str](value))
     })
-    console.log(tempArr)
     let joinedStr = tempArr.join(', ')
-    console.log(joinedStr)
 
     setHelperTexts(    
       produce(helperTexts, draft => {
@@ -384,9 +382,6 @@ const STTable = ({
       })
     )
   }
-
-  console.log(helperTexts)
-
   const getValid = (header) => {
     let valid = ''
     Object.keys(colAttr).map(key => {
@@ -726,7 +721,7 @@ const STTable = ({
                 {headers.map(header => {
                   const isColumnHided = isHidedCulumn(header)
                   let   isQueryCol    = isQuery(header)
-                  let   valid         = getValid(header)
+                  // let   valid         = getValid(header)
                   if (!isColumnHided && header !== 'id') {
                     if (isQueryCol) {
                       return(
