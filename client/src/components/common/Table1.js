@@ -324,9 +324,6 @@ const STTable = ({
     }
   }
 
-
-
-
   //값 인풋 처리 기능
   const [fixedVals, setFixedVals]             = useState([]);
   const onKeyPressOnInput = (e, index, header) => {
@@ -362,25 +359,33 @@ const STTable = ({
   //   console.ro
   // }
   const [helperTexts, setHelperTexts] = useState([])
-  // }
-  //   number : value => value && isNaN(Number(value)) ? 'Must be a number' : undefined,
-  //   code   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
-  //   string   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
-  //   percent   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
-  //   decimal : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
-  //   minValue15 : value => value && maxValue(value, 15) ? 'Value is exceed maximum' : undefined,
-  //   maxValue5 : value => value && maxValue(value, 5) ? 'Value is exceed maximum' : undefined
-  // }
 
-  const checkValid = {
-    number : value => value && isNaN(Number(value)) ? 'Must be a number' : undefined,
-    code   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
-    string   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
-    percent   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
-    decimal : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
-    minValue15 : value => value && maxValue(value, 15) ? 'Value is exceed maximum' : undefined,
-    maxValue5 : value => value && maxValue(value, 5) ? 'Value is exceed maximum' : undefined
+  const checkValid = (index, header, value) => {
+    let tempArr = []
+    let funcs = {    
+      number : val => val && isNaN(Number(val)) ? 'Only Number' : undefined,
+      code   : val => val && hasWhiteSpace(val) ? 'Space(x)' : undefined,
+      string   : val => val && hasWhiteSpace(val) ? 'Space(x)' : undefined,
+      percent   : val => val && hasWhiteSpace(val) ? 'Space(x)' : undefined,
+      decimal : val => val && hasWhiteSpace(val) ? 'Space(x)' : undefined,
+      minValue15 : val => val && maxValue(val, 15) ? 'Value is exceed maximum' : undefined,
+      maxValue5 : val => val && maxValue(val, 5) ? 'Value is exceed maximum' : undefined
+    }
+    colAttr[header].validate.map(str => {
+      tempArr.push(funcs[str](value))
+    })
+    console.log(tempArr)
+    let joinedStr = tempArr.join(', ')
+    console.log(joinedStr)
+
+    setHelperTexts(    
+      produce(helperTexts, draft => {
+        draft[index][header] = joinedStr
+      })
+    )
   }
+
+  console.log(helperTexts)
 
   const getValid = (header) => {
     let valid = ''
@@ -415,12 +420,14 @@ const STTable = ({
         draft[index][header] = temp
       })
     )
-    setHelperTexts(
-      produce(helperTexts, draft => {
-        draft[index][header] = checkValid[colAttr[header].validate](event.target.value)
-      })
-    )
+    // setHelperTexts(
+    //   produce(helperTexts, draft => {
+    //     draft[index][header] = checkValid(index, header, event.target.value)
+    //   })
+    // )
+    checkValid(index, header, event.target.value)
   }
+
   const onKeyPressOnNewAddedInput = (e, header) => {
   }
 

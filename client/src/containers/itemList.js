@@ -260,79 +260,79 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
                 primary : true,
                 fixable : false,
                 defaultHided : false,
-                validate : 'code'
+                validate : ['code']
             },
             itemName : {
                 fixable : true,
                 defaultHided : false,
-                validate : 'string'
+                validate : ['string']
             },
             description : {
                 fixable : true,
                 defaultHided : true,
-                validate : 'string'
+                validate : ['string']
             },
             weight : {
                 fixable : true,
                 defaultHided : true,
-                validate : 'maxValue5'
+                validate : ['maxValue5']
             },
             width : {
                 fixable : true,
                 defaultHided : true,
-                validate : 'maxValue5'
+                validate : ['maxValue5']
             },
             depth : {
                 fixable : true,
                 defaultHided : true,
-                validate : 'maxValue5'
+                validate : ['maxValue5']
             },
             height : {
                 fixable : true,
                 defaultHided : true,
-                validate : 'maxValue5',
+                validate : ['maxValue5']
             },
             importTaxRate : {
                 fixable : true,
                 defaultHided : false,
-                validate : 'percent'
+                validate : ['percent']
             },
             maker : {
                 fixable : true,
                 defaultHided : false,
-                validate : 'string'
+                validate : ['string']
             },
             makerModelNo : {
                 fixable : true,
                 defaultHided : false,
-                validate : 'string'
+                validate : ['string']
             },
             supplierName : {
                 fixable : true,
                 defaultHided : false,
                 query : true,
                 dialog : getAsStrByColName('supplierName'),
-                validate : 'string'
+                validate : ['string']
             },
             VNPrice : {
                 fixable : true,
                 defaultHided : false,
-                validate : 'number',
+                validate : ['number'],
             },
             buyingPKR : {
                 fixable : true,
                 defaultHided : false,
-                validate : 'number',
+                validate : ['number'],
             },
             stkVVar : {
                 fixable : true,
                 defaultHided : true,
-                validate : 'decimal',
+                validate : ['decimal'],
             },
             stkCVar : {
                 fixable : true,
                 defaultHided : true,
-                validate : 'decimal',
+                validate : ['decimal'],
             },
             createdAt : {
                 fixable : false,
