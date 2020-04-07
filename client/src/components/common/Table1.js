@@ -42,7 +42,7 @@ import spacelize                        from '../../lib/spacelize'
 import filterArrayBySearchKeyword       from '../../lib/filterArrayBySearchKeyword'
 import {selectMultipleStates, 
   unSelectMultipleStates}               from '../../lib/tableFuncs'
-  import {hasWhiteSpace}                from '../../lib/validation';
+  import {hasWhiteSpace, maxValue}                from '../../lib/validation';
 
 
 import styled   from "styled-components";
@@ -349,6 +349,41 @@ const STTable = ({
 
 
   //새로운 행 추가 기능
+  //    ---새로운행 validation 기능
+  // const checkValid = (row, header) => {
+  //   console.ro
+  // }
+  const [helperTexts, setHelperTexts] = useState([])
+  // }
+  //   number : value => value && isNaN(Number(value)) ? 'Must be a number' : undefined,
+  //   code   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
+  //   string   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
+  //   percent   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
+  //   decimal : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
+  //   minValue15 : value => value && maxValue(value, 15) ? 'Value is exceed maximum' : undefined,
+  //   maxValue5 : value => value && maxValue(value, 5) ? 'Value is exceed maximum' : undefined
+  // }
+
+  const checkValid = {
+    number : value => value && isNaN(Number(value)) ? 'Must be a number' : undefined,
+    code   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
+    string   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
+    percent   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
+    decimal : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
+    minValue15 : value => value && maxValue(value, 15) ? 'Value is exceed maximum' : undefined,
+    maxValue5 : value => value && maxValue(value, 5) ? 'Value is exceed maximum' : undefined
+  }
+
+  const getValid = (header) => {
+    let valid = ''
+    Object.keys(colAttr).map(key => {
+      if(header == key) {
+        valid = colAttr[key].validate
+      }
+    })
+    return valid
+  }
+
   const onAddNewBlank = () => {
     let tempObj = {}
     headers.map(header => {
@@ -359,6 +394,11 @@ const STTable = ({
         draft.push(tempObj)
       })
     )
+    setHelperTexts(
+      produce(helperTexts, draft => {
+        draft.push({})
+      })
+    )
   }
   const handleChangeNewAddedInput = (event, index, header) => {
     const temp = event.target.value
@@ -367,9 +407,18 @@ const STTable = ({
         draft[index][header] = temp
       })
     )
+    setHelperTexts(
+      produce(helperTexts, draft => {
+        draft[index][header] = checkValid[colAttr[header].validate](event.target.value)
+      })
+    )
   }
   const onKeyPressOnNewAddedInput = (e, header) => {
   }
+
+
+  console.log(helperTexts)
+
 
 
   //헤더 메뉴 기능
@@ -482,25 +531,7 @@ const STTable = ({
   },[filterKeyword, rawData])
 
 
-  const checkValid = {
-    number : value => value && isNaN(Number(value)) ? 'Must be a number' : undefined,
-    code   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
-    string   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
-    percent   : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined,
-    decimal : value => value && hasWhiteSpace(value) ? 'Space is not allowed' : undefined
 
-  }
-
-  //validation 기능
-  const getValid = (header) => {
-    let valid = ''
-    Object.keys(colAttr).map(key => {
-      if(header == key) {
-        valid = colAttr[key].validate
-      }
-    })
-    return valid
-  }
 
 
   return (
@@ -681,7 +712,7 @@ const STTable = ({
                   const isColumnHided = isHidedCulumn(header)
                   let   isQueryCol    = isQuery(header)
                   let   valid         = getValid(header)
-                  console.log(valid)
+                  console.log(index, header)
                   if (!isColumnHided && header !== 'id') {
                     if (isQueryCol) {
                       return(
@@ -692,17 +723,20 @@ const STTable = ({
                             onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                             onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
                             selectFunc = {queryColSelect}
+                            helperText =  "Incorrect entry."
                           />
                         </StyledTableCell>
                       )
                     }else {
                       return(
                         <StyledTableCell>
-                          <Input
+                          <TextField
                             value      = {row[header]}
-                            error      = {valid ? checkValid[valid](row[header]) : false} 
+                            // error      = {valid ? checkValid[valid](row[header]) : false} 
                             onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                             onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
+                            helperText =  "Incorrect entry."
+
                           />
                         </StyledTableCell>
                       )

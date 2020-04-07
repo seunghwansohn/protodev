@@ -64,7 +64,8 @@ const QueryInput = ({
   motherNo,
   motherType,
   dialog,
-  selectFunc
+  selectFunc,
+  helperText
 }) => {
   const dispatch = useDispatch()
 
@@ -259,6 +260,7 @@ const QueryInput = ({
         value = {inputVal} 
         onKeyPress = {(event) => onKeyPressOnInput(event)}
         isSelected = {isSelected}
+        helperText = {helperText}
       />
       <DialogST attr = {DialogsAttr.supplier} motherNo = {frameNo} motherType = {type}>
         <Supplier

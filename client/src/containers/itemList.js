@@ -275,22 +275,22 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
             weight : {
                 fixable : true,
                 defaultHided : true,
-                validate : 'number'
+                validate : 'maxValue5'
             },
             width : {
                 fixable : true,
                 defaultHided : true,
-                validate : 'number'
+                validate : 'maxValue5'
             },
             depth : {
                 fixable : true,
                 defaultHided : true,
-                validate : 'number'
+                validate : 'maxValue5'
             },
             height : {
                 fixable : true,
                 defaultHided : true,
-                validate : 'number',
+                validate : 'maxValue5',
             },
             importTaxRate : {
                 fixable : true,
