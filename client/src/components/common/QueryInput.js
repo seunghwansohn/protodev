@@ -23,6 +23,8 @@ import {generateRandom}     from '../../lib/common';
 
 import axios                from '../../lib/api/axios'
 
+import {actSetReqNo}                from '../../modules/query'
+
 import produce  from 'immer'
 
 import styled   from 'styled-components';
@@ -65,7 +67,10 @@ const QueryInput = ({
   motherType,
   dialog,
   selectFunc,
-  helperText
+  helperText,
+  reqType,
+  value,
+  addedNo
 }) => {
   const dispatch = useDispatch()
 
@@ -91,7 +96,7 @@ const QueryInput = ({
   const queryVars         = useSelector(state => state.query[frameNo])
 
 
-
+  console.log(addedNo)
 
 
   const {filter} = queryVars ? queryVars : ''
@@ -160,9 +165,10 @@ const QueryInput = ({
             {
               title : 'insert',
               type  : 'select',
-              func : function(frameNo, reqNo, selected){
+              func : function(selected){
                 //inser버튼 클릭됐을 때 실행할 명령
-                dispatch(actSelect(frameNo, reqNo, selected))
+                console.log(selected)
+                dispatch(actSelect(frameNo, reqType, addedNo, selected))
                 dispatch(onDialogOpen(false, 'supplier_' + frameNo))
               },
               mother : containerNo
@@ -177,6 +183,11 @@ const QueryInput = ({
     }
 
 
+  // useEffect(()=> {
+  //   dispatch(actSetReqNo(frameNo, reqNo))
+  // },[])
+
+  console.log(frameNo, reqType)
 
   // const reqWhere = () =>{
   //   let tempObj = {}
@@ -222,13 +233,12 @@ const QueryInput = ({
   //     )
   //   }
   // }
-  const [reqNo, setReqNo] = useState(null)
 
   const selected          = useSelector(state => state.query[frameNo])
   const [isSelected, setIsSelected]               = useState(false);
   useEffect(() => {
     if (selected !== undefined) {
-      if(selected[reqNo] !== undefined)
+      if(selected[reqType] !== undefined)
       setIsSelected(true)
     }
   },[selected])
@@ -237,7 +247,6 @@ const QueryInput = ({
   console.log(selected)
 
   const openDialog = (type, info) => {
-    setReqNo(generateRandom())
     dispatch(onDialogOpen(true, type, info))
   }
 
@@ -246,18 +255,23 @@ const QueryInput = ({
   }
   
   const onKeyPressOnInput = (event) => {
-    
+    if(event.key == "Enter") {
+      console.log("엔터눌러짐")
+      dispatch(onDialogOpen(true, DialogsAttr.supplier.title))
+    }
+
   }
 
+  console.log(value)
   const [inputVal, setInputVal]              = useState('');
 
   return (
     <React.Fragment>
-      {/* <Button onClick = {() => {openDialog(DialogsAttr.supplier.title)}}>클릭</Button> */}
+      <Button onClick = {() => {openDialog(DialogsAttr.supplier.title)}}>클릭</Button>
       <TextFieldST 
         onChange = {(event) => handleChangeInput(event)} 
         // key = {header }
-        value = {inputVal} 
+        value = {value ? value : inputVal} 
         onKeyPress = {(event) => onKeyPressOnInput(event)}
         isSelected = {isSelected}
         helperText = {helperText}
@@ -266,7 +280,7 @@ const QueryInput = ({
         <Supplier
           motherType          = {type}
           motherNo            = {frameNo}
-          reqNo               = {reqNo}
+          reqType             = {reqType}
           subTableAttr        = {DialogsAttr.supplier.table}
         ></Supplier>
       </DialogST>

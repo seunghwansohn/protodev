@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {useDispatch}                from 'react-redux';
+import { connect, useSelector, useDispatch } from 'react-redux';
 
 import { makeStyles }   from '@material-ui/core/styles';
 
@@ -30,6 +30,10 @@ import { ExpandLess,
 
 import InputDialog      from '../common/InputDialog';
 import STInput          from '../common/Input';
+import {generateRandom}     from '../../lib/common';
+
+
+import { actSelect, actSetFrame, actAddNewBlankQuery}               from '../../modules/query'
 
 
 import BasicFormControl          from './BasicFormControl';
@@ -110,6 +114,8 @@ const MiniHelperText = styled(TextField)`
 `
 
 const STTable = ({
+  motherType,  
+  motherNo,    
   type,
   attr, 
   states, 
@@ -151,13 +157,16 @@ const STTable = ({
     colAttr, 
     tableButton, 
     setFindOneResult, 
-    frameNo, 
     initialFilter,
     directQuery,
     reqNo
   }                   = attr
 
   const dispatch = useDispatch()
+
+  //개체 기본 속성
+  const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
+  const containerNo = type + '_' + frameNo
 
   //초기 헤더 설정 기능
   let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
@@ -435,7 +444,9 @@ const STTable = ({
         draft.push({})
       })
     )
+    dispatch(actAddNewBlankQuery(frameNo))
   }
+
   const handleChangeNewAddedInput = (event, index, header) => {
     const temp = event.target.value
     setAddedNew(
@@ -446,9 +457,17 @@ const STTable = ({
     checkValid(index, header, event.target.value)
   }
 
-  const onKeyPressOnNewAddedInput = (e, header) => {
-  }
 
+  //쿼리인풋 기능
+  const querySelected     = useSelector(state => state.query[frameNo])
+
+  useEffect(() => {
+    dispatch(actSetFrame(frameNo))
+  },[frameNo])
+
+  const onKeyPressOnNewAddedInput = (e, header) => {
+    
+  }
 
 
 
@@ -721,7 +740,8 @@ const STTable = ({
                           <button onClick = {e => {
                             let selected = {}
                             selected[primaryKey] = filteredData[index][primaryKey]
-                            button.func(frameNo, reqNo, selected)
+                            console.log(selected)
+                            button.func(selected)
                           }}>
                             {button.title}
                           </button>
@@ -745,16 +765,24 @@ const STTable = ({
                   let   isQueryCol    = isQuery(header)
                   let   valid         = getValid(header)
                   if (!isColumnHided && header !== 'id') {
+
                     if (isQueryCol) {
+                      //자꾸 리렌더링되므로 이것도 state로 바꾸어야 함.
+                      
+                      console.log(index)
+                      // dispatch(actSelect(frameNo, reqNo, {}))
                       return(
                         <StyledTableCell>
                           <QueryInput
-                            value      = {'맞지맞어'+ row[header]}
-                            dialog     = {colAttr[header].dialog} 
+                            motherType  = {type}
+                            motherNo    = {frameNo}
+                            addedNo     = {index}
+                            value      = {querySelected[reqNo] ? querySelected[reqNo][header] : row[header]}                            dialog     = {colAttr[header].dialog} 
                             onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                             onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
                             selectFunc = {queryColSelect}
                             helperText =  "Incorrect entry."
+                            reqType      = {'newAdded'}
                           />
                         </StyledTableCell>
                       )
@@ -767,19 +795,8 @@ const STTable = ({
                             onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                             onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
                             helperText = {helperTexts[index][header]}
-
                           />
                         </StyledTableCell>
-                        // <StyledTableCell>
-                        //   <BasicFormControl
-                        //     value      = {row[header]}
-                        //     // error      = {valid ? checkValid[valid](row[header]) : false} 
-                        //     onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
-                        //     onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
-                        //     helperText =  {helperTexts[index][header]}
-
-                        //   />
-                        // </StyledTableCell>
                       )
                     }
                   }
