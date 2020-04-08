@@ -8,7 +8,6 @@ import TableBody    from '@material-ui/core/TableBody';
 import Viewer       from './viewer'
 import FindDialog   from './common/findDialog'
 import QuoteSubmit  from './quoteSubmit'
-import InputBase    from '@material-ui/core/InputBase';
 
 var pdfMake     = require('pdfmake/build/pdfmake.js');
 var pdfFonts    = require('pdfmake/build/vfs_fonts.js');

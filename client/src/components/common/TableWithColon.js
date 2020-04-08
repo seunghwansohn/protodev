@@ -1,4 +1,4 @@
-import React, {useState, useEffect}           from 'react'
+import React           from 'react'
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 
@@ -28,9 +28,9 @@ const TableWithColon = ({subject, arr, styleAttr}) => {
       const tempFunc = (index) => {
         let align = ['right', 'left', 'right', 'left']
         let temp = ''
-        if(index == 1) {
+        if(index === 1) {
           temp = {width : styleAttr[index], align : align[index], padding : 0, margin : 0}
-        } else if (index == 3) {
+        } else if (index === 3) {
           temp = {width : styleAttr[index], align : align[index], padding : 3, margin : 3}
         } else {
           temp = {width : styleAttr[index], align : align[index], padding : 0, margin : 0}

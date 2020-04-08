@@ -92,13 +92,13 @@ const QueryHeader = ({motherType, motherNo, funcs, queryHeaderProps}) => {
       <Grid container>
         {(function(){
           let returnArr = []
-          queryHeaderProps.map(arr => {
+          queryHeaderProps.map((arr, idx1) => {
             let returnChildren = []
-            arr.map(obj => {
+            arr.map((obj, idx2) => {
               if (obj.type == 'paper') {
                 returnChildren.push(
-                  <QueryPaper>
-                    <Grid Container className = {classes.root}>
+                  <QueryPaper key = {idx2}>
+                    <Grid container className = {classes.root}>
                       <Grid item xs = {5}>
                         {obj.title}
                       </Grid>
@@ -113,8 +113,8 @@ const QueryHeader = ({motherType, motherNo, funcs, queryHeaderProps}) => {
                 )
               } else if (obj.type == 'input') {
                 returnChildren.push(
-                  <QueryPaper>
-                    <Grid Container className = {classes.root}>
+                  <QueryPaper key = {idx2}>
+                    <Grid container className = {classes.root}>
                       <Grid item xs = {5}>
                         {obj.title}
                       </Grid>
@@ -134,7 +134,7 @@ const QueryHeader = ({motherType, motherNo, funcs, queryHeaderProps}) => {
               }
             })
             returnArr.push(
-              <Grid xs = {arr[0].size}>
+              <Grid item xs = {arr[0].size} key = {idx1}>
                 {returnChildren}
               </Grid>
             )

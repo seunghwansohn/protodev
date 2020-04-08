@@ -453,7 +453,7 @@ let ItemAdd = props => {
 
   return (
     <div>
-      <Grid container xs = {12} className = {classes.grid} spacing={0}>
+      <Grid container className = {classes.grid} spacing={0}>
         <Grid item xs = {12}>
           <Grid container className = {classes.grid} spacing={0}>
             <Grid item xs = {3}> {createField('itemCode', renderTextField,'fieldItem')} </Grid>

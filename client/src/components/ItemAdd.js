@@ -111,7 +111,7 @@ const ProppedInput = ({infoProps, fixMode, fixedData, setFixedData}) => {
       {infoProps.map(obj => {
         if(obj.type !== 'divider') {
           return(
-            <Grid className = {classes.marginBottom}>
+            <Grid container className = {classes.marginBottom}>
               <InputST
                 title         = {obj.title}
                 attr          = {'regular'}
@@ -396,7 +396,7 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
       <Grid container>
 
 
-        <Grid xs = {3}>
+        <Grid item xs = {3}>
 
           <ProppedInput
             infoProps     = {priceInfoProps}
@@ -450,12 +450,12 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
 
         </Grid>
 
-        <Grid xs = {9}>
+        <Grid item xs = {9}>
           <Grid container>
 
 
 
-            <Grid xs = {6}>
+            <Grid item xs = {6}>
               <Paper className={classes.paperKorea}>Korea</Paper>
               <Table>
                 <TableContainer>
@@ -494,7 +494,7 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
             </Grid>
 
 
-            <Grid xs = {6}>
+            <Grid item xs = {6}>
               <Paper className={classes.paperVietnam}>Vietnam</Paper>
               <Table>
                 <TableContainer>

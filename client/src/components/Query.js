@@ -105,7 +105,7 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, queryProps}) => 
   
   return (
     <React.Fragment>
-      <Grid Container className = {classes.flex}>
+      <Grid container className = {classes.flex}>
         <Grid item xs = {11}>
           <Typography variant="h4">
             {motherType}

@@ -7,7 +7,7 @@ import { authtest } from '../../modules/authtest'
 
 
 import {
-  BrowserRouter as Router,
+//   BrowserRouter as Router,
   Link
 } from "react-router-dom";
 
@@ -32,8 +32,8 @@ const MainHeader = () => {
     const onLogout = () => {
         dispatch(logout());
     }
-    const check = () => {
-    }
+    // const check = () => {
+    // }
     const onSignIn = () => {
         dispatch(signIn())
     }

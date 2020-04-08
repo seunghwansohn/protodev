@@ -135,9 +135,9 @@ export default function EnhancedTable(
         >
           <TableContainer>
               <EnhancedTableHead/>
-              <TableBody>
+              {/* <TableBody>
                   {itemListArr.length !== 0  ? mappedTableBody() : ''}
-              </TableBody>
+              </TableBody> */}
 
 
           </TableContainer>

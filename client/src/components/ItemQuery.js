@@ -399,7 +399,7 @@ let ItemQuery = props => {
   const createInput = (title, state, setState, unit, unitPosition) => {
     let input = 
       <React.Fragment>
-        <Grid Container item xs = {12}>
+        <Grid container item xs = {12}>
           <Grid item xs = {11}>
             <TextField
               disabled = {disabledCheck(title)}
@@ -437,7 +437,8 @@ let ItemQuery = props => {
 
   return (
     <React.Fragment>
-      <Grid container xs = {12} className = {classes.grid} spacing={0}>
+      <Grid 
+      container className = {classes.grid} spacing={0}>
         <Grid item xs = {12}>
           <Grid container className = {classes.grid} spacing={0}>
             <Grid item xs = {3}> {createInput('itemCode', itemCode, setItemCode)}</Grid>

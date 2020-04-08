@@ -48,7 +48,7 @@ import spacelize                        from '../../lib/spacelize'
 import filterArrayBySearchKeyword       from '../../lib/filterArrayBySearchKeyword'
 import {selectMultipleStates, 
   unSelectMultipleStates}               from '../../lib/tableFuncs'
-  import {hasWhiteSpace, maxValue}                from '../../lib/validation';
+import {hasWhiteSpace, maxValue}        from '../../lib/validation';
 
 
 import styled   from "styled-components";
@@ -164,9 +164,11 @@ const STTable = ({
 
   const dispatch = useDispatch()
 
+
   //개체 기본 속성
   const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
   const containerNo = type + '_' + frameNo
+
 
   //초기 헤더 설정 기능
   let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
@@ -222,36 +224,26 @@ const STTable = ({
     setCalValueCols(tmpCalValueCols)
     setQueryCols(tmpQueryCols)
   },[])
+  const isHidedCulumn = name => hided.indexOf(name)       !== -1;
+  const isFixable     = name => fixableCols.indexOf(name) !== -1;
+  const isInput       = name => inputCols.indexOf(name) !== -1;
+  const isCalValue    = name => calValueCols.indexOf(name) !== -1;
+  const isQuery       = name => queryCols.indexOf(name) !== -1;
 
 
+  
 
   //체크박스 체크 기능
   const [allSelected, setAllselected]         = useState(false);
   const isChecked     = name => selected.indexOf(name)    !== -1;
 
 
-  const [showUpdatedSign, setShowUpdatedSign] = useState(false);
 
 
-  useEffect(() => {
-    setFilteredData(rawData)
-  },[rawData])
-
-
-
-  useEffect(() => {
-    if (filteredData.length == 1) {
-      console.log('검색결과 하나임')
-      if (directQuery && setFindOneResult && typeof setFindOneResult == "function") {
-         setFindOneResult(filteredData[0])
-         console.log('검색결과하나입력')
-         dispatch(onDialogOpen(false, 'client_' + frameNo))
-      }
-    }
-  },[filteredData])
 
 
   //업데이트 기능
+  const [showUpdatedSign, setShowUpdatedSign] = useState(false);
   useEffect(() => {
     if (updated) {
       setShowUpdatedSign(true)
@@ -265,11 +257,7 @@ const STTable = ({
   
 
 
-  const isHidedCulumn = name => hided.indexOf(name)       !== -1;
-  const isFixable     = name => fixableCols.indexOf(name) !== -1;
-  const isInput       = name => inputCols.indexOf(name) !== -1;
-  const isCalValue    = name => calValueCols.indexOf(name) !== -1;
-  const isQuery       = name => queryCols.indexOf(name) !== -1;
+
 
   
 
@@ -445,7 +433,6 @@ const STTable = ({
     )
     dispatch(actAddNewBlankQuery(frameNo))
   }
-
   const handleChangeNewAddedInput = (event, index, header) => {
     const temp = event.target.value
     setAddedNew(
@@ -459,17 +446,13 @@ const STTable = ({
 
   //쿼리인풋 기능
   const querySelected     = useSelector(state => state.query[frameNo])
-
   useEffect(() => {
     dispatch(actSetFrame(frameNo))
   },[frameNo])
-
   const onKeyPressOnNewAddedInput = (e, header) => {
     
   }
 
-
-  console.log(querySelected)
 
 
   //헤더 메뉴 기능
@@ -538,7 +521,6 @@ const STTable = ({
     setHowManyCopiedNew]                = useState(null)
   const setAddCopiedNew = (qty) => {
     setHowManyCopiedNew(qty)
-
     let tempObj = {}
     Object.keys(selected[0]).map(header => {
       tempObj[header] = selected[0][header]
@@ -564,6 +546,19 @@ const STTable = ({
 
 
   //검색어 필터 기능
+  useEffect(() => {
+    setFilteredData(rawData)
+  },[rawData])
+  useEffect(() => {
+    if (filteredData.length == 1) {
+      console.log('검색결과 하나임')
+      if (directQuery && setFindOneResult && typeof setFindOneResult == "function") {
+         setFindOneResult(filteredData[0])
+         console.log('검색결과하나입력')
+         dispatch(onDialogOpen(false, 'client_' + frameNo))
+      }
+    }
+  },[filteredData])
   const onInputFilterKeyword = (e) => {
     e.preventDefault(); 
     setFilterKeyword(e.target.value)
@@ -572,11 +567,9 @@ const STTable = ({
     setFilterKeyword(initialFilter)
   },[initialFilter])
   useEffect(() => {
-    console.log('필터실행중')
     if (filterKeyword !== null && filterKeyword !== undefined && filterKeyword !== ''){
       setFilteredData(filterArrayBySearchKeyword(filterKeyword, rawData, primaryKey))
     } else {
-      console.log('엘스실행됨')
       setFilteredData(rawData)
     }
   },[filterKeyword, rawData])
@@ -593,9 +586,9 @@ const STTable = ({
       ></InputDialog>
 
       <div>
-        {hided.map(columns => {
+        {hided.map((columns, idx) => {
           return(
-            <button onClick = {event => unhide(columns, hided, setHided)}>{columns}</button>
+            <button key = {idx} onClick = {event => unhide(columns, hided, setHided)}>{columns}</button>
           )
         })}
       </div>
@@ -618,7 +611,7 @@ const STTable = ({
                 const isColumnHided = isHidedCulumn(header)
                 if (!isColumnHided) {
                   return (
-                    <TableCell>
+                    <TableCell key = {index}>
                       {header}
                       <Menu
                         key="menu"
@@ -642,9 +635,9 @@ const STTable = ({
                   )
                 }
               }) : ''}
-              {tableButton ? tableButton.map(obj => {
+              {tableButton ? tableButton.map((obj, index) => {
                 return(
-                  <TableCell>
+                  <TableCell key = {index}>
                     {obj.title}
                   </TableCell>
                 )
@@ -675,7 +668,7 @@ const STTable = ({
                     <StyledTableCell>
                       {index+1}
                     </StyledTableCell>
-                    {tableHeaderVals.map(header => {
+                    {tableHeaderVals.map((header, idx3) => {
                       let fixable = checkColFixable(index, header)
                       let fixed = checkCellFixed(index, header)
                       let isfixableCol = isFixable(header)
@@ -726,17 +719,17 @@ const STTable = ({
                             )
                         }else if (true) {
                           return(
-                            <StyledTableCell onClick = {() => {onClickCols(row[header], index, header)}}>
+                            <StyledTableCell key = {'basic' + idx3} onClick = {() => {onClickCols(row[header], index, header)}}>
                               {row[header]}
                             </StyledTableCell>
                           )
                         }
                     }
                     })}
-                    {tableButton ? tableButton.map(button => {
+                    {tableButton ? tableButton.map((button, idx4) => {
                       const {title, type, func, mother} = button
                       return(
-                        <StyledTableCell>
+                        <StyledTableCell key = {idx4}>
                           <button onClick = {e => {
                             let selected = {}
                             selected[primaryKey] = filteredData[index][primaryKey]

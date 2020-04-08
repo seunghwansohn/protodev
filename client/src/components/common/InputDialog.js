@@ -86,7 +86,7 @@ const InputDialog = ({attr}) => {
             onChange = {(e) => setTempAnswer(e.target.value)}
           />
         </DialogContent>
-        <Grid Container className = {classes.grid}>
+        <Grid container className = {classes.grid}>
           <Grid item xs = {6}>
             <Button onClick={onSubmit} color="primary">
               Solved!

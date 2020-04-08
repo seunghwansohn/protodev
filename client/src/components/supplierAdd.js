@@ -86,19 +86,19 @@ let SupplierAdd = props => {
   return (
     <React.Fragment>
       <form className={classes.root} noValidate autoComplete="off">
-          <Grid container xs = {12} className = {classes.grid} spacing={0}>
+          <Grid container className = {classes.grid} spacing={0}>
             <Grid item xs = {5}> {createInput('supplierCode')} </Grid>
             <Grid item xs = {7}> {createInput('supplierName')} </Grid>
           </Grid>
-          <Grid container xs = {12} className = {classes.grid} spacing={0}>
+          <Grid container className = {classes.grid} spacing={0}>
             <Grid item xs = {5}> {createInput('country')} </Grid>
             <Grid item xs = {7}> {createInput('province')} </Grid>
           </Grid>
-          <Grid container xs = {12} className = {classes.grid} spacing={0}>
+          <Grid container className = {classes.grid} spacing={0}>
             <Grid item xs = {5}> {createInput('ceo')} </Grid>
             <Grid item xs = {7}> {createInput('taxCode')} </Grid>
           </Grid>
-          <Grid container xs = {12} className = {classes.grid} spacing={0}>
+          <Grid container className = {classes.grid} spacing={0}>
             <Grid item xs = {5}> {createInput('emailType')} </Grid>
             <Grid item xs = {7}> {createInput('emailAddress')} </Grid>
           </Grid>

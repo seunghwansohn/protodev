@@ -48,7 +48,7 @@ const TaskHeader = ({type, idx, setChecked}) => {
       <React.Fragment>
 
           <React.Fragment>
-          <Grid container xs = {12} className = {classes.grid} spacing={0}>
+          <Grid container className = {classes.grid} spacing={0}>
             <Grid item xs = {11} className = {classes.grid}>
               <Checkbox idx = {idx} className = {classes.grid} onChange = {(e, index) => onCheckBox(e, index)}>
               </Checkbox>

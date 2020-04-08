@@ -397,6 +397,7 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
         
         <h1>Quote List</h1>
             <QueryHeader
+                key = {'queryHeader'}
                 motherType          = {type}
                 motherNo            = {frameNo}
                 funcs               = {queryHeaderfuncs()}

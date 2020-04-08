@@ -83,7 +83,7 @@ const CommentDialog = ({states, setStates, funcs}) => {
             onChange = {(e) => onChangeComment(e)}
           />
         </DialogContent>
-        <Grid Container className = {classes.grid}>
+        <Grid container className = {classes.grid}>
           <Grid item xs = {6}>
             <Button onClick={onSolved} color="primary">
               Solved!

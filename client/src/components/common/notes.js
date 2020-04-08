@@ -1,6 +1,6 @@
-import React, {useState, useEffect}             from 'react'
+import React, {useEffect}             from 'react'
 
-import { connect, useSelector, useDispatch }    from 'react-redux';
+import { useSelector, useDispatch }    from 'react-redux';
 
 import { makeStyles }                           from '@material-ui/core/styles';
 import Grid                                     from '@material-ui/core/Grid';
@@ -37,7 +37,7 @@ let Notes = props => {
     const classes     = useStyles();
     const dispatch    = useDispatch();
     
-    const {type, primaryKey, primaryCode} = props
+    const {type, primaryCode} = props
 
     const blankNotes  = [[]];
 
@@ -139,7 +139,7 @@ let Notes = props => {
     return (
       <React.Fragment>
         {title}
-        <Grid container xs = {12} className = {classes.grid} spacing={0}>
+        <Grid container className = {classes.grid} spacing={0}>
           {newNotesArr.map((val, index) => {
             return (
             <React.Fragment>
