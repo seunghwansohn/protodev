@@ -459,38 +459,23 @@ const STTable = ({
     checkValid(index, header, event.target.value)
   }
   useEffect(()=>{
-    if (querySelected) {
-      if (querySelected.newAdded) {
-        querySelected.newAdded.map((rowObj, index) => {
-          console.log(rowObj)
-          if (rowObj !== {}) {
-            Object.keys(rowObj).map(key => {
-              let primaryKey = rowObj[key].primaryKey
-              let nameKey = key
-              let primaryValue = rowObj[key].primaryValue
-              console.log(nameKey)
-              console.log(primaryKey)
-              console.log(primaryValue)
-              console.log(addedNew[index])
-
-              if(addedNew[index]) {
-                setAddedNew(
-                  produce(addedNew, draft => {
-                    draft[index][primaryKey] = rowObj[key].primaryValue
-                  })
-                )
-              }
-              // console.log(addedNew[index][primaryKey])
-              // console.log(rowObj[key].primaryKey)
-              // setAddedNew(
-                // produce(addedNew, draft => {
-                //   draft[index][primaryKey] = rowObj[key].primaryValue
-                // })
-              // )
-            })
-          }
-        })
-      }
+    if (querySelected && querySelected.newAdded) {
+      querySelected.newAdded.map((rowObj, index) => {
+        if (rowObj !== {}) {
+          Object.keys(rowObj).map(key => {
+            let primaryKey = rowObj[key].primaryKey
+            let nameKey = key
+            let primaryValue = rowObj[key].primaryValue
+            if(addedNew[index]) {
+              setAddedNew(
+                produce(addedNew, draft => {
+                  draft[index][primaryKey] = rowObj[key].primaryValue
+                })
+              )
+            }
+          })
+        }
+      })
     }
   },[querySelected])
 
