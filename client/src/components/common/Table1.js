@@ -187,11 +187,13 @@ const STTable = ({
   const [hided, setHided]                     = useState([]);
   const [fixableCols, setFixableCols]         = useState([]);
   const [primaryKey, setPrimaryKey]           = useState('');
+  const [nameKey, setNameKey]                 = useState('');
   const [inputCols, setInputCols]             = useState([]);
   const [calValueCols, setCalValueCols]       = useState([]);
   const [queryCols, setQueryCols]             = useState([]);
   useEffect(() => {
     let tmpPrimaryKey = ''
+    let tmpNameKey = ''
     let tmpDefaultHided = []
     let tempFixableCols = []
     let tmpDefaultInput = []
@@ -207,6 +209,9 @@ const STTable = ({
       if(colAttr[key].primary){
         tmpPrimaryKey = key
       }
+      if(colAttr[key].nameKey){
+        tmpNameKey = key
+      }
       if(colAttr[key].defaultInput){
         tmpDefaultInput.push(key)
       }
@@ -220,6 +225,7 @@ const STTable = ({
     setHided(tmpDefaultHided)
     setFixableCols(tempFixableCols)
     setPrimaryKey(tmpPrimaryKey)
+    setNameKey(tmpNameKey)
     setInputCols(tmpDefaultInput)
     setCalValueCols(tmpCalValueCols)
     setQueryCols(tmpQueryCols)
@@ -231,15 +237,14 @@ const STTable = ({
   const isQuery       = name => queryCols.indexOf(name) !== -1;
 
 
-  
-
+  console.log(addedNew)
   //체크박스 체크 기능
   const [allSelected, setAllselected]         = useState(false);
   const isChecked     = name => selected.indexOf(name)    !== -1;
 
 
 
-
+  
 
 
   //업데이트 기능
@@ -348,6 +353,17 @@ const STTable = ({
     )
   }
 
+  //쿼리인풋 기능
+  const querySelected     = useSelector(state => state.query[frameNo])
+  useEffect(() => {
+    dispatch(actSetFrame(frameNo))
+  },[frameNo])
+  const onKeyPressOnNewAddedInput = (e, header) => {
+    
+  }
+
+
+  console.log(querySelected)
 
 
   //새로운 행 추가 기능
@@ -442,16 +458,44 @@ const STTable = ({
     )
     checkValid(index, header, event.target.value)
   }
+  useEffect(()=>{
+    if (querySelected) {
+      if (querySelected.newAdded) {
+        querySelected.newAdded.map((rowObj, index) => {
+          console.log(rowObj)
+          if (rowObj !== {}) {
+            Object.keys(rowObj).map(key => {
+              let primaryKey = rowObj[key].primaryKey
+              let nameKey = key
+              let primaryValue = rowObj[key].primaryValue
+              console.log(nameKey)
+              console.log(primaryKey)
+              console.log(primaryValue)
+              console.log(addedNew[index])
+
+              if(addedNew[index]) {
+                setAddedNew(
+                  produce(addedNew, draft => {
+                    draft[index][primaryKey] = rowObj[key].primaryValue
+                  })
+                )
+              }
+              // console.log(addedNew[index][primaryKey])
+              // console.log(rowObj[key].primaryKey)
+              // setAddedNew(
+                // produce(addedNew, draft => {
+                //   draft[index][primaryKey] = rowObj[key].primaryValue
+                // })
+              // )
+            })
+          }
+        })
+      }
+    }
+  },[querySelected])
 
 
-  //쿼리인풋 기능
-  const querySelected     = useSelector(state => state.query[frameNo])
-  useEffect(() => {
-    dispatch(actSetFrame(frameNo))
-  },[frameNo])
-  const onKeyPressOnNewAddedInput = (e, header) => {
-    
-  }
+
 
 
 
@@ -574,7 +618,9 @@ const STTable = ({
     }
   },[filterKeyword, rawData])
 
-
+  const check = () => {
+    console.log(addedNew)
+  }
 
 
 
@@ -732,7 +778,10 @@ const STTable = ({
                         <StyledTableCell key = {idx4}>
                           <button onClick = {e => {
                             let selected = {}
-                            selected[primaryKey] = filteredData[index][primaryKey]
+                            selected[nameKey] = {}
+                            selected[nameKey].name = filteredData[index][nameKey]
+                            selected[nameKey].primaryKey = primaryKey
+                            selected[nameKey].primaryValue = filteredData[index][primaryKey]
                             button.func(selected)
                           }}>
                             {button.title}
@@ -751,7 +800,7 @@ const STTable = ({
                 <StyledCheckBox
 
                 />
-                <StyledTableCell>{index + 1}</StyledTableCell>
+                <StyledTableCell>{index + 1}<button onClick = {check}></button></StyledTableCell>
                 {headers.map(header => {
                   const isColumnHided = isHidedCulumn(header)
                   let   isQueryCol    = isQuery(header)
@@ -760,7 +809,6 @@ const STTable = ({
 
                     if (isQueryCol) {
                       //자꾸 리렌더링되므로 이것도 state로 바꾸어야 함.
-                      console.log(querySelected.newAdded)
                       // dispatch(actSelect(frameNo, reqNo, {}))
                       return(
                         <StyledTableCell>

@@ -74,7 +74,7 @@ function reducer (state = initialState, action) {
         case SET_SELECT:
             return produce(state, draft =>{
                 const {frameNo, reqType, key, selected} = action.payload
-                console.log(frameNo, reqType, key, selected)
+                // console.log(frameNo, reqType, key, selected)
                 draft[frameNo][reqType][key]  = selected ? selected : {}
                 // draft[frameNo][type][title] = value
             })

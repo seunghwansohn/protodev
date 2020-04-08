@@ -164,6 +164,7 @@ const QueryInput = ({
               type  : 'select',
               func : function(selected){
                 //inser버튼 클릭됐을 때 실행할 명령
+                console.log(selected)
                 dispatch(actSelect(frameNo, reqType, addedNo, selected))
                 dispatch(onDialogOpen(false, 'supplier_' + frameNo))
               },

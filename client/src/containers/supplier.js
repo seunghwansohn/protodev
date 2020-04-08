@@ -90,6 +90,7 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableA
     const [tableRawData, 
         setTableRawData]                = useState([])
     const [primaryKey, setPrimaryKey]   = useState('');
+    const [nameKey, setNameKey]   = useState('');
     const [includingKeys, 
         setIncludingKeys]               = useState([]);
     const [findingKeys, 
@@ -169,6 +170,7 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableA
     const getRawData = async () => {
         await axios.get('/api/' + dataType + '/load').then(res => {
             setPrimaryKey(res.data.primaryKey)
+            setNameKey('supplierName')
             setIncludingKeys(res.data.includingKeys)
             setTableRawData(withoutIncludingKeys(res.data.vals))
             setFindingKeys(res.data.findingKeys)
@@ -259,9 +261,12 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableA
                 fixable : false,
                 defaultHided : true
             },
-            itemName : {
+            supplierName : {
                 fixable : true,
-                defaultHided : false
+                defaultHided : false,
+                nameKey : true,
+                query : true,
+                dialog : getAsStrByColName('supplierName')
             },
             description : {
                 fixable : true,
@@ -294,12 +299,6 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableA
             makerModelNo : {
                 fixable : true,
                 defaultHided : false
-            },
-            supplierName : {
-                fixable : true,
-                defaultHided : false,
-                query : true,
-                dialog : getAsStrByColName('supplierName')
             },
             VNPrice : {
                 fixable : true,
