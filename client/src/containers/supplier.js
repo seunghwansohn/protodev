@@ -42,7 +42,7 @@ import {getIncludingKeys,
 
 
 
-const SupplierContainer = ({motherType, motherNo, reqNo, subTableAttr}) => {
+const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableAttr}) => {
     const dispatch = useDispatch();
 
 
@@ -84,7 +84,8 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subTableAttr}) => {
       }
     }
 
-
+    console.log(subCompIndex)
+    
     //테이블 관련
     const [tableRawData, 
         setTableRawData]                = useState([])

@@ -413,7 +413,6 @@ const STTable = ({
     // )
   }
 
-  console.log(newAddedError)
   const getValid = (header) => {
     let valid = ''
     Object.keys(colAttr).map(key => {
@@ -470,6 +469,7 @@ const STTable = ({
   }
 
 
+  console.log(querySelected)
 
 
   //헤더 메뉴 기능
@@ -740,7 +740,6 @@ const STTable = ({
                           <button onClick = {e => {
                             let selected = {}
                             selected[primaryKey] = filteredData[index][primaryKey]
-                            console.log(selected)
                             button.func(selected)
                           }}>
                             {button.title}
@@ -768,8 +767,7 @@ const STTable = ({
 
                     if (isQueryCol) {
                       //자꾸 리렌더링되므로 이것도 state로 바꾸어야 함.
-                      
-                      console.log(index)
+                      console.log(querySelected.newAdded)
                       // dispatch(actSelect(frameNo, reqNo, {}))
                       return(
                         <StyledTableCell>
@@ -777,7 +775,8 @@ const STTable = ({
                             motherType  = {type}
                             motherNo    = {frameNo}
                             addedNo     = {index}
-                            value      = {querySelected[reqNo] ? querySelected[reqNo][header] : row[header]}                            dialog     = {colAttr[header].dialog} 
+                            valuee     = {querySelected.newAdded[index].supplierCode}                            
+                            dialog     = {colAttr[header].dialog} 
                             onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                             onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
                             selectFunc = {queryColSelect}

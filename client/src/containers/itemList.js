@@ -84,7 +84,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
       }
     }
 
-    console.log(frameNo)
 
     //테이블 관련
     const [tableRawData, 
