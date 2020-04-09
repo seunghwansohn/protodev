@@ -467,6 +467,7 @@ const STTable = ({
 
 
 
+  console.log(rawData)
 
   console.log(filteredData)
 
@@ -686,7 +687,8 @@ const STTable = ({
                     <StyledTableCell>
                       {index+1}
                     </StyledTableCell>
-                    {/* {tableHeaderVals.map((header) => {
+
+                    {tableHeaderVals.map((header) => {
                       let fixable = checkColFixable(index, header)
                       let fixed = checkCellFixed(index, header)
                       let isfixableCol = isFixable(header)
@@ -730,12 +732,13 @@ const STTable = ({
                             </StyledTableCell>
                           )
                         }else if (fixed) {
-                            return(
-                              <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], index, header)}}>
-                                {row[header]}
-                              </StyledTableCell>
-                            )
-                        }else if (true) {
+                          return(
+                            <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], index, header)}}>
+                              {row[header]}
+                            </StyledTableCell>
+                          )
+                        }
+                        else if (true) {
                           return(
                             <StyledTableCell onClick = {() => {onClickCols(row[header], index, header)}}>
                               {row[header]}
@@ -743,7 +746,8 @@ const STTable = ({
                           )
                         }
                     }
-                    })} */}
+                    })}
+
                     {tableButton ? tableButton.map((button, idx4) => {
                       const {title, type, func, mother} = button
                       return(
@@ -754,6 +758,7 @@ const STTable = ({
                             selected[nameKey].name = filteredData[index][nameKey]
                             selected[nameKey].primaryKey = primaryKey
                             selected[nameKey].primaryValue = filteredData[index][primaryKey]
+                            selected.value = row
                             button.func(selected)
                           }}>
                             {button.title}

@@ -348,8 +348,8 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         tableButton : [
             {
                 title : 'insert',
-                func : function(row){
-                    dispatch(onAlreadyPickedCheck(row))
+                func : function(selected){
+                    dispatch(onAlreadyPickedCheck(selected.value))
                 },
                 mother : containerNo
             },
