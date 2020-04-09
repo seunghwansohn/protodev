@@ -410,13 +410,8 @@ const STTable = ({
         draft[index][header] = joinedStr
       })
     )
-    // setNewAddedError(    
-    //   produce(newAddedError, draft => {
-    //     draft[index][header] = true
-    //   })
-    // )
   }
-
+  //    -- QueryInput error props 반환용 함수
   const getValid = (header) => {
     let valid = ''
     Object.keys(colAttr).map(key => {
@@ -470,6 +465,7 @@ const STTable = ({
               setAddedNew(
                 produce(addedNew, draft => {
                   draft[index][primaryKey] = rowObj[key].primaryValue
+                  delete draft[index][nameKey]
                 })
               )
             }
@@ -478,6 +474,7 @@ const STTable = ({
       })
     }
   },[querySelected])
+
 
 
 
@@ -795,13 +792,14 @@ const STTable = ({
                     if (isQueryCol) {
                       //자꾸 리렌더링되므로 이것도 state로 바꾸어야 함.
                       // dispatch(actSelect(frameNo, reqNo, {}))
+                      let name = querySelected.newAdded[index].supplierName ? querySelected.newAdded[index].supplierName.name : ''
                       return(
                         <StyledTableCell>
                           <QueryInput
                             motherType  = {type}
                             motherNo    = {frameNo}
                             addedNo     = {index}
-                            valuee     = {querySelected.newAdded[index].supplierCode}                            
+                            valuee     = {name}                            
                             dialog     = {colAttr[header].dialog} 
                             onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                             onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}

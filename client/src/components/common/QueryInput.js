@@ -95,6 +95,7 @@ const QueryInput = ({
   const queryRequested    = useSelector(state => state.quoteList.requested)
   const queryVars         = useSelector(state => state.query[frameNo])
 
+  console.log(querySelected)
 
   const {filter} = queryVars ? queryVars : ''
 
