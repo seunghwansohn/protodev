@@ -18,7 +18,6 @@ import Menu             from '@material-ui/core/Menu';
 import MenuItem         from '@material-ui/core/MenuItem';
 
 import Button           from '@material-ui/core/Button';
-import IconButton       from '@material-ui/core/IconButton';
 
 import List             from '@material-ui/core/List';
 import ListItemText     from '@material-ui/core/ListItemText';
@@ -237,14 +236,10 @@ const STTable = ({
   const isQuery       = name => queryCols.indexOf(name) !== -1;
 
 
-  console.log(addedNew)
+
   //체크박스 체크 기능
   const [allSelected, setAllselected]         = useState(false);
   const isChecked     = name => selected.indexOf(name)    !== -1;
-
-
-
-  
 
 
   //업데이트 기능
@@ -259,12 +254,7 @@ const STTable = ({
       setUpdated(false)
     }
   },[updated])
-  
 
-
-
-
-  
 
   //픽스모드 관련기능
   const [fixMode, setFixMode]                 = useState(false);
@@ -326,6 +316,9 @@ const STTable = ({
     }
   }
 
+
+
+
   //값 인풋 처리 기능
   const [fixedVals, setFixedVals]             = useState([]);
   const onKeyPressOnInput = (e, index, header) => {
@@ -363,14 +356,11 @@ const STTable = ({
   }
 
 
-  console.log(querySelected)
 
 
   //새로운 행 추가 기능
   //    ---새로운행 validation 기능
-  // const checkValid = (row, header) => {
-  //   console.ro
-  // }
+
 
       //---HelperText 및 error 구현기능
   const [helperTexts, setHelperTexts] = useState([])
@@ -478,7 +468,7 @@ const STTable = ({
 
 
 
-
+  console.log(filteredData)
 
 
   //헤더 메뉴 기능
@@ -696,7 +686,7 @@ const STTable = ({
                     <StyledTableCell>
                       {index+1}
                     </StyledTableCell>
-                    {tableHeaderVals.map((header, idx3) => {
+                    {/* {tableHeaderVals.map((header) => {
                       let fixable = checkColFixable(index, header)
                       let fixed = checkCellFixed(index, header)
                       let isfixableCol = isFixable(header)
@@ -747,13 +737,13 @@ const STTable = ({
                             )
                         }else if (true) {
                           return(
-                            <StyledTableCell key = {'basic' + idx3} onClick = {() => {onClickCols(row[header], index, header)}}>
+                            <StyledTableCell onClick = {() => {onClickCols(row[header], index, header)}}>
                               {row[header]}
                             </StyledTableCell>
                           )
                         }
                     }
-                    })}
+                    })} */}
                     {tableButton ? tableButton.map((button, idx4) => {
                       const {title, type, func, mother} = button
                       return(

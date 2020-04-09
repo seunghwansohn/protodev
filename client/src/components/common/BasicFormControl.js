@@ -243,7 +243,6 @@ const BasicFormControl = ({
   },[selected])
 
 
-  console.log(selected)
 
   const openDialog = (type, info) => {
     setReqNo(generateRandom())

@@ -79,16 +79,13 @@ function reducer (state = initialState, action) {
             })
         case SET_CLICKED_TABLE_COL:
             return produce(state, draft => {
-                console.log(action.payload)
             })
         case SET_DELETE:
             return produce(state, draft => {
-                console.log(action.payload)
             })
 
         case SET_FINISH_TASK:
             return produce(state, draft => {
-                console.log(action.payload)
             })
             
         default:

@@ -65,7 +65,6 @@ function reducer (state = initialState, action) {
             })
         case SET_SUPPLIER_ADD:
             return produce(state, draft => {
-                console.log(action.payload)
             })
         case SET_UPDATE_SUCCESS:
             return produce(state, draft => {
@@ -73,7 +72,6 @@ function reducer (state = initialState, action) {
             })
         case SET_CLICKED_TABLE_COL:
             return produce(state, draft => {
-                console.log(action.payload)
             })
 
         case SET_SUPPLIER_DELETE_SUCCESS:

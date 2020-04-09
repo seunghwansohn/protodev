@@ -51,6 +51,8 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     const type = 'itemListContainer'
     const containerNo = type + '_' + frameNo
     const dataType = 'item'
+    // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+
 
     //다이얼로그 관련
     const opened         = useSelector(state => state.dialogs.opened)

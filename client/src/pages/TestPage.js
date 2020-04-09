@@ -173,15 +173,12 @@ export const ProjectTaskList = () => {
         })
       }
     })
-    console.log(arrNo)
-    console.log(idxArr)
 
     const lastNo = () => {
       return Math.max.apply(null,idxArr)
     }
 
     let newObj = {projectCode : obj.projectCode, note : null, belongedIdx : obj.idx, idx: lastNo() + 1, level : obj.level + 1}
-    console.log(newObj)
 
     setTmpRawData(
       produce(tmpRawData, draft => {

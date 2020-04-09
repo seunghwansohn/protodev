@@ -65,6 +65,7 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
     const type = 'quoteContainer'
     const containerNo = type + '_' + frameNo
+    const dataType = 'quote'
     // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
@@ -125,9 +126,13 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
 
     //다이얼로그 관련
     const opened    = useSelector(state => state.dialogs.opened)
+    const dialogOpened   = useSelector(state => state.dialogs.opened)
+    const simpleQuery = 'simple'
+    const detailQuery = 'detail'
+
     const checkOpened = (title) => {
         let result = ''
-        opened.map(array => {
+        dialogOpened.map(array => {
             if (array.type == title){
                 result = array.ox
             }
@@ -165,6 +170,8 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
     const [primaryKey, setPrimaryKey]   = useState('');
     const [includingKeys, 
         setIncludingKeys]               = useState([]);
+    const [findingKeys, 
+        setFindingKeys]               = useState([]);
 
     //테이블 업데이트
     const [fixedVals, setFixedVals]             = useState([]);
@@ -200,7 +207,34 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
     
     //테이블 셀렉트
     const [selected, setSelected]               = useState([]);
-    const [clickedCol, setClickedCol]           = useState({});
+
+    //테이블 클릭
+    const [clickedCol, 
+    setClickedCol]     = useState({});
+    const clicked        = useSelector(state => state.item.table.clicked)
+    const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
+      
+
+    useEffect(() => {
+        if (Object.keys(clickedCol).length > 0) {
+            dispatch(actClickedTableCol(clickedCol))
+        } 
+      },[clickedCol])
+      //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
+      useEffect(() => {
+        let keys = Object.keys(clicked)
+        if (keys.length > 0) {
+          if (includingKeys.price.includes(clicked.header)) {
+            dispatch(actClickedTableCol(clickedCol))
+            // dispatch(loadAccount(clickedCol))
+            dispatch(onDialogOpen(true, detailQuery, clickedCol))
+          }else{
+            dispatch(actClickedTableCol(clickedCol))
+            dispatch(onDialogOpen(true, simpleQuery, clickedCol))
+          }
+        } 
+    },[clicked])
+
 
     //테이블 필터
     const [filterKeyword, setFilterKeyword]     = useState('');
@@ -224,6 +258,7 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
             setClientRate(foundResult.clientRate)
         }
     },[foundResult])
+
 
 
     const tableStates = {
@@ -388,7 +423,6 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
                 fixable : false,
                 defaultHided : true
             },
-
         },
     }
 
@@ -426,18 +460,7 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
                     </Table> : ''}
             </TableContainer>
 
-            {/* <TableContainer>
-                {quoteProp.table.contents.length !== 0 ? 
-                    <InputTable 
-                        motherType  = {type}
-                        motherNo    = {frameNo}
-                        states      = {tableStates}
-                        setStates   = {setTableStates}
-                        attr        = {tableAttr}
-                        funcs       = {funcs}
-                    >
-                    </InputTable> : ''}
-            </TableContainer> */}
+
         </div>
     )
 }   

@@ -95,7 +95,6 @@ const QueryInput = ({
   const queryRequested    = useSelector(state => state.quoteList.requested)
   const queryVars         = useSelector(state => state.query[frameNo])
 
-  console.log(querySelected)
 
   const {filter} = queryVars ? queryVars : ''
 
@@ -165,7 +164,6 @@ const QueryInput = ({
               type  : 'select',
               func : function(selected){
                 //inser버튼 클릭됐을 때 실행할 명령
-                console.log(selected)
                 dispatch(actSelect(frameNo, reqType, addedNo, selected))
                 dispatch(onDialogOpen(false, 'supplier_' + frameNo))
               },
@@ -180,7 +178,6 @@ const QueryInput = ({
       }
     }
 
-    console.log(addedNo)
 
 
   // useEffect(()=> {
@@ -262,7 +259,6 @@ const QueryInput = ({
 
   const [inputVal, setInputVal]              = useState('');
 
-  console.log(valuee)
   return (
     <React.Fragment>
       {/* <Button onClick = {() => {openDialog(DialogsAttr.supplier.title)}}>클릭</Button> */}

@@ -208,7 +208,6 @@ function reducer (state = initialState, action) {
             })  
         case SET_QUOTELIST_HEADER:
             return produce(state, draft => {
-              console.log(action)
               draft.header = action.payload
             }) 
         case SET_ADD_HEADER:
@@ -241,7 +240,6 @@ function reducer (state = initialState, action) {
         case QUERY_SUBMIT:
           return produce(state, draft => {
             const payload = action.payload
-            console.log(payload)
             draft.query[payload.type].request = payload.payload
           })
         case SET_INSERT_CLIENT:
