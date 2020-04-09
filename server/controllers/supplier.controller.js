@@ -87,7 +87,6 @@ exports.load1 = (req, res) => {
 };
   
 exports.load = (req, res) => {
-    let primaryKey = 'supplierCode'
     let findingAttr = []
     let includingAttr = []
     getIncludeName(Supplier, Supplier, primaryKey, findingAttr, includingAttr).then(items => {

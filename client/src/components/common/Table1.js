@@ -596,7 +596,6 @@ const STTable = ({
   }
 
 
-
   return (
     <React.Fragment>
 

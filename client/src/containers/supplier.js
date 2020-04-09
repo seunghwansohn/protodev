@@ -329,6 +329,8 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableA
       return Arr
     }
 
+    console.log(findingKeys)
+    console.log(includingKeys)
     return(
         <>
           <Button onClick = {test}>푸하하</Button>
