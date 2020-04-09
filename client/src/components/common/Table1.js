@@ -471,10 +471,6 @@ const STTable = ({
 
 
 
-  console.log(rawData)
-
-  console.log(filteredData)
-
 
   //헤더 메뉴 기능
   const [menuActivated, setMenuActivated]     = useState('');

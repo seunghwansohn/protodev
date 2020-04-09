@@ -5,6 +5,26 @@ const SupplierNote = db.supplierNote;
 const getIncludeName = require("../lib/getIncludeName");
 
 
+const relAttr = {
+    source : Supplier,
+    rels : [
+    //   {
+    //     target: Supplier,
+    //     asStr : 'supplier',
+    //     attributes : ''
+    //   },
+    //   {
+    //     target: ItemPrice,
+    //     asStr : 'price',
+    //     attributes :''
+    //   }
+    ]
+  }
+  
+const Op = db.Sequelize.Op;
+const primaryKey   = 'supplierCode'
+
+
 exports.addNew = (req, res) => {
   const Arr = req.body
   

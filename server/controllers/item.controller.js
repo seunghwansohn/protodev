@@ -5,6 +5,10 @@ const calPrice = require("../lib/calPrice");
 const rmTimeFromReq = require("../lib/sequelMiddleWares");
 const getIncludeName = require("../lib/getIncludeName");
 const getIncludingArr = require("../lib/getIncludingArr");
+const getIncludingAttr = require("../lib/getIncludingAttr");
+const getFindingAttr = require("../lib/getFindingAttr");
+
+
 const getCreateObj = require("../lib/getCreateObj");
 const setNameToCode = require("../lib/setNameToCode");
 
@@ -20,13 +24,16 @@ const relAttr = {
   rels : [
     {
       target: Supplier,
+      relType : 'finding',
       asStr : 'supplier',
-      attributes : ''
+      attributes : ['supplierName'],
+      primaryCode : 'supplierCode'
     },
     {
       target: ItemPrice,
+      relType : 'including',
       asStr : 'price',
-      attributes :''
+      attributes :['VNPrice', 'stkVVar', 'buyingPKR', 'stkCVar']
     }
   ]
 }
@@ -79,16 +86,13 @@ exports.update = async (req, res) => {
 };
 
 exports.itemLoad = (req, res) => {
-    let primaryKey = 'itemCode'
-    let findingAttr = [
-      {model:Supplier, plain : true, raw: false, nest : false, as : 'supplier', attributes : ['supplierName'], primaryCode : 'supplierCode'},
-    ]
-    let includingAttr = [
-      {model:ItemPrice, plain : true, raw: false, nest : false, as: 'price', attributes : ['VNPrice', 'stkVVar', 'buyingPKR', 'stkCVar']}
-    ]
-    getIncludeName(Item, Supplier, primaryKey, findingAttr, includingAttr).then(items => {
-      res.status(200).send(items)
-    })
+
+  const includingAttr = getIncludingAttr(relAttr)
+  const findingAttr   = getFindingAttr(relAttr)
+
+  getIncludeName(Item, Supplier, primaryKey, findingAttr, includingAttr).then(items => {
+    res.status(200).send(items)
+  })
 };
 
 exports.delete = async (req, res) => {
