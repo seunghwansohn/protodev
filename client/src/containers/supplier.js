@@ -259,62 +259,36 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableA
             supplierCode : {
                 primary : true,
                 fixable : false,
-                defaultHided : true
+                defaultHided : true,
+                validate : ['code']
             },
             supplierName : {
                 fixable : true,
                 defaultHided : false,
                 nameKey : true,
                 query : true,
-                dialog : getAsStrByColName('supplierName')
+                dialog : getAsStrByColName('supplierName'),
+                validate : ['string']
             },
-            description : {
+            country : {
                 fixable : true,
-                defaultHided : true
+                defaultHided : false,
+                validate : ['string']
             },
-            weight : {
+            province : {
                 fixable : true,
-                defaultHided : true
+                defaultHided : false,
+                validate : ['string']
             },
-            width : {
+            ceo : {
                 fixable : true,
-                defaultHided : true
+                defaultHided : false,
+                validate : ['string']
             },
-            depth : {
+            taxCode : {
                 fixable : true,
-                defaultHided : true
-            },
-            height : {
-                fixable : true,
-                defaultHided : true
-            },
-            importTaxRate : {
-                fixable : true,
-                defaultHided : false
-            },
-            maker : {
-                fixable : true,
-                defaultHided : false
-            },
-            makerModelNo : {
-                fixable : true,
-                defaultHided : false
-            },
-            VNPrice : {
-                fixable : true,
-                defaultHided : false
-            },
-            buyingPKR : {
-                fixable : true,
-                defaultHided : false
-            },
-            stkVVar : {
-                fixable : true,
-                defaultHided : true
-            },
-            stkCVar : {
-                fixable : true,
-                defaultHided : true
+                defaultHided : false,
+                validate : ['string']
             },
             createdAt : {
                 fixable : false,

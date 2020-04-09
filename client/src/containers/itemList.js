@@ -214,7 +214,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     const test = () => {
         // dispatch(loadAccount())
         // dispatch(onDialogOpen(true, detailQuery, clickedCol))
-        console.log(getAsStrByColName('supplierName'))
+        console.log(getAsStrByColName('itemName'))
     }
 
 
@@ -255,8 +255,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     const tableAttr = {
         flagAble : true,
         fixModeAble : true,
-        queryColSelect : function(){
-        },
         colAttr : {
             itemCode : {
                 primary : true,

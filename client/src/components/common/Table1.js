@@ -377,23 +377,26 @@ const STTable = ({
       minValue15 : val => val && maxValue(val, 15) ? 'Value is exceed maximum' : undefined,
       maxValue5 : val => val && maxValue(val, 5) ? 'Value is exceed maximum' : undefined
     }
-    colAttr[header].validate.map(str => {
-      if (funcs[str](value) !== undefined) {
-        tempArr.push(funcs[str](value))
-        setNewAddedError(    
-          produce(newAddedError, draft => {
-            draft[index][header] = true
-          })
-        )
-      } else {
-        setNewAddedError(    
-          produce(newAddedError, draft => {
-            draft[index][header] = false
-          })
-        )
-      }
+    if (colAttr[header.validate]) {
+      colAttr[header].validate.map(str => {
+        if (funcs[str](value) !== undefined) {
+          tempArr.push(funcs[str](value))
+          setNewAddedError(    
+            produce(newAddedError, draft => {
+              draft[index][header] = true
+            })
+          )
+        } else {
+          setNewAddedError(    
+            produce(newAddedError, draft => {
+              draft[index][header] = false
+            })
+          )
+        }
+  
+      })
+    }
 
-    })
     let joinedStr = tempArr.join(', ')
     setHelperTexts(    
       produce(helperTexts, draft => {
@@ -435,6 +438,7 @@ const STTable = ({
     dispatch(actAddNewBlankQuery(frameNo))
   }
   const handleChangeNewAddedInput = (event, index, header) => {
+    console.log(event.target.value)
     const temp = event.target.value
     setAddedNew(
       produce(addedNew, draft => {
