@@ -1,6 +1,7 @@
+//findingKeys에서 값을 받아서 code를 Name으로 대치하는 코드
+
 module.exports = setNameToCode = (relAttr, findingKeys, addedObj) => {
-  
-  console.log('애디드오브젝', addedObj)
+
   const {rels} = relAttr
   let tempArr = []
 
@@ -12,35 +13,19 @@ module.exports = setNameToCode = (relAttr, findingKeys, addedObj) => {
 
   let valid = false
 
-  
-
   findingKeys.map(obj => {
     Object.keys(obj).map(asStr =>{
       rels.map((rel, idx) =>{
         if (rel.asStr == asStr) {
-          
           relIdx = idx
-
-          Object.keys(obj[asStr]).map(key => {
-            targetCode = key
-            reqName = obj[asStr][key]
-          })
-          where[reqName] = addedObj[reqName]
-
-          if (addedObj[reqName] !== null) {
-            valid = true
-          }
+          targetCode = obj[asStr]
         }
       })
     })
   })
 
-
-  if (valie == true) {
-
-  }
-  console.log('렐레', where, relIdx, targetCode, reqName)
   return rels[relIdx].target.findOne({where:where, attributes :[targetCode]}, ).then(result => {
+    console.log('리절트는 ', result)
     let tempObj = Object.assign(addedObj, result.dataValues)
     delete tempObj[reqName]
     return tempObj

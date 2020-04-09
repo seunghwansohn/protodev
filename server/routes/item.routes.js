@@ -13,12 +13,6 @@ module.exports = function(app) {
   });
 
   app.get("/api/item/load", controller.itemLoad);
-  app.get("/api/item/VNSelling", controller.VNSellingItemLoad);
-  app.post("/api/item/new", controller.newItem)
-  app.post("/api/item/newCopied", controller.newCopied)
-  app.post("/api/item/test", controller.test)
-  app.post("/api/item/checkExist", controller.check)
-  app.post("/api/item/add", controller.newItem)
   app.post("/api/item/query", controller.query)
   app.post("/api/item/delete/", controller.delete);
   app.post("/api/item/update/", controller.update);
