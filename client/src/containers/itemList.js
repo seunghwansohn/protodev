@@ -124,8 +124,9 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
 
     //테이블값 삭제
     const setDelete = async (codes) =>{
+        console.log(codes)
         await codes.map(code => {
-            dispatch(actDelete(type, code.itemCode))
+            dispatch(actDelete(dataType, code[primaryKey]))
         })
         await setUpdated(true)
         await setSelected([])
