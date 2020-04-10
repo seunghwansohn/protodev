@@ -208,32 +208,32 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
     //테이블 셀렉트
     const [selected, setSelected]               = useState([]);
 
-    //테이블 클릭
-    const [clickedCol, 
-    setClickedCol]     = useState({});
-    const clicked        = useSelector(state => state.item.table.clicked)
-    const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
+    // //테이블 클릭
+    // const [clickedCol, 
+    // setClickedCol]     = useState({});
+    // const clicked        = useSelector(state => state.item.table.clicked)
+    // const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
       
 
-    useEffect(() => {
-        if (Object.keys(clickedCol).length > 0) {
-            dispatch(actClickedTableCol(clickedCol))
-        } 
-      },[clickedCol])
-      //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
-      useEffect(() => {
-        let keys = Object.keys(clicked)
-        if (keys.length > 0) {
-          if (includingKeys.price.includes(clicked.header)) {
-            dispatch(actClickedTableCol(clickedCol))
-            // dispatch(loadAccount(clickedCol))
-            dispatch(onDialogOpen(true, detailQuery, clickedCol))
-          }else{
-            dispatch(actClickedTableCol(clickedCol))
-            dispatch(onDialogOpen(true, simpleQuery, clickedCol))
-          }
-        } 
-    },[clicked])
+    // useEffect(() => {
+    //     if (Object.keys(clickedCol).length > 0) {
+    //         dispatch(actClickedTableCol(clickedCol))
+    //     } 
+    //   },[clickedCol])
+    //   //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
+    //   useEffect(() => {
+    //     let keys = Object.keys(clicked)
+    //     if (keys.length > 0) {
+    //       if (includingKeys.price.includes(clicked.header)) {
+    //         dispatch(actClickedTableCol(clickedCol))
+    //         // dispatch(loadAccount(clickedCol))
+    //         dispatch(onDialogOpen(true, detailQuery, clickedCol))
+    //       }else{
+    //         dispatch(actClickedTableCol(clickedCol))
+    //         dispatch(onDialogOpen(true, simpleQuery, clickedCol))
+    //       }
+    //     } 
+    // },[clicked])
 
 
     //테이블 필터

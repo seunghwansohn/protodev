@@ -53,6 +53,11 @@ import {hasWhiteSpace, maxValue}        from '../../lib/validation';
 import styled   from "styled-components";
 import produce  from 'immer'
 
+
+const colors = {
+  fixable : '#fff4e2',
+  unFixable : '#D3D3D3',
+}
 const useStyles = makeStyles({
   root: {
     width: '100%',
@@ -90,7 +95,7 @@ const StyledCheckBox = styled(Checkbox)`
   }
 `
 const StyledTableCell = styled(TableCell)`
-  background-color: #ffffff;
+  background-color: ${props => props.fixMode ? props.fixable ? colors.fixable : colors.unFixable : '#ffffff'};
   width : '10%';
   border-style : ${props => props.updated ? 'ridge':'none'};
   &:hover {
@@ -699,8 +704,8 @@ const STTable = ({
                       if (!isColumnHided) {
                         if (fixable && isfixableCol) {
                           return (
-                            <StyledTableCell>
-                              <Input 
+                            <StyledTableCell fixable = {isfixableCol}>
+                              <StyledInput 
                               onChange = {(event) => handleChangeInput(event, index, header)} 
                               key = {header }
                               value = {filteredData[index][header]} 
@@ -709,8 +714,8 @@ const STTable = ({
                           )
                         }else if (isInputCol) { 
                           return (
-                            <StyledTableCell>
-                              <Input 
+                            <StyledTableCell fixable = {isfixableCol}>
+                              <StyledInput 
                                 onChange = {(event) => handleChangeInput(event, index, header)} 
                                 key = {header }
                                 value = {filteredData[index][header]} 
@@ -720,8 +725,8 @@ const STTable = ({
                           )
                         }else if (isCalValueCol) { 
                           return (
-                            <StyledTableCell>
-                              <Input
+                            <StyledTableCell fixable = {isfixableCol}>
+                              <StyledInput
                                 disable 
                                 onChange = {(event) => handleChangeInput(event, index, header)} 
                                 key = {header }
@@ -739,7 +744,7 @@ const STTable = ({
                         }
                         else if (true) {
                           return(
-                            <StyledTableCell onClick = {() => {onClickCols(row[header], index, header)}}>
+                            <StyledTableCell fixMode = {fixMode} fixable = {isfixableCol} onClick = {() => {onClickCols(row[header], index, header)}}>
                               {row[header]}
                             </StyledTableCell>
                           )
