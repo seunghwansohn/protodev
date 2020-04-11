@@ -28,7 +28,14 @@ import { ExpandLess,
   FilterDrama}          from '@material-ui/icons';
 
 import InputDialog      from '../common/InputDialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+
 import STInput          from '../common/Input';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import {generateRandom}     from '../../lib/common';
 
 
@@ -36,6 +43,8 @@ import { actSelect, actSetFrame, actAddNewBlankQuery}               from '../../
 
 
 import BasicFormControl          from './BasicFormControl';
+import SmallKeyPopUp          from './SmallKeyPopUp';
+
 
 import QueryInput       from './QueryInput';
 
@@ -297,6 +306,10 @@ const STTable = ({
 
 
   //컬럼 클릭 기능
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false)
+  const handleCloseConfirmDialog = () => {
+    setOpenConfirmDialog(false)
+  }
   const onClickCols = (value, row, header) => {
     const tempObj = {
       value : value,
@@ -312,9 +325,21 @@ const STTable = ({
     tempObj2.value  = value
     tempObj2.row    = row
     tempObj2.header = header
+    console.log(tempObj2)
+
     if (fixMode){
       const temp = {row : row, header : header}
       setFixableCells(temp)
+      if (tempFixedVal.location && tempFixedVal.vals !== {}) {
+        console.log(tempFixedVal.location)
+        console.log(tempObj2)
+        if (tempObj2.row !== tempFixedVal.location.index || tempObj2.header !== tempFixedVal.location.header) {
+          setOpenConfirmDialog(true)
+        }
+        // setOpenConfirmDialog(true)
+        console.log(tempFixedVal)
+        console.log('값을 확정하시겠스니까?')
+      }
     }
     else {
       setClickedCol(tempObj2)
@@ -326,21 +351,20 @@ const STTable = ({
 
   //값 인풋 처리 기능
   const [fixedVals, setFixedVals]             = useState([]);
+  const [tempFixedVal, setTempFixedVal]     = useState({});
+
+  const confirmInputFixedVal = () => {
+    const temp = {}
+    setFixableCells(temp)  
+    setFixedVals(
+      produce(fixedVals, draft => {
+        draft.push(tempFixedVal)
+      })
+    )
+  }
   const onKeyPressOnInput = (e, index, header) => {
     if (e.key === "Enter") {
-      const temp = {}
-      setFixableCells(temp)
-      let temp1 = {}
-      temp1.ref = {}
-      temp1.vals = {}
-      temp1.location = {index : index, header, header}
-      temp1.ref[primaryKey] = filteredData[index][primaryKey]
-      temp1.vals[header] = e.target.value
-      setFixedVals(
-        produce(fixedVals, draft => {
-          draft.push(temp1)
-        })
-      )
+      confirmInputFixedVal()
     }
   }
   const handleChangeInput = (e, index, header) => {
@@ -349,7 +373,15 @@ const STTable = ({
         draft[index][header] = e.target.value
       })
     )
+    let temp1 = {}
+    temp1.ref = {}
+    temp1.vals = {}
+    temp1.location = {index : index, header, header}
+    temp1.ref[primaryKey] = filteredData[index][primaryKey]
+    temp1.vals[header] = e.target.value
+    setTempFixedVal(temp1)
   }
+
 
   //쿼리인풋 기능
   const querySelected     = useSelector(state => state.query[frameNo])
@@ -382,7 +414,7 @@ const STTable = ({
       minValue15 : val => val && maxValue(val, 15) ? 'Value is exceed maximum' : undefined,
       maxValue5 : val => val && maxValue(val, 5) ? 'Value is exceed maximum' : undefined
     }
-    if (colAttr[header.validate]) {
+    if (colAttr[header].validate) {
       colAttr[header].validate.map(str => {
         if (funcs[str](value) !== undefined) {
           tempArr.push(funcs[str](value))
@@ -443,7 +475,6 @@ const STTable = ({
     dispatch(actAddNewBlankQuery(frameNo))
   }
   const handleChangeNewAddedInput = (event, index, header) => {
-    console.log(event.target.value)
     const temp = event.target.value
     setAddedNew(
       produce(addedNew, draft => {
@@ -475,6 +506,7 @@ const STTable = ({
   },[querySelected])
 
 
+  console.log(fixedVals)
 
 
   //헤더 메뉴 기능
@@ -603,7 +635,37 @@ const STTable = ({
 
   return (
     <React.Fragment>
-
+      <Dialog
+        open = {openConfirmDialog}
+        onClose = {handleCloseConfirmDialog}
+        onExit = {() => {
+          setTempFixedVal({})
+        }}
+        onKeyPress={(event) => {
+          event.preventDefault()
+          if (event.key == 'Enter') {
+            console.log('엔터키눌림')
+            confirmInputFixedVal()
+            handleCloseConfirmDialog()
+          }
+        }}
+      >
+        <DialogTitle id="alert-dialog-title">Are you confirm the data you input?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            If you want to input the data, please press the 'Enter' key now.
+            If you cancel the date, please press the 'Esc' key now.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseConfirmDialog} color="primary">
+            Disagree
+          </Button>
+          <Button onClick={handleCloseConfirmDialog} color="primary" autoFocus>
+            Agree
+          </Button>
+        </DialogActions>
+      </Dialog>
       <InputDialog
         attr = {addCopiedNewNoDialogAttr}
       ></InputDialog>
@@ -708,6 +770,7 @@ const STTable = ({
                               <StyledInput 
                               onChange = {(event) => handleChangeInput(event, index, header)} 
                               key = {header }
+                              endAdornment = {<InputAdornment position="end"><SmallKeyPopUp>Enter</SmallKeyPopUp><SmallKeyPopUp>Tab</SmallKeyPopUp></InputAdornment>}
                               value = {filteredData[index][header]} 
                               onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}/>
                             </StyledTableCell>
@@ -718,6 +781,8 @@ const STTable = ({
                               <StyledInput 
                                 onChange = {(event) => handleChangeInput(event, index, header)} 
                                 key = {header }
+                                endAdornment = {<InputAdornment position="start">fdfe</InputAdornment>}
+                                startAdornment={<InputAdornment position="start">$</InputAdornment>}
                                 value = {filteredData[index][header]} 
                                 onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
                               />
