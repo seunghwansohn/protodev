@@ -276,22 +276,22 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
             weight : {
                 fixable : true,
                 defaultHided : true,
-                validate : ['maxValue5']
+                validate : ['maxValue5', 'number']
             },
             width : {
                 fixable : true,
                 defaultHided : true,
-                validate : ['maxValue5']
+                validate : ['maxValue5', 'number']
             },
             depth : {
                 fixable : true,
                 defaultHided : true,
-                validate : ['maxValue5']
+                validate : ['maxValue5', 'number']
             },
             height : {
                 fixable : true,
                 defaultHided : true,
-                validate : ['maxValue5']
+                validate : ['maxValue5', 'number']
             },
             importTaxRate : {
                 fixable : true,
@@ -318,7 +318,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
             VNPrice : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['number'],
+                validate : ['number', 'max15'],
             },
             buyingPKR : {
                 fixable : true,
@@ -328,12 +328,12 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
             stkVVar : {
                 fixable : true,
                 defaultHided : true,
-                validate : ['decimal'],
+                validate : ['decimal2', 'max1', 'number'],
             },
             stkCVar : {
                 fixable : true,
                 defaultHided : true,
-                validate : ['decimal'],
+                validate : ['decimal2', 'max1', 'number'],
             },
             createdAt : {
                 fixable : false,
@@ -355,6 +355,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         ],
     }
 
+    
     const arrFunc = () => {
       let Arr = []
       const makeFieldAttrArr = (name, component) => {

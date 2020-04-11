@@ -250,6 +250,11 @@ const STTable = ({
   const isQuery       = name => queryCols.indexOf(name) !== -1;
 
 
+  //인덱스값만 넣어서 primaryCode를 얻는 기능
+  const getPrimaryCode = (index) => {
+    return filteredData[index][primaryKey]
+  }
+
 
   //체크박스 체크 기능
   const [allSelected, setAllselected]         = useState(false);
@@ -311,46 +316,24 @@ const STTable = ({
     setOpenConfirmDialog(false)
   }
   const onClickCols = (value, row, header) => {
-    const tempObj = {
-      value : value,
-      type  : type,
-      index : row,
-      header: header,
-      primaryKey : primaryKey
-    }
-    let tempObj1 = {}
-    tempObj1[primaryKey] = rawData[row][primaryKey]
-
     let tempObj2 = {}
     tempObj2.value  = value
     tempObj2.row    = row
     tempObj2.header = header
-    console.log(tempObj2)
 
     if (fixMode){
       const temp = {row : row, header : header}
       setFixableCells(temp)
-      if (tempFixedVal.location && tempFixedVal.vals !== {}) {
-        console.log(tempFixedVal.location)
-        console.log(tempObj2)
+      if (tempFixedVal.location && tempFixedVal.vals !== {} && !checkNoValidationErrorAtAll()) {
         if (tempObj2.row !== tempFixedVal.location.index || tempObj2.header !== tempFixedVal.location.header) {
           setOpenConfirmDialog(true)
         }
-        // setOpenConfirmDialog(true)
-        console.log(tempFixedVal)
-        console.log('값을 확정하시겠스니까?')
       }
     }
     else {
       setClickedCol(tempObj2)
     }
   }
-
- //새로운 행 추가 기능
-  //    ---새로운행 validation 기능
-
-
-
 
 
   //Validation기능
@@ -365,11 +348,12 @@ const STTable = ({
       plus : val => val && isPlus(val) ? 'only Plus or 0' : undefined,
       minValue15 : val => val && maxValue(val, 15) ? 'Value is exceed maximum' : undefined,
       maxValue5 : val => val && maxValue(val, 5) ? 'Value is exceed maximum' : undefined,
+      max1 : val => val && maxValue(val, 1) ? 'Value is exceed maximum' : undefined,
+      max15 : val => val && maxValue(val, 15) ? 'Value is exceed maximum' : undefined,
       decimal2 : val => val && checkDecimal(val, 2) == true ? '1.xx (o), 1.xxx (x)' : undefined
     }
     if (colAttr[header].validate) {
       colAttr[header].validate.map(str => {
-        console.log(str)
         if (funcs[str] && funcs[str](value) !== undefined) {
           tempArr.push(funcs[str](value))
         }
@@ -417,6 +401,8 @@ const STTable = ({
     dispatch(actAddNewBlankQuery(frameNo))
   }
 
+
+
   //newAdded 값 변경 기능
   const handleChangeNewAddedInput = (event, index, header) => {
     const temp = event.target.value
@@ -427,6 +413,7 @@ const STTable = ({
     )
     const validArr = checkValid(index, header, event.target.value)
     let joinedValidStr = validArr.join(', ')
+    console.log(validArr)
     setNewAddedHelperTexts(    
       produce(newAddedhelperTexts, draft => {
         draft[index][header] = joinedValidStr
@@ -447,9 +434,9 @@ const STTable = ({
     }
   }
 
-  const getPrimaryCode = (index) => {
-    return filteredData[index][primaryKey]
-  }
+
+
+
 
   //값 update시 인풋 처리 기능
   const [fixedVals, setFixedVals]           = useState([]);
@@ -459,15 +446,32 @@ const STTable = ({
   const [updateValidationError, 
     setUpdateValidationError]               = useState({})
 
+  //방금 고친 값 발리데이션 에러 있는지 체크
+  const checkNoValidationErrorAtAll = () =>{
+    const {location} = tempFixedVal
+    const {header} = location
+    const primaryCode = getPrimaryCode(location.index)
+    return updateValidationError[primaryCode][header] == true ? true : false
+  }
+
   const confirmInputFixedVal = () => {
     const temp = {}
-    setFixableCells(temp)  
-    setFixedVals(
-      produce(fixedVals, draft => {
-        draft.push(tempFixedVal)
-      })
-    )
+
+    const isNowError = checkNoValidationErrorAtAll()
+
+    if (isNowError == true) {
+      console.log('발리데이션에러입니다')
+    }else {
+      setFixableCells(temp)  
+      setFixedVals(
+        produce(fixedVals, draft => {
+          draft.push(tempFixedVal)
+        })
+      )
+    }
   }
+
+  console.log(tempFixedVal)
   const onKeyPressOnInput = (e, index, header) => {
     if (e.key === "Enter") {
       confirmInputFixedVal()
@@ -476,7 +480,7 @@ const STTable = ({
   const handleChangeInput = (e, index, header) => {
     setFilteredData(
       produce(filteredData, draft => {
-        draft[index][header] = e.target.value
+        draft[index][header] = e.target.value 
       })
     )
     let temp1 = {}
@@ -490,6 +494,7 @@ const STTable = ({
     setTempFixedVal(temp1)
     const validArr = checkValid(index, header, e.target.value)
     let joinedValidStr = validArr.join(', ')
+    console.log('발리드엥알알', validArr)
 
     const primaryCode = getPrimaryCode(index)
 
@@ -499,7 +504,8 @@ const STTable = ({
         draft[primaryCode][header] = joinedValidStr
       })
     )
-    if (validArr == {}) {
+    if (validArr.length > 0) {
+      console.log('에러값0보다큼')
       setUpdateValidationError(    
         produce(updateValidationError, draft => {
           draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
@@ -507,14 +513,21 @@ const STTable = ({
         })
       )
     } else {
+      console.log('에러값0보다작음')
+
       setUpdateValidationError(    
         produce(updateValidationError, draft => {
           draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
           draft[primaryCode][header] = false
         })
       )
+
     }
   }
+
+  console.log(updateValidationError)
+  console.log(updateHelperTexts)
+
 
 
   //쿼리인풋 기능
@@ -525,9 +538,6 @@ const STTable = ({
   const onKeyPressOnNewAddedInput = (e, header) => {
     
   }
-
-
-
   useEffect(()=>{
     if (querySelected && querySelected.newAdded) {
       querySelected.newAdded.map((rowObj, index) => {
@@ -550,9 +560,6 @@ const STTable = ({
     }
   },[querySelected])
  
-
-
-  console.log(fixedVals)
 
 
   //헤더 메뉴 기능
@@ -653,9 +660,9 @@ const STTable = ({
     if (filteredData.length == 1) {
       console.log('검색결과 하나임')
       if (directQuery && setFindOneResult && typeof setFindOneResult == "function") {
-         setFindOneResult(filteredData[0])
-         console.log('검색결과하나입력')
-         dispatch(onDialogOpen(false, 'client_' + frameNo))
+        setFindOneResult(filteredData[0])
+        console.log('검색결과하나입력')
+        dispatch(onDialogOpen(false, 'client_' + frameNo))
       }
     }
   },[filteredData])
@@ -712,6 +719,7 @@ const STTable = ({
           </Button>
         </DialogActions>
       </Dialog>
+
       <InputDialog
         attr = {addCopiedNewNoDialogAttr}
       ></InputDialog>
@@ -723,15 +731,19 @@ const STTable = ({
           )
         })}
       </div>
-        <Input 
-          id = 'sea'
-          label  = 'dfe'
-          onChange = {(e) => {onInputFilterKeyword(e)}}
-          value    = {filterKeyword}
-        ></Input>
+
+      <Input 
+        id = 'sea'
+        label  = 'dfe'
+        onChange = {(e) => {onInputFilterKeyword(e)}}
+        value    = {filterKeyword}
+      ></Input>
+
       {fixModeAble ? <button onClick = { onSetfixMode }>fixmode</button> :''}
+
       <TableContainer>
         <StyledTable size = {'small'}>
+
           <StyledTableHeader>
             <TableRow>
               {tableHeaderVals && attr.flagAble ? 
@@ -784,110 +796,110 @@ const STTable = ({
               const isItemSelected = isChecked(row)
               const labelId = `enhanced-table-checkbox-${index}`;
               return(
-                  <TableRow 
-                    key = {tableHeaderVals[index]}
-                  >
-                    {attr.flagAble ? 
-                      <TableCell padding="checkbox">
-                        <StyledCheckBox
-                          checked={isItemSelected}
-                          inputProps={{ 'aria-labelledby': labelId }}
-                          onClick={event => handleClickFlag(row, null, selected, setSelected)}
-                        />
-                      </TableCell>:''
-                    }
-                    <StyledTableCell>
-                      {index+1}
-                    </StyledTableCell>
+                <TableRow 
+                  key = {tableHeaderVals[index]}
+                >
+                  {attr.flagAble ? 
+                    <TableCell padding="checkbox">
+                      <StyledCheckBox
+                        checked={isItemSelected}
+                        inputProps={{ 'aria-labelledby': labelId }}
+                        onClick={event => handleClickFlag(row, null, selected, setSelected)}
+                      />
+                    </TableCell>:''
+                  }
+                  <StyledTableCell>
+                    {index+1}
+                  </StyledTableCell>
 
-                    {tableHeaderVals.map((header) => {
-                      let fixable = checkColFixable(index, header)
-                      let fixed = checkCellFixed(index, header)
-                      let isfixableCol = isFixable(header)
-                      let isInputCol   = isInput(header)
-                      let isCalValueCol   = isCalValue(header)
-                      let isQueryCol      = isQuery(header)
-                      let isColumnHided = isHidedCulumn(header)
+                  {tableHeaderVals.map((header) => {
+                    let fixable = checkColFixable(index, header)
+                    let fixed = checkCellFixed(index, header)
+                    let isfixableCol = isFixable(header)
+                    let isInputCol   = isInput(header)
+                    let isCalValueCol   = isCalValue(header)
+                    let isQueryCol      = isQuery(header)
+                    let isColumnHided = isHidedCulumn(header)
 
-                      let primaryCode = getPrimaryCode(index)
+                    let primaryCode = getPrimaryCode(index)
 
-                      if (!isColumnHided) {
-                        if (fixable && isfixableCol) {
-                          return (
-                            <StyledTableCell fixable = {isfixableCol}>
-                              <MiniHelperText 
-                                key = {header }
-                                value = {filteredData[index][header]} 
-                                onChange = {(event) => handleChangeInput(event, index, header)} 
-                                onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
-                                helperText = {updateHelperTexts[primaryCode] ? updateHelperTexts[primaryCode][header] : ''}
-                                InputProps = {{
-                                  endAdornment : <InputAdornment position="end"><SmallKeyPopUp>Enter</SmallKeyPopUp><SmallKeyPopUp>Tab</SmallKeyPopUp></InputAdornment>
-                                }}
-                              />
-                            </StyledTableCell>
-                          )
-                        }else if (isInputCol) { 
-                          return (
-                            <StyledTableCell fixable = {isfixableCol}>
-                              <StyledInput 
-                                onChange = {(event) => handleChangeInput(event, index, header)} 
-                                key = {header }
-                                endAdornment = {<InputAdornment position="start">fdfe</InputAdornment>}
-                                startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                                value = {filteredData[index][header]} 
-                                onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
-                              />
-                            </StyledTableCell>
-                          )
-                        }else if (isCalValueCol) { 
-                          return (
-                            <StyledTableCell fixable = {isfixableCol}>
-                              <StyledInput
-                                disable 
-                                onChange = {(event) => handleChangeInput(event, index, header)} 
-                                key = {header }
-                                value = {colAttr[header].value(index)} 
-                                onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
-                              />
-                            </StyledTableCell>
-                          )
-                        }else if (fixed) {
-                          return(
-                            <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], index, header)}}>
-                              {row[header]}
-                            </StyledTableCell>
-                          )
-                        }
-                        else if (true) {
-                          return(
-                            <StyledTableCell fixMode = {fixMode} fixable = {isfixableCol} onClick = {() => {onClickCols(row[header], index, header)}}>
-                              {row[header]}
-                            </StyledTableCell>
-                          )
-                        }
-                    }
-                    })}
+                    if (!isColumnHided) {
+                      if (fixable && isfixableCol) {
+                        return (
+                          <StyledTableCell fixable = {isfixableCol}>
+                            <MiniHelperText 
+                              key = {header }
+                              value = {filteredData[index][header]} 
+                              onChange = {(event) => handleChangeInput(event, index, header)} 
+                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
+                              helperText = {updateHelperTexts[primaryCode] ? updateHelperTexts[primaryCode][header] : ''}
+                              InputProps = {{
+                                endAdornment : <InputAdornment position="end"><SmallKeyPopUp>Enter</SmallKeyPopUp><SmallKeyPopUp>Tab</SmallKeyPopUp></InputAdornment>
+                              }}
+                            />
+                          </StyledTableCell>
+                        )
+                      }else if (isInputCol) { 
+                        return (
+                          <StyledTableCell fixable = {isfixableCol}>
+                            <StyledInput 
+                              onChange = {(event) => handleChangeInput(event, index, header)} 
+                              key = {header }
+                              endAdornment = {<InputAdornment position="start">fdfe</InputAdornment>}
+                              startAdornment={<InputAdornment position="start">$</InputAdornment>}
+                              value = {filteredData[index][header]} 
+                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
+                            />
+                          </StyledTableCell>
+                        )
+                      }else if (isCalValueCol) { 
+                        return (
+                          <StyledTableCell fixable = {isfixableCol}>
+                            <StyledInput
+                              disable 
+                              onChange = {(event) => handleChangeInput(event, index, header)} 
+                              key = {header }
+                              value = {colAttr[header].value(index)} 
+                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
+                            />
+                          </StyledTableCell>
+                        )
+                      }else if (fixed) {
+                        return(
+                          <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], index, header)}}>
+                            {row[header]}
+                          </StyledTableCell>
+                        )
+                      }
+                      else if (true) {
+                        return(
+                          <StyledTableCell fixMode = {fixMode} fixable = {isfixableCol} onClick = {() => {onClickCols(row[header], index, header)}}>
+                            {row[header]}
+                          </StyledTableCell>
+                        )
+                      }
+                  }
+                  })}
 
-                    {tableButton ? tableButton.map((button, idx4) => {
-                      const {title, type, func, mother} = button
-                      return(
-                        <StyledTableCell key = {idx4}>
-                          <button onClick = {e => {
-                            let selected = {}
-                            selected[nameKey] = {}
-                            selected[nameKey].name = filteredData[index][nameKey]
-                            selected[nameKey].primaryKey = primaryKey
-                            selected[nameKey].primaryValue = filteredData[index][primaryKey]
-                            selected.value = row
-                            button.func(selected)
-                          }}>
-                            {button.title}
-                          </button>
-                        </StyledTableCell>
-                      )
-                    }):''}
-                  </TableRow>
+                  {tableButton ? tableButton.map((button, idx4) => {
+                    const {title, type, func, mother} = button
+                    return(
+                      <StyledTableCell key = {idx4}>
+                        <button onClick = {e => {
+                          let selected = {}
+                          selected[nameKey] = {}
+                          selected[nameKey].name = filteredData[index][nameKey]
+                          selected[nameKey].primaryKey = primaryKey
+                          selected[nameKey].primaryValue = filteredData[index][primaryKey]
+                          selected.value = row
+                          button.func(selected)
+                        }}>
+                          {button.title}
+                        </button>
+                      </StyledTableCell>
+                    )
+                  }):''}
+                </TableRow>
               )
             }) :''}
 
@@ -950,13 +962,14 @@ const STTable = ({
       </TableContainer>
       
       <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={filteredData.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onChangePage={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}/>
+        rowsPerPageOptions={[5, 10, 25]}
+        component="div"
+        count={filteredData.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onChangePage={handleChangePage}
+        onChangeRowsPerPage={handleChangeRowsPerPage}
+      />
 
       <Button onClick = {onAddNewBlank}>add New</Button>
       <Button onClick = {() => onSubmitNewAdded(addedNew)}>     Submit New </Button>
