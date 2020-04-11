@@ -56,7 +56,7 @@ import spacelize                        from '../../lib/spacelize'
 import filterArrayBySearchKeyword       from '../../lib/filterArrayBySearchKeyword'
 import {selectMultipleStates, 
   unSelectMultipleStates}               from '../../lib/tableFuncs'
-import {hasWhiteSpace, maxValue}        from '../../lib/validation';
+import {checkDecimal, percent, hasWhiteSpace, maxValue, isPlus}        from '../../lib/validation';
 
 
 import styled   from "styled-components";
@@ -404,19 +404,22 @@ const STTable = ({
   const [newAddedError, setNewAddedError] = useState([])
 
   const checkValid = (index, header, value) => {
+    console.log(index, header, value)
     let tempArr = []
     let funcs = {    
       number : val => val && isNaN(Number(val)) ? 'Only Number' : undefined,
       code   : val => val && hasWhiteSpace(val) ? 'Space(x)' : undefined,
-      string   : val => val && hasWhiteSpace(val) ? 'Space(x)' : undefined,
-      percent   : val => val && hasWhiteSpace(val) ? 'Space(x)' : undefined,
+      string   : val => undefined,
+      percent   : val => val && percent(val) ? 'Space(x)' : undefined,
       decimal : val => val && hasWhiteSpace(val) ? 'Space(x)' : undefined,
+      plus : val => val && isPlus(val) ? 'only Plus or 0' : undefined,
       minValue15 : val => val && maxValue(val, 15) ? 'Value is exceed maximum' : undefined,
-      maxValue5 : val => val && maxValue(val, 5) ? 'Value is exceed maximum' : undefined
+      maxValue5 : val => val && maxValue(val, 5) ? 'Value is exceed maximum' : undefined,
+      decimal2 : val => val && checkDecimal(val, 2) == true ? '1.xx (o), 1.xxx (x)' : undefined
     }
     if (colAttr[header].validate) {
       colAttr[header].validate.map(str => {
-        if (funcs[str](value) !== undefined) {
+        if (funcs[str] && funcs[str](value) !== undefined) {
           tempArr.push(funcs[str](value))
           setNewAddedError(    
             produce(newAddedError, draft => {
@@ -433,7 +436,9 @@ const STTable = ({
   
       })
     }
-
+    console.log(tempArr)
+    console.log(helperTexts)
+    //모든 에러메시지를 array에 담은뒤 array를 join시켜서 출력할 helperText를 string으로 형성
     let joinedStr = tempArr.join(', ')
     setHelperTexts(    
       produce(helperTexts, draft => {

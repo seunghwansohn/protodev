@@ -296,7 +296,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
             importTaxRate : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['percent']
+                validate : ['percent', 'plus', 'decimal2', 'number']
             },
             maker : {
                 fixable : true,
