@@ -350,9 +350,7 @@ const STTable = ({
   //    ---새로운행 validation 기능
 
 
-  //---HelperText 및 error 구현기능
-  const [newAddedhelperTexts, setNewAddedHelperTexts] = useState([])
-  const [newAddedError, setNewAddedError] = useState([])
+
 
 
   //Validation기능
@@ -393,6 +391,9 @@ const STTable = ({
 
 
 //  -- 빈 새열 추가 기능
+  //---HelperText 및 error 구현기능
+  const [newAddedhelperTexts, setNewAddedHelperTexts] = useState([])
+  const [newAddedError, setNewAddedError] = useState([])
   const onAddNewBlank = () => {
     let tempObj = {}
     headers.map(header => {
@@ -446,9 +447,17 @@ const STTable = ({
     }
   }
 
-  //값 인풋 처리 기능
-  const [fixedVals, setFixedVals]             = useState([]);
+  const getPrimaryCode = (index) => {
+    return filteredData[index][primaryKey]
+  }
+
+  //값 update시 인풋 처리 기능
+  const [fixedVals, setFixedVals]           = useState([]);
   const [tempFixedVal, setTempFixedVal]     = useState({});
+  const [updateHelperTexts, 
+    setUpdateHelperTexts]                   = useState({})
+  const [updateValidationError, 
+    setUpdateValidationError]               = useState({})
 
   const confirmInputFixedVal = () => {
     const temp = {}
@@ -476,8 +485,35 @@ const STTable = ({
     temp1.location = {index : index, header, header}
     temp1.ref[primaryKey] = filteredData[index][primaryKey]
     temp1.vals[header] = e.target.value
+
+
     setTempFixedVal(temp1)
-    console.log(checkValid(index, header, e.target.value))
+    const validArr = checkValid(index, header, e.target.value)
+    let joinedValidStr = validArr.join(', ')
+
+    const primaryCode = getPrimaryCode(index)
+
+    setUpdateHelperTexts(    
+      produce(updateHelperTexts, draft => {
+        draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
+        draft[primaryCode][header] = joinedValidStr
+      })
+    )
+    if (validArr == {}) {
+      setUpdateValidationError(    
+        produce(updateValidationError, draft => {
+          draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
+          draft[primaryCode][header] = true
+        })
+      )
+    } else {
+      setUpdateValidationError(    
+        produce(updateValidationError, draft => {
+          draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
+          draft[primaryCode][header] = false
+        })
+      )
+    }
   }
 
 
@@ -773,16 +809,22 @@ const STTable = ({
                       let isQueryCol      = isQuery(header)
                       let isColumnHided = isHidedCulumn(header)
 
+                      let primaryCode = getPrimaryCode(index)
+
                       if (!isColumnHided) {
                         if (fixable && isfixableCol) {
                           return (
                             <StyledTableCell fixable = {isfixableCol}>
-                              <StyledInput 
-                              onChange = {(event) => handleChangeInput(event, index, header)} 
-                              key = {header }
-                              endAdornment = {<InputAdornment position="end"><SmallKeyPopUp>Enter</SmallKeyPopUp><SmallKeyPopUp>Tab</SmallKeyPopUp></InputAdornment>}
-                              value = {filteredData[index][header]} 
-                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}/>
+                              <MiniHelperText 
+                                key = {header }
+                                value = {filteredData[index][header]} 
+                                onChange = {(event) => handleChangeInput(event, index, header)} 
+                                onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
+                                helperText = {updateHelperTexts[primaryCode] ? updateHelperTexts[primaryCode][header] : ''}
+                                InputProps = {{
+                                  endAdornment : <InputAdornment position="end"><SmallKeyPopUp>Enter</SmallKeyPopUp><SmallKeyPopUp>Tab</SmallKeyPopUp></InputAdornment>
+                                }}
+                              />
                             </StyledTableCell>
                           )
                         }else if (isInputCol) { 
