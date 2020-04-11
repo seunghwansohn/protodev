@@ -346,8 +346,105 @@ const STTable = ({
     }
   }
 
+ //새로운 행 추가 기능
+  //    ---새로운행 validation 기능
 
 
+  //---HelperText 및 error 구현기능
+  const [newAddedhelperTexts, setNewAddedHelperTexts] = useState([])
+  const [newAddedError, setNewAddedError] = useState([])
+
+
+  //Validation기능
+  const checkValid = (index, header, value) => {
+    let tempArr = []
+    let funcs = {    
+      number : val => val && isNaN(Number(val)) ? 'Only Number' : undefined,
+      code   : val => val && hasWhiteSpace(val) ? 'Space(x)' : undefined,
+      string   : val => undefined,
+      percent   : val => val && percent(val) ? 'Space(x)' : undefined,
+      decimal : val => val && hasWhiteSpace(val) ? 'Space(x)' : undefined,
+      plus : val => val && isPlus(val) ? 'only Plus or 0' : undefined,
+      minValue15 : val => val && maxValue(val, 15) ? 'Value is exceed maximum' : undefined,
+      maxValue5 : val => val && maxValue(val, 5) ? 'Value is exceed maximum' : undefined,
+      decimal2 : val => val && checkDecimal(val, 2) == true ? '1.xx (o), 1.xxx (x)' : undefined
+    }
+    if (colAttr[header].validate) {
+      colAttr[header].validate.map(str => {
+        console.log(str)
+        if (funcs[str] && funcs[str](value) !== undefined) {
+          tempArr.push(funcs[str](value))
+        }
+      })
+    }
+    return tempArr
+  }
+
+  //    -- QueryInput error props 반환용 함수
+  const getValid = (header) => {
+    let valid = ''
+    Object.keys(colAttr).map(key => {
+      if(header == key) {
+        valid = colAttr[key].validate
+      }
+    })
+    return valid
+  }
+
+
+//  -- 빈 새열 추가 기능
+  const onAddNewBlank = () => {
+    let tempObj = {}
+    headers.map(header => {
+      tempObj[header] = null
+    })
+    setAddedNew(
+      produce(addedNew, draft => {
+        draft.push(tempObj)
+      }) 
+    )
+    setNewAddedHelperTexts(
+      produce(newAddedhelperTexts, draft => {
+        draft.push({})
+      })
+    )
+    setNewAddedError(
+      produce(newAddedError, draft => {
+        draft.push({})
+      })
+    )
+    dispatch(actAddNewBlankQuery(frameNo))
+  }
+
+  //newAdded 값 변경 기능
+  const handleChangeNewAddedInput = (event, index, header) => {
+    const temp = event.target.value
+    setAddedNew(
+      produce(addedNew, draft => {
+        draft[index][header] = temp
+      })
+    )
+    const validArr = checkValid(index, header, event.target.value)
+    let joinedValidStr = validArr.join(', ')
+    setNewAddedHelperTexts(    
+      produce(newAddedhelperTexts, draft => {
+        draft[index][header] = joinedValidStr
+      })
+    )
+    if (validArr == []) {
+      setNewAddedError(    
+        produce(newAddedError, draft => {
+          draft[index][header] = true
+        })
+      )
+    } else {
+      setNewAddedError(    
+        produce(newAddedError, draft => {
+          draft[index][header] = false
+        })
+      )
+    }
+  }
 
   //값 인풋 처리 기능
   const [fixedVals, setFixedVals]             = useState([]);
@@ -380,6 +477,7 @@ const STTable = ({
     temp1.ref[primaryKey] = filteredData[index][primaryKey]
     temp1.vals[header] = e.target.value
     setTempFixedVal(temp1)
+    console.log(checkValid(index, header, e.target.value))
   }
 
 
@@ -394,100 +492,6 @@ const STTable = ({
 
 
 
-
-  //새로운 행 추가 기능
-  //    ---새로운행 validation 기능
-
-
-      //---HelperText 및 error 구현기능
-  const [helperTexts, setHelperTexts] = useState([])
-  const [newAddedError, setNewAddedError] = useState([])
-
-  const checkValid = (index, header, value) => {
-    console.log(index, header, value)
-    let tempArr = []
-    let funcs = {    
-      number : val => val && isNaN(Number(val)) ? 'Only Number' : undefined,
-      code   : val => val && hasWhiteSpace(val) ? 'Space(x)' : undefined,
-      string   : val => undefined,
-      percent   : val => val && percent(val) ? 'Space(x)' : undefined,
-      decimal : val => val && hasWhiteSpace(val) ? 'Space(x)' : undefined,
-      plus : val => val && isPlus(val) ? 'only Plus or 0' : undefined,
-      minValue15 : val => val && maxValue(val, 15) ? 'Value is exceed maximum' : undefined,
-      maxValue5 : val => val && maxValue(val, 5) ? 'Value is exceed maximum' : undefined,
-      decimal2 : val => val && checkDecimal(val, 2) == true ? '1.xx (o), 1.xxx (x)' : undefined
-    }
-    if (colAttr[header].validate) {
-      colAttr[header].validate.map(str => {
-        if (funcs[str] && funcs[str](value) !== undefined) {
-          tempArr.push(funcs[str](value))
-          setNewAddedError(    
-            produce(newAddedError, draft => {
-              draft[index][header] = true
-            })
-          )
-        } else {
-          setNewAddedError(    
-            produce(newAddedError, draft => {
-              draft[index][header] = false
-            })
-          )
-        }
-  
-      })
-    }
-    console.log(tempArr)
-    console.log(helperTexts)
-    //모든 에러메시지를 array에 담은뒤 array를 join시켜서 출력할 helperText를 string으로 형성
-    let joinedStr = tempArr.join(', ')
-    setHelperTexts(    
-      produce(helperTexts, draft => {
-        draft[index][header] = joinedStr
-      })
-    )
-  }
-  //    -- QueryInput error props 반환용 함수
-  const getValid = (header) => {
-    let valid = ''
-    Object.keys(colAttr).map(key => {
-      if(header == key) {
-        valid = colAttr[key].validate
-      }
-    })
-    return valid
-  }
-//  -- 빈 새열 추가 기능
-  const onAddNewBlank = () => {
-    let tempObj = {}
-    headers.map(header => {
-      tempObj[header] = null
-    })
-    setAddedNew(
-      produce(addedNew, draft => {
-        draft.push(tempObj)
-      }) 
-    )
-    setHelperTexts(
-      produce(helperTexts, draft => {
-        draft.push({})
-      })
-    )
-    setNewAddedError(
-      produce(newAddedError, draft => {
-        draft.push({})
-      })
-    )
-    dispatch(actAddNewBlankQuery(frameNo))
-  }
-  const handleChangeNewAddedInput = (event, index, header) => {
-    const temp = event.target.value
-    setAddedNew(
-      produce(addedNew, draft => {
-        draft[index][header] = temp
-      })
-    )
-    checkValid(index, header, event.target.value)
-  }
   useEffect(()=>{
     if (querySelected && querySelected.newAdded) {
       querySelected.newAdded.map((rowObj, index) => {
@@ -509,6 +513,7 @@ const STTable = ({
       })
     }
   },[querySelected])
+ 
 
 
   console.log(fixedVals)
@@ -886,7 +891,7 @@ const STTable = ({
                             error      = {newAddedError[index][header]} 
                             onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                             onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
-                            helperText = {helperTexts[index][header]}
+                            helperText = {newAddedhelperTexts[index][header]}
                           />
                         </StyledTableCell>
                       )
