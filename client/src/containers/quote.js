@@ -1,131 +1,49 @@
-import React, { useEffect, useState } from 'react'
-import { connect, useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect }           from 'react'
+import { connect, useSelector, useDispatch }    from 'react-redux';
 
-import QuoteListComponent   from '../components/quoteList'
-import Table                from '../components/common/Table1'
-import InputTable           from '../components/common/InputTable'
-import QueryHeader          from '../components/common/queryHeader'
-import DialogST             from '../components/common/DialogST'
-
-import Client from '../containers/clients'
-
-import * as onFuncsDialog from '../modules/dialogs'
-import * as mainSearchAct from '../modules/mainSearch';
-import { setSearchKeyword } from '../modules/mainSearch'
-import { actQuery } from '../modules/query'
-
-import { setApiLoad } from '../modules/itemList'
-import { 
-    onAlreadyPickedCheck,
-    onSetClose,
-    onSetItemListHeader,
-    setSelectedItems,
-    setHeader,
-    setInputChange,
-    recordQuote,
-    querySubmit,
-    actSubmit,
+import { setAuthReset }                 from '../modules/auth'
+import { onDialogOpen }                 from '../modules/dialogs'
+import { getExchangeRate }              from '../modules/basicInfo'
+import {
     actUpdate, 
     actUpdateChange, 
     actClickedTableCol,
     actAdd,
     actDelete
-
- } from '../modules/quote'
- import { onDialogOpen } from '../modules/dialogs'
-
- import { actSetFilter } from '../modules/clients'
+}                                       from '../modules/quote'
 
 
-import {generateRandom}     from '../lib/common';
-import {getDateNow}     from '../lib/basicInfo';
+import DialogST     from '../components/common/DialogST'
+import Table        from '../components/common/Table1'
+import ButtonHeader from '../components/common/ButtonHeader'
 
 
-import TableContainer from '@material-ui/core/TableContainer';
-import Button from "@material-ui/core/Button";
-import { makeStyles } from '@material-ui/core/styles';
-import {produce} from 'immer'
+
+import spacelize                      from '../lib/spacelize'
+import {generateRandom}               from '../lib/common';
+
+import Button           from '@material-ui/core/Button';
+
 
 import axios                from '../lib/api/axios'
-
-
-const useStyles = makeStyles(theme => ({
-    root: {
-      flexGrow: 1,
-    },
-}))
+import {getIncludingKeys,
+    withoutIncludingKeys }  from '../lib/common'
 
 
 
-const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
-    const classes = useStyles();
+const QuoteList = ({motherType, motherNo, subTableAttr}) => {
     const dispatch = useDispatch();
-    
+
     //개체 기본 속성
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
-    const type = 'quoteContainer'
+    const type = 'QuoteList'
     const containerNo = type + '_' + frameNo
     const dataType = 'quote'
     // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
-    //쿼리헤더관련
-    const [foundResult, 
-        setFoundResult]                     = useState({});
-
-    const [changedHeaderInput, 
-        setChangedHeaderInput]              = useState({});
-        
-    const querySelected     = useSelector(state => state.quoteList.selected)
-    const queryRequested    = useSelector(state => state.quoteList.requested)
-    const queryVars         = useSelector(state => state.query[frameNo])
-
-    const {filter} = queryVars ? queryVars : ''
-
-    const [client, setClient]               = useState('');
-    const [clientRate, setClientRate]       = useState('');
-
-    const queryHeaderfuncs = () => {
-        const onSetClose = (type) => {
-            const ox = false
-            dispatch(onFuncsDialog.onDialogOpen(ox,type))
-        }
-        const onRecordToDB = () => {
-            dispatch(recordQuote(quoteProp.table))
-        }
-        const onQueryheaderInputChange = (title, e) => {
-            setChangedHeaderInput(
-                produce(changedHeaderInput, draft => {
-                    draft[title] = e.target.value
-                }
-            ))
-        }
-        const onQueryHeaderKeyPress = async (frameNo, title, e) => {
-            if (e.key === 'Enter') {
-                let type = 'filter'
-                let tempObj = {}
-                const daialogNo = title + '_' + frameNo
-                tempObj[frameNo] = {}
-                tempObj[frameNo][title] = changedHeaderInput[title]
-                // await axios.post('/api/' + type )
-                dispatch(actQuery(frameNo, type, title, e.target.value))
-                dispatch(actSubmit(tempObj))
-                dispatch(actSetFilter(frameNo, title, e.target.value))
-                dispatch(onDialogOpen(true, daialogNo))
-            }
-        }
-        const funcsObj = {
-            onSetClose : onSetClose,
-            onRecordToDB : onRecordToDB,
-            headerInputChanged : onQueryheaderInputChange,
-            onKeyPressOnInput : onQueryHeaderKeyPress
-        }
-        return funcsObj
-    }
-
-
     //다이얼로그 관련
-    const opened    = useSelector(state => state.dialogs.opened)
+    const opened         = useSelector(state => state.dialogs.opened)
     const dialogOpened   = useSelector(state => state.dialogs.opened)
     const simpleQuery = 'simple'
     const detailQuery = 'detail'
@@ -139,34 +57,27 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
         })
         return result
     }
-
     const DialogsAttr = {
-        client : {
-            title : 'client_' + frameNo,
-            maxWidth : 'xl' ,
-            funcs : queryHeaderfuncs(),
-            open : checkOpened('client_' + frameNo),
-            table : {
-                tableButton : [
-                    {
-                        title : 'insert',
-                        func : function(row, index, containerNo){
-                        },
-                        mother : containerNo
-                    },
-                ],
-                setFindOneResult : setFoundResult,
-                frameNo : 'client_' + frameNo,
-                initialFilter : filter ? filter.client : '',
-                directQuery : true
-            },
-        }
+      itemAdd : {
+        title : detailQuery,
+        maxWidth : 'md' ,
+        // funcs : funcs,
+        open : checkOpened(detailQuery),
+        scroll : 'paper'
+        
+      },
+      itemQuery : {
+          title : simpleQuery,
+          maxWidth : 'xl' ,
+          // funcs : funcs,
+          open : checkOpened(simpleQuery)
+      }
     }
 
 
     //테이블 관련
-    const [tableRawData,
-        setTableRawData]         = useState([])
+    const [tableRawData, 
+        setTableRawData]                = useState([])
     const [primaryKey, setPrimaryKey]   = useState('');
     const [includingKeys, 
         setIncludingKeys]               = useState([]);
@@ -176,16 +87,19 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
     //테이블 업데이트
     const [fixedVals, setFixedVals]             = useState([]);
     const [updated, setUpdated]                 = useState(false);
-    const {update} = useSelector(({ item }) => ({ update : item.table.update }));
+    const {update} = useSelector(({ quote }) => ({ update : quote.table.update }));
 
     //테이블값 새로 추가
     const [addedNew, setAddedNew]               = useState([]);
     const onSubmitNewAdded = async () => {
-        // let obj = {addedNew :}
-        await dispatch(actAdd(addedNew, includingKeys))
+        await addedNew.map(obj => {
+            dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
+        })
+        // await dispatch(actAdd(addedNew, primaryKey, includingKeys))
         await getRawData()
         await setAddedNew([])
     }
+
 
     //테이블값 수정
     const onSubmitUpdatedVals = async (fixedVals) => {
@@ -198,42 +112,42 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
 
     //테이블값 삭제
     const setDelete = async (codes) =>{
+        console.log(codes)
         await codes.map(code => {
-            dispatch(actDelete(type, code.itemCode))
+            dispatch(actDelete(dataType, code[primaryKey]))
         })
         await setUpdated(true)
         await setSelected([])
     }
-    
+
     //테이블 셀렉트
-    const [selected, setSelected]               = useState([]);
+    const [selected, setSelected]         = useState([]);
 
-    // //테이블 클릭
-    // const [clickedCol, 
-    // setClickedCol]     = useState({});
-    // const clicked        = useSelector(state => state.item.table.clicked)
-    // const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
-      
 
-    // useEffect(() => {
-    //     if (Object.keys(clickedCol).length > 0) {
-    //         dispatch(actClickedTableCol(clickedCol))
-    //     } 
-    //   },[clickedCol])
-    //   //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
-    //   useEffect(() => {
-    //     let keys = Object.keys(clicked)
-    //     if (keys.length > 0) {
-    //       if (includingKeys.price.includes(clicked.header)) {
-    //         dispatch(actClickedTableCol(clickedCol))
-    //         // dispatch(loadAccount(clickedCol))
-    //         dispatch(onDialogOpen(true, detailQuery, clickedCol))
-    //       }else{
-    //         dispatch(actClickedTableCol(clickedCol))
-    //         dispatch(onDialogOpen(true, simpleQuery, clickedCol))
-    //       }
-    //     } 
-    // },[clicked])
+    //테이블 클릭
+    const [clickedCol, 
+      setClickedCol]     = useState({});
+    const clicked        = useSelector(state => state.quote.table.clicked)
+    const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
+
+    useEffect(() => {
+      if (Object.keys(clickedCol).length > 0) {
+          dispatch(actClickedTableCol(clickedCol))
+      } 
+    },[clickedCol])
+    //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
+    useEffect(() => {
+      let keys = Object.keys(clicked)
+      if (keys.length > 0) {
+        if (includingKeys.price.includes(clicked.header)) {
+          dispatch(actClickedTableCol(clickedCol))
+          dispatch(onDialogOpen(true, detailQuery, clickedCol))
+        }else{
+          dispatch(actClickedTableCol(clickedCol))
+          dispatch(onDialogOpen(true, simpleQuery, clickedCol))
+        }
+      } 
+    },[clicked])
 
 
     //테이블 필터
@@ -241,179 +155,173 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
     const [filteredData, setFilteredData]       = useState(tableRawData);
 
 
+    //테이블 로드
+    const getRawData = async () => {
+        await axios.get('/api/' + dataType + '/load').then(res => {
+            console.log(res)
+            setPrimaryKey(res.data.primaryKey)
+            setIncludingKeys(res.data.includingKeys)
+            setTableRawData(withoutIncludingKeys(res.data.vals))
+            setFindingKeys(res.data.findingKeys)
+        })
+    }
+    useEffect(() => {
+        getRawData()
+    },[])
 
-    const quoteProp         = useSelector(state => state.quoteList)
 
-    const [date, setDate]                   = useState(getDateNow());
+    
+    //Api로부터 findingKeys를 받은 뒤
+    //input을 query창으로 형성할 컬럼의 목록을 arr로
+    const [findingCols, 
+        setFindingCols]                = useState([])
+    useEffect(() => {
+        let tempArr = []
+        findingKeys.map(obj => {
+            Object.keys(obj).map(asStr => {
+                Object.keys(obj[asStr]).map(codeKey => {
+                    tempArr.push(obj[asStr][codeKey])
+                })
+            })
+        })
+        setFindingCols(tempArr)
+    },[findingKeys])
 
-    const getRawData = () => {
 
+    const getAsStrByColName = (colName) => {
+        let tempAsStr = ''
+        findingKeys.map(obj => {
+            Object.keys(obj).map(asStr => {
+                Object.keys(obj[asStr]).map(codeKey => {
+                    tempAsStr = asStr
+                })
+            })
+        })
+        return tempAsStr
     }
 
-    const quoteNo = date.yymmdd + '-' + quoteProp.table.info.quoteLastNo
-    
-    useEffect(() => {
-        if (Object.keys(foundResult).includes('clientRate')){
-            console.log('클라이언트레이트있음', foundResult.clientRate)
-            setClientRate(foundResult.clientRate)
-        }
-    },[foundResult])
+    const test = () => {
+        // dispatch(loadAccount())
+        // dispatch(onDialogOpen(true, detailQuery, clickedCol))
+        console.log(getAsStrByColName('itemName'))
+    }
+
+
+    if (update) {
+        getRawData()
+        dispatch(actUpdateChange(false))
+        setUpdated(true)
+    }
 
 
 
+    //table 관련 속성들
     const tableStates = {
-        rawData     : quoteProp.table.contents,
-        // updated     : updated,
-        // clickedCol  : clickedCol,
-        // addedNew    : addedNew,
-        selected    : selected,
+        rawData         : tableRawData,
+        updated         : updated,
+        clickedCol      : clickedCol,
+        addedNew        : addedNew,
+        selected        : selected,
         filterKeyword   : filterKeyword,
         filteredData    : filteredData
     }
-
     const setTableStates = {
-        setRawData         : setTableRawData,
-        // setUpdated      : setUpdated,
-        // setClickedCol   : setClickedCol,
-        // setAddedNew     : setAddedNew,
-        // setSelected     : setSelected,
-        setFilterKeyword   : setFilterKeyword,
+        setTableRawData     : setTableRawData,
+        setUpdated          : setUpdated,
+        setClickedCol       : setClickedCol,
+        setAddedNew         : setAddedNew,
+        setSelected         : setSelected,
+        setFilterKeyword    : setFilterKeyword,
         setFilteredData     : setFilteredData
     }
-
     const funcs = {
         load : getRawData,
-        // onSubmitUpdatedVals : onSubmitUpdatedVals,
-        // onDialogOpen : onDialogOpen,
-        // onDelete : setDelete,
-        // onSubmitNewAdded : onSubmitNewAdded
+        onSubmitUpdatedVals : onSubmitUpdatedVals,
+        onDialogOpen : onDialogOpen,
+        onDelete : setDelete,
+        onSubmitNewAdded : onSubmitNewAdded
     }
-    
-
-
-    const queryHeaderProps = [
-        [
-            {type : 'paper', size : 3, title: 'quoteNo', state : quoteNo, style:'regular'},
-            {type : 'paper', title: 'date', state: date.yyyymmdd1 ,style:'regular'},
-        ],
-        [
-            {type : 'input', size : 3, title: 'client', state : client, setState: setClient, style:'regular'},
-            {type : 'paper', title: 'clientRate', state : clientRate, setState : setClientRate, style:'regular'},
-        ]
-    ]
-
-
-    const defaultHideCols = [
-        'width',
-        'depth',
-        'weight',
-        'id',
-        'height',
-        'description',
-        'itemCode',
-        'notes',
-        'itemCode',
-        'supplierCode',
-        'makerModelNo',
-    ]
-
-    const arrangeRules = [   //헤더 순서를 정하려면 여기다가 배열값 추가 하면 됨.
-        ['importRate', 'description'],
-        ['weight', 'height'],
-        ['priceRate', 'VNPrice'],
-        ['quotePrice', 'priceRate'],
-        ['qty', 'quotePrice'],
-        ['amount', 'qty'],
-        ['notes', 'amount'],
-    ]
-
-
     const tableAttr = {
         flagAble : true,
-        fixModeAble : false,
-        colAttr :   {
+        fixModeAble : true,
+        colAttr : {
             itemCode : {
-                type : true,
+                primary : true,
                 fixable : false,
-                defaultHided : true
+                defaultHided : false,
+                validate : ['code']
             },
             itemName : {
                 fixable : true,
-                defaultHided : false
+                defaultHided : false,
+                validate : ['string']
             },
             description : {
                 fixable : true,
-                defaultHided : true
+                defaultHided : true,
+                validate : ['string']
             },
             weight : {
                 fixable : true,
-                defaultHided : true
+                defaultHided : true,
+                validate : ['maxValue5', 'number']
             },
             width : {
                 fixable : true,
-                defaultHided : true
+                defaultHided : true,
+                validate : ['maxValue5', 'number']
             },
             depth : {
                 fixable : true,
-                defaultHided : true
+                defaultHided : true,
+                validate : ['maxValue5', 'number']
             },
             height : {
                 fixable : true,
-                defaultHided : true
+                defaultHided : true,
+                validate : ['maxValue5', 'number']
             },
             importTaxRate : {
                 fixable : true,
-                defaultHided : false
+                defaultHided : false,
+                validate : ['percent', 'plus', 'decimal2', 'number']
             },
             maker : {
                 fixable : true,
-                defaultHided : false
-            },
-            supplierCode : {
-                fixable : true,
-                defaultHided : false
-            },
-            notes : {
-                fixable : true,
-                defaultHided : true
+                defaultHided : false,
+                validate : ['string']
             },
             makerModelNo : {
                 fixable : true,
-                defaultHided : true
+                defaultHided : false,
+                validate : ['string']
+            },
+            supplierName : {
+                fixable : true,
+                defaultHided : false,
+                query : true,
+                dialog : getAsStrByColName('supplierName'),
+                validate : ['string']
             },
             VNPrice : {
                 fixable : true,
-                defaultHided : false
+                defaultHided : false,
+                validate : ['number', 'max15'],
+            },
+            buyingPKR : {
+                fixable : true,
+                defaultHided : false,
+                validate : ['number'],
             },
             stkVVar : {
                 fixable : true,
-                defaultHided : true
+                defaultHided : true,
+                validate : ['decimal2', 'max1', 'number'],
             },
             stkCVar : {
                 fixable : true,
-                defaultHided : true
-            },
-            priceRate : {
-                fixable : true,
-                defaultHided : false,
-                defaultInput : true,
-                defaultValue : 0
-            },
-            qty : {
-                fixable : true,
-                defaultHided : false,
-                defaultInput : true,
-                defaultValue : 0
-            },
-            amount : {
-                calValue : true,
-                value : function(index) {
-                    let result = ''
-                    if (filteredData[index].buyingPKR && filteredData[index].qty) {
-                        result = filteredData[index].buyingPKR * filteredData[index].qty
-                    }
-                    return result
-                }
+                defaultHided : true,
+                validate : ['decimal2', 'max1', 'number'],
             },
             createdAt : {
                 fixable : false,
@@ -424,45 +332,66 @@ const QuoteContainer = ({motherType, motherNo, subTableAttr}) => {
                 defaultHided : true
             },
         },
+        tableButton : [
+            {
+                title : 'insert',
+                func : function(selected){
+                    // dispatch(onAlreadyPickedCheck(selected.value))
+                },
+                mother : containerNo
+            },
+        ],
+    }
+
+    
+    const arrFunc = () => {
+      let Arr = []
+      const makeFieldAttrArr = (name, component) => {
+          const obj = {
+              name : name,
+              component : component,
+              label : spacelize(name)
+          }
+          Arr.push(obj)
+      }
+      makeFieldAttrArr('firstName', 'renderTextField')
+      makeFieldAttrArr('secondName', 'renderTextField')
+      return Arr
     }
 
     return(
-        <div className = {classes.root}> 
-        
-        <h1>Quote List</h1>
-            <QueryHeader
-                key = {'queryHeader'}
-                motherType          = {type}
-                motherNo            = {frameNo}
-                funcs               = {queryHeaderfuncs()}
-                queryHeaderProps    = {queryHeaderProps}
-            >
-            </QueryHeader>
+        <>
+          <Button onClick = {test}>푸하하</Button>
+          {/* <DialogST attr = {DialogsAttr.itemAdd}>
+            <ItemAdd 
+              title       = {DialogsAttr.itemAdd.title} 
+              fieldsAttr  = {arrFunc()}
+              motherType  = {type}
+              motherNo    = {frameNo}
+              reqKey      = {primaryKey}
+              reqCode     = {reqQueryCode}
+            ></ItemAdd>
+          </DialogST> */}
 
-            <DialogST attr = {DialogsAttr.client} motherNo = {frameNo} motherType = {type}>
-                <Client
-                    motherType          = {type}
-                    motherNo            = {frameNo} 
-                    subTableAttr        = {DialogsAttr.client.table}
-                ></Client>
-            </DialogST>
+          <Table 
+              motherType  = {type}
+              motherNo    = {frameNo}
+              states      = {tableStates}
+              setStates   = {setTableStates}
+              attr        = {tableAttr}
+              funcs       = {funcs}
+          ></Table>
 
-            <TableContainer>
-                {quoteProp.table.contents.length !== 0 ? 
-                    <Table 
-                        motherType  = {type}
-                        motherNo    = {frameNo}
-                        states      = {tableStates}
-                        setStates   = {setTableStates}
-                        attr        = {tableAttr}
-                        funcs       = {funcs}
-                    >
-                    </Table> : ''}
-            </TableContainer>
-
-
-        </div>
+          {/* <DialogST attr = {DialogsAttr.itemQuery}>
+            <ItemQuery 
+              motherType  = {type}
+              motherNo    = {frameNo}
+              reqKey      = {primaryKey}
+              reqCode     = {reqQueryCode}
+            ></ItemQuery>
+          </DialogST> */}
+        </>
     )
 }   
 
-export default QuoteContainer
+export default QuoteList

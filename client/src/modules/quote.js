@@ -75,6 +75,7 @@ export function* quoteSaga() {
 const initialState = {
     pickedCount: 0,
     table : {
+      clicked : {},
       contents:[],
       header : [],
       totalValues :  {

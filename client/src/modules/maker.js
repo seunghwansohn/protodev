@@ -2,14 +2,15 @@ import produce from 'immer'
 import { createAction, handleActions }                from 'redux-actions';
 import { takeLatest, takeEvery, call }                from 'redux-saga/effects';
 import createRequestSaga, {createRequestActionTypes } from '../lib/createRequestSaga';
-import * as maker                                     from '../lib/api/maker';
+import * as maker                                      from '../lib/api/maker';
 
 
 const initialState = {
     table : {
-        header : [],
-        contents : [],
-        update : false
+        header      : [],
+        contents    : [],
+        update      : false,
+        clicked     : {}
     }
 }
 
@@ -26,25 +27,32 @@ const [SET_LOAD, SET_LOAD_SUCCESS, SET_LOAD_ADD_FAILURE ]
 = createRequestActionTypes('maker/SET_LOAD');
 const [SET_DELETE, SET_DELETE_SUCCESS, SET_DELETE_FAILURE ] 
 = createRequestActionTypes('maker/SET_DELETE');
+const [SET_SUBMIT_ADD_MAKER, SET_SUBMIT_ADD_MAKER_SUCCESS, SET_SUBMIT_ADD_MAKER_FAILURE ] 
+= createRequestActionTypes('maker/SET_SUBMIT_ADD_MAKER');
 
 const addSaga       = createRequestSaga(SET_ADD, maker.addNew);
 const loadSaga      = createRequestSaga(SET_LOAD, maker.load);
 const updateSaga    = createRequestSaga(SET_UPDATE, maker.update);
 const deleteSaga    = createRequestSaga(SET_DELETE, maker.del);
+const addMakerSaga   = createRequestSaga(SET_SUBMIT_ADD_MAKER, maker.addNew);
 
-export const setHeader          = createAction(SET_HEADER, columns => columns)
-export const setAdd             = createAction(SET_ADD, info => info)
-export const setLoad            = createAction(SET_LOAD)
-export const setUpdate          = createAction(SET_UPDATE, arr => arr)
-export const updateChange       = createAction(SET_UPDATE_CHANGE, ox => ox)
-export const setClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
-export const setDelete          = createAction(SET_DELETE, (type, code) => ({type, code}))
+export const actHeader          = createAction(SET_HEADER, columns => columns)
+export const actAdd             = createAction(SET_ADD, (addedNew, primaryKey, includingKeys, findingKeys) => ({addedNew, primaryKey, includingKeys, findingKeys}))
+export const actLoad            = createAction(SET_LOAD)
+export const actUpdate          = createAction(SET_UPDATE, arr => arr)
+export const actUpdateChange    = createAction(SET_UPDATE_CHANGE, ox => ox)
+export const actClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
+export const actDelete          = createAction(SET_DELETE, (type, code) => ({type, code}))
+export const actSubmitAddItem   = createAction(SET_SUBMIT_ADD_MAKER, maker => maker)
+
+
 
 export function* makerSaga() {
-    yield takeLatest(SET_ADD,    addSaga);
-    yield takeLatest(SET_LOAD,   loadSaga);
-    yield takeEvery(SET_UPDATE, updateSaga);
-    yield takeEvery (SET_DELETE, deleteSaga);
+    yield takeEvery    (SET_ADD,    addSaga);
+    yield takeLatest    (SET_LOAD,   loadSaga);
+    yield takeEvery     (SET_UPDATE, updateSaga);
+    yield takeEvery     (SET_DELETE, deleteSaga);
+    yield takeLatest    (SET_SUBMIT_ADD_MAKER, addMakerSaga);
 }
 
 
@@ -52,7 +60,7 @@ function reducer (state = initialState, action) {
     switch (action.type) {
         case SET_UPDATE_CHANGE:
             return produce(state, draft => {
-                draft.table.update = action.payload
+                draft.table.update = action.payload 
             })
         case SET_HEADER:
             return produce(state, draft => {
@@ -74,10 +82,15 @@ function reducer (state = initialState, action) {
             })
         case SET_CLICKED_TABLE_COL:
             return produce(state, draft => {
+                draft.table.clicked = action.payload
             })
         case SET_DELETE:
             return produce(state, draft => {
             })
+        case SET_UPDATE:
+            return produce(state, draft => {
+            })
+
         default:
             return state;
     } 

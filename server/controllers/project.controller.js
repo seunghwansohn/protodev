@@ -1,9 +1,45 @@
 const db = require("../models");
 const config = require("../config/auth.config");
-const Main = db.project;
+
+const monolize = require("../lib/monolizeSequel");
+const calPrice = require("../lib/calPrice");
+const rmTimeFromReq = require("../lib/sequelMiddleWares");
+const getIncludeName = require("../lib/getIncludeName");
+const getIncludingArr = require("../lib/getIncludingArr");
+const getIncludingAttr = require("../lib/getIncludingAttr");
+const getFindingAttr = require("../lib/getFindingAttr");
+
+
+const getCreateObj = require("../lib/getCreateObj");
+const setNameToCode = require("../lib/setNameToCode");
+
+const {produce} = require ('immer')
+
+const Project = db.project;
 const Note = db.projectNote;
 
+const relAttr = {
+    source : Project,
+    rels : [
+    //   {
+    //     target: Supplier,
+    //     relType : 'finding',
+    //     asStr : 'supplier',
+    //     attributes : ['supplierName'],
+    //     primaryCode : 'supplierCode'
+    //   },
+    //   {
+    //     target: ItemPrice,
+    //     relType : 'including',
+    //     asStr : 'price',
+    //     attributes :['VNPrice', 'stkVVar', 'buyingPKR', 'stkCVar']
+    //   }
+    ]
+}
+
 const Op = db.Sequelize.Op;
+const primaryKey   = 'projectCode'
+
 
 exports.addNew = (req, res) => {
     const Arr = req.body
@@ -26,12 +62,11 @@ exports.addNew = (req, res) => {
 };
 
 exports.load = (req, res) => {
-    Main.findAll({
-      include:[{model : Note, as : 'tasks'}]
-    }).then(project => {
-            result = project
-        }).then(() => {
-            res.status(200).send(result);
+    const includingAttr = getIncludingAttr(relAttr)
+    const findingAttr   = getFindingAttr(relAttr)
+  
+    getIncludeName(Project, Project, primaryKey, findingAttr, includingAttr).then(items => {
+      res.status(200).send(items)
     })
 };
 

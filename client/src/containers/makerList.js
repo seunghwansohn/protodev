@@ -1,173 +1,403 @@
-import React, { useState, useEffect } from 'react'
-import { connect, useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect }           from 'react'
+import { connect, useSelector, useDispatch }    from 'react-redux';
 
-import Table    from '../components/common/Table1'
-import DialogST from '../components/common/DialogST'
-import MakerQuery from './MakerQuery'
-
-import axios from '../lib/api/axios'
+import {checkedItem, IsThereSelected}   from '../modules/maker'
+import { setAuthReset }                 from '../modules/auth'
+import { onDialogOpen }                 from '../modules/dialogs'
+import { getExchangeRate }              from '../modules/basicInfo'
 
 import {
-    setUpdate, 
-    updateChange, 
-    setClickedTableCol,
-    setAdd,
-    setDelete
-}                            from '../modules/maker'
+    actUpdate, 
+    actUpdateChange, 
+    actClickedTableCol,
+    actAdd,
+    actDelete
+}                                       from '../modules/maker'
 
-import { onDialogOpen }      from '../modules/dialogs'
-
-
-const tableAttr = {
-    flag : true,
-    colAttr : {
-        makerCode : {
-            primary : true,
-            fixable : false,
-            defaultHided : false
-        },
-        makerName : {
-            fixable : true,
-            defaultHided : false
-        },
-        origin : {
-            fixable : true,
-            defaultHided : false
-        },
-        createdAt : {
-            fixable : false,
-            defaultHided : true
-        },
-        updatedAt : {
-            fixable : false,
-            defaultHided : true
-        }
-    }
-}
-
-const Maker = props => {
-    const dispatch = useDispatch()
-
-    const type = 'maker'
-
-    const [rawData, setRawData]           = useState([])
-    const [fixedVals, setFixedVals]     = useState([]);
-    const [updated, setUpdated]         = useState(false);
-    const [clickedCol, setClickedCol]   = useState({});
-    const [addedNew, setAddedNew]       = useState([]);
-    const [selected, setSelected]       = useState([]);
-
-    const { update } = useSelector(({ maker }) => ({ update : maker.table.update }));
-    const opened = useSelector(state => state.dialogs.opened)
+import {load as loadAccount} from '../modules/reduxForm'
 
 
-    const getRawData = async () => {
-        await axios.get('/api/' + type + '/load').then(res => {
-            setRawData(res.data)
-        })
-    }
+import DialogST     from '../components/common/DialogST'
+import Table        from '../components/common/Table1'
+import ButtonHeader from '../components/common/ButtonHeader'
 
-    const onDelete = async (codes) =>{
-        await codes.map(code => {
-            dispatch(setDelete(type, code.makerCode))
-        })
-        await setUpdated(true)
-        await setSelected([])
-    }
 
-    const onSubmitNewAdded = async (addedNew) => {
-        await dispatch(setAdd(addedNew))
-        await getRawData()
-        await setAddedNew([])
-    }
 
-    const onSubmitUpdatedVals = async (fixedVals) => {
-        await fixedVals.map(arr => {
-            dispatch(setUpdate(arr))
-        })
-        await setFixedVals([])
-    }
+import spacelize                      from '../lib/spacelize'
+import {generateRandom}               from '../lib/common';
+
+import MakerQuery   from '../containers/MakerQuery'
+
+import Button           from '@material-ui/core/Button';
+
+
+import axios                from '../lib/api/axios'
+import {getIncludingKeys,
+    withoutIncludingKeys }  from '../lib/common'
+
+
+
+const MakerList = ({motherType, motherNo, subTableAttr}) => {
+    const dispatch = useDispatch();
+
+    //개체 기본 속성
+    const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
+    const type = 'makerList'
+    const containerNo = type + '_' + frameNo
+    const dataType = 'maker'
+    // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+
+
+    //다이얼로그 관련
+    const opened         = useSelector(state => state.dialogs.opened)
+    const dialogOpened   = useSelector(state => state.dialogs.opened)
+    const simpleQuery = 'simple'
+    const detailQuery = 'detail'
 
     const checkOpened = (title) => {
         let result = ''
-        opened.map(array => {
+        dialogOpened.map(array => {
             if (array.type == title){
                 result = array.ox
             }
         })
         return result
     }
+    const DialogsAttr = {
+      itemAdd : {
+        title : detailQuery,
+        maxWidth : 'md' ,
+        // funcs : funcs,
+        open : checkOpened(detailQuery),
+        scroll : 'paper'
+        
+      },
+      itemQuery : {
+          title : simpleQuery,
+          maxWidth : 'xl' ,
+          // funcs : funcs,
+          open : checkOpened(simpleQuery)
+      }
+    }
 
+
+    //테이블 관련
+    const [tableRawData, 
+        setTableRawData]                = useState([])
+    const [primaryKey, setPrimaryKey]   = useState('');
+    const [includingKeys, 
+        setIncludingKeys]               = useState([]);
+    const [findingKeys, 
+        setFindingKeys]               = useState([]);
+
+    //테이블 업데이트
+    const [fixedVals, setFixedVals]             = useState([]);
+    const [updated, setUpdated]                 = useState(false);
+    const {update} = useSelector(({ maker }) => ({ update : maker.table.update }));
+
+    //테이블값 새로 추가
+    const [addedNew, setAddedNew]               = useState([]);
+    const onSubmitNewAdded = async () => {
+        await addedNew.map(obj => {
+            dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
+        })
+        // await dispatch(actAdd(addedNew, primaryKey, includingKeys))
+        await getRawData()
+        await setAddedNew([])
+    }
+
+
+    //테이블값 수정
+    const onSubmitUpdatedVals = async (fixedVals) => {
+        await fixedVals.map(arr => {
+            dispatch(actUpdate(arr))
+        })
+        await setFixedVals([])
+    }
+
+
+    //테이블값 삭제
+    const setDelete = async (codes) =>{
+        console.log(codes)
+        await codes.map(code => {
+            dispatch(actDelete(dataType, code[primaryKey]))
+        })
+        await setUpdated(true)
+        await setSelected([])
+    }
+
+    //테이블 셀렉트
+    const [selected, setSelected]         = useState([]);
+
+
+    //테이블 클릭
+    const [clickedCol, 
+      setClickedCol]     = useState({});
+    const clicked        = useSelector(state => state.item.table.clicked)
+    const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
+
+    useEffect(() => {
+      if (Object.keys(clickedCol).length > 0) {
+          dispatch(actClickedTableCol(clickedCol))
+      } 
+    },[clickedCol])
+    //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
+    useEffect(() => {
+      let keys = Object.keys(clicked)
+      if (keys.length > 0) {
+        if (includingKeys.price.includes(clicked.header)) {
+          dispatch(actClickedTableCol(clickedCol))
+          dispatch(loadAccount(clickedCol))
+          dispatch(onDialogOpen(true, detailQuery, clickedCol))
+        }else{
+          dispatch(actClickedTableCol(clickedCol))
+          dispatch(onDialogOpen(true, simpleQuery, clickedCol))
+        }
+      } 
+    },[clicked])
+
+
+    //테이블 필터
+    const [filterKeyword, setFilterKeyword]     = useState('');
+    const [filteredData, setFilteredData]       = useState(tableRawData);
+
+
+    //테이블 로드
+    const getRawData = async () => {
+        await axios.get('/api/' + dataType + '/load').then(res => {
+            setPrimaryKey(res.data.primaryKey)
+            setIncludingKeys(res.data.includingKeys)
+            setTableRawData(withoutIncludingKeys(res.data.vals))
+            setFindingKeys(res.data.findingKeys)
+        })
+    }
     useEffect(() => {
         getRawData()
     },[])
 
 
-
-    useEffect(() => {
-        if (Object.keys(clickedCol).length > 0) {
-            dispatch(setClickedTableCol(clickedCol))
-            dispatch(onDialogOpen(true, type, clickedCol))
-        } 
-    },[clickedCol])
     
+    //Api로부터 findingKeys를 받은 뒤
+    //input을 query창으로 형성할 컬럼의 목록을 arr로
+    const [findingCols, 
+        setFindingCols]                = useState([])
+    useEffect(() => {
+        let tempArr = []
+        findingKeys.map(obj => {
+            Object.keys(obj).map(asStr => {
+                Object.keys(obj[asStr]).map(codeKey => {
+                    tempArr.push(obj[asStr][codeKey])
+                })
+            })
+        })
+        setFindingCols(tempArr)
+    },[findingKeys])
+
+
+    const getAsStrByColName = (colName) => {
+        let tempAsStr = ''
+        findingKeys.map(obj => {
+            Object.keys(obj).map(asStr => {
+                Object.keys(obj[asStr]).map(codeKey => {
+                    tempAsStr = asStr
+                })
+            })
+        })
+        return tempAsStr
+    }
+
+    const test = () => {
+        // dispatch(loadAccount())
+        // dispatch(onDialogOpen(true, detailQuery, clickedCol))
+        console.log(getAsStrByColName('itemName'))
+    }
+
+
     if (update) {
         getRawData()
-        dispatch(updateChange(false))
+        dispatch(actUpdateChange(false))
         setUpdated(true)
     }
 
-    const states = {
-        rawData     : rawData,
-        updated     : updated,
-        clickedCol  : clickedCol,
-        addedNew    : addedNew,
-        selected    : selected
-    }
 
-    const setStates = {
-        setRawData      : setRawData,
-        setUpdated      : setUpdated,
-        setClickedCol   : setClickedCol,
-        setAddedNew     : setAddedNew,
-        setSelected     : setSelected
-    }
 
+    //table 관련 속성들
+    const tableStates = {
+        rawData         : tableRawData,
+        updated         : updated,
+        clickedCol      : clickedCol,
+        addedNew        : addedNew,
+        selected        : selected,
+        filterKeyword   : filterKeyword,
+        filteredData    : filteredData
+    }
+    const setTableStates = {
+        setTableRawData     : setTableRawData,
+        setUpdated          : setUpdated,
+        setClickedCol       : setClickedCol,
+        setAddedNew         : setAddedNew,
+        setSelected         : setSelected,
+        setFilterKeyword    : setFilterKeyword,
+        setFilteredData     : setFilteredData
+    }
     const funcs = {
         load : getRawData,
         onSubmitUpdatedVals : onSubmitUpdatedVals,
         onDialogOpen : onDialogOpen,
-        onDelete : onDelete,
+        onDelete : setDelete,
         onSubmitNewAdded : onSubmitNewAdded
     }
+    const tableAttr = {
+        flagAble : true,
+        fixModeAble : true,
+        colAttr : {
+            makerCode : {
+                primary : true,
+                fixable : false,
+                defaultHided : false,
+                validate : ['code']
+            },
+            makerName : {
+                fixable : true,
+                defaultHided : false,
+                validate : ['string']
+            },
+            description : {
+                fixable : true,
+                defaultHided : true,
+                validate : ['string']
+            },
+            weight : {
+                fixable : true,
+                defaultHided : true,
+                validate : ['maxValue5', 'number']
+            },
+            width : {
+                fixable : true,
+                defaultHided : true,
+                validate : ['maxValue5', 'number']
+            },
+            depth : {
+                fixable : true,
+                defaultHided : true,
+                validate : ['maxValue5', 'number']
+            },
+            height : {
+                fixable : true,
+                defaultHided : true,
+                validate : ['maxValue5', 'number']
+            },
+            importTaxRate : {
+                fixable : true,
+                defaultHided : false,
+                validate : ['percent', 'plus', 'decimal2', 'number']
+            },
+            maker : {
+                fixable : true,
+                defaultHided : false,
+                validate : ['string']
+            },
+            makerModelNo : {
+                fixable : true,
+                defaultHided : false,
+                validate : ['string']
+            },
+            supplierName : {
+                fixable : true,
+                defaultHided : false,
+                query : true,
+                dialog : getAsStrByColName('supplierName'),
+                validate : ['string']
+            },
+            VNPrice : {
+                fixable : true,
+                defaultHided : false,
+                validate : ['number', 'max15'],
+            },
+            buyingPKR : {
+                fixable : true,
+                defaultHided : false,
+                validate : ['number'],
+            },
+            stkVVar : {
+                fixable : true,
+                defaultHided : true,
+                validate : ['decimal2', 'max1', 'number'],
+            },
+            stkCVar : {
+                fixable : true,
+                defaultHided : true,
+                validate : ['decimal2', 'max1', 'number'],
+            },
+            createdAt : {
+                fixable : false,
+                defaultHided : true
+            },
+            updatedAt : {
+                fixable : false,
+                defaultHided : true
+            },
+        },
+        tableButton : [
+            {
+                title : 'insert',
+                func : function(selected){
+                    // dispatch(onAlreadyPickedCheck(selected.value))
+                },
+                mother : containerNo
+            },
+        ],
+    }
 
-    const DialogsAttr = {
-        makerQuery : {
-            title : 'maker',
-            maxWidth : 'xl' ,
-            funcs : funcs,
-            open : checkOpened('maker')
-        }
+    
+    const arrFunc = () => {
+      let Arr = []
+      const makeFieldAttrArr = (name, component) => {
+          const obj = {
+              name : name,
+              component : component,
+              label : spacelize(name)
+          }
+          Arr.push(obj)
+      }
+      makeFieldAttrArr('firstName', 'renderTextField')
+      makeFieldAttrArr('secondName', 'renderTextField')
+      return Arr
     }
 
     return(
         <>
-            <Table 
-                type        = {type}
-                tableArr    = {rawData.data}  
-                attr        = {tableAttr}
-                funcs       = {funcs}
-                states      = {states}
-                setStates   = {setStates}
-            ></Table>
+          <Button onClick = {test}>푸하하</Button>
+          {/* <DialogST attr = {DialogsAttr.itemAdd}>
+            <ItemAdd 
+              title       = {DialogsAttr.itemAdd.title} 
+              fieldsAttr  = {arrFunc()}
+              motherType  = {type}
+              motherNo    = {frameNo}
+              reqKey      = {primaryKey}
+              reqCode     = {reqQueryCode}
+            ></ItemAdd>
+          </DialogST> */}
 
-            <DialogST attr = {DialogsAttr.makerQuery}>
-                <MakerQuery reqCode = {clickedCol}
-                ></MakerQuery>
-            </DialogST>
-            
+          <Table 
+              motherType  = {type}
+              motherNo    = {frameNo}
+              states      = {tableStates}
+              setStates   = {setTableStates}
+              attr        = {tableAttr}
+              funcs       = {funcs}
+          ></Table>
+
+          {/* <DialogST attr = {DialogsAttr.itemQuery}>
+            <ItemQuery 
+              motherType  = {type}
+              motherNo    = {frameNo}
+              reqKey      = {primaryKey}
+              reqCode     = {reqQueryCode}
+            ></ItemQuery>
+          </DialogST> */}
         </>
     )
 }   
 
-export default Maker
+export default MakerList

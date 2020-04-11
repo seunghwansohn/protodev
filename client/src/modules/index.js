@@ -2,7 +2,7 @@ import { combineReducers }  from 'redux';
 import {all}                from 'redux-saga/effects'
 
 import item, {itemSaga}    from './itemList'
-import quoteList, {quoteSaga}   from './quote'
+import quote, {quoteSaga}   from './quote'
 import mainSearch               from './mainSearch'
 import clients, {clientsSaga}   from './clients'
 import dialogs                  from './dialogs'
@@ -27,7 +27,7 @@ import reduxFormInit from './reduxForm'
 
 const rootReducer = combineReducers({
     item,
-    quoteList,
+    quote,
     mainSearch,
     loading,
     clients,
