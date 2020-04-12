@@ -317,6 +317,8 @@ const STTable = ({
     tempObj2.value  = value
     tempObj2.row    = row
     tempObj2.header = header
+    tempObj2.primaryCode = getPrimaryCode(row)
+
 
     if (fixMode){
       const temp = {row : row, header : header}

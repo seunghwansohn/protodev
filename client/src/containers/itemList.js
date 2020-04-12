@@ -140,7 +140,9 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     const [clickedCol, 
       setClickedCol]     = useState({});
     const clicked        = useSelector(state => state.item.table.clicked)
-    const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
+    // const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
+    const [reqQueryCode, setReqQueryCode]  = useState('BF-50A')
+
 
     useEffect(() => {
       if (Object.keys(clickedCol).length > 0) {
@@ -150,7 +152,12 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
     useEffect(() => {
       let keys = Object.keys(clicked)
+      const {header, row, value} = clicked
+      const {clickType} = tableAttr.colAttr[header] ? tableAttr.colAttr[header] : ''
+    //   const primaryCode = getPrimaryCode
       if (keys.length > 0) {
+        console.log(clickType)
+        console.log(clickedCol)
         if (includingKeys.price.includes(clicked.header)) {
           dispatch(actClickedTableCol(clickedCol))
         //   dispatch(onDialogOpen(true, detailQuery, clickedCol))
@@ -231,6 +238,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         setUpdated(true)
     }
 
+    console.log(clicked)
 
 
     //table 관련 속성들
@@ -267,7 +275,8 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
                 primary : true,
                 fixable : false,
                 defaultHided : false,
-                validate : ['code']
+                validate : ['code'],
+                clickType : '렐렐'
             },
             itemName : {
                 fixable : true,

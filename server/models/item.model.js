@@ -33,7 +33,7 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.NUMBER,
       allowNull: true
     },
-    maker: {
+    makerCode: {
       type: Sequelize.STRING,
       allowNull: true
     },

@@ -14,16 +14,6 @@ export const ON_DIALOG_CLOSE  = 'dialog/ON_DIALOG_CLOSE'
 export const onDialogOpen = createAction(ON_DIALOG_OPEN, obj => obj)
 export const onDialogClose = createAction(ON_DIALOG_CLOSE, obj => obj)
 
-// const [ON_DIALOG_OPEN, ON_DIALOG_OPEN_SUCCESS, ON_DIALOG_OPEN_FAILURE ] 
-// = createRequestActionTypes('dialog/ON_DIALOG_OPEN');
-
-// const dialogLoadInitSaga = createRequestSaga(ON_DIALOG_OPEN, item.addItem);
-
-
-// export function* dialogSaga() {
-//   yield takeLatest(ON_DIALOG_OPEN, dialogLoadInitSaga);
-// }
-
 function reducer (state = initialState, action) {
   switch (action.type) {
     case ON_DIALOG_OPEN:

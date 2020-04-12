@@ -15,6 +15,8 @@ const setNameToCode = require("../lib/setNameToCode");
 const {produce} = require ('immer')
 
 const Item = db.item;
+const Maker = db.maker;
+
 const ItemPrice = db.itemPRice
 const Role = db.role;
 const Supplier = db.supplier;
@@ -28,6 +30,13 @@ const relAttr = {
       asStr : 'supplier',
       attributes : ['supplierName'],
       primaryCode : 'supplierCode'
+    },
+    {
+      target: Maker,
+      relType : 'finding',
+      asStr : 'maker',
+      attributes : ['makerName'],
+      primaryCode : 'makerCode'
     },
     {
       target: ItemPrice,
@@ -86,10 +95,11 @@ exports.update = async (req, res) => {
 };
 
 exports.itemLoad = (req, res) => {
+  // console.log(req.body)
 
   const includingAttr = getIncludingAttr(relAttr)
   const findingAttr   = getFindingAttr(relAttr)
-
+  // res.send(findingAttr)
   getIncludeName(Item, Supplier, primaryKey, findingAttr, includingAttr).then(items => {
     res.status(200).send(items)
   })

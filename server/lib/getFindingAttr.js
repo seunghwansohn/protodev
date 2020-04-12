@@ -1,8 +1,8 @@
 module.exports = getFindingAttr = (relAttr) => {
     let tempArr = []
-    let tempObj = {}
     relAttr.rels.map(rel => {
       if (rel.relType == 'finding') {
+        let tempObj = {}
         tempObj.model = rel.target
         tempObj.plain = true
         tempObj.raw = false

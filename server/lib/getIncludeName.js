@@ -30,12 +30,12 @@ module.exports = function (source, target, primaryKey, findingAttr, includingAtt
     findingKeys.push(tempObj)
   })
 
+
   let concatedAttr = includingAttr.concat(findingAttr)
 
   return source.findAll({
     include : concatedAttr
   }).then(async arr => {
-    
     
     arr.map(obj => {
 
@@ -50,12 +50,11 @@ module.exports = function (source, target, primaryKey, findingAttr, includingAtt
         })
       })
 
-      findingAttr.map(attr => {
-        let targetCodes = attr.attributes
-        let as = attr.as
-        let primaryCode = attr.primaryCode
-
-        targetCodes.map(async targetCode => {
+      findingAttr.map(async attr => {
+        let targetCodes = await attr.attributes
+        let as = await attr.as
+        let primaryCode = await attr.primaryCode
+        await targetCodes.map(async targetCode => {
           if (obj.dataValues[as] !== null && obj.dataValues[as] !== undefined) {
             obj.dataValues[targetCode] = await obj.dataValues[as].dataValues[targetCode]
             await delete obj.dataValues[as]
@@ -64,8 +63,7 @@ module.exports = function (source, target, primaryKey, findingAttr, includingAtt
         })
       })
     })
-    afterIncluding = {primaryKey : primaryKey, includingKeys : includingKeys, findingKeys : findingKeys, vals :arr}
-    // console.log(afterIncluding)
+    afterIncluding = await {primaryKey : primaryKey, includingKeys : includingKeys, findingKeys : findingKeys, vals :arr}
     return afterIncluding
   })
 }
