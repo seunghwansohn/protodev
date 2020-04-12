@@ -1,5 +1,5 @@
 import React from 'react';
-import QuotesList from '../containers/quote';
+import QuotesList from '../containers/Quote';
 
 
 const QuotesPage = () => {

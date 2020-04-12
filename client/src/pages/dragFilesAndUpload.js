@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import SupplierQuery from '../containers/SupplierQuery';
-import MakerList from '../containers/makerList';
+import MakerList from '../containers/MakerList';
 import axios from 'axios';
 import pdf from 'pdf-thumbnail';
 

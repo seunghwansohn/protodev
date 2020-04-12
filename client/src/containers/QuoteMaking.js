@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { connect, useSelector, useDispatch } from 'react-redux';
 
-import QuoteListComponent   from '../components/quoteList'
 import Table                from '../components/common/Table1'
-import InputTable           from '../components/common/InputTable'
 import QueryHeader          from '../components/common/queryHeader'
 import DialogST             from '../components/common/dialogs/DialogST'
 
-import Client from '../containers/clients'
+import Client from '../containers/ClientList'
 
 import * as onFuncsDialog from '../modules/dialogs'
 import * as mainSearchAct from '../modules/mainSearch';
@@ -76,8 +74,8 @@ const MakingQuote = ({motherType, motherNo, subTableAttr}) => {
     const [changedHeaderInput, 
         setChangedHeaderInput]              = useState({});
         
-    const querySelected     = useSelector(state => state.quoteList.selected)
-    const queryRequested    = useSelector(state => state.quoteList.requested)
+    const querySelected     = useSelector(state => state.quote.selected)
+    const queryRequested    = useSelector(state => state.quote.requested)
     const queryVars         = useSelector(state => state.query[frameNo])
 
     const {filter} = queryVars ? queryVars : ''
@@ -242,7 +240,7 @@ const MakingQuote = ({motherType, motherNo, subTableAttr}) => {
 
 
 
-    const quoteProp         = useSelector(state => state.quoteList)
+    const quoteProp         = useSelector(state => state.quote)
 
     const [date, setDate]                   = useState(getDateNow());
 

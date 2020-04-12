@@ -1,5 +1,5 @@
 import React from 'react';
-import MakerList from '../containers/makerList';
+import MakerList from '../containers/MakerList';
 
 
 const MakersPage = () => {

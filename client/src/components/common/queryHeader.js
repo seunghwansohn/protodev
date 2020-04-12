@@ -51,9 +51,9 @@ const QueryHeader = ({motherType, motherNo, funcs, queryHeaderProps}) => {
 
   const [clientName, setClientName]   = useState(null);
 
-  const {selectedClientName, selectedClientRate} = useSelector(({quoteList}) => ({
-      selectedClientName : quoteList.query.clients.result.clientName,
-      selectedClientRate : quoteList.query.clients.result.clientRate
+  const {selectedClientName, selectedClientRate} = useSelector(({quote}) => ({
+      selectedClientName : quote.query.clients.result.clientName,
+      selectedClientRate : quote.query.clients.result.clientRate
 
   }))
 

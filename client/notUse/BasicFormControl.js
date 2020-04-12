@@ -20,7 +20,7 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 
 
 
-import Supplier from '../../containers/supplier'
+import SupplierList from '../../containers/SupplierList'
 
 
 import DialogST             from './dialogs/DialogST'
@@ -95,8 +95,8 @@ const BasicFormControl = ({
   const [changedHeaderInput, 
       setChangedHeaderInput]              = useState({});
       
-  const querySelected     = useSelector(state => state.quoteList.selected)
-  const queryRequested    = useSelector(state => state.quoteList.requested)
+  const querySelected     = useSelector(state => state.quote.selected)
+  const queryRequested    = useSelector(state => state.quote.requested)
   const queryVars         = useSelector(state => state.query[frameNo])
 
 

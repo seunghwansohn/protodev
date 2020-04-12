@@ -1,5 +1,5 @@
 import React from 'react';
-import SupplierContainer from '../containers/supplier';
+import SupplierContainer from '../containers/SupplierList';
 
 const Suppliers = () => {
   return (

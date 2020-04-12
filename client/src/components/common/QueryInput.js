@@ -14,7 +14,7 @@ import Input            from '@material-ui/core/Input';
 
 
 
-import Supplier from '../../containers/supplier'
+import SupplierList from '../../containers/SupplierList'
 
 
 import DialogST             from './dialogs/DialogST'
@@ -91,8 +91,8 @@ const QueryInput = ({
   const [changedHeaderInput, 
       setChangedHeaderInput]              = useState({});
       
-  const querySelected     = useSelector(state => state.quoteList.selected)
-  const queryRequested    = useSelector(state => state.quoteList.requested)
+  const querySelected     = useSelector(state => state.quote.selected)
+  const queryRequested    = useSelector(state => state.quote.requested)
   const queryVars         = useSelector(state => state.query[frameNo])
 
 
@@ -271,13 +271,13 @@ const QueryInput = ({
         helperText = {helperText}
       />
       <DialogST attr = {DialogsAttr.supplier} motherNo = {frameNo} motherType = {type}>
-        <Supplier
+        <SupplierList
           motherType          = {type}
           motherNo            = {frameNo}
           reqType             = {reqType}
           subCompIndex        = {addedNo}
           subTableAttr        = {DialogsAttr.supplier.table}
-        ></Supplier>
+        ></SupplierList>
       </DialogST>
 
     </React.Fragment>

@@ -1,5 +1,5 @@
 import React from 'react';
-import Clients from '../containers/clients'
+import ClientList from '../containers/ClientList'
 // import { withRouter } from 'react-router-dom';
 
 
@@ -7,7 +7,7 @@ const ClientPage = props => {
 
   return (
     <>
-      <Clients attr = {''}></Clients>
+      <ClientList attr = {''}></ClientList>
     </>
   );
 };
