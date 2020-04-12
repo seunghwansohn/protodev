@@ -8,7 +8,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import camelize from '../../../lib/camelize'
 import { useDispatch } from 'react-redux';
-import { onDialogOpen } from '../../../modules/dialogs'
+import { onDialogClose, onDialogOpen } from '../../../modules/dialogs'
 
 
 const useStyles = makeStyles(theme => ({
@@ -27,19 +27,19 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export default function MaxWidthDialog(props) {
+export default function MaxWidthDialog({frameNo, motherNo, attr, children}) {
   const classes = useStyles();
   const dispatch = useDispatch();
 
   const [fullWidth, setFullWidth] = React.useState(true);
 
-  const {attr} = props
   const {open, type, funcs, maxWidth, title, scroll, onClose} = attr
 
   const handleClose = () => {
     const ox = false
     const type = camelize(title)
-    dispatch(onDialogOpen(ox,type))
+    let tempObj = {frameNo : frameNo, currentNo : motherNo, type : type, open : false}
+    dispatch(onDialogClose(tempObj))
     if (onClose !== undefined) {
       onClose()
     }
@@ -48,7 +48,7 @@ export default function MaxWidthDialog(props) {
 
   const optionFunc = function () { 
     const temp = {}
-    if (props.type === 'addItem') {
+    if (type === 'addItem') {
         temp.title = 'Add Item'
       }
     return temp
@@ -65,9 +65,9 @@ export default function MaxWidthDialog(props) {
         aria-labelledby="max-width-dialog-title"
         scroll = {scroll}
       >
-        <DialogTitle id="max-width-dialog-title">{props.title}</DialogTitle>
+        <DialogTitle id="max-width-dialog-title">{title}</DialogTitle>
         <DialogContent>
-            {props.children} 
+            {children} 
 
           <DialogContentText>
           </DialogContentText>

@@ -5,7 +5,7 @@ import {checkedItem, IsThereSelected}   from '../modules/itemList'
 import { setSearchKeyword }             from '../modules/mainSearch'
 import { onAlreadyPickedCheck }         from '../modules/quote'
 import { setAuthReset }                 from '../modules/auth'
-import { onDialogOpen }                 from '../modules/dialogs'
+import {onDialogOpen, onDialogClose}    from '../modules/dialogs'
 import { getExchangeRate }              from '../modules/basicInfo'
 import {
     actUpdate, 
@@ -14,9 +14,6 @@ import {
     actAdd,
     actDelete
 }                                       from '../modules/itemList'
-
-import {load as loadAccount} from '../modules/reduxForm'
-
 
 import DialogST     from '../components/common/dialogs/DialogST'
 import Table        from '../components/common/Table1'
@@ -47,23 +44,25 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
 
     //개체 기본 속성
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
-    const type = 'itemListContainer'
+    const [currentNo, setCurrentNo]  = useState(generateRandom())
+
+    const type = 'itemList'
     const containerNo = type + '_' + frameNo
     const dataType = 'item'
     // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
     //다이얼로그 관련
-    const opened         = useSelector(state => state.dialogs.opened)
     const dialogOpened   = useSelector(state => state.dialogs.opened)
-    const simpleQuery = 'simple'
-    const detailQuery = 'detail'
+    const simpleQuery = 'simpleQuery'
+    const detailQuery = 'detailQuery'
 
-    const checkOpened = (title) => {
+    const checkOpened = (type) => {
         let result = ''
-        dialogOpened.map(array => {
-            if (array.type == title){
-                result = array.ox
+        dialogOpened.map(obj => {
+            console.log(obj)
+            if( obj.frameNo == frameNo && obj.currentNo == currentNo && obj.type == type) {
+                result = obj.open
             }
         })
         return result
@@ -71,6 +70,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     const DialogsAttr = {
       itemAdd : {
         title : detailQuery,
+        type : detailQuery,
         maxWidth : 'md' ,
         // funcs : funcs,
         open : checkOpened(detailQuery),
@@ -79,6 +79,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
       },
       itemQuery : {
           title : simpleQuery,
+          type : detailQuery,
           maxWidth : 'xl' ,
           // funcs : funcs,
           open : checkOpened(simpleQuery)
@@ -152,11 +153,15 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
       if (keys.length > 0) {
         if (includingKeys.price.includes(clicked.header)) {
           dispatch(actClickedTableCol(clickedCol))
-          dispatch(loadAccount(clickedCol))
-          dispatch(onDialogOpen(true, detailQuery, clickedCol))
+        //   dispatch(onDialogOpen(true, detailQuery, clickedCol))
+          let tempObj = {frameNo : frameNo, currentNo : currentNo, type : detailQuery, open : true}
+          dispatch(onDialogOpen(tempObj))
+
         }else{
           dispatch(actClickedTableCol(clickedCol))
-          dispatch(onDialogOpen(true, simpleQuery, clickedCol))
+        //   dispatch(onDialogOpen(true, simpleQuery, clickedCol))
+          let tempObj = {frameNo : frameNo, currentNo : currentNo, type : simpleQuery, open : true}
+          dispatch(onDialogOpen(tempObj))
         }
       } 
     },[clicked])
@@ -214,7 +219,9 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     const test = () => {
         // dispatch(loadAccount())
         // dispatch(onDialogOpen(true, detailQuery, clickedCol))
-        console.log(getAsStrByColName('itemName'))
+        // console.log(checkOpened('itemName'))
+        checkOpened()
+        console.log(reqQueryCode)
     }
 
 
@@ -373,7 +380,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     return(
         <>
           <Button onClick = {test}>푸하하</Button>
-          <DialogST attr = {DialogsAttr.itemAdd}>
+          <DialogST frameNo = {frameNo} motherNo = {currentNo} attr = {DialogsAttr.itemAdd}>
               아이템에디디
             <ItemAdd 
               title       = {DialogsAttr.itemAdd.title} 
@@ -394,7 +401,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
               funcs       = {funcs}
           ></Table>
 
-          <DialogST attr = {DialogsAttr.itemQuery}>
+          <DialogST frameNo = {frameNo} motherNo = {currentNo} attr = {DialogsAttr.itemQuery}>
             <ItemQuery 
               motherType  = {type}
               motherNo    = {frameNo}

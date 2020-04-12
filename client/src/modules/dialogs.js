@@ -9,8 +9,10 @@ const initialState = {
 };
 
 export const ON_DIALOG_OPEN  = 'dialog/ON_DIALOG_OPEN'
-export const onDialogOpen = createAction(ON_DIALOG_OPEN, ox => ox, (ox, type, payload) => ({ox, type, payload}))
+export const ON_DIALOG_CLOSE  = 'dialog/ON_DIALOG_CLOSE'
 
+export const onDialogOpen = createAction(ON_DIALOG_OPEN, obj => obj)
+export const onDialogClose = createAction(ON_DIALOG_CLOSE, obj => obj)
 
 // const [ON_DIALOG_OPEN, ON_DIALOG_OPEN_SUCCESS, ON_DIALOG_OPEN_FAILURE ] 
 // = createRequestActionTypes('dialog/ON_DIALOG_OPEN');
@@ -24,35 +26,26 @@ export const onDialogOpen = createAction(ON_DIALOG_OPEN, ox => ox, (ox, type, pa
 
 function reducer (state = initialState, action) {
   switch (action.type) {
-      case ON_DIALOG_OPEN:
-        return produce(state, draft =>{
-            const temp = {}
-            if (action.meta.type == 'copyItem') {
-              temp.type = 'itemAdd'
-            }
+    case ON_DIALOG_OPEN:
+      return produce(state, draft =>{
+        console.log(action.payload)
+        if (!draft.opened.includes(action.payload)) {
+          draft.opened.push(action.payload)
+        }
+      })
+    case ON_DIALOG_CLOSE:
+      const {frameNo, currentNo, type, open} = action.payload
+      const isMatched = (obj) => {
+        return obj.frameNo !== frameNo && obj.currentNo !== currentNo && obj.type !== type
+      }
+      return produce(state, draft =>{
+        const filtered = draft.opened.filter(isMatched)
+        draft.opened = filtered
+      })
 
-            if (action.meta.type == 'itemQuery') {
-              temp.type = 'itemQuery'
-              temp.initVal = action.meta.payload
-            }
-            
-            else {temp.type = action.meta.type}
-
-            if (action.meta.ox == true) {
-              temp.ox = action.meta.ox
-              draft.opened.push(temp)
-
-            } else if (action.meta.ox == false){
-              state.opened.map((dialog, index) => {
-                if (dialog.type == action.meta.type) {
-                  delete draft.opened[index]
-                }
-              })
-            }
-        })
-      default:
-        return state;
-    } 
+    default:
+      return state;
+  } 
 }
 
 export default reducer
