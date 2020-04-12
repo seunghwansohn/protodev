@@ -72,7 +72,7 @@ const MakerList = ({motherType, motherNo, subTableAttr}) => {
         scroll : 'paper'
         
       },
-      itemQuery : {
+      MakerQuery : {
           title : simpleQuery,
           maxWidth : 'xl' ,
           // funcs : funcs,
@@ -133,7 +133,7 @@ const MakerList = ({motherType, motherNo, subTableAttr}) => {
     //테이블 클릭
     const [clickedCol, 
       setClickedCol]     = useState({});
-    const clicked        = useSelector(state => state.item.table.clicked)
+    const clicked        = useSelector(state => state.maker.table.clicked)
     const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
 
     useEffect(() => {
@@ -145,7 +145,7 @@ const MakerList = ({motherType, motherNo, subTableAttr}) => {
     useEffect(() => {
       let keys = Object.keys(clicked)
       if (keys.length > 0) {
-        if (includingKeys.price.includes(clicked.header)) {
+        if (includingKeys) {
           dispatch(actClickedTableCol(clickedCol))
           dispatch(loadAccount(clickedCol))
           dispatch(onDialogOpen(true, detailQuery, clickedCol))
@@ -388,14 +388,14 @@ const MakerList = ({motherType, motherNo, subTableAttr}) => {
               funcs       = {funcs}
           ></Table>
 
-          {/* <DialogST attr = {DialogsAttr.itemQuery}>
-            <ItemQuery 
+          <DialogST attr = {DialogsAttr.MakerQuery}>
+            <MakerQuery 
               motherType  = {type}
               motherNo    = {frameNo}
               reqKey      = {primaryKey}
               reqCode     = {reqQueryCode}
-            ></ItemQuery>
-          </DialogST> */}
+            ></MakerQuery>
+          </DialogST>
         </>
     )
 }   

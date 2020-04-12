@@ -178,64 +178,24 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
     // const filter   = useSelector(state => state.clients.table.filter[frameNo][dataType])
 
     const tableAttr = {
-        flag : true,
+        flagAble : true,
         colAttr :   {
-            itemCode : {
+            clientCode : {
                 primary : true,
                 fixable : false,
                 defaultHided : false
             },
-            itemName : {
+            clientName : {
                 fixable : true,
                 defaultHided : false
             },
-            description : {
-                fixable : true,
-                defaultHided : true
-            },
-            weight : {
-                fixable : true,
-                defaultHided : true
-            },
-            width : {
-                fixable : true,
-                defaultHided : true
-            },
-            depth : {
-                fixable : true,
-                defaultHided : true
-            },
-            height : {
-                fixable : true,
-                defaultHided : true
-            },
-            importTaxRate : {
+            clientRate : {
                 fixable : true,
                 defaultHided : false
             },
-            maker : {
+            increaseRate : {
                 fixable : true,
                 defaultHided : false
-            },
-            supplierCode : {
-                fixable : true,
-                defaultHided : false
-            },
-            makerModelNo : {
-                fixable : true,
-                defaultHided : false
-            },
-            VNPrice : {
-                fixable : true,
-                defaultHided : false
-            },
-            stkVVar : {
-                fixable : true,
-                defaultHided : true
-            },
-            stkCVar : {
-                fixable : true,
-                defaultHided : true
             },
             createdAt : {
                 fixable : false,
@@ -245,7 +205,6 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
                 fixable : false,
                 defaultHided : true
             },
-
         },
         tableButton,
         setFindOneResult,
@@ -321,7 +280,7 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
     return(
         <>
             <ClientMain></ClientMain>
-            <ButtonHeader type = {type} onHeaderButton = { onHeaderButton }></ButtonHeader>
+            {/* <ButtonHeader type = {type} onHeaderButton = { onHeaderButton }></ButtonHeader> */}
 
             <Table
                 type        = {type}

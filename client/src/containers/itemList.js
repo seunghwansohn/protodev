@@ -28,7 +28,6 @@ import spacelize                      from '../lib/spacelize'
 import {generateRandom}               from '../lib/common';
 
 import ItemAdd      from '../components/ItemAdd'
-// import ItemQuery from '../components/ItemQuery'
 // import SupplierAdd from '../components/supplierAdd'
 
 import MakerQuery   from '../containers/MakerQuery'
@@ -375,6 +374,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         <>
           <Button onClick = {test}>푸하하</Button>
           <DialogST attr = {DialogsAttr.itemAdd}>
+              아이템에디디
             <ItemAdd 
               title       = {DialogsAttr.itemAdd.title} 
               fieldsAttr  = {arrFunc()}
