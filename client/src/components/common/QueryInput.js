@@ -17,7 +17,7 @@ import Input            from '@material-ui/core/Input';
 import Supplier from '../../containers/supplier'
 
 
-import DialogST             from './DialogST'
+import DialogST             from './dialogs/DialogST'
 
 import {generateRandom}     from '../../lib/common';
 

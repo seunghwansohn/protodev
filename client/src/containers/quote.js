@@ -13,7 +13,7 @@ import {
 }                                       from '../modules/quote'
 
 
-import DialogST     from '../components/common/DialogST'
+import DialogST     from '../components/common/dialogs/DialogST'
 import Table        from '../components/common/Table1'
 import ButtonHeader from '../components/common/ButtonHeader'
 

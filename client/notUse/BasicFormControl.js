@@ -23,7 +23,7 @@ import OutlinedInput from '@material-ui/core/OutlinedInput';
 import Supplier from '../../containers/supplier'
 
 
-import DialogST             from './DialogST'
+import DialogST             from './dialogs/DialogST'
 
 import {generateRandom}     from '../../lib/common';
 

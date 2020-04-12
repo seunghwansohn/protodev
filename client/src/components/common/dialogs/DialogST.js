@@ -6,9 +6,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import camelize from '../../lib/camelize'
+import camelize from '../../../lib/camelize'
 import { useDispatch } from 'react-redux';
-import { onDialogOpen } from '../../modules/dialogs'
+import { onDialogOpen } from '../../../modules/dialogs'
 
 
 const useStyles = makeStyles(theme => ({

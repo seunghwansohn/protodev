@@ -31,7 +31,7 @@ import { withStyles }           from '@material-ui/core/styles';
 
 import styled, { keyframes }    from 'styled-components';
 
-import ExpantionPane          from '../components/common/expantionPane';
+import ExpansionPane          from '../components/common/ExpansionPane';
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import Typography from '@material-ui/core/Typography';
@@ -39,7 +39,7 @@ import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import SingleTask             from '../components/singleTask';
 import STTable                from '../components/common/Table1';
-import CommentDialog          from '../components/common/CommentDialog';
+import CommentDialog          from '../components/common/dialogs/CommentDialog';
 
 import { setAddNotes }        from '../modules/common';
 import { setFinishTask }      from '../modules/task';

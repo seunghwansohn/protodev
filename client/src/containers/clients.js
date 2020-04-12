@@ -5,9 +5,7 @@ import ClientMain from '../components/clientMain'
 import {setClientLoad} from '../modules/clients'
 import {setInsertClient} from '../modules/quote'
 import Table from '../components/common/Table1'
-import ContactForm from '../components/clientAdd'
-import DialogST from '../components/common/DialogST'
-import ClientAdd from '../components/clientAdd'
+import DialogST from '../components/common/dialogs/DialogST'
 import ButtonHeader from '../components/common/ButtonHeader'
 import { onDialogOpen } from '../modules/dialogs'
 
@@ -336,7 +334,7 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
             </Table>
 
             <DialogST attr = {DialogsAttr.addClient}>
-                <ClientAdd title = {DialogsAttr.addClient.title}></ClientAdd>
+                {/* <ClientAdd title = {DialogsAttr.addClient.title}></ClientAdd> */}
             </DialogST>
         </>
     )

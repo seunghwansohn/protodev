@@ -6,7 +6,7 @@ import Table from './common/Table1'
 import TableHead    from '@material-ui/core/TableHead';
 import TableBody    from '@material-ui/core/TableBody';
 import Viewer       from './viewer'
-import FindDialog   from './common/findDialog'
+import FindDialog   from './common/dialogs/FindDialog'
 import QuoteSubmit  from './quoteSubmit'
 
 var pdfMake     = require('pdfmake/build/pdfmake.js');

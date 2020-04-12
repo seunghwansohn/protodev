@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import Test from '../components/Test'
 // import Table from '../components/common/Table'
-import DialogST from '../components/common/DialogST'
+import DialogST from '../components/common/dialogs/DialogST'
 
 
 

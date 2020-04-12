@@ -23,11 +23,7 @@ import List             from '@material-ui/core/List';
 import ListItemText     from '@material-ui/core/ListItemText';
 import ListSubheader    from '@material-ui/core/ListSubheader';
 
-import { ExpandLess, 
-  ExpandMore, 
-  FilterDrama}          from '@material-ui/icons';
-
-import InputDialog      from '../common/InputDialog';
+import PopQuestionDlg      from '../common/dialogs/PopQuestionDlg';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -42,7 +38,6 @@ import {generateRandom}     from '../../lib/common';
 import { actSelect, actSetFrame, actAddNewBlankQuery}               from '../../modules/query'
 
 
-import BasicFormControl          from './BasicFormControl';
 import SmallKeyPopUp          from './SmallKeyPopUp';
 
 
@@ -257,8 +252,9 @@ const STTable = ({
 
 
   //체크박스 체크 기능
-  const [allSelected, setAllselected]         = useState(false);
-  const isChecked     = name => selected.indexOf(name)    !== -1;
+  const isChecked       = name => selected.indexOf(name) !== -1;
+  const [allSelected, 
+    setAllselected]     = useState(false);
 
 
   //업데이트 기능
@@ -311,6 +307,7 @@ const STTable = ({
 
 
   //컬럼 클릭 기능
+  //  --값 update 후 다른 컬럼 클릭했을 때
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false)
   const handleCloseConfirmDialog = () => {
     setOpenConfirmDialog(false)
@@ -374,10 +371,11 @@ const STTable = ({
   }
 
 
-//  -- 빈 새열 추가 기능
+//빈 새열 추가 기능
   //---HelperText 및 error 구현기능
   const [newAddedhelperTexts, setNewAddedHelperTexts] = useState([])
   const [newAddedError, setNewAddedError] = useState([])
+  //--------------------------
   const onAddNewBlank = () => {
     let tempObj = {}
     headers.map(header => {
@@ -453,14 +451,11 @@ const STTable = ({
     const primaryCode = getPrimaryCode(location.index)
     return updateValidationError[primaryCode][header] == true ? true : false
   }
-
   const confirmInputFixedVal = () => {
     const temp = {}
-
     const isNowError = checkNoValidationErrorAtAll()
 
     if (isNowError == true) {
-      console.log('발리데이션에러입니다')
     }else {
       setFixableCells(temp)  
       setFixedVals(
@@ -470,8 +465,6 @@ const STTable = ({
       )
     }
   }
-
-  console.log(tempFixedVal)
   const onKeyPressOnInput = (e, index, header) => {
     if (e.key === "Enter") {
       confirmInputFixedVal()
@@ -490,11 +483,9 @@ const STTable = ({
     temp1.ref[primaryKey] = filteredData[index][primaryKey]
     temp1.vals[header] = e.target.value
 
-
     setTempFixedVal(temp1)
     const validArr = checkValid(index, header, e.target.value)
     let joinedValidStr = validArr.join(', ')
-    console.log('발리드엥알알', validArr)
 
     const primaryCode = getPrimaryCode(index)
 
@@ -505,7 +496,6 @@ const STTable = ({
       })
     )
     if (validArr.length > 0) {
-      console.log('에러값0보다큼')
       setUpdateValidationError(    
         produce(updateValidationError, draft => {
           draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
@@ -513,8 +503,6 @@ const STTable = ({
         })
       )
     } else {
-      console.log('에러값0보다작음')
-
       setUpdateValidationError(    
         produce(updateValidationError, draft => {
           draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
@@ -524,10 +512,6 @@ const STTable = ({
 
     }
   }
-
-  console.log(updateValidationError)
-  console.log(updateHelperTexts)
-
 
 
   //쿼리인풋 기능
@@ -720,9 +704,9 @@ const STTable = ({
         </DialogActions>
       </Dialog>
 
-      <InputDialog
+      <PopQuestionDlg
         attr = {addCopiedNewNoDialogAttr}
-      ></InputDialog>
+      ></PopQuestionDlg>
 
       <div>
         {hided.map((columns, idx) => {
