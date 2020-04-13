@@ -18,7 +18,6 @@ function reducer (state = initialState, action) {
   switch (action.type) {
     case ON_DIALOG_OPEN:
       return produce(state, draft =>{
-        console.log(action.payload)
         if (!draft.opened.includes(action.payload)) {
           draft.opened.push(action.payload)
         }

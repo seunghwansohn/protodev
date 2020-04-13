@@ -5,7 +5,7 @@ import axios                          from 'axios';
 import {generateRandom}               from '../lib/common';
 import {actUpdate}                    from '../modules/itemList'
 
-const ItemQuery = ({motherType, motherNo, reqKey, reqCode}) => {
+const ItemQuery = ({motherType, motherNo, reqKey, reqCode, attr}) => {
     const [itemCode, setItemCode]           = useState('')
     const [itemName, setItemName]           = useState('')
     const [description, setDescription]     = useState('')
@@ -13,7 +13,7 @@ const ItemQuery = ({motherType, motherNo, reqKey, reqCode}) => {
     const [loadedData, setLoadedData]       = useState([])
     const [primaryKey, setPrimaryKey]       = useState('');
 
-
+    console.log(attr)
 
     //개체 기본 속성
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
@@ -25,16 +25,16 @@ const ItemQuery = ({motherType, motherNo, reqKey, reqCode}) => {
     }
 
     const setUpdate = (fixedData) => {
-    }
+    } 
 
 
     
     const queryProps = [
-        {type : 'primary', newRow : true, size : 5, title: 'itemCode', state : itemCode, setState : setItemCode, style:'regular'},
-        {type : 'fixable', newRow : true, size : 7, title: 'itemName', state : itemName, setState : setItemName, style:'regular'},
-        {type : 'fixable', newRow : false, size : 5, title: 'description', state : description, setState : setDescription, style:'regular'},
-        {type : 'divider', typoGraphy : 'basicInfo'},
-        // {type : 'fixable', newRow : false, size : 5, title: 'ceo', state : ceo, setState : setCeo, style:'regular'},
+    //     {type : 'primary', newRow : true, size : 5, title: 'itemCode', state : itemCode, setState : setItemCode, style:'regular'},
+    //     {type : 'fixable', newRow : true, size : 7, title: 'itemName', state : itemName, setState : setItemName, style:'regular'},
+    //     {type : 'fixable', newRow : false, size : 5, title: 'description', state : description, setState : setDescription, style:'regular'},
+    //     {type : 'divider', typoGraphy : 'basicInfo'},
+    //     // {type : 'fixable', newRow : false, size : 5, title: 'ceo', state : ceo, setState : setCeo, style:'regular'},
     ]
 
     //-- api로드 부분

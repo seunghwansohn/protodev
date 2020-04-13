@@ -29,6 +29,8 @@ import ItemAdd      from '../components/ItemAdd'
 
 import MakerQuery   from '../containers/MakerQuery'
 import ItemQuery    from '../containers/ItemQuery'
+import Query        from '../components/Query'
+
 
 import Button           from '@material-ui/core/Button';
 
@@ -46,6 +48,8 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
     const [currentNo, setCurrentNo]  = useState(generateRandom())
 
+    console.log(frameNo, currentNo )
+
     const type = 'itemList'
     const containerNo = type + '_' + frameNo
     const dataType = 'item'
@@ -53,16 +57,15 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
 
 
     //다이얼로그 관련
-    const dialogOpened   = useSelector(state => state.dialogs.opened)
+    const dialogOpened                  = useSelector(state => state.dialogs.opened)
+    const [dialogInfo, setDialogInfo]   = useState({})
     const simpleQuery = 'simpleQuery'
     const detailQuery = 'detailQuery'
-
     const checkOpened = (type) => {
         let result = ''
         dialogOpened.map(obj => {
-            console.log(obj)
-            if( obj.frameNo == frameNo && obj.currentNo == currentNo && obj.type == type) {
-                result = obj.open
+            if(obj.frameNo == frameNo && obj.currentNo == currentNo && obj.type == type) {
+              result = obj.open
             }
         })
         return result
@@ -78,13 +81,20 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         
       },
       itemQuery : {
-          title : simpleQuery,
-          type : detailQuery,
-          maxWidth : 'xl' ,
-          // funcs : funcs,
-          open : checkOpened(simpleQuery)
+        title : simpleQuery,
+        type : simpleQuery,
+        maxWidth : 'xl' ,
+        // funcs : funcs,
+        open : checkOpened(simpleQuery)
       }
     }
+    useEffect(()=> {
+      dialogOpened.map(obj => {
+        if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
+          setDialogInfo(obj)
+        }
+      })
+    },[dialogOpened])
 
 
     //테이블 관련
@@ -124,7 +134,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
 
     //테이블값 삭제
     const setDelete = async (codes) =>{
-        console.log(codes)
         await codes.map(code => {
             dispatch(actDelete(dataType, code[primaryKey]))
         })
@@ -151,27 +160,40 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     },[clickedCol])
     //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
     useEffect(() => {
+      console.log('클릭드발동')
       let keys = Object.keys(clicked)
       const {header, row, value} = clicked
       const {clickType} = tableAttr.colAttr[header] ? tableAttr.colAttr[header] : ''
     //   const primaryCode = getPrimaryCode
       if (keys.length > 0) {
-        console.log(clickType)
-        console.log(clickedCol)
         if (includingKeys.price.includes(clicked.header)) {
           dispatch(actClickedTableCol(clickedCol))
-        //   dispatch(onDialogOpen(true, detailQuery, clickedCol))
-          let tempObj = {frameNo : frameNo, currentNo : currentNo, type : detailQuery, open : true}
+          let aColAttr = tableAttr.colAttr[clickedCol.header]
+          let {clickType} = aColAttr
+          let tempObj = {frameNo : frameNo, currentNo : currentNo, type : simpleQuery, open : true, dataType : dataType, data : clickedCol, clickType : clickType}
           dispatch(onDialogOpen(tempObj))
 
         }else{
           dispatch(actClickedTableCol(clickedCol))
-        //   dispatch(onDialogOpen(true, simpleQuery, clickedCol))
-          let tempObj = {frameNo : frameNo, currentNo : currentNo, type : simpleQuery, open : true}
+          let aColAttr = tableAttr.colAttr[clickedCol.header]
+          let {clickType} = aColAttr
+          let tempObj = {frameNo : frameNo, currentNo : currentNo, type : simpleQuery, open : true, dataType : dataType, data : clickedCol, clickType : clickType}
           dispatch(onDialogOpen(tempObj))
         }
-      } 
+      }
+      dialogOpened.map(obj => {
+        console.log(obj)
+        if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
+          console.log('일치함 ㅋㅋ')
+          setDialogInfo(obj)
+        }
+      })
     },[clicked])
+
+
+
+    console.log(dialogOpened)
+    console.log(dialogInfo)
 
 
     //테이블 필터
@@ -228,7 +250,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         // dispatch(onDialogOpen(true, detailQuery, clickedCol))
         // console.log(checkOpened('itemName'))
         checkOpened()
-        console.log(reqQueryCode)
     }
 
 
@@ -238,7 +259,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         setUpdated(true)
     }
 
-    console.log(clicked)
 
 
     //table 관련 속성들
@@ -276,17 +296,20 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
                 fixable : false,
                 defaultHided : false,
                 validate : ['code'],
-                clickType : '렐렐'
+                clickType : 'itemQuery'
             },
             itemName : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['string']
+                validate : ['string'],
+                clickType : 'itemQuery'
+
             },
             description : {
                 fixable : true,
                 defaultHided : true,
-                validate : ['string']
+                validate : ['string'],
+                clickType : 'itemQuery'
             },
             weight : {
                 fixable : true,
@@ -411,12 +434,13 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
           ></Table>
 
           <DialogST frameNo = {frameNo} motherNo = {currentNo} attr = {DialogsAttr.itemQuery}>
-            <ItemQuery 
+            <Query 
               motherType  = {type}
               motherNo    = {frameNo}
               reqKey      = {primaryKey}
               reqCode     = {reqQueryCode}
-            ></ItemQuery>
+              attr        = {dialogInfo}
+            ></Query>
           </DialogST>
         </>
     )

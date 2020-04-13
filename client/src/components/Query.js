@@ -11,6 +11,11 @@ import Notes            from './common/notes'
 import InputST          from './common/Input'
 
 import {generateRandom} from '../lib/common';
+import {getIncludingKeys,
+  withoutIncludingKeys }  from '../lib/common'
+
+import axios                from '../lib/api/axios'
+
 
 
 const useStyles = makeStyles(theme => ({
@@ -30,7 +35,7 @@ const useStyles = makeStyles(theme => ({
 //loadedTempData: Query의 정보를 담은 rawData. 값형식 : obj
 //queryProps    : Query의 각 input을 어떻게 표시할건가 정보를 담은 배열 값형식: arr
 //updateData    : 업데이트 함수
-const Query = ({motherType, motherNo, loadedTempData, onUpdate, queryProps}) => {
+const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
   const [fixMode, setFixMode]         = useState(false)
   const [fixedData, setFixedData]     = useState([])
 
@@ -45,8 +50,18 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, queryProps}) => 
   const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
   const type = 'Query'
   const containerNo = type + '_' + frameNo
-  const dataType = 'item'
+  const {dataType} = attr
 
+  //테이블 각열 Attr 
+  const queryProps = {
+    item : [
+      // {type : 'primary', newRow : true, size : 5, title: 'itemCode', state : itemCode, setState : setItemCode, style:'regular'},
+      // {type : 'fixable', newRow : true, size : 7, title: 'itemName', state : itemName, setState : setItemName, style:'regular'},
+      // {type : 'fixable', newRow : false, size : 5, title: 'description', state : description, setState : setDescription, style:'regular'},
+      // {type : 'divider', typoGraphy : 'basicInfo'}
+    ]
+    // {type : 'fixable', newRow : false, size : 5, title: 'ceo', state : ceo, setState : setCeo, style:'regular'},
+  }
 
   //픽스모드 설정
   const onModeChange = () => {
@@ -56,12 +71,12 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, queryProps}) => 
   //primary키 설정
   //queryProps조회해서 프라이머리 키 받아서 react state로 설정
   const getPrimaryKey = () => {
-    queryProps.map(obj => {
-      if (obj.type == 'primary') {
-          setPrimaryKey(obj.title)
-          setPrimaryCode(obj.state)
-      }
-    })
+    // queryProps.map(obj => {
+    //   if (obj.type == 'primary') {
+    //       setPrimaryKey(obj.title)
+    //       setPrimaryCode(obj.state)
+    //   }
+    // })
   }
   const getPrimaryCode = () => {
     queryProps.map(obj => {
@@ -75,6 +90,28 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, queryProps}) => 
   },[queryProps])
 
 
+
+    //테이블 관련
+  const [tableRawData, 
+    setTableRawData]                = useState([])
+  const [includingKeys, 
+      setIncludingKeys]               = useState([]);
+  const [findingKeys, 
+      setFindingKeys]               = useState([]);
+
+  const getRawData = async () => {
+    await axios.get('/api/' + dataType + '/load').then(res => {
+      console.log(res)
+        setPrimaryKey(res.data.primaryKey)
+        setIncludingKeys(res.data.includingKeys)
+        setTableRawData(withoutIncludingKeys(res.data.vals))
+        setFindingKeys(res.data.findingKeys)
+    })
+  }
+  useEffect(() => {
+    getRawData()
+  },[])
+  console.log(tableRawData)
 
   //업데이트 함수
   const onFixedVal = (fixedArr) => {
@@ -90,21 +127,23 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, queryProps}) => 
 
 
 
+
   //컨테이너에서 내려받은 api의 Data에서 queryProps에 규정된 것만 추출하여
   //state로 저장.
   useEffect(() => {
     setLodedData(loadedTempData)
-    queryProps.map(obj => {
-      if (loadedTempData.hasOwnProperty(obj.title)) {
-        obj.setState(loadedTempData[obj.title])
-      }
-    })
+    // queryProps.map(obj => {
+    //   if (loadedTempData.hasOwnProperty(obj.title)) {
+    //     obj.setState(loadedTempData[obj.title])
+    //   }
+    // })
   },[loadedTempData])
 
 
   
   return (
     <React.Fragment>
+      케헤헤
       <Grid container className = {classes.flex}>
         <Grid item xs = {11}>
           <Typography variant="h4">
@@ -120,7 +159,7 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, queryProps}) => 
       </Grid>
       <br/>
       <Grid container>
-        {queryProps.map(row => {
+        {/* {queryProps.map(row => {
           if(row.type !== 'divider') {
             return(
               <Grid item xs ={row.size}>
@@ -154,7 +193,7 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, queryProps}) => 
               </Grid>
             )
           }
-        })}
+        })} */}
       </Grid>
 
       <Notes type = {type} primaryKey = {primaryKey} primaryCode = {primaryCode}></Notes>
