@@ -100,12 +100,14 @@ exports.update = async (req, res) => {
 };
 
 exports.query = (req, res) => {
+    let {queryObj} = req.body
+    console.log(queryObj)
 
-    const header = req.body.header
-    const tempObj = {}
-    tempObj[header] = req.body.value
+    // const header = req.body.header
+    // const tempObj = {}
+    // tempObj[header] = req.body.value
 
-    Maker.findOne({where:tempObj})
+    Maker.findOne({where:queryObj})
     .then(res => {
         // console.log(res)
         result = res.dataValues

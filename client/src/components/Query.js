@@ -91,6 +91,7 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
 
 
 
+  console.log(attr)
     //테이블 관련
   const [tableRawData, 
     setTableRawData]                = useState([])
@@ -99,19 +100,27 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
   const [findingKeys, 
       setFindingKeys]               = useState([]);
 
+  const queryObj = {}
   const getRawData = async () => {
-    await axios.get('/api/' + dataType + '/load').then(res => {
+    let queryObj = {}
+    queryObj[attr.data.header] = attr.data.value
+
+    let request = {queryObj : queryObj, findingKeys, includingKeys}
+    console.log(request)
+
+    await axios.post('/api/' + dataType + '/query', request).then(res => {
       console.log(res)
-        setPrimaryKey(res.data.primaryKey)
-        setIncludingKeys(res.data.includingKeys)
-        setTableRawData(withoutIncludingKeys(res.data.vals))
-        setFindingKeys(res.data.findingKeys)
+        // setPrimaryKey(res.data.primaryKey)
+        // setIncludingKeys(res.data.includingKeys)
+        // setTableRawData(withoutIncludingKeys(res.data.vals))
+        // setFindingKeys(res.data.findingKeys)
     })
   }
+
+  console.log()
   useEffect(() => {
     getRawData()
   },[])
-  console.log(tableRawData)
 
   //업데이트 함수
   const onFixedVal = (fixedArr) => {

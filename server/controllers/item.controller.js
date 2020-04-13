@@ -114,6 +114,7 @@ exports.delete = async (req, res) => {
 
 
 exports.query = (req, res) => {
+  console.log(req.body)
   try {
     const where = req.body
     let result = ''

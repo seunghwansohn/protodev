@@ -317,6 +317,9 @@ const STTable = ({
     tempObj2.value  = value
     tempObj2.row    = row
     tempObj2.header = header
+    console.log(colAttr)
+    console.log(header)
+    tempObj2.dataType = colAttr[header].dataType
     tempObj2.primaryCode = getPrimaryCode(row)
     if (fixMode){
       const temp = {row : row, header : header}
@@ -331,6 +334,7 @@ const STTable = ({
       setClickedCol(tempObj2)
     }
   }
+  console.log(colAttr)
 
 
   //Validation기능

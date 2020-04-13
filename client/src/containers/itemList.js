@@ -122,6 +122,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         await setAddedNew([])
     }
 
+    console.log(primaryKey, includingKeys, findingKeys)
 
     //테이블값 수정
     const onSubmitUpdatedVals = async (fixedVals) => {
@@ -169,14 +170,14 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         if (includingKeys.price.includes(clicked.header)) {
           dispatch(actClickedTableCol(clickedCol))
           let aColAttr = tableAttr.colAttr[clickedCol.header]
-          let {clickType} = aColAttr
+          let {clickType, dataType} = aColAttr
           let tempObj = {frameNo : frameNo, currentNo : currentNo, type : simpleQuery, open : true, dataType : dataType, data : clickedCol, clickType : clickType}
           dispatch(onDialogOpen(tempObj))
 
         }else{
           dispatch(actClickedTableCol(clickedCol))
           let aColAttr = tableAttr.colAttr[clickedCol.header]
-          let {clickType} = aColAttr
+          let {clickType, dataType} = aColAttr
           let tempObj = {frameNo : frameNo, currentNo : currentNo, type : simpleQuery, open : true, dataType : dataType, data : clickedCol, clickType : clickType}
           dispatch(onDialogOpen(tempObj))
         }
@@ -191,9 +192,8 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
     },[clicked])
 
 
+    console.log(clickedCol)
 
-    console.log(dialogOpened)
-    console.log(dialogInfo)
 
 
     //테이블 필터
@@ -296,12 +296,14 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
                 fixable : false,
                 defaultHided : false,
                 validate : ['code'],
+                dataType : dataType,
                 clickType : 'itemQuery'
             },
             itemName : {
                 fixable : true,
                 defaultHided : false,
                 validate : ['string'],
+                dataType : dataType,
                 clickType : 'itemQuery'
 
             },
@@ -309,77 +311,93 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
                 fixable : true,
                 defaultHided : true,
                 validate : ['string'],
+                dataType : dataType,
                 clickType : 'itemQuery'
             },
             weight : {
                 fixable : true,
                 defaultHided : true,
-                validate : ['maxValue5', 'number']
+                validate : ['maxValue5', 'number'],
+                dataType : dataType,
             },
             width : {
                 fixable : true,
                 defaultHided : true,
-                validate : ['maxValue5', 'number']
+                validate : ['maxValue5', 'number'],
+                dataType : dataType,
             },
             depth : {
                 fixable : true,
                 defaultHided : true,
-                validate : ['maxValue5', 'number']
+                validate : ['maxValue5', 'number'],
+                dataType : dataType,
             },
             height : {
                 fixable : true,
                 defaultHided : true,
-                validate : ['maxValue5', 'number']
+                validate : ['maxValue5', 'number'],
+                dataType : dataType,
             },
             importTaxRate : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['percent', 'plus', 'decimal2', 'number']
+                validate : ['percent', 'plus', 'decimal2', 'number'],
+                dataType : dataType,
             },
-            maker : {
+            makerName : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['string']
+                validate : ['string'],
+                dataType : 'maker',
+                clickType : 'makerQuery'
             },
             makerModelNo : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['string']
+                validate : ['string'],
+                dataType : dataType,
             },
             supplierName : {
                 fixable : true,
                 defaultHided : false,
                 query : true,
+                dataType : 'supplier',
                 dialog : getAsStrByColName('supplierName'),
-                validate : ['string']
+                validate : ['string'],
             },
             VNPrice : {
                 fixable : true,
                 defaultHided : false,
                 validate : ['number', 'max15'],
+                dataType : dataType,
             },
             buyingPKR : {
                 fixable : true,
                 defaultHided : false,
                 validate : ['number'],
+                dataType : dataType,
             },
             stkVVar : {
                 fixable : true,
                 defaultHided : true,
                 validate : ['decimal2', 'max1', 'number'],
+                dataType : dataType,
             },
             stkCVar : {
                 fixable : true,
                 defaultHided : true,
                 validate : ['decimal2', 'max1', 'number'],
+                dataType : dataType,
             },
             createdAt : {
                 fixable : false,
-                defaultHided : true
+                defaultHided : true,
+                dataType : dataType,
             },
             updatedAt : {
                 fixable : false,
-                defaultHided : true
+                defaultHided : true,
+                dataType : dataType,
             },
         },
         tableButton : [
