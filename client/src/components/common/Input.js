@@ -45,24 +45,22 @@ const TextFieldST = styled(TextField)`
 
 
 const InputST = ({
-  title, 
-  state, 
-  setState, 
   attr, 
   type, 
   fixMode, 
-  fixable, 
+
+  title, 
+  inputVal, 
+  onChangeVal, 
+
   fixedData, 
   setFixedData, 
-
-  required,
-  variant,
-  fullWidth,
-  error,
-  validation
+  onFixedVal
 }) => {
 
-  const onChangeValue = (event, func) => {
+  const handleChangeValue = (event) => {
+    let value =  event.target.value
+    const key = title
     // setState(event.target.value)
     // let temp = {}
     // let tempArr = fixedData
@@ -72,7 +70,8 @@ const InputST = ({
     //     fixedData[title] = event.target.value
     //   })
     // )
-    error(state)
+    // error(state)
+    onChangeVal(key, value)
   }
   const onKeyPressInput = (event) => {
     if (event.key == "Enter") {
@@ -93,15 +92,13 @@ const InputST = ({
       <TextFieldST
         label={title}
         id={title}
-        type = {validation}
+
         style={{width: "100%"}}
-        required = {required}
-        variant= {variant}
-        fullWidth = {fullWidth}
         size = {'small'}
-        value = {state}
         margin = {'none'}
-        onChange = {(event) => onChangeValue(event, setState)}
+
+        value = {inputVal}
+        onChange = {(event) => handleChangeValue(event)}
         onKeyPress = {(event) => onKeyPressInput(event)}
 
         // disabled = {type == 'fixable' && fixMode == true ? false : true}

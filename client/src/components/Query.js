@@ -15,7 +15,7 @@ import {getIncludingKeys,
   withoutIncludingKeys }  from '../lib/common'
 
 import axios                from '../lib/api/axios'
-
+import produce  from 'immer'
 
 
 const useStyles = makeStyles(theme => ({
@@ -37,9 +37,9 @@ const useStyles = makeStyles(theme => ({
 //updateData    : 업데이트 함수
 const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
   const [fixMode, setFixMode]         = useState(false)
-  const [fixedData, setFixedData]     = useState([])
+  const [fixedData, setFixedData]     = useState({})
 
-  const [lodedData, setLodedData]     = useState([])
+  const [loadedData, setLoadedData]     = useState([])
   
   const [primaryKey, setPrimaryKey]   = useState('')
   const [primaryCode, setPrimaryCode] = useState('')
@@ -52,47 +52,7 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
   const containerNo = type + '_' + frameNo
   const {dataType} = attr
 
-  //테이블 각열 Attr 
-  const queryProps = {
-    item : [
-      // {type : 'primary', newRow : true, size : 5, title: 'itemCode', state : itemCode, setState : setItemCode, style:'regular'},
-      // {type : 'fixable', newRow : true, size : 7, title: 'itemName', state : itemName, setState : setItemName, style:'regular'},
-      // {type : 'fixable', newRow : false, size : 5, title: 'description', state : description, setState : setDescription, style:'regular'},
-      // {type : 'divider', typoGraphy : 'basicInfo'}
-    ]
-    // {type : 'fixable', newRow : false, size : 5, title: 'ceo', state : ceo, setState : setCeo, style:'regular'},
-  }
-
-  //픽스모드 설정
-  const onModeChange = () => {
-    fixMode == false ? setFixMode(true) : setFixMode(false)
-  }
-
-  //primary키 설정
-  //queryProps조회해서 프라이머리 키 받아서 react state로 설정
-  const getPrimaryKey = () => {
-    // queryProps.map(obj => {
-    //   if (obj.type == 'primary') {
-    //       setPrimaryKey(obj.title)
-    //       setPrimaryCode(obj.state)
-    //   }
-    // })
-  }
-  const getPrimaryCode = () => {
-    queryProps.map(obj => {
-      if (obj.type == 'primary') {
-          setPrimaryCode(obj.title)
-        }
-      })
-  }
-  useEffect(() => {
-    getPrimaryKey()
-  },[queryProps])
-
-
-
-  console.log(attr)
-    //테이블 관련
+  //테이블 관련
   const [tableRawData, 
     setTableRawData]                = useState([])
   const [includingKeys, 
@@ -100,24 +60,57 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
   const [findingKeys, 
       setFindingKeys]               = useState([]);
 
-  const queryObj = {}
+  //픽스모드 설정
+  const onModeChange = () => {
+    fixMode == false ? setFixMode(true) : setFixMode(false)
+  }
+
+  console.log(fixMode)
+  
+  //primary키 설정
+  //queryProps조회해서 프라이머리 키 받아서 react state로 설정
+
+  //테이블 각열 Attr 
+  const queryProps = () => {
+    let tempObj = {
+      maker : [
+        {type : 'primary', newRow : true, size : 5, title: 'makerCode', style:'regular'},
+        {type : 'fixable', newRow : true, size : 7, title: 'makerName', style:'regular'},
+        {type : 'divider', typoGraphy : 'basicInfo'}
+      ]
+    }
+    return tempObj
+    // {type : 'fixable', newRow : false, size : 5, title: 'ceo', state : ceo, setState : setCeo, style:'regular'},
+  }
+
+
+  //primaryCode와 primaryKey를 설정
+  const getPrimaryKey = () => {
+    queryProps()[dataType].map(obj => {
+      if (obj.type == 'primary') {
+          setPrimaryKey(obj.title)
+          setPrimaryCode(loadedData[obj.title])
+      }
+    })
+  }
+  useEffect(() => {
+    getPrimaryKey()
+  },[queryProps])
+
+
   const getRawData = async () => {
     let queryObj = {}
     queryObj[attr.data.header] = attr.data.value
 
     let request = {queryObj : queryObj, findingKeys, includingKeys}
-    console.log(request)
 
     await axios.post('/api/' + dataType + '/query', request).then(res => {
-      console.log(res)
-        // setPrimaryKey(res.data.primaryKey)
-        // setIncludingKeys(res.data.includingKeys)
-        // setTableRawData(withoutIncludingKeys(res.data.vals))
-        // setFindingKeys(res.data.findingKeys)
+      setTableRawData(res.data)
+      setLoadedData(res.data)
     })
   }
 
-  console.log()
+
   useEffect(() => {
     getRawData()
   },[])
@@ -135,58 +128,61 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
   }
 
 
-
-
   //컨테이너에서 내려받은 api의 Data에서 queryProps에 규정된 것만 추출하여
   //state로 저장.
-  useEffect(() => {
-    setLodedData(loadedTempData)
-    // queryProps.map(obj => {
-    //   if (loadedTempData.hasOwnProperty(obj.title)) {
-    //     obj.setState(loadedTempData[obj.title])
-    //   }
-    // })
-  },[loadedTempData])
 
 
+  const onChangeVal = (key, value) => {
+    console.log(key, value)
+    setLoadedData(
+      produce(loadedData, draft => {
+        draft[key] = value
+      })
+    )
+    setFixedData(
+      produce(fixedData, draft => {
+        draft[key] = value
+      })
+    )
+  }
   
   return (
     <React.Fragment>
-      케헤헤
+      {dataType}
       <Grid container className = {classes.flex}>
         <Grid item xs = {11}>
           <Typography variant="h4">
-            {motherType}
+            {tableRawData.makerName}
           </Typography>
         </Grid>
         <Grid item xs = {1}>
           <Button className = {classes.right} onClick = {onModeChange}>Fix</Button>
-
         </Grid>
         
         <Divider/>
       </Grid>
       <br/>
       <Grid container>
-        {/* {queryProps.map(row => {
-          if(row.type !== 'divider') {
+        {queryProps().maker.map(obj => {
+          if(obj.type !== 'divider') {
             return(
-              <Grid item xs ={row.size}>
+              <Grid item xs ={obj.size}>
                 <InputST
-                  title         = {row.title}
                   attr          = {'regular'}
-                  type          = {row.type}
+                  type          = {obj.type}
                   fixMode       = {fixMode}
-                  state         = {row.state}
-                  setState      = {row.setState}
+
+                  title         = {obj.title}
+                  inputVal      = {loadedData[obj.title]}
+                  onChangeVal   = {onChangeVal}
+
                   fixedData     = {fixedData}
                   setFixedData  = {setFixedData}
                   onFixedVal    = {onFixedVal}
-                  lodedData     = {lodedData ? lodedData : null}
                 ></InputST>
               </Grid>
             )
-          }else if (row.type == 'divider') {
+          }else if (obj.type == 'divider') {
             return(
               <Grid item xs = {12}>
                 <br/>
@@ -197,12 +193,11 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
                     display="block"
                     variant="caption"
                   >
-                    Divider
                   </Typography>
               </Grid>
             )
           }
-        })} */}
+        })}
       </Grid>
 
       <Notes type = {type} primaryKey = {primaryKey} primaryCode = {primaryCode}></Notes>
