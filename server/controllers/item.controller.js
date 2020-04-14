@@ -4,6 +4,8 @@ const monolize = require("../lib/monolizeSequel");
 const calPrice = require("../lib/calPrice");
 const rmTimeFromReq = require("../lib/sequelMiddleWares");
 const getIncludeName = require("../lib/getIncludeName");
+const getIncludeNameFindOne = require("../lib/getIncludeNameFindOne");
+
 const getIncludingArr = require("../lib/getIncludingArr");
 const getIncludingAttr = require("../lib/getIncludingAttr");
 const getFindingAttr = require("../lib/getFindingAttr");
@@ -51,6 +53,8 @@ const Op = db.Sequelize.Op;
 const primaryKey   = 'itemCode'
 
 
+const includingAttr = getIncludingAttr(relAttr)
+const findingAttr   = getFindingAttr(relAttr)
 
 exports.addNew = (req, res) => {
   const {addedNew, primaryKey, includingKeys, findingKeys} = req.body
@@ -100,7 +104,7 @@ exports.itemLoad = (req, res) => {
   const includingAttr = getIncludingAttr(relAttr)
   const findingAttr   = getFindingAttr(relAttr)
   // res.send(findingAttr)
-  getIncludeName(Item, Supplier, primaryKey, findingAttr, includingAttr).then(items => {
+  getIncludeName(Item, primaryKey, findingAttr, includingAttr).then(items => {
     res.status(200).send(items)
   })
 };
@@ -113,7 +117,7 @@ exports.delete = async (req, res) => {
 };
 
 
-exports.query = (req, res) => {
+exports.query1 = (req, res) => {
   console.log(req.body)
   try {
     const where = req.body
@@ -131,6 +135,17 @@ exports.query = (req, res) => {
   catch (err) {
     res.status(500).send({message:err.message})
   }
+};
+
+
+exports.query = (req, res) => {
+  let {queryObj} = req.body
+  console.log(queryObj)
+  let where = queryObj
+
+  getIncludeNameFindOne(Item, primaryKey, where, findingAttr, includingAttr).then(items => {
+    res.status(200).send(items)
+  })
 };
 
 

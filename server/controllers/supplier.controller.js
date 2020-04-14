@@ -3,6 +3,7 @@ const config = require("../config/auth.config");
 const Supplier = db.supplier;
 const SupplierNote = db.supplierNote;
 const getIncludeName = require("../lib/getIncludeName");
+const getIncludeNameFindOne = require("../lib/getIncludeNameFindOne");
 
 
 const relAttr = {
@@ -23,6 +24,9 @@ const relAttr = {
   
 const Op = db.Sequelize.Op;
 const primaryKey   = 'supplierCode'
+
+const includingAttr = getIncludingAttr(relAttr)
+const findingAttr   = getFindingAttr(relAttr)
 
 
 exports.addNew = (req, res) => {
@@ -127,17 +131,11 @@ exports.query1 = (req, res) => {
   
 exports.query = (req, res) => {
     let {queryObj} = req.body
-    console.log(queryObj)
+    let where = queryObj
 
-    // const header = req.body.header
-    // const tempObj = {}
-    // tempObj[header] = req.body.value
-
-    Supplier.findOne({where:queryObj})
-    .then(res => {
-        // console.log(res)
-        result = res.dataValues
-    }).then(() => res.status(200).send(result) )
+    getIncludeNameFindOne(Supplier, primaryKey, where, findingAttr, includingAttr).then(items => {
+        res.status(200).send(items)
+    })
 };
 
 exports.delete = async (req, res) => {

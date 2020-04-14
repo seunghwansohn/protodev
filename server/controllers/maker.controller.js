@@ -4,6 +4,8 @@ const monolize = require("../lib/monolizeSequel");
 const calPrice = require("../lib/calPrice");
 const rmTimeFromReq = require("../lib/sequelMiddleWares");
 const getIncludeName = require("../lib/getIncludeName");
+const getIncludeNameFindOne = require("../lib/getIncludeNameFindOne");
+
 const getIncludingArr = require("../lib/getIncludingArr");
 const getIncludingAttr = require("../lib/getIncludingAttr");
 const getFindingAttr = require("../lib/getFindingAttr");
@@ -38,6 +40,10 @@ const relAttr = {
 }
 
   
+const includingAttr = getIncludingAttr(relAttr)
+const findingAttr   = getFindingAttr(relAttr)
+
+
 const Op = db.Sequelize.Op;
 const primaryKey   = 'makerCode'
 
@@ -101,17 +107,11 @@ exports.update = async (req, res) => {
 
 exports.query = (req, res) => {
     let {queryObj} = req.body
-    console.log(queryObj)
+    let where = queryObj
 
-    // const header = req.body.header
-    // const tempObj = {}
-    // tempObj[header] = req.body.value
-
-    Maker.findOne({where:queryObj})
-    .then(res => {
-        // console.log(res)
-        result = res.dataValues
-    }).then(() => res.status(200).send(result) )
+    getIncludeNameFindOne(Maker, primaryKey, where, findingAttr, includingAttr).then(items => {
+        res.status(200).send(items)
+    })
 };
   
 exports.addNotes = (req, res) => {

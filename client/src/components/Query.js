@@ -81,6 +81,18 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
         {type : 'primary', newRow : true, size : 5, title: 'supplierCode', style:'regular'},
         {type : 'fixable', newRow : true, size : 7, title: 'supplierName', style:'regular'},
         {type : 'divider', typoGraphy : 'basicInfo'}
+      ],
+      item : [
+        {type : 'primary', newRow : true, size : 5, title: 'itemCode', style:'regular'},
+        {type : 'fixable', newRow : true, size : 7, title: 'itemName', style:'regular'},
+        {type : 'fixable', newRow : true, size : 12, title: 'description', style:'regular'},
+        {type : 'fixable', newRow : true, size : 3, title: 'weight', style:'regular'},
+        {type : 'fixable', newRow : true, size : 3, title: 'width', style:'regular'},
+        {type : 'fixable', newRow : true, size : 3, title: 'depth', style:'regular'},
+        {type : 'fixable', newRow : true, size : 3, title: 'height', style:'regular'},
+        {type : 'fixable', newRow : true, size : 6, title: 'importTaxRate', style:'regular'},
+        {type : 'fixable', newRow : true, size : 6, title: 'VNPrice', style:'regular'},
+        {type : 'divider', typoGraphy : 'basicInfo'}
       ]
     }
     return tempObj
@@ -107,8 +119,10 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
     queryObj[attr.data.header] = attr.data.value
     let request = {queryObj : queryObj, findingKeys, includingKeys}
     await axios.post('/api/' + dataType + '/query', request).then(res => {
-      setTableRawData(res.data)
-      setLoadedData(res.data)
+      setTableRawData(res.data.vals)
+      setLoadedData(res.data.vals)
+      setIncludingKeys(res.data.primaryKey)
+      setFindingKeys(res.data.findingKeys)
     })
   }
   useEffect(() => {

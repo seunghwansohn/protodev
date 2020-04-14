@@ -14,7 +14,7 @@
 // }
 
 
-module.exports = function (source, target, primaryKey, findingAttr, includingAttr) {
+module.exports = function (source, primaryKey, findingAttr, includingAttr) {
   let includingKeys = {}
   let findingKeys = []
   let afterIncluding = ''
