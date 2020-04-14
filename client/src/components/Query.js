@@ -137,11 +137,9 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
   }
 
 
-  console.log(loadedData)
 
   //input값 변경 기능
   const onChangeVal = (key, value) => {
-    console.log(key, value)
     setLoadedData(
       produce(loadedData, draft => {
         draft[key] = value

@@ -22,8 +22,8 @@ const relAttr = {
     ]
   }
   
-const Op = db.Sequelize.Op;
-const primaryKey   = 'supplierCode'
+const Op            = db.Sequelize.Op;
+const primaryKey    = 'supplierCode'
 
 const includingAttr = getIncludingAttr(relAttr)
 const findingAttr   = getFindingAttr(relAttr)
@@ -41,9 +41,9 @@ exports.addNew = (req, res) => {
             province: obj.province,
             ceo: obj.ceo,
             taxCode: obj.taxCode,
-          }).then(() => {
+        }).then(() => {
             res.send({ message: "supplier added successfully" });
-          })
+        })
     })
   }
 

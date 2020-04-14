@@ -317,8 +317,6 @@ const STTable = ({
     tempObj2.value  = value
     tempObj2.row    = row
     tempObj2.header = header
-    console.log(colAttr)
-    console.log(header)
     tempObj2.dataType = colAttr[header].dataType
     tempObj2.primaryCode = getPrimaryCode(row)
     if (fixMode){
@@ -334,7 +332,6 @@ const STTable = ({
       setClickedCol(tempObj2)
     }
   }
-  console.log(colAttr)
 
 
   //Validation기능
@@ -415,7 +412,6 @@ const STTable = ({
     )
     const validArr = checkValid(index, header, event.target.value)
     let joinedValidStr = validArr.join(', ')
-    console.log(validArr)
     setNewAddedHelperTexts(    
       produce(newAddedhelperTexts, draft => {
         draft[index][header] = joinedValidStr

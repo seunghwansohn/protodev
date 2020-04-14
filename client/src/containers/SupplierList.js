@@ -179,7 +179,6 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableA
         getRawData()
     },[])
 
-    console.log(primaryKey)
     
     //Api로부터 findingKeys를 받은 뒤
     //input을 query창으로 형성할 컬럼의 목록을 arr로

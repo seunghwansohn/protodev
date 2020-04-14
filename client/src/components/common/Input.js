@@ -86,7 +86,6 @@ const InputST = ({
     setInputVal1(inputVal)
   },[inputVal])
 
-  console.log(inputVal)
 
   return (
     <React.Fragment>
