@@ -112,7 +112,7 @@ exports.update = async (req, res) => {
     }
 };
 
-exports.query = (req, res) => {
+exports.query1 = (req, res) => {
 
     const header = req.body.header
     const tempObj = {}
@@ -125,6 +125,21 @@ exports.query = (req, res) => {
     }).then(() => res.status(200).send(result) )
 };
   
+exports.query = (req, res) => {
+    let {queryObj} = req.body
+    console.log(queryObj)
+
+    // const header = req.body.header
+    // const tempObj = {}
+    // tempObj[header] = req.body.value
+
+    Supplier.findOne({where:queryObj})
+    .then(res => {
+        // console.log(res)
+        result = res.dataValues
+    }).then(() => res.status(200).send(result) )
+};
+
 exports.delete = async (req, res) => {
     // console.log(req.body)
     let draft = await Supplier.findOne({where:req.body})

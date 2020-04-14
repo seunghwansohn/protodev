@@ -18,8 +18,13 @@ const TextFieldST = styled(TextField)`
         return '#ffffff'
       } else if (props.type == 'fixable' && props.fixMode == true){ 
         return '#ffe6ff'}}};
+  .MuiInputLabel-root{
+    color: red;
+    font-size : 18px;
+    vertical-align : text-top;
+  }
   label.Mui-focused {
-    color: green;
+    color: pink;
     font-size : 18px;
     vertical-align : text-top;
 
@@ -58,19 +63,10 @@ const InputST = ({
   onFixedVal
 }) => {
 
+  const [inputVal1, setInputVal1] = useState(inputVal)
   const handleChangeValue = (event) => {
     let value =  event.target.value
     const key = title
-    // setState(event.target.value)
-    // let temp = {}
-    // let tempArr = fixedData
-    // temp[title] = event.target.value
-    // setFixedData(
-    //   produce(fixedData, draft => {
-    //     fixedData[title] = event.target.value
-    //   })
-    // )
-    // error(state)
     onChangeVal(key, value)
   }
   const onKeyPressInput = (event) => {
@@ -86,6 +82,11 @@ const InputST = ({
     }
   }
 
+  useEffect(() => {
+    setInputVal1(inputVal)
+  },[inputVal])
+
+  console.log(inputVal)
 
   return (
     <React.Fragment>
@@ -97,7 +98,11 @@ const InputST = ({
         size = {'small'}
         margin = {'none'}
 
-        value = {inputVal}
+        InputLabelProps={{
+          shrink: true,
+        }}
+
+        value = {inputVal1}
         onChange = {(event) => handleChangeValue(event)}
         onKeyPress = {(event) => onKeyPressInput(event)}
 

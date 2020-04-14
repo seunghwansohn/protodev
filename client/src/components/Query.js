@@ -65,7 +65,6 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
     fixMode == false ? setFixMode(true) : setFixMode(false)
   }
 
-  console.log(fixMode)
   
   //primary키 설정
   //queryProps조회해서 프라이머리 키 받아서 react state로 설정
@@ -77,10 +76,14 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
         {type : 'primary', newRow : true, size : 5, title: 'makerCode', style:'regular'},
         {type : 'fixable', newRow : true, size : 7, title: 'makerName', style:'regular'},
         {type : 'divider', typoGraphy : 'basicInfo'}
+      ],
+      supplier : [
+        {type : 'primary', newRow : true, size : 5, title: 'supplierCode', style:'regular'},
+        {type : 'fixable', newRow : true, size : 7, title: 'supplierName', style:'regular'},
+        {type : 'divider', typoGraphy : 'basicInfo'}
       ]
     }
     return tempObj
-    // {type : 'fixable', newRow : false, size : 5, title: 'ceo', state : ceo, setState : setCeo, style:'regular'},
   }
 
 
@@ -98,40 +101,31 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
   },[queryProps])
 
 
+  //api값을 받아와 설정
   const getRawData = async () => {
     let queryObj = {}
     queryObj[attr.data.header] = attr.data.value
-
     let request = {queryObj : queryObj, findingKeys, includingKeys}
-
     await axios.post('/api/' + dataType + '/query', request).then(res => {
       setTableRawData(res.data)
       setLoadedData(res.data)
     })
   }
-
-
   useEffect(() => {
     getRawData()
   },[])
 
+
+
   //업데이트 함수
   const onFixedVal = (fixedArr) => {
-    let tempObj = {}
-    tempObj.ref = {}
-    tempObj.vals = {}
-    tempObj.ref[primaryKey] = primaryCode
-    Object.keys(fixedData).map(key => {
-      tempObj.vals[key] = fixedData[key]
-    })
-    onUpdate(tempObj)
+    onUpdate()
   }
 
 
-  //컨테이너에서 내려받은 api의 Data에서 queryProps에 규정된 것만 추출하여
-  //state로 저장.
+  console.log(loadedData)
 
-
+  //input값 변경 기능
   const onChangeVal = (key, value) => {
     console.log(key, value)
     setLoadedData(
@@ -152,7 +146,7 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
       <Grid container className = {classes.flex}>
         <Grid item xs = {11}>
           <Typography variant="h4">
-            {tableRawData.makerName}
+            {tableRawData[dataType + 'Name']}
           </Typography>
         </Grid>
         <Grid item xs = {1}>
@@ -163,7 +157,7 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
       </Grid>
       <br/>
       <Grid container>
-        {queryProps().maker.map(obj => {
+        {queryProps()[dataType].map(obj => {
           if(obj.type !== 'divider') {
             return(
               <Grid item xs ={obj.size}>
@@ -178,7 +172,6 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
 
                   fixedData     = {fixedData}
                   setFixedData  = {setFixedData}
-                  onFixedVal    = {onFixedVal}
                 ></InputST>
               </Grid>
             )
