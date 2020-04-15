@@ -19,8 +19,6 @@ import DialogST     from '../components/common/dialogs/DialogST'
 import Table        from '../components/common/Table1'
 import ButtonHeader from '../components/common/ButtonHeader'
 
-
-
 import spacelize                      from '../lib/spacelize'
 import {generateRandom}               from '../lib/common';
 
@@ -327,7 +325,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
       title : detailQuery,
       type : detailQuery,
       maxWidth : 'md' ,
-      // funcs : funcs,
       open : checkOpened(detailQuery),
       scroll : 'paper'
       
@@ -336,7 +333,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
       title : simpleQuery,
       type : simpleQuery,
       maxWidth : 'xl' ,
-      // funcs : funcs,
       open : checkOpened(simpleQuery)
     }
   }
@@ -470,6 +466,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
           motherNo    = {frameNo}
           reqKey      = {primaryKey}
           reqCode     = {reqQueryCode}
+          attr        = {dialogInfo}
         ></ItemAdd>
       </DialogST>
 

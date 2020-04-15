@@ -51,6 +51,9 @@ import InputST          from './common/Input'
 import {actSubmitAddItem} from '../modules/itemList'
 
 import TableWithColon from './common/TableWithColon'
+import produce  from 'immer'
+
+
 
 toast.configure()
 
@@ -104,24 +107,27 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
-const ProppedInput = ({infoProps, fixMode, fixedData, setFixedData}) => {
+const ProppedInput = ({infoProps, fixMode, fixedData, setFixedData, loadedData, onChangeVal}) => {
   const classes = useStyles();
+  console.log(loadedData)
   return (
     <Grid container>
       {infoProps.map(obj => {
+        console.log(obj)
         if(obj.type !== 'divider') {
           return(
             <Grid container className = {classes.marginBottom}>
               <InputST
-                title         = {obj.title}
                 attr          = {'regular'}
                 type          = {obj.type}
                 fixMode       = {fixMode}
-                state         = {obj.state}
-                setState      = {obj.setState}
+
+                title         = {obj.title}
+                inputVal      = {loadedData[obj.title]}
+                onChangeVal   = {onChangeVal}
+
                 fixedData     = {fixedData}
                 setFixedData  = {setFixedData}
-                validation    = {obj.validation}
               ></InputST>
             </Grid>
 
@@ -133,13 +139,13 @@ const ProppedInput = ({infoProps, fixMode, fixedData, setFixedData}) => {
 }
 
 
-let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
+let ItemAdd = ({motherType, motherNo, reqKey, reqCode, attr}) => {
   const [fixMode, setFixMode]         = useState(false)
   const [fixedData, setFixedData]     = useState({})
 
   const [loadedData, setLoadedData]     = useState([])
 
-  const [primaryKey, setPrimaryKey]   = useState(reqKey)
+  const [primaryKey, setPrimaryKey]   = useState('itemCode')
   const [primaryCode, setPrimaryCode] = useState(reqCode)
 
   const classes = useStyles();
@@ -186,6 +192,22 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
 
 
 
+  
+  //input값 변경 기능
+  const onChangeVal = (key, value) => {
+    setLoadedData(
+      produce(loadedData, draft => {
+        draft[key] = value
+      })
+    )
+    setFixedData(
+      produce(fixedData, draft => {
+        draft[key] = value
+      })
+    )
+  }
+  
+
   //픽스모드 설정
   const onModeChange = () => {
     fixMode == false ? setFixMode(true) : setFixMode(false)
@@ -195,8 +217,13 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
   const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
   const type = 'itemDetailQuery'
   const containerNo = type + '_' + frameNo
-  const dataType = 'item'
+  const {dataType} = attr
 
+  //테이블 기본 키
+  const [includingKeys, 
+    setIncludingKeys]               = useState([]);
+  const [findingKeys, 
+    setFindingKeys]               = useState([]);
 
   useEffect(() => {
     const CBM = cal.CBM(width, depth, height)
@@ -259,11 +286,43 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
     return tempObj
   }
   useEffect(() => {
-    axios.post('/api/' + dataType + '/query', reqWhere()).then(res => {
-        setLoadedData(res.data[0])
+    let queryObj = {}
+    queryObj[primaryKey] = attr.data.primaryCode
+    let request = {queryObj : queryObj, findingKeys, includingKeys}
+    axios.post('/api/' + dataType + '/query', request).then(res => {
+      setLoadedData(res.data.vals)
+      setIncludingKeys(res.data.primaryKey)
+      setFindingKeys(res.data.findingKeys)
     })
   },[])
 
+  useEffect(() => {
+    const {
+      itemCode, 
+      itemName,
+      supplierName, 
+      description,
+      makerName,
+      buyingPKR,
+      importTaxRate,
+      width,
+      depth,
+      height,
+      weight
+    } = loadedData
+    setItemCode(itemCode)
+    setItemName(itemName)
+    setSupplier(supplierName)
+    setDescription(description)
+    setMaker(makerName)
+    setBuyingPrice(buyingPKR)
+    setImportTaxRate(importTaxRate)
+
+    setWidth(width)
+    setDepth(depth)
+    setHeight(height)
+    setWeight(weight)
+  },[loadedData])
 
 
   useEffect(() => {
@@ -286,9 +345,6 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
       }
     })
   },[loadedData])
-
-
-
 
 
   //슬라이더부분
@@ -314,7 +370,7 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
 
 
   const priceInfoProps = [
-    {type : 'fixable', newRow : false, size : 5, title: 'buyingPrice', state : buyingPrice, setState : setBuyingPrice, style:'regular', validation : "number"},
+    {type : 'fixable', newRow : false, size : 5, title: 'buyingPKR', state : buyingPrice, setState : setBuyingPrice, style:'regular', validation : "number"},
     {type : 'fixable', newRow : false, size : 7, title: 'importTaxRate', state : importTaxRate, setState : setImportTaxRate, style:'regular', validation : "number"},
 
   ]
@@ -376,10 +432,14 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
             return(
               <Grid item xs ={obj.size} className = {classes.marginBottom}>
                 <InputST
-                  title         = {obj.title}
                   attr          = {'regular'}
                   type          = {obj.type}
                   fixMode       = {fixMode}
+
+                  title         = {obj.title}
+                  inputVal      = {obj.state}
+                  onChangeVal   = {onChangeVal}
+
                   state         = {obj.state}
                   setState      = {obj.setState}
                   fixedData     = {fixedData}
@@ -403,6 +463,9 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
             fixMode       = {fixMode}
             fixedData     = {fixedData}
             setFixedData  = {setFixedData}
+            loadedData    = {loadedData}
+            onChangeVal   = {onChangeVal}
+
           >
           </ProppedInput>
 
@@ -444,12 +507,14 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
             fixMode       = {fixMode}
             fixedData     = {fixedData}
             setFixedData  = {setFixedData}
+            loadedData    = {loadedData}
+            onChangeVal   = {onChangeVal}
+
           >
           </ProppedInput>
 
 
         </Grid>
-
         <Grid item xs = {9}>
           <Grid container>
 
@@ -533,7 +598,6 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode}) => {
 
           </Grid>
         </Grid>
-
 
 
 
