@@ -207,6 +207,7 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode, attr}) => {
     )
   }
   
+  console.log(fixedData)
 
   //픽스모드 설정
   const onModeChange = () => {
@@ -350,9 +351,35 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode, attr}) => {
   //슬라이더부분
   const onSetSTKVVar = (value) => {
     setStkVVar(value)
+    if (loadedData.stkVVar !== value){
+      setFixedData(
+        produce(fixedData, draft => {
+          draft.stkVVar = value
+        })
+      )
+    }else{
+      setFixedData(
+        produce(fixedData, draft => {
+          delete draft.stkVVar
+        })
+      )
+    }
   }
   const onSetSTKCVar = (value) => {
     setStkCvar(value)
+    if (loadedData.stkVVar !== value){
+      setFixedData(
+        produce(fixedData, draft => {
+          draft.stkCVar = value
+        })
+      )
+    }else {
+      setFixedData(
+        produce(fixedData, draft => {
+          delete draft.stkCVar
+        })
+      )
+    }
   }
 
 
