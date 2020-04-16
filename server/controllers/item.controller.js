@@ -96,16 +96,20 @@ exports.update = async (req, res) => {
     return tempMatched
   }
 
-  ItemPrice.update(vals, {where:ref})
-
-
   Object.keys(vals).map(async key => {
     const includeUpdate = await getIncludeUpdate(key)
     await console.log('이프문전에', includeUpdate)
     if (Object.keys(includeUpdate).length > 0) {
       console.log('이프문아래', includeUpdate)
       const {target} = includeUpdate
-      target.update(vals, {where:ref})
+      let tempVal = {}
+      tempVal[key] = vals[key]
+      
+      target.update(tempVal, {where:ref})
+    } else {
+      let tempVal = {}
+      tempVal[key] = vals[key]
+      Item.update(tempVal, {where:ref})
     }
   })
 
