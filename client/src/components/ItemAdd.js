@@ -5,23 +5,13 @@ import { Field, reduxForm, Fields }           from 'redux-form'
 import axios                          from 'axios';
 
 import Table from '@material-ui/core/Table'; //material-ui의 Table ui를 불러와서 프론트엔드에 쓰이는 모든 테이블 스타일을 이 스타일로 함.
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
+
 import TableBody from '@material-ui/core/TableBody';
 import TableContainer from '@material-ui/core/TableContainer';
 
 import Typography       from '@material-ui/core/Typography';
 import Slider           from '@material-ui/core/Slider';
-import TextField        from '@material-ui/core/TextField'
-import Checkbox         from '@material-ui/core/Checkbox'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
-import FormControl      from '@material-ui/core/FormControl'
-import Select           from '@material-ui/core/Select'
-import InputLabel       from '@material-ui/core/InputLabel'
-import FormHelperText   from '@material-ui/core/FormHelperText'
-import Radio            from '@material-ui/core/Radio'
-import RadioGroup       from '@material-ui/core/RadioGroup'
+
 import { makeStyles }   from '@material-ui/core/styles';
 import Grid             from '@material-ui/core/Grid';
 import Button           from '@material-ui/core/Button';
@@ -351,35 +341,35 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode, attr}) => {
   //슬라이더부분
   const onSetSTKVVar = (value) => {
     setStkVVar(value)
-    if (loadedData.stkVVar !== value){
-      setFixedData(
-        produce(fixedData, draft => {
-          draft.stkVVar = value
-        })
-      )
-    }else{
-      setFixedData(
-        produce(fixedData, draft => {
-          delete draft.stkVVar
-        })
-      )
-    }
+    // if (loadedData.stkVVar !== value){
+    //   setFixedData(
+    //     produce(fixedData, draft => {
+    //       draft.stkVVar = value
+    //     })
+    //   )
+    // }else{
+    //   setFixedData(
+    //     produce(fixedData, draft => {
+    //       delete draft.stkVVar
+    //     })
+    //   )
+    // }
   }
   const onSetSTKCVar = (value) => {
     setStkCvar(value)
-    if (loadedData.stkVVar !== value){
-      setFixedData(
-        produce(fixedData, draft => {
-          draft.stkCVar = value
-        })
-      )
-    }else {
-      setFixedData(
-        produce(fixedData, draft => {
-          delete draft.stkCVar
-        })
-      )
-    }
+    // if (loadedData.stkVVar !== value){
+    //   setFixedData(
+    //     produce(fixedData, draft => {
+    //       draft.stkCVar = value
+    //     })
+    //   )
+    // }else {
+    //   setFixedData(
+    //     produce(fixedData, draft => {
+    //       delete draft.stkCVar
+    //     })
+    //   )
+    // }
   }
 
 
@@ -443,7 +433,7 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode, attr}) => {
     tempObj1[primaryKey] = primaryCode
 
     let tempObj = {ref : tempObj1, vals : fixedData}
-    
+    console.log(tempObj)
     dispatch(actUpdate(tempObj))
   }
 
@@ -625,8 +615,6 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode, attr}) => {
 
           </Grid>
         </Grid>
-
-
 
 
       </Grid>

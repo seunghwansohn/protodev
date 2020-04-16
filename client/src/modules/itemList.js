@@ -39,7 +39,7 @@ const addItemSaga   = createRequestSaga(SET_SUBMIT_ADD_ITEM, item.addNew);
 export const actHeader          = createAction(SET_HEADER, columns => columns)
 export const actAdd             = createAction(SET_ADD, (addedNew, primaryKey, includingKeys, findingKeys) => ({addedNew, primaryKey, includingKeys, findingKeys}))
 export const actLoad            = createAction(SET_LOAD)
-export const actUpdate          = createAction(SET_UPDATE, arr => arr)
+export const actUpdate          = createAction(SET_UPDATE, obj => obj)
 export const actUpdateChange    = createAction(SET_UPDATE_CHANGE, ox => ox)
 export const actClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
 export const actDelete          = createAction(SET_DELETE, (type, code) => ({type, code}))

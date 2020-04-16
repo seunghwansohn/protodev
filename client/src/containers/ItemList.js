@@ -114,6 +114,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
 
   //테이블값 수정
   const onSubmitUpdatedVals = async (fixedVals) => {
+    
     await fixedVals.map(arr => {
         dispatch(actUpdate(arr))
     })
@@ -345,16 +346,6 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
   },[dialogOpened])
 
 
-
-
-
-
-
-
-
-
-
-
   //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
   useEffect(() => {
     let keys = Object.keys(clicked)
@@ -437,7 +428,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
 
 
 
-
+  console.log(fixedVals)
   
   const arrFunc = () => {
     let Arr = []

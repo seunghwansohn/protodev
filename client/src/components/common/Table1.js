@@ -435,7 +435,6 @@ const STTable = ({
 
 
 
-
   //값 update시 인풋 처리 기능
   const [fixedVals, setFixedVals]           = useState([]);
   const [tempFixedVal, setTempFixedVal]     = useState({});
@@ -514,6 +513,9 @@ const STTable = ({
   }
 
 
+  console.log(fixedVals)
+
+  
   //쿼리인풋 기능
   const querySelected     = useSelector(state => state.query[frameNo])
   useEffect(() => {

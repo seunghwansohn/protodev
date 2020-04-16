@@ -9,6 +9,9 @@ const getIncludeNameFindOne = require("../lib/getIncludeNameFindOne");
 const getIncludingArr = require("../lib/getIncludingArr");
 const getIncludingAttr = require("../lib/getIncludingAttr");
 const getFindingAttr = require("../lib/getFindingAttr");
+const getIncludeAttrArr = require("../lib/getIncludeAttrArr");
+const getMatchedAttr = require("../lib/getMatchedAttr");
+
 
 
 const getCreateObj = require("../lib/getCreateObj");
@@ -79,23 +82,47 @@ exports.addNew = (req, res) => {
 
 exports.update = async (req, res) => {
   let data = req.body
-
   let { ref,vals } = data
-  
-  try {
-      const draft = await Item.findOne({where:ref})
-      keys = await Object.keys(vals)
 
-      keys.map(async key => {
-          draft[key] = vals[key]
-      })
-      await draft.save().then(() => {
-          res.status(200).send('updated Successfully')
-      })
+  const getIncludeUpdate = (key) => {
+    let tempMatched = {}
+    relAttr.rels.map(rel => {
+      if (rel.attributes.includes(key)) {
+        tempMatched.target = rel.target
+        tempMatched.relType = rel.relType
+      }
+    })
+    // console.log(tempMatched)
+    return tempMatched
   }
-  catch (err) {
 
-  }
+  ItemPrice.update(vals, {where:ref})
+
+
+  Object.keys(vals).map(async key => {
+    const includeUpdate = await getIncludeUpdate(key)
+    await console.log('이프문전에', includeUpdate)
+    if (Object.keys(includeUpdate).length > 0) {
+      console.log('이프문아래', includeUpdate)
+      const {target} = includeUpdate
+      target.update(vals, {where:ref})
+    }
+  })
+
+  // try {
+  //     let draft = await Item.findOne({where:ref, include : includingAttr})
+
+  //     draft.itemName = 'ebdzxcfgdsf'
+
+  //     draft.dataValues.price.VNPrice = await 80000000
+  //     console.log(draft)
+  //     await draft.save({include :[{model:ItemPrice, as : 'price'}]}).then(() => {
+  //         res.status(200).send('updated Successfully')
+  //     })
+  // }
+  // catch (err) {
+
+  // }
 };
 
 exports.itemLoad = (req, res) => {

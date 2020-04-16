@@ -32,13 +32,13 @@ module.exports = function (source, primaryKey, findingAttr, includingAttr) {
 
 
   let concatedAttr = includingAttr.concat(findingAttr)
+  console.log(concatedAttr)
 
   return source.findAll({
     include : concatedAttr
   }).then(async arr => {
-    
+    // console.log(arr)
     arr.map(obj => {
-
       includingAttr.map(attr => {
         let targetCodes = attr.attributes
         let as = attr.as
