@@ -167,11 +167,13 @@ const STTable = ({
     setFindOneResult, 
     initialFilter,
     directQuery,
-    reqNo
+    reqNo,
+    findingKeys
   }                   = attr
 
   const dispatch = useDispatch()
 
+  console.log(findingKeys)
 
   //개체 기본 속성
   const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
@@ -643,7 +645,7 @@ const STTable = ({
     setFilteredData(rawData)
   },[rawData])
   useEffect(() => {
-    if (filteredData.length == 1) {
+    if (filteredData.length == 1 && initialFilter == filterKeyword) { 
       console.log('검색결과 하나임')
       if (directQuery && setFindOneResult && typeof setFindOneResult == "function") {
         setFindOneResult(filteredData[0])
@@ -671,7 +673,7 @@ const STTable = ({
     console.log(addedNew)
   }
 
-  console.log(initialFilter)
+  console.log(initialFilter, filterKeyword)
 
 
   return (
@@ -905,7 +907,23 @@ const STTable = ({
                   let   valid         = getValid(header)
                   if (!isColumnHided && header !== 'id') {
                     if (isQueryCol) {
-                      let queryColType = 'newAdded'
+                      let queryColType  = 'newAdded'
+                      let findingKey    = header
+                      let dataType      =  colAttr[header].dataType
+
+                      console.log(dataType)
+                      const getMatchedFinding = (type) => {
+                        let tempMatched = ''
+                        findingKeys.map(obj => {
+                          Object.keys(obj).map(key => {
+                            if (type == key) {
+                              tempMatched = obj
+                            }
+                          })
+                        })
+                        return tempMatched[type]
+                      }
+
                       const getSelectedValue = (key) => {
                         let values = null
                         querySelected.map(obj => {
@@ -925,7 +943,8 @@ const STTable = ({
                             motherType  = {type}
 
                             reqType     = {queryColType}
-                            dataType    = {colAttr[header].dialog} 
+                            dataType    = {dataType}
+                            codeNName    = {getMatchedFinding(dataType)}
 
                             addedNo     = {index}
                             selectedVal = {name}

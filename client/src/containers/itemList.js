@@ -305,6 +305,7 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
         mother : containerNo
       },
     ],
+    findingKeys
   }
 
   //다이얼로그 관련

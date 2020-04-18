@@ -53,8 +53,11 @@ const TextFieldST = styled(TextField)`
 const QueryInput = ({
   motherNo,
   motherType,
+
   reqType,
   dataType,
+  codeNName,
+
   addedNo,
   selectedVal,
   helperText,
@@ -70,7 +73,32 @@ const QueryInput = ({
   const type = 'selectQuery'
   const containerNo = type + '_' + frameNo
 
-  // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+  
+  
+  //finding code와 Name 생성
+  const getFirstKey = (obj) => {
+    let matchedKey = ''
+    Object.keys(obj).map(key => {
+      if (key) {
+        matchedKey = key
+      }
+    })
+    return matchedKey
+  }
+  const getFirstVal = (obj) => {
+    let matchedVal = ''
+    Object.keys(obj).map(key => {
+      if (key) {
+        matchedVal = obj[key]
+      }
+    })
+    return matchedVal
+  }
+  const [queryCode, setQueryCode] = useState(codeNName ? getFirstKey(codeNName) : '')
+  const [queryName, setQueryName] = useState(codeNName ? getFirstVal(codeNName) : '')
+
+
+
 
 
   //쿼리헤더관련
@@ -107,6 +135,14 @@ const QueryInput = ({
   },[opened])
 
 
+  //findOneResult(검색 결과값 하나일 때) 기능
+  const handleFindOneResult = (obj) => {
+    setInputVal(obj[queryName])
+    let tempObj = {frameNo : frameNo, currentNo : motherNo, type : type, open : false}
+    dispatch(onDialogClose(tempObj))
+  }
+
+
   const DialogsAttr = {
     supplier : {
       title : 'supplier_' + frameNo,
@@ -128,7 +164,7 @@ const QueryInput = ({
             mother : containerNo
           },
         ],
-        setFindOneResult : setFoundResult,
+        setFindOneResult : handleFindOneResult,
         frameNo : 'supplier_' + frameNo,
         initialFilter : filter ? filter : '',
         directQuery : true
