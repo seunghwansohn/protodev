@@ -42,7 +42,7 @@ import {getIncludingKeys,
 
 
 
-const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableAttr}) => {
+const SupplierContainer = ({motherType, motherNo, subTableAttr}) => {
     const dispatch = useDispatch();
 
 
@@ -96,9 +96,6 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableA
         setFindingKeys]               = useState([]);
 
           
-    //서브컨테이너 기능 관련
-    const {tableButton, setFindOneResult, initialFilter, directQuery} = subTableAttr ? subTableAttr : ''
-
 
     //테이블 업데이트
     const [fixedVals, setFixedVals]             = useState([]);
@@ -224,7 +221,6 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableA
     }
 
 
-
     //table 관련 속성들
     const tableStates = {
         rawData         : tableRawData,
@@ -251,7 +247,7 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableA
         onDelete : setDelete,
         onSubmitNewAdded : onSubmitNewAdded
     }
-    const tableAttr = {
+    let tableAttr = {
         flagAble : true,
         fixModeAble : true,
         colAttr : {
@@ -297,22 +293,8 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableA
                 defaultHided : true
             },
         },
-        // tableButton : [
-        //     {
-        //         title : 'insert',
-        //         func : function(row){
-        //             dispatch(onAlreadyPickedCheck(row))
-        //         },
-        //         mother : containerNo
-        //     },
-        // ],
-        tableButton,
-        setFindOneResult,
-        frameNo,
-        initialFilter,
-        directQuery,
-        reqNo
     }
+    tableAttr = Object.assign(tableAttr, subTableAttr)
 
     const arrFunc = () => {
       let Arr = []

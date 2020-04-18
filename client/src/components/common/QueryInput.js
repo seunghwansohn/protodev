@@ -2,17 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { connect, useSelector, useDispatch } from 'react-redux';
 
 import TextField                  from '@material-ui/core/TextField'
-import InputAdornment             from '@material-ui/core/InputAdornment';
-import Grid                       from '@material-ui/core/Grid';
-import IconButton                 from '@material-ui/core/IconButton';
-import EditIcon                   from '@material-ui/icons/Edit';
-import { withStyles, makeStyles } from "@material-ui/core/styles";
-import Button                     from '@material-ui/core/Button';
-import { onDialogOpen, onDialogClose }           from '../../modules/dialogs'
-import { actSelect }               from '../../modules/query'
-import Input            from '@material-ui/core/Input';
-
-
 
 import SupplierList from '../../containers/SupplierList'
 
@@ -21,11 +10,10 @@ import DialogST             from './dialogs/DialogST'
 
 import {generateRandom}     from '../../lib/common';
 
-import axios                from '../../lib/api/axios'
-
-import {actSetReqNo}                from '../../modules/query'
-
-import produce  from 'immer'
+import { onDialogOpen, 
+  onDialogClose }           from '../../modules/dialogs'
+import { actSelect }        from '../../modules/query'
+import {actSetReqNo}        from '../../modules/query'
 
 import styled   from 'styled-components';
 
@@ -65,12 +53,12 @@ const TextFieldST = styled(TextField)`
 const QueryInput = ({
   motherNo,
   motherType,
-  dialog,
-  selectFunc,
-  helperText,
   reqType,
-  valuee,
-  addedNo
+  addedNo,
+  selectedVal,
+  dialog,
+  helperText,
+  
 }) => {
   const dispatch = useDispatch()
 
@@ -88,13 +76,12 @@ const QueryInput = ({
 
   //쿼리헤더관련
   const [foundResult, 
-    setFoundResult]                     = useState({});
+    setFoundResult]                       = useState({});
 
   const [changedHeaderInput, 
       setChangedHeaderInput]              = useState({});
       
   const querySelected     = useSelector(state => state.quote.selected)
-  const queryRequested    = useSelector(state => state.quote.requested)
   const queryVars         = useSelector(state => state.query[frameNo])
 
 
@@ -102,188 +89,87 @@ const QueryInput = ({
 
   const [client, setClient]               = useState('');
   const [clientRate, setClientRate]       = useState('');
-  const queryHeaderfuncs = () => {
-    // const onSetClose = (type) => {
-    //     const ox = false
-    //     dispatch(onFuncsDialog.onDialogOpen(ox,type))
-    // }
-    // const onRecordToDB = () => {
-    //     dispatch(recordQuote(quoteProp.table))
-    // }
-    // const onQueryheaderInputChange = (title, e) => {
-    //     setChangedHeaderInput(
-    //         produce(changedHeaderInput, draft => {
-    //             draft[title] = e.target.value
-    //         }
-    //     ))
-    // }
-    // const onQueryHeaderKeyPress = async (frameNo, title, e) => {
-    //     if (e.key === 'Enter') {
-    //         let type = 'filter'
-    //         let tempObj = {}
-    //         const daialogNo = title + '_' + frameNo
-    //         tempObj[frameNo] = {}
-    //         tempObj[frameNo][title] = changedHeaderInput[title]
-    //         // await axios.post('/api/' + type )
-    //         dispatch(actQuery(frameNo, type, title, e.target.value))
-    //         dispatch(actSubmit(tempObj))
-    //         dispatch(actSetFilter(frameNo, title, e.target.value))
-    //         dispatch(onDialogOpen(true, daialogNo))
-    //     }
-    // }
-    // const funcsObj = {
-    //     onSetClose : onSetClose,
-    //     onRecordToDB : onRecordToDB,
-    //     headerInputChanged : onQueryheaderInputChange,
-    //     onKeyPressOnInput : onQueryHeaderKeyPress
-    // }
-    // return funcsObj
-}
 
+  //다이얼로그 관련
+  const opened    = useSelector(state => state.dialogs.opened)
+  const checkOpened = (title) => {
+      let result = ''
+      opened.map(obj => {
+        if(obj.frameNo == frameNo && obj.currentNo == currentNo && obj.type == type) {
+          console.log('일치함')
+          result = obj.open
+        }
+      })
+      return result
+  }
+  const DialogsAttr = {
+    supplier : {
+      title : 'supplier_' + frameNo,
+      maxWidth : 'xl' ,
+      open : checkOpened('supplier_' + frameNo),
+      table : {
+        tableButton : [
+          {
+            title : 'insert',
+            type  : 'select',
+            func : function(selected){
+              //inser버튼 클릭됐을 때 실행할 명령
+              console.log(selected)
+              let tempObj = {frameNo : frameNo, currentNo : motherNo, type : type, open : false}
 
-    //다이얼로그 관련
-    const opened    = useSelector(state => state.dialogs.opened)
-    const checkOpened = (title) => {
-        let result = ''
-        opened.map(obj => {
-          if(obj.frameNo == frameNo && obj.currentNo == currentNo && obj.type == type) {
-            console.log('일치함')
-            result = obj.open
-          }
-        })
-        return result
-    }
-    
-    const DialogsAttr = {
-      supplier : {
-        title : 'supplier_' + frameNo,
-        maxWidth : 'xl' ,
-        funcs : queryHeaderfuncs(),
-        open : checkOpened('supplier_' + frameNo),
-        table : {
-          tableButton : [
-            {
-              title : 'insert',
-              type  : 'select',
-              func : function(selected){
-                //inser버튼 클릭됐을 때 실행할 명령
-                console.log(selected)
-                let tempObj = {frameNo : frameNo, currentNo : motherNo, type : type, open : false}
-
-                dispatch(actSelect(frameNo, reqType, addedNo, selected))
-                dispatch(onDialogClose(tempObj))
-              },
-              mother : containerNo
+              dispatch(actSelect(frameNo, reqType, addedNo, selected))
+              dispatch(onDialogClose(tempObj))
             },
-          ],
-          setFindOneResult : setFoundResult,
-          frameNo : 'supplier_' + frameNo,
-          initialFilter : filter ? filter.supplier : '',
-          directQuery : true
-        },
-      }
+            mother : containerNo
+          },
+        ],
+        setFindOneResult : setFoundResult,
+        frameNo : 'supplier_' + frameNo,
+        initialFilter : filter ? filter.supplier : '',
+        directQuery : true
+      },
     }
-
-
-
-  // useEffect(()=> {
-  //   dispatch(actSetReqNo(frameNo, reqNo))
-  // },[])
-
-
-  // const reqWhere = () =>{
-  //   let tempObj = {}
-  //   tempObj[reqKey] = reqCode
-  //   return tempObj
-  // }
-
-  // const getRawData = async () => {
-  //   await axios.post('/api/' + dataType + '/query', reqWhere()).then(res => {
-
-  //       // setPrimaryKey(res.data.primaryKey)
-  //       // setIncludingKeys(res.data.includingKeys)
-  //       // setTableRawData(withoutIncludingKeys(res.data.vals))
-  //       // setFindingKeys(res.data.findingKeys)
-  //   })
-  // }
-  // useEffect(() => {
-  //     getRawData()
-  // },[])
-
-  // const onChangeValue = (event, func) => {
-  //   setState(event.target.value)
-  //   let temp = {}
-  //   let tempArr = fixedData
-  //   console.log(event.target.value)
-  //   temp[title] = event.target.value
-  //   setFixedData(
-  //     produce(fixedData, draft => {
-  //       console.log(fixedData)
-  //       fixedData[title] = event.target.value
-  //     })
-  //   )
-  // }
-  // const onKeyPressInput = (event) => {
-  //   if (event.key == "Enter") {
-  //     let temp = {}
-  //     let tempArr = fixedData
-  //     temp[title] = event.target.value
-  //     setFixedData(
-  //       produce(fixedData, draft => {
-  //         fixedData[title] = event.target.value
-  //       })
-  //     )
-  //   }
-  // }
-
-  const selected          = useSelector(state => state.query[frameNo])
-  const [isSelected, setIsSelected]               = useState(false);
-  useEffect(() => {
-    if (selected !== undefined) {
-      if(selected[reqType] !== undefined)
-      setIsSelected(true)
-    }
-  },[selected])
-
-
-
-  const openDialog = (type, info) => {
-    dispatch(onDialogOpen(true, type, info))
   }
 
+
+  const selected          = useSelector(state => state.query[frameNo])
+  const [isSelected, 
+    setIsSelected]        = useState(false);
+  const [inputVal, setInputVal]              = useState('');
   const handleChangeInput = (event) => {
     setInputVal(event.target.value)
   }
+  useEffect(() => {
+    if (selected !== undefined) {
+      setInputVal(selectedVal)
+    }
+  },[selected])
+
   
   const onKeyPressOnInput = (event) => {
+    setInputVal(event.target.value)
     if(event.key == "Enter") {
       console.log("엔터눌러짐")
       let tempObj = {frameNo : frameNo, currentNo : currentNo, type : type, open : true, dataType : dataType, clickType : type}
 
       dispatch(onDialogOpen(tempObj))
     }
-
   }
 
-  const [inputVal, setInputVal]              = useState('');
 
   return (
     <React.Fragment>
-      {/* <Button onClick = {() => {openDialog(DialogsAttr.supplier.title)}}>클릭</Button> */}
       <TextFieldST 
-        onChange = {(event) => handleChangeInput(event)} 
-        // key = {header }
-        value = {valuee} 
-        onKeyPress = {(event) => onKeyPressOnInput(event)}
-        isSelected = {isSelected}
-        helperText = {helperText}
+        onChange    = {(event) => handleChangeInput(event)} 
+        onKeyPress  = {(event) => onKeyPressOnInput(event)}
+        value       = {inputVal} 
+        isSelected  = {isSelected}
+        helperText  = {helperText}
       />
       <DialogST attr = {DialogsAttr.supplier} frameNo = {frameNo} motherNo = {frameNo} motherType = {type}>
         <SupplierList
           motherType          = {type}
           motherNo            = {frameNo}
-          reqType             = {reqType}
-          subCompIndex        = {addedNo}
           subTableAttr        = {DialogsAttr.supplier.table}
         ></SupplierList>
       </DialogST>

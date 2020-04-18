@@ -919,14 +919,16 @@ const STTable = ({
                       return(
                         <StyledTableCell>
                           <QueryInput
-                            motherType  = {type}
                             motherNo    = {frameNo}
+                            motherType  = {type}
+                            reqType     = {queryColType}
+
                             addedNo     = {index}
-                            valuee     = {name}                            
-                            dialog     = {colAttr[header].dialog} 
-                            selectFunc = {queryColSelect}
-                            helperText =  "Incorrect entry."
-                            reqType      = {'newAdded'}
+                            selectedVal = {name}
+
+                            dialog      = {colAttr[header].dialog} 
+
+                            helperText  =  "Incorrect entry."
                           />
                         </StyledTableCell>
                       )
