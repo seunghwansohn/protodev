@@ -50,16 +50,17 @@ function reducer (state = initialState, action) {
         case SET_QUERY:
             return produce(state, draft =>{
                 const {frameNo, type, title, value} = action.payload
-                draft[frameNo] = draft[frameNo] ? draft[frameNo] : {}
-                draft[frameNo][type]  =draft[frameNo][type] ? draft[frameNo][type] : {}
-                draft[frameNo][type][title] = value
+                let tempObj = {type : type, title : title, value : value}
+                draft[frameNo] = draft[frameNo] ? draft[frameNo] : []
+                draft[frameNo].push(tempObj)
+                // draft[frameNo][type]  =draft[frameNo][type] ? draft[frameNo][type] : {}
+                // draft[frameNo][type][title] = value
             })
 
         case SET_FRAME:
             return produce(state, draft =>{
                 let frameNo = action.payload
-                draft[frameNo] = draft[frameNo] ? draft[frameNo] :{}
-                draft[frameNo].newAdded = draft[frameNo].newAdded ? draft[frameNo].newAdded:[]
+                draft[frameNo] = draft[frameNo] ? draft[frameNo] :[]
             })
         case SET_REQNO:
             return produce(state, draft =>{
@@ -73,10 +74,10 @@ function reducer (state = initialState, action) {
             })
         case SET_SELECT:
             return produce(state, draft =>{
+                console.log(action.payload)
                 const {frameNo, reqType, key, selected} = action.payload
-                // console.log(frameNo, reqType, key, selected)
-                draft[frameNo][reqType][key]  = selected ? selected : {}
-                // draft[frameNo][type][title] = value
+                let tempObj = {reqType, key, selected}
+                draft[frameNo].push(tempObj)
             })
 
         default:

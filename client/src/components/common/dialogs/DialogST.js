@@ -39,6 +39,7 @@ export default function MaxWidthDialog({frameNo, motherNo, attr, children}) {
     const ox = false
     const type = camelize(title)
     let tempObj = {frameNo : frameNo, currentNo : motherNo, type : type, open : false}
+    console.log(tempObj)
     dispatch(onDialogClose(tempObj))
     if (onClose !== undefined) {
       onClose()

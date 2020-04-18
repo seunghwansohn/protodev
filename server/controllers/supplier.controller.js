@@ -1,9 +1,25 @@
 const db = require("../models");
 const config = require("../config/auth.config");
-const Supplier = db.supplier;
-const SupplierNote = db.supplierNote;
+
+const rmTimeFromReq = require("../lib/sequelMiddleWares");
 const getIncludeName = require("../lib/getIncludeName");
 const getIncludeNameFindOne = require("../lib/getIncludeNameFindOne");
+
+const getIncludingArr = require("../lib/getIncludingArr");
+const getIncludingAttr = require("../lib/getIncludingAttr");
+const getFindingAttr = require("../lib/getFindingAttr");
+const getIncludeAttrArr = require("../lib/getIncludeAttrArr");
+const getMatchedAttr = require("../lib/getMatchedAttr");
+const setUpdate = require("../lib/setUpdate");
+
+
+  
+const Op            = db.Sequelize.Op;
+const primaryKey    = 'supplierCode'
+
+const Supplier = db.supplier;
+const SupplierNote = db.supplierNote;
+
 
 
 const relAttr = {
@@ -20,13 +36,20 @@ const relAttr = {
     //     attributes :''
     //   }
     ]
-  }
-  
-const Op            = db.Sequelize.Op;
-const primaryKey    = 'supplierCode'
+}
 
 const includingAttr = getIncludingAttr(relAttr)
 const findingAttr   = getFindingAttr(relAttr)
+
+
+exports.load = (req, res) => {
+    // let findingAttr = []
+    // let includingAttr = []
+    getIncludeName(Supplier, primaryKey, findingAttr, includingAttr).then(items => {
+        res.status(200).send(items)
+    })
+};
+
 
 
 exports.addNew = (req, res) => {
@@ -90,13 +113,6 @@ exports.load1 = (req, res) => {
     })
 };
   
-exports.load = (req, res) => {
-    let findingAttr = []
-    let includingAttr = []
-    getIncludeName(Supplier, Supplier, primaryKey, findingAttr, includingAttr).then(items => {
-      res.status(200).send(items)
-    })
-};
 
 exports.update = async (req, res) => {
     let data = req.body

@@ -168,6 +168,7 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableA
     //테이블 로드
     const getRawData = async () => {
         await axios.get('/api/' + dataType + '/load').then(res => {
+            console.log(res)
             setPrimaryKey(res.data.primaryKey)
             setNameKey('supplierName')
             setIncludingKeys(res.data.includingKeys)
@@ -328,8 +329,6 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableA
       return Arr
     }
 
-    console.log(findingKeys)
-    console.log(includingKeys)
     return(
         <>
           <Button onClick = {test}>푸하하</Button>
@@ -343,7 +342,7 @@ const SupplierContainer = ({motherType, motherNo, reqNo, subCompIndex, subTableA
               reqCode     = {reqQueryCode}
             ></ItemAdd>
           </DialogST> */}
-
+    게를를
           <Table 
               motherType  = {type}
               motherNo    = {frameNo}

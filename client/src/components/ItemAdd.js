@@ -377,9 +377,9 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode, attr}) => {
   const basicInfoProps = [
     {type : 'primary', newRow : true, size : 5, title: 'itemCode', state : itemCode, setState : setItemCode, style:'regular'},
     {type : 'fixable', newRow : true, size : 7, title: 'itemName', state : itemName, setState : setItemName, style:'regular'},
-    {type : 'fixable', newRow : false, size : 5, title: 'supplier', state : supplier, setState : setSupplier, style:'regular'},
+    {type : 'select', newRow : false, size : 5, title: 'supplier', state : supplier, setState : setSupplier, style:'regular'},
     {type : 'fixable', newRow : false, size : 7, title: 'description', state : description, setState : setDescription, style:'regular'},
-    {type : 'fixable', newRow : false, size : 5, title: 'maker', state : maker, setState : setMaker, style:'regular'},
+    {type : 'select', newRow : false, size : 5, title: 'maker', state : maker, setState : setMaker, style:'regular'},
     {type : 'fixable', newRow : false, size : 7, title: 'makerModelNo', state : makerModelNo, setState : setMakerModelNo, style:'regular'},
     {type : 'divider', typoGraphy : 'basicInfo'},
     // {type : 'fixable', newRow : false, size : 5, title: 'ceo', state : ceo, setState : setCeo, style:'regular'},

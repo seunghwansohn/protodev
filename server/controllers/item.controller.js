@@ -85,20 +85,17 @@ exports.addNew = (req, res) => {
 exports.update = async (req, res) => {
   let data = req.body
   let { ref,vals } = data
+  console.log(vals)
 
   setUpdate(vals, ref, relAttr).then(result => {
     res.status(200).send(result)
   })
-
-
 };
 
 exports.itemLoad = (req, res) => {
-  // console.log(req.body)
 
   const includingAttr = getIncludingAttr(relAttr)
   const findingAttr   = getFindingAttr(relAttr)
-  // res.send(findingAttr)
   getIncludeName(Item, primaryKey, findingAttr, includingAttr).then(items => {
     res.status(200).send(items)
   })
@@ -112,25 +109,6 @@ exports.delete = async (req, res) => {
 };
 
 
-exports.query1 = (req, res) => {
-  console.log(req.body)
-  try {
-    const where = req.body
-    let result = ''
-    const includingKey = 'price'
-    Item.findAll(
-      {where: where, include: [{model:ItemPrice, as: includingKey}] }
-      ).then(items => {
-        result = monolize(items, includingKey)
-      }).then(() => {
-        calPrice.VNSellP(result)
-        res.status(200).send(result);
-      }) 
-  }
-  catch (err) {
-    res.status(500).send({message:err.message})
-  }
-};
 
 
 exports.query = (req, res) => {
@@ -142,6 +120,27 @@ exports.query = (req, res) => {
     res.status(200).send(items)
   })
 };
+
+
+// exports.query1 = (req, res) => {
+//   console.log(req.body)
+//   try {
+//     const where = req.body
+//     let result = ''
+//     const includingKey = 'price'
+//     Item.findAll(
+//       {where: where, include: [{model:ItemPrice, as: includingKey}] }
+//       ).then(items => {
+//         result = monolize(items, includingKey)
+//       }).then(() => {
+//         calPrice.VNSellP(result)
+//         res.status(200).send(result);
+//       }) 
+//   }
+//   catch (err) {
+//     res.status(500).send({message:err.message})
+//   }
+// };
 
 
 // exports.test = (req,res) => {

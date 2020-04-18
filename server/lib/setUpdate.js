@@ -1,5 +1,4 @@
 module.exports = setUpdate = (vals, ref, relAttr) => {
-    console.log('tlfgodwnd')
 
     const getIncludeUpdate = (key) => {
         let tempMatched = {}

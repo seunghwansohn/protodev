@@ -397,7 +397,7 @@ const STTable = ({
         draft.push({})
       })
     )
-    dispatch(actAddNewBlankQuery(frameNo))
+    // dispatch(actAddNewBlankQuery(frameNo))
   }
 
 
@@ -897,16 +897,25 @@ const STTable = ({
 
                 />
                 <StyledTableCell>{index + 1}<button onClick = {check}></button></StyledTableCell>
-                {headers.map(header => {
+                {headers.map((header, idx6) => {
                   const isColumnHided = isHidedCulumn(header)
                   let   isQueryCol    = isQuery(header)
                   let   valid         = getValid(header)
                   if (!isColumnHided && header !== 'id') {
-
                     if (isQueryCol) {
-                      //자꾸 리렌더링되므로 이것도 state로 바꾸어야 함.
-                      // dispatch(actSelect(frameNo, reqNo, {}))
-                      let name = querySelected.newAdded[index].supplierName ? querySelected.newAdded[index].supplierName.name : ''
+                      let queryColType = 'newAdded'
+                      const getSelectedValue = (key) => {
+                        let values = null
+                        querySelected.map(obj => {
+                          if (obj.reqType == queryColType && obj.key == index) {
+                            values = obj.selected
+                          }
+                        })
+                        return values                        
+                      }
+
+                      const selectedValue = getSelectedValue()
+                      let name = selectedValue && selectedValue.value ? selectedValue.value[header] :''
                       return(
                         <StyledTableCell>
                           <QueryInput
@@ -915,8 +924,6 @@ const STTable = ({
                             addedNo     = {index}
                             valuee     = {name}                            
                             dialog     = {colAttr[header].dialog} 
-                            onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
-                            onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
                             selectFunc = {queryColSelect}
                             helperText =  "Incorrect entry."
                             reqType      = {'newAdded'}

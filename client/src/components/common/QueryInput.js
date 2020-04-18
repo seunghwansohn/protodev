@@ -8,7 +8,7 @@ import IconButton                 from '@material-ui/core/IconButton';
 import EditIcon                   from '@material-ui/icons/Edit';
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Button                     from '@material-ui/core/Button';
-import { onDialogOpen }           from '../../modules/dialogs'
+import { onDialogOpen, onDialogClose }           from '../../modules/dialogs'
 import { actSelect }               from '../../modules/query'
 import Input            from '@material-ui/core/Input';
 
@@ -77,7 +77,9 @@ const QueryInput = ({
   
   //개체 기본 속성
   const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
-  const type = 'queryInputComp'
+  const [currentNo, setCurrentNo]  = useState(generateRandom())
+
+  const type = 'selectQuery'
   const containerNo = type + '_' + frameNo
   const dataType = dialog
 
@@ -143,10 +145,11 @@ const QueryInput = ({
     const opened    = useSelector(state => state.dialogs.opened)
     const checkOpened = (title) => {
         let result = ''
-        opened.map(array => {
-            if (array.type == title){
-                result = array.ox
-            }
+        opened.map(obj => {
+          if(obj.frameNo == frameNo && obj.currentNo == currentNo && obj.type == type) {
+            console.log('일치함')
+            result = obj.open
+          }
         })
         return result
     }
@@ -164,8 +167,11 @@ const QueryInput = ({
               type  : 'select',
               func : function(selected){
                 //inser버튼 클릭됐을 때 실행할 명령
+                console.log(selected)
+                let tempObj = {frameNo : frameNo, currentNo : motherNo, type : type, open : false}
+
                 dispatch(actSelect(frameNo, reqType, addedNo, selected))
-                dispatch(onDialogOpen(false, 'supplier_' + frameNo))
+                dispatch(onDialogClose(tempObj))
               },
               mother : containerNo
             },
@@ -252,7 +258,9 @@ const QueryInput = ({
   const onKeyPressOnInput = (event) => {
     if(event.key == "Enter") {
       console.log("엔터눌러짐")
-      dispatch(onDialogOpen(true, DialogsAttr.supplier.title))
+      let tempObj = {frameNo : frameNo, currentNo : currentNo, type : type, open : true, dataType : dataType, clickType : type}
+
+      dispatch(onDialogOpen(tempObj))
     }
 
   }
@@ -270,7 +278,7 @@ const QueryInput = ({
         isSelected = {isSelected}
         helperText = {helperText}
       />
-      <DialogST attr = {DialogsAttr.supplier} motherNo = {frameNo} motherType = {type}>
+      <DialogST attr = {DialogsAttr.supplier} frameNo = {frameNo} motherNo = {frameNo} motherType = {type}>
         <SupplierList
           motherType          = {type}
           motherNo            = {frameNo}

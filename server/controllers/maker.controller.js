@@ -73,7 +73,7 @@ exports.load = (req, res) => {
     const includingAttr = getIncludingAttr(relAttr)
     const findingAttr   = getFindingAttr(relAttr)
   
-    getIncludeName(Maker, Maker, primaryKey, findingAttr, includingAttr).then(items => {
+    getIncludeName(Maker, primaryKey, findingAttr, includingAttr).then(items => {
       res.status(200).send(items)
     })
   };
