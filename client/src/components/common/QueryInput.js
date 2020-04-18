@@ -54,9 +54,9 @@ const QueryInput = ({
   motherNo,
   motherType,
   reqType,
+  dataType,
   addedNo,
   selectedVal,
-  dialog,
   helperText,
   
 }) => {
@@ -69,26 +69,18 @@ const QueryInput = ({
 
   const type = 'selectQuery'
   const containerNo = type + '_' + frameNo
-  const dataType = dialog
 
   // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
   //쿼리헤더관련
   const [foundResult, 
-    setFoundResult]                       = useState({});
-
-  const [changedHeaderInput, 
-      setChangedHeaderInput]              = useState({});
-      
+    setFoundResult]               = useState({});
+  const [queryVals, setQueryVals] = useState({})
   const querySelected     = useSelector(state => state.quote.selected)
-  const queryVars         = useSelector(state => state.query[frameNo])
 
+  const {filter} = queryVals ? queryVals : ''
 
-  const {filter} = queryVars ? queryVars : ''
-
-  const [client, setClient]               = useState('');
-  const [clientRate, setClientRate]       = useState('');
 
   //다이얼로그 관련
   const opened    = useSelector(state => state.dialogs.opened)
@@ -102,6 +94,19 @@ const QueryInput = ({
       })
       return result
   }
+
+  const getQeuryVal = () => {
+    opened.map(obj => {
+      if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
+        setQueryVals(obj)
+      }
+    })
+  }
+  useEffect(()=> {
+    getQeuryVal()
+  },[opened])
+
+
   const DialogsAttr = {
     supplier : {
       title : 'supplier_' + frameNo,
@@ -125,7 +130,7 @@ const QueryInput = ({
         ],
         setFindOneResult : setFoundResult,
         frameNo : 'supplier_' + frameNo,
-        initialFilter : filter ? filter.supplier : '',
+        initialFilter : filter ? filter : '',
         directQuery : true
       },
     }
@@ -149,9 +154,7 @@ const QueryInput = ({
   const onKeyPressOnInput = (event) => {
     setInputVal(event.target.value)
     if(event.key == "Enter") {
-      console.log("엔터눌러짐")
-      let tempObj = {frameNo : frameNo, currentNo : currentNo, type : type, open : true, dataType : dataType, clickType : type}
-
+      let tempObj = {frameNo : frameNo, currentNo : currentNo, type : type, open : true, dataType : dataType, clickType : type, filter : inputVal}
       dispatch(onDialogOpen(tempObj))
     }
   }

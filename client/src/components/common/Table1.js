@@ -671,6 +671,8 @@ const STTable = ({
     console.log(addedNew)
   }
 
+  console.log(initialFilter)
+
 
   return (
     <React.Fragment>
@@ -921,13 +923,12 @@ const STTable = ({
                           <QueryInput
                             motherNo    = {frameNo}
                             motherType  = {type}
+
                             reqType     = {queryColType}
+                            dataType    = {colAttr[header].dialog} 
 
                             addedNo     = {index}
                             selectedVal = {name}
-
-                            dialog      = {colAttr[header].dialog} 
-
                             helperText  =  "Incorrect entry."
                           />
                         </StyledTableCell>
