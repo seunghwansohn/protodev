@@ -49,9 +49,9 @@ export default function MaxWidthDialog({
   // const dataType = 'item'
 
 
-  const [fullWidth, setFullWidth] = React.useState(true);
+  const [fullWidth, setFullWidth] = useState(true);
 
-  const {open, type, funcs, maxWidth, title, scroll, onClose} = attr
+  const {open, dialogType, funcs, maxWidth, title, scroll, onClose} = attr
 
   console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', typeP, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
@@ -60,8 +60,12 @@ export default function MaxWidthDialog({
   const handleClose = () => {
     const ox = false
     const type = camelize(title)
-    let tempObj = {frameNo : frameNo, currentNo : motherNo, type : type, open : false}
-    console.log(tempObj)
+    let tempObj = {
+      frameNo : frameNo, 
+      currentNo : motherNo, 
+      currentType : motherType, 
+      clickedType : dialogType,
+    }
     dispatch(onDialogClose(tempObj))
     if (onClose !== undefined) {
       onClose()
@@ -71,7 +75,7 @@ export default function MaxWidthDialog({
 
   const optionFunc = function () { 
     const temp = {}
-    if (type === 'addItem') {
+    if (dialogType === 'addItem') {
         temp.title = 'Add Item'
       }
     return temp

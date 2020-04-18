@@ -10,7 +10,9 @@ const MakerQuery = ({reqCode}) => {
     const [ceo, setCeo] = useState('')
     const [loadedData, setLoadedData] = useState([])
 
-    const type = 'maker'
+    const currentType = 'maker'
+    const dataType = 'maker'
+
 
     const style = {
         
@@ -25,7 +27,7 @@ const MakerQuery = ({reqCode}) => {
     ]
 
     useEffect(() => {
-        axios.post('/api/' + type + 'query', reqCode).then(res => {
+        axios.post('/api/' + dataType + 'query', reqCode).then(res => {
             setLoadedData(res.data)
         })
     },[])
@@ -33,7 +35,7 @@ const MakerQuery = ({reqCode}) => {
       
     return(
         <React.Fragment>
-            <Query loadedTempData = {loadedData} type = {type} queryProps = {queryProps}></Query>
+            <Query loadedTempData = {loadedData} type = {currentType} queryProps = {queryProps}></Query>
         </React.Fragment>
     )
 }

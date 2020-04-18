@@ -48,8 +48,8 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
 
   //개체 기본 속성
   const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
-  const type = 'Query'
-  const containerNo = type + '_' + frameNo
+  const currentType = 'Query'
+  const containerNo = currentType + '_' + frameNo
   const {dataType} = attr
 
   //테이블 관련
@@ -116,7 +116,7 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
   //api값을 받아와 설정
   const getRawData = async () => {
     let queryObj = {}
-    queryObj[attr.data.header] = attr.data.value
+    queryObj[attr.clickedHeader] = attr.clickedVal
     let request = {queryObj : queryObj, findingKeys, includingKeys}
     await axios.post('/api/' + dataType + '/query', request).then(res => {
       setTableRawData(res.data.vals)
@@ -205,7 +205,7 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
         })}
       </Grid>
 
-      <Notes type = {type} primaryKey = {primaryKey} primaryCode = {primaryCode}></Notes>
+      <Notes type = {currentType} primaryKey = {primaryKey} primaryCode = {primaryCode}></Notes>
       <Button onClick = {onModeChange}>모드 변경</Button>
       <Button onClick = {onFixedVal}>Update</Button>
 

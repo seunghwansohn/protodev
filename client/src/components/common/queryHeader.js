@@ -58,8 +58,8 @@ const QueryHeader = ({motherType, motherNo, funcs, queryHeaderProps}) => {
   }))
 
   const [frameNo, setFrameNo] = useState(motherNo ? motherNo : generateRandom())
-  const type = 'queryHeaderComponent'
-  const componentNo = type + '_' + frameNo
+  const currentType = 'queryHeaderComponent'
+  const componentNo = currentType + '_' + frameNo
 
 
   // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')', '커런트넘버는 ', currentNo)

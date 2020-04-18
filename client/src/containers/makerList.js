@@ -44,11 +44,11 @@ const MakerList = ({motherType, motherFrameNo, motherNo, subTableAttr}) => {
     const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
     const [currentNo, setCurrentNo]  = useState(generateRandom())
 
-    const type = 'makerList'
-    const containerNo = type + '_' + frameNo
+    const currentType = 'makerList'
+    const containerNo = currentType + '_' + frameNo
     const dataType = 'maker'
 
-    console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', type, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+    console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
     //다이얼로그 관련
@@ -121,7 +121,6 @@ const MakerList = ({motherType, motherFrameNo, motherNo, subTableAttr}) => {
 
     //테이블값 삭제
     const setDelete = async (codes) =>{
-        console.log(codes)
         await codes.map(code => {
             dispatch(actDelete(dataType, code[primaryKey]))
         })
@@ -376,7 +375,7 @@ const MakerList = ({motherType, motherFrameNo, motherNo, subTableAttr}) => {
           </DialogST> */}
 
           <Table 
-              motherType    = {type}
+              motherType    = {currentType}
               motherNo      = {currentNo}
               motherFrameNo = {frameNo}
               states        = {tableStates}
@@ -385,10 +384,10 @@ const MakerList = ({motherType, motherFrameNo, motherNo, subTableAttr}) => {
               funcs         = {funcs}
           ></Table>
 
-          <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {type} attr = {DialogsAttr.MakerQuery}>
+          <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType} attr = {DialogsAttr.MakerQuery}>
             <MakerQuery 
               motherFrameNo = {frameNo}
-              motherType  = {type}
+              motherType  = {currentType}
               motherNo    = {frameNo}
               reqKey      = {primaryKey}
               reqCode     = {reqQueryCode}

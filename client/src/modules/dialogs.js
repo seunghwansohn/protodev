@@ -18,20 +18,32 @@ function reducer (state = initialState, action) {
   switch (action.type) {
     case ON_DIALOG_OPEN:
       return produce(state, draft =>{
+
         if (!draft.opened.includes(action.payload)) {
-          draft.opened.push(action.payload)
+          let {frameNo, currentNo, motherNo, currentType, clickType} = action.payload
+          let checkDupe = (obj) => {
+            let matchedCount = 0
+            draft.opened.map(obj => {
+              if (obj.frameNo == frameNo && obj.currentNo == currentNo && obj.motherNo == motherNo &&  obj.currentType == currentType &&  obj.clickType == clickType) {
+                matchedCount = matchedCount + 1
+              }
+            })
+            if (matchedCount == 0) {
+              draft.opened.push(action.payload)
+            }
+          }
+          checkDupe(action.payload)
         }
       })
     case ON_DIALOG_CLOSE:
-      const {frameNo, currentNo, type, open} = action.payload
+      const {frameNo, currentNo, currentType, clickedType} = action.payload
+      console.log(action.payload)
 
       return produce(state, draft =>{
-        const filtered = draft.opened.filter(function(obj){
-          console.log(frameNo, currentNo, type)
-          console.log(obj)
-          return obj.frameNo !== frameNo && obj.currentNo !== currentNo && obj.type !== type
+        draft.opened = draft.opened.filter(function(obj){
+          return obj.frameNo !== frameNo || obj.currentNo !== currentNo || obj.currentType !== currentType
         })
-        draft.opened = filtered
+        // draft.opened = filtered
       })
 
     default:

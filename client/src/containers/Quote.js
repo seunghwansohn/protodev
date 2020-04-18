@@ -112,7 +112,6 @@ const QuoteList = ({motherType, motherNo, subTableAttr}) => {
 
     //테이블값 삭제
     const setDelete = async (codes) =>{
-        console.log(codes)
         await codes.map(code => {
             dispatch(actDelete(dataType, code[primaryKey]))
         })
@@ -158,7 +157,6 @@ const QuoteList = ({motherType, motherNo, subTableAttr}) => {
     //테이블 로드
     const getRawData = async () => {
         await axios.get('/api/' + dataType + '/load').then(res => {
-            console.log(res)
             setPrimaryKey(res.data.primaryKey)
             setIncludingKeys(res.data.includingKeys)
             setTableRawData(withoutIncludingKeys(res.data.vals))

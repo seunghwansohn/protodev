@@ -72,11 +72,11 @@ const QueryInput = ({
   const [currentNo, setCurrentNo]  = useState(generateRandom())
 
 
-  const type = 'selectQuery'
+  const currentType = 'selectQuery'
 
-  console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', type, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+  console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
-  const containerNo = type + '_' + frameNo
+  const containerNo = currentType + '_' + frameNo
 
   
   
@@ -116,20 +116,35 @@ const QueryInput = ({
 
 
   //다이얼로그 관련
-  const opened    = useSelector(state => state.dialogs.opened)
-  const checkOpened = (title) => {
-      let result = ''
-      opened.map(obj => {
-        if(obj.frameNo == frameNo && obj.currentNo == currentNo && obj.type == type) {
-          console.log('일치함')
-          result = obj.open
-        }
-      })
-      return result
+  const dialogOpened    = useSelector(state => state.dialogs.opened)
+  const checkOpened = (type) => {
+    console.log(type)
+    let result = ''
+    dialogOpened.map(obj => {
+      console.log(obj)
+      console.log('프레임넘버는 ', frameNo)
+      console.log('커런트넘버는 ', currentNo)
+      console.log('커런트타입은 ', currentType)
+      console.log('마더넘버는 ', motherNo)
+      console.log('마더타입은 ', motherType)
+
+      if (
+        obj.frameNo     == frameNo && 
+        obj.currentNo   == currentNo && 
+        obj.currentType == currentType && 
+        obj.motherNo    == motherNo &&
+        obj.motherType  == motherType
+        // obj.clickedType == type 
+      ) {
+        result = true
+        console.log(result)
+      }
+    })
+    return result
   }
 
   const getQeuryVal = () => {
-    opened.map(obj => {
+    dialogOpened.map(obj => {
       if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
         setQueryVals(obj)
       }
@@ -137,13 +152,13 @@ const QueryInput = ({
   }
   useEffect(()=> {
     getQeuryVal()
-  },[opened])
+  },[dialogOpened])
 
 
   //findOneResult(검색 결과값 하나일 때) 기능
   const handleFindOneResult = (obj) => {
     setInputVal(obj[queryName])
-    let tempObj = {frameNo : frameNo, currentNo : currentNo, type : type, open : false}
+    let tempObj = {frameNo : frameNo, currentNo : currentNo, type : currentType, open : false}
     dispatch(onDialogClose(tempObj))
   }
 
@@ -151,8 +166,9 @@ const QueryInput = ({
   const DialogsAttr = {
     supplier : {
       title : 'supplier_' + frameNo,
+      dialogType : 'supplierQuery',
       maxWidth : 'xl' ,
-      open : checkOpened('supplier_' + frameNo),
+      open : checkOpened('selectQuery'),
       table : {
         tableButton : [
           {
@@ -160,7 +176,7 @@ const QueryInput = ({
             type  : 'select',
             func : function(selected){
               //inser버튼 클릭됐을 때 실행할 명령
-              let tempObj = {frameNo : frameNo, currentNo : motherNo, type : type, open : false}
+              let tempObj = {frameNo : frameNo, currentNo : motherNo, type : currentType, open : false}
 
               dispatch(actSelect(frameNo, reqType, addedNo, selected))
               dispatch(onDialogClose(tempObj))
@@ -176,8 +192,9 @@ const QueryInput = ({
     },
     maker : {
       title : 'maker' + frameNo,
+      dialogType : 'makerQuery',
       maxWidth : 'xl' ,
-      open : checkOpened('maker' + frameNo),
+      open : checkOpened('selectQuery'),
       table : {
         tableButton : [
           {
@@ -185,7 +202,7 @@ const QueryInput = ({
             type  : 'select',
             func : function(selected){
               //inser버튼 클릭됐을 때 실행할 명령
-              let tempObj = {frameNo : frameNo, currentNo : motherNo, type : type, open : false}
+              let tempObj = {frameNo : frameNo, currentNo : motherNo, type : currentType, open : false}
 
               dispatch(actSelect(frameNo, reqType, addedNo, selected))
               dispatch(onDialogClose(tempObj))
@@ -219,7 +236,23 @@ const QueryInput = ({
   const onKeyPressOnInput = (event) => {
     setInputVal(event.target.value)
     if(event.key == "Enter") {
-      let tempObj = {frameNo : frameNo, currentNo : currentNo, type : type, open : true, dataType : dataType, clickType : type, filter : inputVal}
+      console.log('엔터눌림')
+      let tempObj = {
+        frameNo : frameNo,
+        currentNo : currentNo,
+        currentType : currentType, 
+        motherNo : motherNo, 
+        motherType : motherType,
+
+        clickedHeader : '',
+        clickedIndex : '',
+        clickedVal : '',
+        clickedType : '',
+        clickedPrimaryCode : '',
+
+        dataType : dataType, 
+        initialFilter : '',
+      }
       dispatch(onDialogOpen(tempObj))
     }
   }
@@ -238,17 +271,17 @@ const QueryInput = ({
         isSelected  = {isSelected}
         style       = {{width : '100%'}}
       />
-      <DialogST attr = {DialogsAttr.supplier} motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {type}>
+      <DialogST attr = {DialogsAttr.supplier} motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType}>
         <SupplierList
-          motherType          = {type}
+          motherType          = {currentType}
           motherFrameNo       = {frameNo}
           motherNo            = {currentNo}
           subTableAttr        = {DialogsAttr.supplier.table}
         ></SupplierList>
       </DialogST>
-      <DialogST attr = {DialogsAttr.maker} motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {type}>
+      <DialogST attr = {DialogsAttr.maker} motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType}>
         <MakerList
-          motherType          = {type}
+          motherType          = {currentType}
           motherFrameNo       = {frameNo}
           motherNo            = {currentNo}
           subTableAttr        = {DialogsAttr.maker.table}

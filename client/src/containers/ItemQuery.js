@@ -16,8 +16,8 @@ const ItemQuery = ({motherType, motherNo, reqKey, reqCode, attr}) => {
 
     //개체 기본 속성
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
-    const type = 'itemQuery'
-    const containerNo = type + '_' + frameNo
+    const currentType = 'itemQuery'
+    const containerNo = currentType + '_' + frameNo
     const dataType = 'item'
 
     const style = {
@@ -64,7 +64,7 @@ const ItemQuery = ({motherType, motherNo, reqKey, reqCode, attr}) => {
     return(
         <React.Fragment>
             <Query
-                motherType          = {type}
+                motherType          = {currentType}
                 motherNo            = {frameNo}
                 loadedTempData      = {loadedData}
                 onUpdate            = {setUpdate}

@@ -219,12 +219,12 @@ let ItemAdd = ({
   const [frameNo, setFrameNo]       = useState(motherFrameNo ? motherFrameNo : generateRandom())
   const [currentNo, setCurrentNo]   = useState(generateRandom())
 
-  const type = 'itemDetailQuery'
+  const currentType = 'itemDetailQuery'
 
-  const containerNo = type + '_' + frameNo
+  const containerNo = currentType + '_' + frameNo
   const {dataType} = attr
 
-  console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', type, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+  console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', containerNo, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
   //테이블 기본 키
@@ -295,7 +295,7 @@ let ItemAdd = ({
   }
   useEffect(() => {
     let queryObj = {}
-    queryObj[primaryKey] = attr.data.primaryCode
+    queryObj[primaryKey] = attr.clickedPrimaryCode
     let request = {queryObj : queryObj, findingKeys, includingKeys}
     axios.post('/api/' + dataType + '/query', request).then(res => {
       setLoadedData(res.data.vals)
@@ -512,7 +512,7 @@ let ItemAdd = ({
               <Grid item xs ={obj.size} className = {classes.marginBottom}>
                 <QueryInput
                   motherNo      = {currentNo}
-                  motherType    = {type}
+                  motherType    = {currentType}
                   motherFrameNo = {frameNo}
 
                   reqType       = {queryColType}

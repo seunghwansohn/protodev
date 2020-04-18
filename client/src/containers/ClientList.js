@@ -35,8 +35,8 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
 
     //개체 기본 속성
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
-    const type = 'clientContainer'
-    const containerNo = type + '_' + frameNo
+    const currentType = 'clientList'
+    const containerNo = currentType + '_' + frameNo
     const dataType = 'client'
     // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 (', motherType, ', ', motherNo, ')')
 
@@ -116,7 +116,7 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
     //테이블값 삭제
     const setDelete = async (codes) =>{
         await codes.map(code => {
-            dispatch(actDelete(type, code.itemCode))
+            dispatch(actDelete(currentType, code.itemCode))
         })
         await setUpdated(true)
         await setSelected([])
@@ -148,7 +148,7 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
     useEffect(() => {
         if (Object.keys(clickedCol).length > 0) {
             dispatch(actClickedTableCol(clickedCol))
-            dispatch(onDialogOpen(true, type, clickedCol))
+            dispatch(onDialogOpen(true, currentType, clickedCol))
         } 
     },[clickedCol])
     
@@ -283,7 +283,7 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
             {/* <ButtonHeader type = {type} onHeaderButton = { onHeaderButton }></ButtonHeader> */}
 
             <Table
-                type        = {type}
+                type        = {currentType}
                 attr        = {tableAttr}
                 funcs       = {funcs}
                 states      = {tableStates}

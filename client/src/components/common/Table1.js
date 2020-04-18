@@ -181,10 +181,10 @@ const STTable = ({
   const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
   const [currentNo, setCurrentNo]  = useState(generateRandom())
 
-  const type = motherType + 'Table'
-  const containerNo = type + '_' + frameNo
+  const currentType = motherType + 'Table'
+  const containerNo = currentType + '_' + frameNo
 
-  console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', type, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+  console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
   //초기 헤더 설정 기능
@@ -327,6 +327,8 @@ const STTable = ({
     tempObj2.row    = row
     tempObj2.header = header
     tempObj2.dataType = colAttr[header].dataType
+    tempObj2.clickType = colAttr[header].clickType
+    tempObj2.queryType = colAttr[header].queryType
     tempObj2.primaryCode = getPrimaryCode(row)
     if (fixMode){
       const temp = {row : row, header : header}
@@ -656,6 +658,8 @@ const STTable = ({
       if (directQuery && setFindOneResult && typeof setFindOneResult == "function") {
         setFindOneResult(filteredData[0])
         console.log('검색결과하나입력')
+
+
         dispatch(onDialogOpen(false, 'client_' + frameNo))
       }
     }
@@ -944,7 +948,7 @@ const STTable = ({
                           <QueryInput
                             motherFrameNo = {frameNo}
                             motherNo      = {currentNo}
-                            motherType    = {type}
+                            motherType    = {currentType}
 
                             reqType       = {queryColType}
                             dataType      = {dataType}

@@ -318,7 +318,6 @@ let ItemAdd = props => {
 
   const exchangeRate = useSelector(state => state.basicInfo.exchangeRate)
 
-  // console.log(itemName)
   const [CBM, setCBM]                       = useState(0);
   const [deliveryKorea, setDeliveryKorea]   = useState(0);
   const [seaFreight, setSeaFreight]         = useState(0);

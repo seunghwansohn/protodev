@@ -51,11 +51,11 @@ const ItemListContainer = ({
   const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
   const [currentNo, setCurrentNo]  = useState(generateRandom())
 
-  const type = 'itemList'
-  const containerNo = type + '_' + frameNo
+  const currentType = 'itemList'
+  const containerNo = currentType + '_' + frameNo
   const dataType = 'item'
 
-  console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', type, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+  console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
   //테이블 관련
@@ -319,11 +319,20 @@ const ItemListContainer = ({
   const [dialogInfo, setDialogInfo]   = useState({})
   const simpleQuery = 'simpleQuery'
   const detailQuery = 'detailQuery'
+
   const checkOpened = (type) => {
     let result = ''
     dialogOpened.map(obj => {
-      if(obj.frameNo == frameNo && obj.currentNo == currentNo && obj.type == type) {
-        result = obj.open
+      console.log(obj)
+      if (
+        obj.frameNo     == frameNo && 
+        obj.currentNo   == currentNo && 
+        obj.currentType == currentType && 
+        obj.motherNo    == motherNo &&
+        obj.motherType  == motherType &&
+        obj.clickedType == type 
+      ) {
+        result = true
       }
     })
     return result
@@ -331,27 +340,32 @@ const ItemListContainer = ({
   const DialogsAttr = {
     itemAdd : {
       title : detailQuery,
-      type : detailQuery,
+      dialogType : detailQuery,
       maxWidth : 'md' ,
       open : checkOpened(detailQuery),
       scroll : 'paper'
-      
     },
     itemQuery : {
       title : simpleQuery,
-      type : simpleQuery,
+      dialogType : simpleQuery,
       maxWidth : 'xl' ,
       open : checkOpened(simpleQuery)
     }
   }
   useEffect(()=> {
     dialogOpened.map(obj => {
-      if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
+      if (
+        obj.frameNo     == frameNo && 
+        obj.currentNo   == currentNo && 
+        obj.motherNo    == motherNo &&
+        obj.motherType  == motherType
+      ) {
         setDialogInfo(obj)
       }
     })
   },[dialogOpened])
 
+  console.log(dialogInfo)
 
   //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
   useEffect(() => {
@@ -359,9 +373,8 @@ const ItemListContainer = ({
     const {colAttr} = tableAttr
     const colAttrKeys = Object.keys(colAttr)
 
-    const {header, row, value} = clicked
+    const {header, row, value, dataType, primaryCode, queryType} = clicked
     const {clickType} = tableAttr.colAttr[header] ? tableAttr.colAttr[header] : ''
-
     if (keys.length > 0) {
       dispatch(actClickedTableCol(clicked))
       let aColAttr = tableAttr.colAttr[clicked.header]
@@ -372,7 +385,22 @@ const ItemListContainer = ({
           queryType = colAttr[key].queryType
         }
       })
-      let tempObj = {frameNo : frameNo, currentNo : currentNo, type : queryType, open : true, dataType : dataType, data : clicked, clickType : clickType}
+      let tempObj = {
+        frameNo : frameNo,
+        currentNo : currentNo,
+        currentType : currentType, 
+        motherNo : null, 
+        motherType : null,
+
+        clickedHeader : header,
+        clickedIndex : row,
+        clickedVal : value,
+        clickedType : queryType,
+        clickedPrimaryCode : primaryCode,
+
+        dataType : dataType, 
+        initialFilter : '',
+      }
       dispatch(onDialogOpen(tempObj))
     }
     dialogOpened.map(obj => {
@@ -433,10 +461,6 @@ const ItemListContainer = ({
   }
 
 
-
-
-  console.log(fixedVals)
-  
   const arrFunc = () => {
     let Arr = []
     const makeFieldAttrArr = (name, component) => {
@@ -455,13 +479,13 @@ const ItemListContainer = ({
   return(
     <>
       <Button onClick = {test}>푸하하</Button>
-      <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {type} attr = {DialogsAttr.itemAdd}>
+      <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType} attr = {DialogsAttr.itemAdd}>
           아이템에디디
         <ItemAdd 
           title       = {DialogsAttr.itemAdd.title} 
           fieldsAttr  = {arrFunc()}
 
-          motherType    = {type}
+          motherType    = {currentType}
           motherFrameNo = {frameNo} 
           motherNo      = {currentNo}
 
@@ -472,7 +496,7 @@ const ItemListContainer = ({
       </DialogST>
 
       <Table 
-        motherType    = {type}
+        motherType    = {currentType}
         motherFrameNo = {frameNo} 
         motherNo      = {currentNo}
 
@@ -482,9 +506,9 @@ const ItemListContainer = ({
         funcs         = {funcs}
       ></Table>
 
-      <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {type} attr = {DialogsAttr.itemQuery}>
+      <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType} attr = {DialogsAttr.itemQuery}>
         <Query 
-          motherType    = {type}
+          motherType    = {currentType}
           motherFrameNo = {frameNo} 
           motherNo      = {currentNo}
 
