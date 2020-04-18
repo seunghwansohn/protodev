@@ -247,7 +247,7 @@ const MakerList = ({motherType, motherNo, subTableAttr}) => {
         onDelete : setDelete,
         onSubmitNewAdded : onSubmitNewAdded
     }
-    const tableAttr = {
+    let tableAttr = {
         flagAble : true,
         fixModeAble : true,
         colAttr : {
@@ -338,16 +338,9 @@ const MakerList = ({motherType, motherNo, subTableAttr}) => {
                 defaultHided : true
             },
         },
-        tableButton : [
-            {
-                title : 'insert',
-                func : function(selected){
-                    // dispatch(onAlreadyPickedCheck(selected.value))
-                },
-                mother : containerNo
-            },
-        ],
     }
+    tableAttr = Object.assign(tableAttr, subTableAttr)
+
 
     
     const arrFunc = () => {

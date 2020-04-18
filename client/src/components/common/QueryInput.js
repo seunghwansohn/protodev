@@ -4,6 +4,7 @@ import { connect, useSelector, useDispatch } from 'react-redux';
 import TextField                  from '@material-ui/core/TextField'
 
 import SupplierList from '../../containers/SupplierList'
+import MakerList from '../../containers/MakerList'
 
 
 import DialogST             from './dialogs/DialogST'
@@ -60,8 +61,7 @@ const QueryInput = ({
 
   addedNo,
   selectedVal,
-  helperText,
-  
+  label
 }) => {
   const dispatch = useDispatch()
 
@@ -138,7 +138,7 @@ const QueryInput = ({
   //findOneResult(검색 결과값 하나일 때) 기능
   const handleFindOneResult = (obj) => {
     setInputVal(obj[queryName])
-    let tempObj = {frameNo : frameNo, currentNo : motherNo, type : type, open : false}
+    let tempObj = {frameNo : frameNo, currentNo : currentNo, type : type, open : false}
     dispatch(onDialogClose(tempObj))
   }
 
@@ -155,8 +155,7 @@ const QueryInput = ({
             type  : 'select',
             func : function(selected){
               //inser버튼 클릭됐을 때 실행할 명령
-              console.log(selected)
-              let tempObj = {frameNo : frameNo, currentNo : motherNo, type : type, open : false}
+              let tempObj = {frameNo : frameNo, currentNo : currentNo, type : type, open : false}
 
               dispatch(actSelect(frameNo, reqType, addedNo, selected))
               dispatch(onDialogClose(tempObj))
@@ -166,6 +165,31 @@ const QueryInput = ({
         ],
         setFindOneResult : handleFindOneResult,
         frameNo : 'supplier_' + frameNo,
+        initialFilter : filter ? filter : '',
+        directQuery : true
+      },
+    },
+    maker : {
+      title : 'maker' + frameNo,
+      maxWidth : 'xl' ,
+      open : checkOpened('maker' + frameNo),
+      table : {
+        tableButton : [
+          {
+            title : 'insert',
+            type  : 'select',
+            func : function(selected){
+              //inser버튼 클릭됐을 때 실행할 명령
+              let tempObj = {frameNo : frameNo, currentNo : currentNo, type : type, open : false}
+
+              dispatch(actSelect(frameNo, reqType, addedNo, selected))
+              dispatch(onDialogClose(tempObj))
+            },
+            mother : containerNo
+          },
+        ],
+        setFindOneResult : handleFindOneResult,
+        frameNo : 'maker' + frameNo,
         initialFilter : filter ? filter : '',
         directQuery : true
       },
@@ -199,18 +223,29 @@ const QueryInput = ({
   return (
     <React.Fragment>
       <TextFieldST 
+        label       = {label}
+        InputLabelProps={{
+          shrink: true,
+        }}
         onChange    = {(event) => handleChangeInput(event)} 
         onKeyPress  = {(event) => onKeyPressOnInput(event)}
         value       = {inputVal} 
         isSelected  = {isSelected}
-        helperText  = {helperText}
+        style       = {{width : '100%'}}
       />
-      <DialogST attr = {DialogsAttr.supplier} frameNo = {frameNo} motherNo = {frameNo} motherType = {type}>
+      <DialogST attr = {DialogsAttr.supplier} frameNo = {frameNo} motherNo = {currentNo} motherType = {type}>
         <SupplierList
           motherType          = {type}
-          motherNo            = {frameNo}
+          motherNo            = {currentNo}
           subTableAttr        = {DialogsAttr.supplier.table}
         ></SupplierList>
+      </DialogST>
+      <DialogST attr = {DialogsAttr.maker} frameNo = {frameNo} motherNo = {currentNo} motherType = {type}>
+        <MakerList
+          motherType          = {type}
+          motherNo            = {currentNo}
+          subTableAttr        = {DialogsAttr.maker.table}
+        ></MakerList>
       </DialogST>
 
     </React.Fragment>

@@ -19,6 +19,7 @@ import Paper            from '@material-ui/core/Paper';
 import Box              from '@material-ui/core/Box';
 import { ToastContainer, toast } from 'react-toastify';
 
+
 import {
   actUpdate, 
   actUpdateChange, 
@@ -37,6 +38,8 @@ import spacelize  from '../lib/spacelize'
 import * as cal   from '../lib/calSTValues'
 
 import InputST          from './common/Input'
+import QueryInput       from './common/QueryInput';
+
 
 import {actSubmitAddItem} from '../modules/itemList'
 
@@ -99,11 +102,12 @@ const useStyles = makeStyles(theme => ({
 
 const ProppedInput = ({infoProps, fixMode, fixedData, setFixedData, loadedData, onChangeVal}) => {
   const classes = useStyles();
-  console.log(loadedData)
+
+
+
   return (
     <Grid container>
       {infoProps.map(obj => {
-        console.log(obj)
         if(obj.type !== 'divider') {
           return(
             <Grid container className = {classes.marginBottom}>
@@ -129,7 +133,15 @@ const ProppedInput = ({infoProps, fixMode, fixedData, setFixedData, loadedData, 
 }
 
 
-let ItemAdd = ({motherType, motherNo, reqKey, reqCode, attr}) => {
+let ItemAdd = ({
+  motherType,
+  motherFrameNo, 
+  motherNo, 
+  reqKey, 
+  reqCode, 
+  attr
+}) => {
+
   const [fixMode, setFixMode]         = useState(false)
   const [fixedData, setFixedData]     = useState({})
 
@@ -197,7 +209,6 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode, attr}) => {
     )
   }
   
-  console.log(fixedData)
 
   //픽스모드 설정
   const onModeChange = () => {
@@ -205,7 +216,7 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode, attr}) => {
   }
 
   //개체 기본 속성
-  const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
+  const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
   const type = 'itemDetailQuery'
   const containerNo = type + '_' + frameNo
   const {dataType} = attr
@@ -433,9 +444,11 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode, attr}) => {
     tempObj1[primaryKey] = primaryCode
 
     let tempObj = {ref : tempObj1, vals : fixedData}
-    console.log(tempObj)
     dispatch(actUpdate(tempObj))
   }
+
+  const querySelected     = useSelector(state => state.query[frameNo])
+
 
   return (
     <>
@@ -445,7 +458,7 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode, attr}) => {
 
       <Grid container>
         {basicInfoProps.map(obj => {
-          if(obj.type !== 'divider') {
+          if(obj.type == 'fixable' || obj.type == 'primary') {
             return(
               <Grid item xs ={obj.size} className = {classes.marginBottom}>
                 <InputST
@@ -462,6 +475,47 @@ let ItemAdd = ({motherType, motherNo, reqKey, reqCode, attr}) => {
                   fixedData     = {fixedData}
                   setFixedData  = {setFixedData}
                 ></InputST>
+              </Grid>
+            )
+          }else if (obj.type == 'select') {
+            let queryColType  = 'itemDetailQuery'
+            const getSelectedValue = (key) => {
+              let values = null
+              querySelected.map(obj => {
+                // if (obj.reqType == queryColType && obj.key == index) {
+                //   values = obj.selected
+                // }
+              })
+              return values                        
+            }
+
+            const getMatchedFinding = (type) => {
+              let tempMatched = ''
+              findingKeys.map(obj => {
+                Object.keys(obj).map(key => {
+                  if (type == key) {
+                    tempMatched = obj
+                  }
+                })
+              })
+              return tempMatched[type]
+            }
+            const selectedValue = getSelectedValue()
+            let name = selectedValue && selectedValue.value ? selectedValue.value[obj.title] :''
+            return(
+              <Grid item xs ={obj.size} className = {classes.marginBottom}>
+                <QueryInput
+                  motherNo    = {frameNo}
+                  motherType  = {type}
+
+                  reqType     = {queryColType}
+                  dataType    = {obj.title}
+                  codeNName   = {getMatchedFinding(dataType)}
+
+                  addedNo     = {''}
+                  selectedVal = {name}
+                  label       = {obj.title}
+                ></QueryInput>
               </Grid>
             )
           }

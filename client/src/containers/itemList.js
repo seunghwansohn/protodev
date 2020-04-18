@@ -39,11 +39,16 @@ import {getIncludingKeys,
 
 
 
-const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
+const ItemListContainer = ({
+  motherFrameNo, 
+  motherType, 
+  motherNo, 
+  subTableAttr
+}) => {
   const dispatch = useDispatch();
 
   //개체 기본 속성
-  const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
+  const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
   const [currentNo, setCurrentNo]  = useState(generateRandom())
 
   const type = 'itemList'
@@ -449,13 +454,16 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
   return(
     <>
       <Button onClick = {test}>푸하하</Button>
-      <DialogST frameNo = {frameNo} motherNo = {currentNo} attr = {DialogsAttr.itemAdd}>
+      <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} attr = {DialogsAttr.itemAdd}>
           아이템에디디
         <ItemAdd 
           title       = {DialogsAttr.itemAdd.title} 
           fieldsAttr  = {arrFunc()}
-          motherType  = {type}
-          motherNo    = {frameNo}
+
+          motherType    = {type}
+          motherFrameNo = {frameNo} 
+          motherNo      = {currentNo}
+
           reqKey      = {primaryKey}
           reqCode     = {reqQueryCode}
           attr        = {dialogInfo}
@@ -463,18 +471,24 @@ const ItemListContainer = ({motherType, motherNo, subTableAttr}) => {
       </DialogST>
 
       <Table 
-        motherType  = {type}
-        motherNo    = {frameNo}
-        states      = {tableStates}
-        setStates   = {setTableStates}
-        attr        = {tableAttr}
-        funcs       = {funcs}
+        type    = {type}
+
+        motherType    = {type}
+        motherFrameNo = {frameNo} 
+        motherNo      = {currentNo}
+
+        states        = {tableStates}
+        setStates     = {setTableStates}
+        attr          = {tableAttr}
+        funcs         = {funcs}
       ></Table>
 
-      <DialogST frameNo = {frameNo} motherNo = {currentNo} attr = {DialogsAttr.itemQuery}>
+      <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} attr = {DialogsAttr.itemQuery}>
         <Query 
-          motherType  = {type}
-          motherNo    = {frameNo}
+          motherType    = {type}
+          motherFrameNo = {frameNo} 
+          motherNo      = {currentNo}
+
           reqKey      = {primaryKey}
           reqCode     = {reqQueryCode}
           attr        = {dialogInfo}

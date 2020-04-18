@@ -122,12 +122,16 @@ const MiniHelperText = styled(TextField)`
 `
 
 const STTable = ({
-  motherType,  
-  motherNo,    
-  type,
-  attr, 
+  type, 
+
+  motherType,
+  motherFrameNo,  
+  motherNo,
+
   states, 
   setStates, 
+
+  attr, 
   funcs, 
 }) => {
   
@@ -173,10 +177,9 @@ const STTable = ({
 
   const dispatch = useDispatch()
 
-  console.log(findingKeys)
 
   //개체 기본 속성
-  const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
+  const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
   const containerNo = type + '_' + frameNo
 
 
@@ -515,7 +518,6 @@ const STTable = ({
   }
 
 
-  console.log(fixedVals)
 
   
   //쿼리인풋 기능
@@ -672,8 +674,6 @@ const STTable = ({
   const check = () => {
     console.log(addedNew)
   }
-
-  console.log(initialFilter, filterKeyword)
 
 
   return (
@@ -911,7 +911,6 @@ const STTable = ({
                       let findingKey    = header
                       let dataType      =  colAttr[header].dataType
 
-                      console.log(dataType)
                       const getMatchedFinding = (type) => {
                         let tempMatched = ''
                         findingKeys.map(obj => {
@@ -948,7 +947,6 @@ const STTable = ({
 
                             addedNo     = {index}
                             selectedVal = {name}
-                            helperText  =  "Incorrect entry."
                           />
                         </StyledTableCell>
                       )

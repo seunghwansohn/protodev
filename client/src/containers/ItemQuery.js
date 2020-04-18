@@ -13,7 +13,6 @@ const ItemQuery = ({motherType, motherNo, reqKey, reqCode, attr}) => {
     const [loadedData, setLoadedData]       = useState([])
     const [primaryKey, setPrimaryKey]       = useState('');
 
-    console.log(attr)
 
     //개체 기본 속성
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
