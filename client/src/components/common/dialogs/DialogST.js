@@ -44,15 +44,18 @@ export default function MaxWidthDialog({
   const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
   const [currentNo, setCurrentNo]  = useState(generateRandom())
 
-  // const type = 'dialogST'
+  const typeP = 'dialogST'
   // const containerNo = type + '_' + frameNo
   // const dataType = 'item'
-  // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
   const [fullWidth, setFullWidth] = React.useState(true);
 
   const {open, type, funcs, maxWidth, title, scroll, onClose} = attr
+
+  console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', typeP, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+
+
 
   const handleClose = () => {
     const ox = false

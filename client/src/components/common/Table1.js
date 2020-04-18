@@ -122,7 +122,6 @@ const MiniHelperText = styled(TextField)`
 `
 
 const STTable = ({
-  type, 
 
   motherType,
   motherFrameNo,  
@@ -180,7 +179,12 @@ const STTable = ({
 
   //개체 기본 속성
   const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
+  const [currentNo, setCurrentNo]  = useState(generateRandom())
+
+  const type = motherType + 'Table'
   const containerNo = type + '_' + frameNo
+
+  console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', type, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
   //초기 헤더 설정 기능
@@ -938,15 +942,16 @@ const STTable = ({
                       return(
                         <StyledTableCell>
                           <QueryInput
-                            motherNo    = {frameNo}
-                            motherType  = {type}
+                            motherFrameNo = {frameNo}
+                            motherNo      = {currentNo}
+                            motherType    = {type}
 
-                            reqType     = {queryColType}
-                            dataType    = {dataType}
-                            codeNName    = {getMatchedFinding(dataType)}
+                            reqType       = {queryColType}
+                            dataType      = {dataType}
+                            codeNName     = {getMatchedFinding(dataType)}
 
-                            addedNo     = {index}
-                            selectedVal = {name}
+                            addedNo       = {index}
+                            selectedVal   = {name}
                           />
                         </StyledTableCell>
                       )

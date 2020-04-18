@@ -42,13 +42,15 @@ import {getIncludingKeys,
 
 
 
-const SupplierContainer = ({motherType, motherNo, subTableAttr}) => {
+const SupplierContainer = ({motherFrameNo, motherType, motherNo, subTableAttr}) => {
     const dispatch = useDispatch();
 
 
     //개체 기본 속성
-    const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
-    const type = 'itemListContainer'
+    const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
+    const [currentNo, setCurrentNo]  = useState(generateRandom())
+
+    const type = 'supplierList'
     const containerNo = type + '_' + frameNo
     const dataType = 'supplier'
 
@@ -326,12 +328,13 @@ const SupplierContainer = ({motherType, motherNo, subTableAttr}) => {
           </DialogST> */}
     게를를
           <Table 
-              motherType  = {type}
-              motherNo    = {frameNo}
-              states      = {tableStates}
-              setStates   = {setTableStates}
-              attr        = {tableAttr}
-              funcs       = {funcs}
+              motherFrameNo = {frameNo}
+              motherType    = {type}
+              motherNo      = {currentNo}
+              states        = {tableStates}
+              setStates     = {setTableStates}
+              attr          = {tableAttr}
+              funcs         = {funcs}
           ></Table>
 
           {/* <DialogST attr = {DialogsAttr.itemQuery}>

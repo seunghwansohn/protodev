@@ -216,10 +216,16 @@ let ItemAdd = ({
   }
 
   //개체 기본 속성
-  const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
+  const [frameNo, setFrameNo]       = useState(motherFrameNo ? motherFrameNo : generateRandom())
+  const [currentNo, setCurrentNo]   = useState(generateRandom())
+
   const type = 'itemDetailQuery'
+
   const containerNo = type + '_' + frameNo
   const {dataType} = attr
+
+  console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', type, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+
 
   //테이블 기본 키
   const [includingKeys, 
@@ -505,16 +511,17 @@ let ItemAdd = ({
             return(
               <Grid item xs ={obj.size} className = {classes.marginBottom}>
                 <QueryInput
-                  motherNo    = {frameNo}
-                  motherType  = {type}
+                  motherNo      = {currentNo}
+                  motherType    = {type}
+                  motherFrameNo = {frameNo}
 
-                  reqType     = {queryColType}
-                  dataType    = {obj.title}
-                  codeNName   = {getMatchedFinding(dataType)}
+                  reqType       = {queryColType}
+                  dataType      = {obj.title}
+                  codeNName     = {getMatchedFinding(dataType)}
 
-                  addedNo     = {''}
-                  selectedVal = {name}
-                  label       = {obj.title}
+                  addedNo       = {''}
+                  selectedVal   = {name}
+                  label         = {obj.title}
                 ></QueryInput>
               </Grid>
             )

@@ -53,6 +53,7 @@ const TextFieldST = styled(TextField)`
 
 const QueryInput = ({
   motherNo,
+  motherFrameNo,
   motherType,
 
   reqType,
@@ -67,10 +68,14 @@ const QueryInput = ({
 
   
   //개체 기본 속성
-  const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
+  const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
   const [currentNo, setCurrentNo]  = useState(generateRandom())
 
+
   const type = 'selectQuery'
+
+  console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', type, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+
   const containerNo = type + '_' + frameNo
 
   
@@ -155,7 +160,7 @@ const QueryInput = ({
             type  : 'select',
             func : function(selected){
               //inser버튼 클릭됐을 때 실행할 명령
-              let tempObj = {frameNo : frameNo, currentNo : currentNo, type : type, open : false}
+              let tempObj = {frameNo : frameNo, currentNo : motherNo, type : type, open : false}
 
               dispatch(actSelect(frameNo, reqType, addedNo, selected))
               dispatch(onDialogClose(tempObj))
@@ -180,7 +185,7 @@ const QueryInput = ({
             type  : 'select',
             func : function(selected){
               //inser버튼 클릭됐을 때 실행할 명령
-              let tempObj = {frameNo : frameNo, currentNo : currentNo, type : type, open : false}
+              let tempObj = {frameNo : frameNo, currentNo : motherNo, type : type, open : false}
 
               dispatch(actSelect(frameNo, reqType, addedNo, selected))
               dispatch(onDialogClose(tempObj))
@@ -233,16 +238,18 @@ const QueryInput = ({
         isSelected  = {isSelected}
         style       = {{width : '100%'}}
       />
-      <DialogST attr = {DialogsAttr.supplier} frameNo = {frameNo} motherNo = {currentNo} motherType = {type}>
+      <DialogST attr = {DialogsAttr.supplier} motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {type}>
         <SupplierList
           motherType          = {type}
+          motherFrameNo       = {frameNo}
           motherNo            = {currentNo}
           subTableAttr        = {DialogsAttr.supplier.table}
         ></SupplierList>
       </DialogST>
-      <DialogST attr = {DialogsAttr.maker} frameNo = {frameNo} motherNo = {currentNo} motherType = {type}>
+      <DialogST attr = {DialogsAttr.maker} motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {type}>
         <MakerList
           motherType          = {type}
+          motherFrameNo       = {frameNo}
           motherNo            = {currentNo}
           subTableAttr        = {DialogsAttr.maker.table}
         ></MakerList>

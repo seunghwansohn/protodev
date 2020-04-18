@@ -37,15 +37,18 @@ import {getIncludingKeys,
 
 
 
-const MakerList = ({motherType, motherNo, subTableAttr}) => {
+const MakerList = ({motherType, motherFrameNo, motherNo, subTableAttr}) => {
     const dispatch = useDispatch();
 
     //개체 기본 속성
-    const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
+    const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
+    const [currentNo, setCurrentNo]  = useState(generateRandom())
+
     const type = 'makerList'
     const containerNo = type + '_' + frameNo
     const dataType = 'maker'
-    // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+
+    console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', type, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
     //다이얼로그 관련
@@ -373,16 +376,18 @@ const MakerList = ({motherType, motherNo, subTableAttr}) => {
           </DialogST> */}
 
           <Table 
-              motherType  = {type}
-              motherNo    = {frameNo}
-              states      = {tableStates}
-              setStates   = {setTableStates}
-              attr        = {tableAttr}
-              funcs       = {funcs}
+              motherType    = {type}
+              motherNo      = {currentNo}
+              motherFrameNo = {frameNo}
+              states        = {tableStates}
+              setStates     = {setTableStates}
+              attr          = {tableAttr}
+              funcs         = {funcs}
           ></Table>
 
-          <DialogST attr = {DialogsAttr.MakerQuery}>
+          <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {type} attr = {DialogsAttr.MakerQuery}>
             <MakerQuery 
+              motherFrameNo = {frameNo}
               motherType  = {type}
               motherNo    = {frameNo}
               reqKey      = {primaryKey}

@@ -24,9 +24,7 @@ function reducer (state = initialState, action) {
       })
     case ON_DIALOG_CLOSE:
       const {frameNo, currentNo, type, open} = action.payload
-      // const isMatched = () => {
-      //   return frameNo !== frameNo && currentNo !== currentNo && type !== type
-      // }
+
       return produce(state, draft =>{
         const filtered = draft.opened.filter(function(obj){
           console.log(frameNo, currentNo, type)

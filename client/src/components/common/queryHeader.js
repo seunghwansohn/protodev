@@ -61,7 +61,9 @@ const QueryHeader = ({motherType, motherNo, funcs, queryHeaderProps}) => {
   const type = 'queryHeaderComponent'
   const componentNo = type + '_' + frameNo
 
-  // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+
+  // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')', '커런트넘버는 ', currentNo)
+
 
   const { onQuerySubmit,  submitChanged, headerInputChanged, onKeyPressOnInput} = funcs
 

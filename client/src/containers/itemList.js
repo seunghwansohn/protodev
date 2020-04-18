@@ -54,7 +54,8 @@ const ItemListContainer = ({
   const type = 'itemList'
   const containerNo = type + '_' + frameNo
   const dataType = 'item'
-  // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+
+  console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', type, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
   //테이블 관련
@@ -454,7 +455,7 @@ const ItemListContainer = ({
   return(
     <>
       <Button onClick = {test}>푸하하</Button>
-      <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} attr = {DialogsAttr.itemAdd}>
+      <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {type} attr = {DialogsAttr.itemAdd}>
           아이템에디디
         <ItemAdd 
           title       = {DialogsAttr.itemAdd.title} 
@@ -471,8 +472,6 @@ const ItemListContainer = ({
       </DialogST>
 
       <Table 
-        type    = {type}
-
         motherType    = {type}
         motherFrameNo = {frameNo} 
         motherNo      = {currentNo}
@@ -483,7 +482,7 @@ const ItemListContainer = ({
         funcs         = {funcs}
       ></Table>
 
-      <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} attr = {DialogsAttr.itemQuery}>
+      <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {type} attr = {DialogsAttr.itemQuery}>
         <Query 
           motherType    = {type}
           motherFrameNo = {frameNo} 

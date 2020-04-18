@@ -10,7 +10,7 @@ const ItemListPage = () => {
   return (
     <>
       <ItemList></ItemList>
-      <QuoteMaking></QuoteMaking>
+      {/* <QuoteMaking></QuoteMaking> */}
     </>
   );
 };
