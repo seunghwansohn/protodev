@@ -12,7 +12,7 @@ module.exports = function(app) {
     next();
   });
 
-  app.get("/api/item/load", controller.itemLoad);
+  app.get("/api/item/load", controller.load);
   app.post("/api/item/query", controller.query)
   app.post("/api/item/delete/", controller.delete);
   app.post("/api/item/update/", controller.update);

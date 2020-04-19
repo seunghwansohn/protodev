@@ -1,202 +1,202 @@
-import React, { useState, useEffect }        from 'react'
-import { connect, useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect }           from 'react'
+import { connect, useSelector, useDispatch }    from 'react-redux';
 
-import ClientMain from '../components/clientMain'
-import {setClientLoad} from '../modules/clients'
-import {setInsertClient} from '../modules/quote'
-import Table from '../components/common/Table1'
-import DialogST from '../components/common/dialogs/DialogST'
-import ButtonHeader from '../components/common/ButtonHeader'
-import { onDialogOpen } from '../modules/dialogs'
+import { onDialogOpen }                 from '../modules/dialogs'
 
-import axios                from '../lib/api/axios'
 
-import {getIncludingKeys,
-    withoutIncludingKeys,
-    generateRandom}         from '../lib/common'
-
-import { 
-    onAlreadyPickedCheck,
-    onSetClose,
-    onSetItemListHeader,
-    setHeader,
-    setInputChange,
+import {
     actUpdate, 
     actUpdateChange, 
     actClickedTableCol,
     actAdd,
     actDelete
- } from '../modules/clients'
+}                                       from '../modules/client'
+
+import DialogST     from '../components/common/dialogs/DialogST'
+import Table        from '../components/common/Table1'
+
+import {generateRandom}                         from '../lib/common';
+
+
+import Query        from '../components/Query'
+import Button           from '@material-ui/core/Button';
+
+
+import axios                from '../lib/api/axios'
+import {getIncludingKeys,
+    withoutIncludingKeys }  from '../lib/common'
 
 
 
-const Client = ({motherType, motherNo, subTableAttr}) => {
+const ClientContainer = ({
+    motherFrameNo, 
+    motherType, 
+    motherNo, 
+    subTableAttr
+}) => {
     const dispatch = useDispatch();
 
     //개체 기본 속성
-    const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
-    const currentType = 'clientList'
+    const [frameNo, setFrameNo]      = useState(motherFrameNo ? motherFrameNo : generateRandom())
+    const [currentNo, setCurrentNo]  = useState(generateRandom())
+
+    const currentType = 'supplierList'
     const containerNo = currentType + '_' + frameNo
     const dataType = 'client'
-    // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 (', motherType, ', ', motherNo, ')')
+
+    console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
-    //다이얼로그 관련
-    const opened         = useSelector(state => state.dialogs.opened)
-    const dialogOpened   = useSelector(state => state.dialogs.opened)
-
-    const checkOpened = (title) => {
-        let result = ''
-        opened.map(array => {
-            if (array.type == title){
-                result = array.ox
-            }
-        })
-        return result
-    }
-    const dialogFuncs = {
-        onDialogOpen : onDialogOpen,
-    }
-    const DialogsAttr = {
-        itemAdd : {
-            title : 'Item Add',
-            maxWidth : 'xl' ,
-            funcs : dialogFuncs,
-            open : checkOpened('itemAdd')
-        },
-        check : {
-            title : 'check',
-            maxWidth : 'xl',
-            open : 'checkOpened'
-        },
-        addClient : {
-            title : 'Add Client',
-            maxWidth : 'xl' ,
-            funcs : dialogFuncs,
-            open : checkOpened('addClient')
-        },
-    }
-
-
-    //테이블 관련   
+    //테이블 관련
     const [tableRawData, 
-        setTableRawData]                 = useState([])
-    const [primaryKey, setPrimaryKey]    = useState('');
+        setTableRawData]                = useState([])
+    const [primaryKey, setPrimaryKey]   = useState('');
     const [includingKeys, 
-        setIncludingKeys]                = useState([]);
+        setIncludingKeys]               = useState([]);
     const [findingKeys, 
-        setFindingKeys]               = useState([]);
-
-    //서브컨테이너 기능 관련
-    const {tableButton, setFindOneResult, initialFilter, directQuery} = subTableAttr ? subTableAttr : ''
+        setFindingKeys]                 = useState([]);
 
     //테이블 업데이트
     const [fixedVals, setFixedVals]             = useState([]);
     const [updated, setUpdated]                 = useState(false);
-    // const {update} = useSelector(({ client }) => ({ update : client.table.update }));
 
+    const {update} = useSelector(({ client }) => ({ update : client.table.update }));
+
+    //테이블 클릭
+    const [clickedCol, 
+        setClickedCol]      = useState({});
+    const clicked           = useSelector(state => state.client.table.clicked)
+
+    useEffect(() => {
+      if (Object.keys(clickedCol).length > 0) {
+          dispatch(actClickedTableCol(clickedCol))
+      } 
+    },[clickedCol])
 
     //테이블값 새로 추가
     const [addedNew, setAddedNew]               = useState([]);
     const onSubmitNewAdded = async () => {
-        // let obj = {addedNew :}
-        await dispatch(actAdd(addedNew, includingKeys))
+        await addedNew.map(obj => {
+            dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
+        })
         await getRawData()
         await setAddedNew([])
     }
 
+
+    //테이블 셀렉트
+    const [selected, setSelected]         = useState([]);
+
+    //테이블 필터
+    const [filterKeyword, setFilterKeyword]     = useState('');
+    const [filteredData, setFilteredData]       = useState(tableRawData);
+    
+    //테이블 로드
+    const getRawData = async () => {
+        await axios.get('/api/' + dataType + '/load').then(res => {
+            console.log(res.data)
+            setPrimaryKey(res.data.primaryKey)
+            setIncludingKeys(res.data.includingKeys)
+            setTableRawData(withoutIncludingKeys(res.data.vals))
+            setFindingKeys(res.data.findingKeys)
+        })
+    }
+    useEffect(() => {
+        getRawData()
+    },[])
+
     //테이블값 수정
     const onSubmitUpdatedVals = async (fixedVals) => {
+
         await fixedVals.map(arr => {
             dispatch(actUpdate(arr))
         })
         await setFixedVals([])
     }
 
+
     //테이블값 삭제
     const setDelete = async (codes) =>{
         await codes.map(code => {
-            dispatch(actDelete(currentType, code.itemCode))
+            dispatch(actDelete(dataType, code[primaryKey]))
         })
         await setUpdated(true)
         await setSelected([])
     }
 
-    //테이블 셀렉트
-    const [selected, setSelected]               = useState([]);
-    const [clickedCol, setClickedCol]           = useState({});
 
-
-    //테이블 필터
-    const [filterKeyword, setFilterKeyword]     = useState('');
-    const [filteredData, setFilteredData]       = useState(tableRawData);
-
-    const getRawData = async () => {
-        await axios.get('/api/' + dataType + '/load').then(res => {
-            setPrimaryKey(res.data.primaryKey)
-            setIncludingKeys(getIncludingKeys(res.data.result))
-            setTableRawData(withoutIncludingKeys(res.data.result))
+    //뭐지?
+    const getAsStrByColName = (colName) => {
+      let tempAsStr = ''
+      findingKeys.map(obj => {
+        Object.keys(obj).map(asStr => {
+          Object.keys(obj[asStr]).map(codeKey => {
+            tempAsStr = asStr
+          })
         })
+      })
+      return tempAsStr
     }
 
-    useEffect(() => {
-        console.log('겟로우데이타실행')
-        getRawData()
-    },[])
-
-
-    useEffect(() => {
-        if (Object.keys(clickedCol).length > 0) {
-            dispatch(actClickedTableCol(clickedCol))
-            dispatch(onDialogOpen(true, currentType, clickedCol))
-        } 
-    },[clickedCol])
-    
-    // if (update) {
-    //     getRawData()
-    //     dispatch(actUpdateChange(false))
-    //     setUpdated(true)
-    // }
-
-    const recordToDB = () => {
-        // dispatch(recordQuote(quoteProp.table))
+    //table 관련 속성들
+    const tableStates = {
+        rawData         : tableRawData,
+        updated         : updated,
+        clickedCol      : clickedCol,
+        addedNew        : addedNew,
+        selected        : selected,
+        filterKeyword   : filterKeyword,
+        filteredData    : filteredData
     }
-
-    const onInsertButton = (selected) => {
-        dispatch(setInsertClient(selected))
+    const setTableStates = {
+        setTableRawData     : setTableRawData,
+        setUpdated          : setUpdated,
+        setClickedCol       : setClickedCol,
+        setAddedNew         : setAddedNew,
+        setSelected         : setSelected,
+        setFilterKeyword    : setFilterKeyword,
+        setFilteredData     : setFilteredData
     }
-    const defaultHideCols = [
-        'width',
-        'depth',
-        'weight',
-        'id',
-        'height'
-    ]
-
-    const [defaultIdentKey, setDefaultIdentKey] = useState('clientName');
-
-    // const filter   = useSelector(state => state.clients.table.filter[frameNo][dataType])
-
-    const tableAttr = {
+    const funcs = {
+        load : getRawData,
+        onSubmitUpdatedVals : onSubmitUpdatedVals,
+        onDialogOpen : onDialogOpen,
+        onDelete : setDelete,
+        onSubmitNewAdded : onSubmitNewAdded
+    }
+    let tableAttr = {
         flagAble : true,
-        colAttr :   {
+        fixModeAble : true,
+        colAttr : {
             clientCode : {
                 primary : true,
                 fixable : false,
-                defaultHided : false
+                defaultHided : true,
+                validate : ['code'],
+                dataType : dataType,
+                clickType : 'supplierQuery',
+                queryType : 'simpleQuery'
+
             },
             clientName : {
                 fixable : true,
-                defaultHided : false
+                defaultHided : false,
+                nameKey : true,
+                dialog : getAsStrByColName('clientName'),
+                validate : ['string'],
+                dataType : dataType,
+                clickType : 'clientQuery',
+                queryType : 'simpleQuery'
             },
             clientRate : {
                 fixable : true,
-                defaultHided : false
+                defaultHided : false,
+                validate : ['string'],
+                dataType : dataType,
+                clickType : 'clientQuery',
+                queryType : 'simpleQuery'
             },
-            increaseRate : {
-                fixable : true,
-                defaultHided : false
-            },
+
             createdAt : {
                 fixable : false,
                 defaultHided : true
@@ -206,97 +206,165 @@ const Client = ({motherType, motherNo, subTableAttr}) => {
                 defaultHided : true
             },
         },
-        tableButton,
-        setFindOneResult,
-        frameNo,
-        initialFilter,
-        directQuery
     }
-
-    const funcs = {
-        load : getRawData,
-        onSubmitUpdatedVals : onSubmitUpdatedVals,
-        onDelete : setDelete,
-        onSubmitNewAdded : onSubmitNewAdded,
-        onDialogOpen : onDialogOpen,
-    }
-
-    const tableStates = {
-        rawData     : tableRawData,
-        updated     : updated,
-        clickedCol  : clickedCol,
-        addedNew    : addedNew,
-        selected    : selected,
-        filterKeyword   : filterKeyword,
-        filteredData    : filteredData
-    }
-
-    const setTableStates = {
-        setRawData      : setTableRawData,
-        setUpdated      : setUpdated,
-        setClickedCol   : setClickedCol,
-        setAddedNew     : setAddedNew,
-        setSelected     : setSelected,
-        setFilterKeyword    : setFilterKeyword,
-        setFilteredData     : setFilteredData
-    }
-
-    const arrangeRules = [   //헤더 순서를 정하려면 여기다가 배열값 추가 하면 됨.
-        ['importRate', 'description'],
-        ['weight', 'height'],
-        ['priceRate', 'VNPrice'],
-        ['quotePrice', 'priceRate'],
-        ['qty', 'quotePrice'],
-        ['amount', 'qty'],
-        ['notes', 'amount'],
-    ]
-
-
-    const onHeaderButton = async (type) => {
-        const ox = true
-        await dispatch(onDialogOpen(ox, type))
-    }
-
+    tableAttr = Object.assign(tableAttr, subTableAttr)
 
     
-    const onSetHeader = (arrangedColumns) => {
-        dispatch(setHeader(arrangedColumns))
+    //다이얼로그 관련
+    const dialogOpened   = useSelector(state => state.dialogs.opened)
+    const [dialogInfo, setDialogInfo]   = useState({})
+    const simpleQuery = 'simpleQuery'
+    const detailQuery = 'detailQuery'
+
+    console.log(dialogInfo)
+
+
+    const checkOpened = (type) => {
+        console.log(type)
+        let result = ''
+        dialogOpened.map(obj => {
+          if (
+            obj.frameNo     == frameNo && 
+            obj.currentNo   == currentNo && 
+            obj.currentType == currentType && 
+            obj.motherNo    == motherNo &&
+            obj.motherType  == motherType &&
+            obj.clickedType == type 
+          ) {
+            result = true
+          }
+        })
+        return result
     }
-
-    const onSetSelectedItems = (items) => {
-        // dispatch(setSelectedItems(items))
+    const DialogsAttr = {
+        detailQuery : {
+            title : detailQuery,
+            dialogType : detailQuery,
+            maxWidth : 'md' ,
+            open : checkOpened(detailQuery),
+            scroll : 'paper'
+        },
+        simpleQuery : {
+            title : simpleQuery,
+            dialogType : simpleQuery,
+            maxWidth : 'xl' ,
+            open : checkOpened(simpleQuery)
+        }
     }
+    useEffect(()=> {
+    dialogOpened.map(obj => {
+        if (
+        obj.frameNo     == frameNo && 
+        obj.currentNo   == currentNo && 
+        obj.motherNo    == motherNo &&
+        obj.motherType  == motherType
+        ) {
+        setDialogInfo(obj)
+        }
+    })
+    },[dialogOpened])
 
-    const onChangeInput = (id, name, value) => {
-        dispatch(setInputChange({id, name, value}))
+  
+
+
+  //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
+  useEffect(() => {
+    let   keys = clicked ? Object.keys(clicked) : []
+    const {colAttr} = tableAttr
+    const colAttrKeys = Object.keys(colAttr)
+
+    const {header, row, value, dataType, primaryCode, queryType} = clicked ? clicked : ''
+    const {clickType} = tableAttr.colAttr[header] ? tableAttr.colAttr[header] : ''
+    if (keys.length > 0) {
+      let aColAttr = tableAttr.colAttr[clicked.header]
+      let {clickType, dataType} = aColAttr
+      let queryType = ''
+      colAttrKeys.map(key => {
+        if (key == header) {
+          queryType = colAttr[key].queryType
+        }
+      })
+      let tempObj = {
+        frameNo     : frameNo,
+        currentNo   : currentNo,
+        currentType : currentType, 
+        motherNo    : motherNo, 
+        motherType  : motherType,
+
+        clickedHeader       : header,
+        clickedIndex        : row,
+        clickedVal          : value,
+        clickedType         : queryType,
+        clickedPrimaryCode  : primaryCode,
+
+        dataType      : dataType, 
+        initialFilter : '',
+      }
+      dispatch(onDialogOpen(tempObj))
     }
+    dialogOpened.map(obj => {
+      if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
+        setDialogInfo(obj)
+      }
+    })
+  },[clicked])
 
-    const onSelectButton = (items) => {
-    }
+
+  console.log(clickedCol)
+  const test = () => {
+    // dispatch(loadAccount())
+    // dispatch(onDialogOpen(true, detailQuery, clickedCol))
+    // console.log(checkOpened('itemName'))
+    checkOpened()
+  }
+
+
+  if (update) {
+    getRawData()
+    dispatch(actUpdateChange(false))
+    setUpdated(true)
+  }
+
+  console.log(dialogInfo)
 
 
 
+  return(
+      <>
+        <Button onClick = {test}>푸하하</Button>
+        <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType} attr = {DialogsAttr.simpleQuery}>
+          <Query 
+            title       = {DialogsAttr.simpleQuery.title} 
 
-    return(
-        <>
-            <ClientMain></ClientMain>
-            {/* <ButtonHeader type = {type} onHeaderButton = { onHeaderButton }></ButtonHeader> */}
+            motherType  = {currentType}
+            motherFrameNo = {frameNo} 
+            motherNo    = {currentNo}
 
-            <Table
-                type        = {currentType}
-                attr        = {tableAttr}
-                funcs       = {funcs}
-                states      = {tableStates}
-                setStates   = {setTableStates}
-                // frameNo     = {frameNo}
-            >
-            </Table>
+            reqKey      = {primaryKey}
+            attr        = {dialogInfo}
+          ></Query>
+        </DialogST>
 
-            <DialogST attr = {DialogsAttr.addClient}>
-                {/* <ClientAdd title = {DialogsAttr.addClient.title}></ClientAdd> */}
-            </DialogST>
-        </>
-    )
+        <Table 
+            motherFrameNo = {frameNo}
+            motherType    = {currentType}
+            motherNo      = {currentNo}
+            states        = {tableStates}
+            setStates     = {setTableStates}
+            attr          = {tableAttr}
+            funcs         = {funcs}
+        ></Table>
+
+        {/* <DialogST attr = {DialogsAttr.itemQuery}>
+          <ItemQuery 
+            motherType  = {type}
+            motherNo    = {frameNo}
+            reqKey      = {primaryKey}
+            reqCode     = {reqQueryCode}
+          ></ItemQuery>
+        </DialogST> */}
+      </>
+  )
 }   
 
-export default Client
+export default ClientContainer

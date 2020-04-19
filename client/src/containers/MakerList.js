@@ -1,10 +1,8 @@
 import React, { useState, useEffect }           from 'react'
 import { connect, useSelector, useDispatch }    from 'react-redux';
 
-import {checkedItem, IsThereSelected}   from '../modules/maker'
-import { setAuthReset }                 from '../modules/auth'
 import { onDialogOpen }                 from '../modules/dialogs'
-import { getExchangeRate }              from '../modules/basicInfo'
+
 
 import {
     actUpdate, 
@@ -14,20 +12,13 @@ import {
     actDelete
 }                                       from '../modules/maker'
 
-import {load as loadAccount} from '../modules/reduxForm'
-
-
 import DialogST     from '../components/common/dialogs/DialogST'
 import Table        from '../components/common/Table1'
-import ButtonHeader from '../components/common/ButtonHeader'
+
+import {generateRandom}                         from '../lib/common';
 
 
-
-import spacelize                      from '../lib/spacelize'
-import {generateRandom}               from '../lib/common';
-
-import MakerQuery   from '../containers/MakerQuery'
-
+import Query        from '../components/Query'
 import Button           from '@material-ui/core/Button';
 
 
@@ -37,51 +28,23 @@ import {getIncludingKeys,
 
 
 
-const MakerList = ({motherType, motherFrameNo, motherNo, subTableAttr}) => {
+const MakerContainer = ({
+    motherFrameNo, 
+    motherType, 
+    motherNo, 
+    subTableAttr
+}) => {
     const dispatch = useDispatch();
 
     //개체 기본 속성
-    const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
+    const [frameNo, setFrameNo]      = useState(motherFrameNo ? motherFrameNo : generateRandom())
     const [currentNo, setCurrentNo]  = useState(generateRandom())
 
-    const currentType = 'makerList'
+    const currentType = 'supplierList'
     const containerNo = currentType + '_' + frameNo
     const dataType = 'maker'
 
     console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
-
-
-    //다이얼로그 관련
-    const opened         = useSelector(state => state.dialogs.opened)
-    const dialogOpened   = useSelector(state => state.dialogs.opened)
-    const simpleQuery = 'simple'
-    const detailQuery = 'detail'
-
-    const checkOpened = (title) => {
-        let result = ''
-        dialogOpened.map(array => {
-            if (array.type == title){
-                result = array.ox
-            }
-        })
-        return result
-    }
-    const DialogsAttr = {
-      itemAdd : {
-        title : detailQuery,
-        maxWidth : 'md' ,
-        // funcs : funcs,
-        open : checkOpened(detailQuery),
-        scroll : 'paper'
-        
-      },
-      MakerQuery : {
-          title : simpleQuery,
-          maxWidth : 'xl' ,
-          // funcs : funcs,
-          open : checkOpened(simpleQuery)
-      }
-    }
 
 
     //테이블 관련
@@ -91,12 +54,24 @@ const MakerList = ({motherType, motherFrameNo, motherNo, subTableAttr}) => {
     const [includingKeys, 
         setIncludingKeys]               = useState([]);
     const [findingKeys, 
-        setFindingKeys]               = useState([]);
+        setFindingKeys]                 = useState([]);
 
     //테이블 업데이트
     const [fixedVals, setFixedVals]             = useState([]);
     const [updated, setUpdated]                 = useState(false);
+
     const {update} = useSelector(({ maker }) => ({ update : maker.table.update }));
+
+    //테이블 클릭
+    const [clickedCol, 
+        setClickedCol]      = useState({});
+    const clicked           = useSelector(state => state.maker.table.clicked)
+
+    useEffect(() => {
+      if (Object.keys(clickedCol).length > 0) {
+          dispatch(actClickedTableCol(clickedCol))
+      } 
+    },[clickedCol])
 
     //테이블값 새로 추가
     const [addedNew, setAddedNew]               = useState([]);
@@ -104,14 +79,34 @@ const MakerList = ({motherType, motherFrameNo, motherNo, subTableAttr}) => {
         await addedNew.map(obj => {
             dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
         })
-        // await dispatch(actAdd(addedNew, primaryKey, includingKeys))
         await getRawData()
         await setAddedNew([])
     }
 
 
+    //테이블 셀렉트
+    const [selected, setSelected]         = useState([]);
+
+    //테이블 필터
+    const [filterKeyword, setFilterKeyword]     = useState('');
+    const [filteredData, setFilteredData]       = useState(tableRawData);
+    
+    //테이블 로드
+    const getRawData = async () => {
+        await axios.get('/api/' + dataType + '/load').then(res => {
+            setPrimaryKey(res.data.primaryKey)
+            setIncludingKeys(res.data.includingKeys)
+            setTableRawData(withoutIncludingKeys(res.data.vals))
+            setFindingKeys(res.data.findingKeys)
+        })
+    }
+    useEffect(() => {
+        getRawData()
+    },[])
+
     //테이블값 수정
     const onSubmitUpdatedVals = async (fixedVals) => {
+
         await fixedVals.map(arr => {
             dispatch(actUpdate(arr))
         })
@@ -128,100 +123,19 @@ const MakerList = ({motherType, motherFrameNo, motherNo, subTableAttr}) => {
         await setSelected([])
     }
 
-    //테이블 셀렉트
-    const [selected, setSelected]         = useState([]);
 
-
-    //테이블 클릭
-    const [clickedCol, 
-      setClickedCol]     = useState({});
-    const clicked        = useSelector(state => state.maker.table.clicked)
-    const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
-
-    useEffect(() => {
-      if (Object.keys(clickedCol).length > 0) {
-          dispatch(actClickedTableCol(clickedCol))
-      } 
-    },[clickedCol])
-    //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
-    useEffect(() => {
-      let keys = Object.keys(clicked)
-      if (keys.length > 0) {
-        if (includingKeys) {
-          dispatch(actClickedTableCol(clickedCol))
-          dispatch(loadAccount(clickedCol))
-          dispatch(onDialogOpen(true, detailQuery, clickedCol))
-        }else{
-          dispatch(actClickedTableCol(clickedCol))
-          dispatch(onDialogOpen(true, simpleQuery, clickedCol))
-        }
-      } 
-    },[clicked])
-
-
-    //테이블 필터
-    const [filterKeyword, setFilterKeyword]     = useState('');
-    const [filteredData, setFilteredData]       = useState(tableRawData);
-
-
-    //테이블 로드
-    const getRawData = async () => {
-        await axios.get('/api/' + dataType + '/load').then(res => {
-            setPrimaryKey(res.data.primaryKey)
-            setIncludingKeys(res.data.includingKeys)
-            setTableRawData(withoutIncludingKeys(res.data.vals))
-            setFindingKeys(res.data.findingKeys)
-        })
-    }
-    useEffect(() => {
-        getRawData()
-    },[])
-
-
-    
-    //Api로부터 findingKeys를 받은 뒤
-    //input을 query창으로 형성할 컬럼의 목록을 arr로
-    const [findingCols, 
-        setFindingCols]                = useState([])
-    useEffect(() => {
-        let tempArr = []
-        findingKeys.map(obj => {
-            Object.keys(obj).map(asStr => {
-                Object.keys(obj[asStr]).map(codeKey => {
-                    tempArr.push(obj[asStr][codeKey])
-                })
-            })
-        })
-        setFindingCols(tempArr)
-    },[findingKeys])
-
-
+    //뭐지?
     const getAsStrByColName = (colName) => {
-        let tempAsStr = ''
-        findingKeys.map(obj => {
-            Object.keys(obj).map(asStr => {
-                Object.keys(obj[asStr]).map(codeKey => {
-                    tempAsStr = asStr
-                })
-            })
+      let tempAsStr = ''
+      findingKeys.map(obj => {
+        Object.keys(obj).map(asStr => {
+          Object.keys(obj[asStr]).map(codeKey => {
+            tempAsStr = asStr
+          })
         })
-        return tempAsStr
+      })
+      return tempAsStr
     }
-
-    const test = () => {
-        // dispatch(loadAccount())
-        // dispatch(onDialogOpen(true, detailQuery, clickedCol))
-        console.log(getAsStrByColName('itemName'))
-    }
-
-
-    if (update) {
-        getRawData()
-        dispatch(actUpdateChange(false))
-        setUpdated(true)
-    }
-
-
 
     //table 관련 속성들
     const tableStates = {
@@ -253,83 +167,57 @@ const MakerList = ({motherType, motherFrameNo, motherNo, subTableAttr}) => {
         flagAble : true,
         fixModeAble : true,
         colAttr : {
-            makerCode : {
+            supplierCode : {
                 primary : true,
                 fixable : false,
-                defaultHided : false,
-                validate : ['code']
-            },
-            makerName : {
-                fixable : true,
-                defaultHided : false,
-                validate : ['string']
-            },
-            description : {
-                fixable : true,
                 defaultHided : true,
-                validate : ['string']
-            },
-            weight : {
-                fixable : true,
-                defaultHided : true,
-                validate : ['maxValue5', 'number']
-            },
-            width : {
-                fixable : true,
-                defaultHided : true,
-                validate : ['maxValue5', 'number']
-            },
-            depth : {
-                fixable : true,
-                defaultHided : true,
-                validate : ['maxValue5', 'number']
-            },
-            height : {
-                fixable : true,
-                defaultHided : true,
-                validate : ['maxValue5', 'number']
-            },
-            importTaxRate : {
-                fixable : true,
-                defaultHided : false,
-                validate : ['percent', 'plus', 'decimal2', 'number']
-            },
-            maker : {
-                fixable : true,
-                defaultHided : false,
-                validate : ['string']
-            },
-            makerModelNo : {
-                fixable : true,
-                defaultHided : false,
-                validate : ['string']
+                validate : ['code'],
+                dataType : dataType,
+                clickType : 'supplierQuery',
+                queryType : 'simpleQuery'
+
             },
             supplierName : {
                 fixable : true,
                 defaultHided : false,
-                query : true,
+                nameKey : true,
                 dialog : getAsStrByColName('supplierName'),
-                validate : ['string']
+                validate : ['string'],
+                dataType : dataType,
+                clickType : 'supplierQuery',
+                queryType : 'simpleQuery'
             },
-            VNPrice : {
+            country : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['number', 'max15'],
+                validate : ['string'],
+                dataType : dataType,
+                clickType : 'supplierQuery',
+                queryType : 'simpleQuery'
             },
-            buyingPKR : {
+            province : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['number'],
+                validate : ['string'],
+                dataType : dataType,
+                clickType : 'supplierQuery',
+                queryType : 'simpleQuery'
             },
-            stkVVar : {
+            ceo : {
                 fixable : true,
-                defaultHided : true,
-                validate : ['decimal2', 'max1', 'number'],
+                defaultHided : false,
+                validate : ['string'],
+                dataType : dataType,
+                clickType : 'supplierQuery',
+                queryType : 'simpleQuery'
             },
-            stkCVar : {
+            taxCode : {
                 fixable : true,
-                defaultHided : true,
-                validate : ['decimal2', 'max1', 'number'],
+                defaultHided : false,
+                validate : ['string'],
+                dataType : dataType,
+                clickType : 'supplierQuery',
+                queryType : 'simpleQuery'
             },
             createdAt : {
                 fixable : false,
@@ -342,59 +230,157 @@ const MakerList = ({motherType, motherFrameNo, motherNo, subTableAttr}) => {
         },
     }
     tableAttr = Object.assign(tableAttr, subTableAttr)
-
-
     
-    const arrFunc = () => {
-      let Arr = []
-      const makeFieldAttrArr = (name, component) => {
-          const obj = {
-              name : name,
-              component : component,
-              label : spacelize(name)
+    //다이얼로그 관련
+    const dialogOpened   = useSelector(state => state.dialogs.opened)
+    const [dialogInfo, setDialogInfo]   = useState({})
+    const simpleQuery = 'simpleQuery'
+    const detailQuery = 'detailQuery'
+
+
+    const checkOpened = (type) => {
+        console.log(type)
+        let result = ''
+        dialogOpened.map(obj => {
+          if (
+            obj.frameNo     == frameNo && 
+            obj.currentNo   == currentNo && 
+            obj.currentType == currentType && 
+            obj.motherNo    == motherNo &&
+            obj.motherType  == motherType &&
+            obj.clickedType == type 
+          ) {
+            result = true
           }
-          Arr.push(obj)
-      }
-      makeFieldAttrArr('firstName', 'renderTextField')
-      makeFieldAttrArr('secondName', 'renderTextField')
-      return Arr
+        })
+        return result
     }
+    const DialogsAttr = {
+        detailQuery : {
+            title : detailQuery,
+            dialogType : detailQuery,
+            maxWidth : 'md' ,
+            open : checkOpened(detailQuery),
+            scroll : 'paper'
+        },
+        simpleQuery : {
+            title : simpleQuery,
+            dialogType : simpleQuery,
+            maxWidth : 'xl' ,
+            open : checkOpened(simpleQuery)
+        }
+    }
+    useEffect(()=> {
+    dialogOpened.map(obj => {
+        if (
+        obj.frameNo     == frameNo && 
+        obj.currentNo   == currentNo && 
+        obj.motherNo    == motherNo &&
+        obj.motherType  == motherType
+        ) {
+        setDialogInfo(obj)
+        }
+    })
+    },[dialogOpened])
 
-    return(
-        <>
-          <Button onClick = {test}>푸하하</Button>
-          {/* <DialogST attr = {DialogsAttr.itemAdd}>
-            <ItemAdd 
-              title       = {DialogsAttr.itemAdd.title} 
-              fieldsAttr  = {arrFunc()}
-              motherType  = {type}
-              motherNo    = {frameNo}
-              reqKey      = {primaryKey}
-              reqCode     = {reqQueryCode}
-            ></ItemAdd>
-          </DialogST> */}
+  
 
-          <Table 
-              motherType    = {currentType}
-              motherNo      = {currentNo}
-              motherFrameNo = {frameNo}
-              states        = {tableStates}
-              setStates     = {setTableStates}
-              attr          = {tableAttr}
-              funcs         = {funcs}
-          ></Table>
+  //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
+  useEffect(() => {
+    let   keys = clicked ? Object.keys(clicked) : []
+    const {colAttr} = tableAttr
+    const colAttrKeys = Object.keys(colAttr)
 
-          <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType} attr = {DialogsAttr.MakerQuery}>
-            <MakerQuery 
-              motherFrameNo = {frameNo}
-              motherType  = {currentType}
-              motherNo    = {frameNo}
-              reqKey      = {primaryKey}
-              reqCode     = {reqQueryCode}
-            ></MakerQuery>
-          </DialogST>
-        </>
-    )
+    const {header, row, value, dataType, primaryCode, queryType} = clicked ? clicked : ''
+    const {clickType} = tableAttr.colAttr[header] ? tableAttr.colAttr[header] : ''
+    if (keys.length > 0) {
+      let aColAttr = tableAttr.colAttr[clicked.header]
+      let {clickType, dataType} = aColAttr
+      let queryType = ''
+      colAttrKeys.map(key => {
+        if (key == header) {
+          queryType = colAttr[key].queryType
+        }
+      })
+      let tempObj = {
+        frameNo     : frameNo,
+        currentNo   : currentNo,
+        currentType : currentType, 
+        motherNo    : motherNo, 
+        motherType  : motherType,
+
+        clickedHeader       : header,
+        clickedIndex        : row,
+        clickedVal          : value,
+        clickedType         : queryType,
+        clickedPrimaryCode  : primaryCode,
+
+        dataType      : dataType, 
+        initialFilter : '',
+      }
+      dispatch(onDialogOpen(tempObj))
+    }
+    dialogOpened.map(obj => {
+      if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
+        setDialogInfo(obj)
+      }
+    })
+  },[clicked])
+
+
+  const test = () => {
+    // dispatch(loadAccount())
+    // dispatch(onDialogOpen(true, detailQuery, clickedCol))
+    // console.log(checkOpened('itemName'))
+    checkOpened()
+  }
+
+
+  if (update) {
+    getRawData()
+    dispatch(actUpdateChange(false))
+    setUpdated(true)
+  }
+
+
+
+
+  return(
+      <>
+        <Button onClick = {test}>푸하하</Button>
+        <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType} attr = {DialogsAttr.simpleQuery}>
+          <Query 
+            title       = {DialogsAttr.simpleQuery.title} 
+
+            motherType  = {currentType}
+            motherFrameNo = {frameNo} 
+            motherNo    = {currentNo}
+
+            reqKey      = {primaryKey}
+            attr        = {dialogInfo}
+          ></Query>
+        </DialogST>
+
+        <Table 
+            motherFrameNo = {frameNo}
+            motherType    = {currentType}
+            motherNo      = {currentNo}
+            states        = {tableStates}
+            setStates     = {setTableStates}
+            attr          = {tableAttr}
+            funcs         = {funcs}
+        ></Table>
+
+        {/* <DialogST attr = {DialogsAttr.itemQuery}>
+          <ItemQuery 
+            motherType  = {type}
+            motherNo    = {frameNo}
+            reqKey      = {primaryKey}
+            reqCode     = {reqQueryCode}
+          ></ItemQuery>
+        </DialogST> */}
+      </>
+  )
 }   
 
-export default MakerList
+export default MakerContainer

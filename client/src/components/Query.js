@@ -48,7 +48,7 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
 
   console.log(attr)
 
-  
+
   //개체 기본 속성
   const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
   const currentType = 'Query'
@@ -96,7 +96,12 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
         {type : 'fixable', newRow : true, size : 6, title: 'importTaxRate', style:'regular'},
         {type : 'fixable', newRow : true, size : 6, title: 'VNPrice', style:'regular'},
         {type : 'divider', typoGraphy : 'basicInfo'}
-      ]
+      ],
+      client : [
+        {type : 'primary', newRow : true, size : 5, title: 'clientCode', style:'regular'},
+        {type : 'fixable', newRow : true, size : 7, title: 'clientName', style:'regular'},
+        {type : 'divider', typoGraphy : 'basicInfo'}
+      ],
     }
     return tempObj
   }
@@ -115,13 +120,15 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
     getPrimaryKey()
   },[queryProps])
 
-
+console.log(dataType)
+  
   //api값을 받아와 설정
   const getRawData = async () => {
     let queryObj = {}
     queryObj[attr.clickedHeader] = attr.clickedVal
     let request = {queryObj : queryObj, findingKeys, includingKeys}
     await axios.post('/api/' + dataType + '/query', request).then(res => {
+      console.log(res.data)
       setTableRawData(res.data.vals)
       setLoadedData(res.data.vals)
       setIncludingKeys(res.data.primaryKey)

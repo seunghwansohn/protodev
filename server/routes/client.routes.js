@@ -9,7 +9,11 @@ module.exports = function(app) {
     );
     next();
   });
-  app.get("/api/client/load", controller.clientLoad);
+  app.get("/api/client/load", controller.load);
+  app.post("/api/client/query", controller.query)
+  app.post("/api/client/delete/", controller.delete);
+  app.post("/api/client/update/", controller.update);
+  app.post("/api/client/addNew", controller.addNew)
 };
 
 

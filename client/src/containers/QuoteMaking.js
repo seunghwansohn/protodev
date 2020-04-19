@@ -32,7 +32,7 @@ import {
  } from '../modules/quote'
  import { onDialogOpen } from '../modules/dialogs'
 
- import { actSetFilter } from '../modules/clients'
+ import { actSetFilter } from '../modules/client'
 
 
 import {generateRandom}     from '../lib/common';

@@ -647,6 +647,7 @@ const STTable = ({
   }
 
 
+  console.log(addedNew)
 
   //검색어 필터 기능
   useEffect(() => {

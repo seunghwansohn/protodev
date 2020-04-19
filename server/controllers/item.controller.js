@@ -92,8 +92,7 @@ exports.update = async (req, res) => {
   })
 };
 
-exports.itemLoad = (req, res) => {
-
+exports.load = (req, res) => {
   const includingAttr = getIncludingAttr(relAttr)
   const findingAttr   = getFindingAttr(relAttr)
   getIncludeName(Item, primaryKey, findingAttr, includingAttr).then(items => {
@@ -109,8 +108,6 @@ exports.delete = async (req, res) => {
 };
 
 
-
-
 exports.query = (req, res) => {
   let {queryObj} = req.body
   console.log(queryObj)
@@ -120,36 +117,3 @@ exports.query = (req, res) => {
     res.status(200).send(items)
   })
 };
-
-
-// exports.query1 = (req, res) => {
-//   console.log(req.body)
-//   try {
-//     const where = req.body
-//     let result = ''
-//     const includingKey = 'price'
-//     Item.findAll(
-//       {where: where, include: [{model:ItemPrice, as: includingKey}] }
-//       ).then(items => {
-//         result = monolize(items, includingKey)
-//       }).then(() => {
-//         calPrice.VNSellP(result)
-//         res.status(200).send(result);
-//       }) 
-//   }
-//   catch (err) {
-//     res.status(500).send({message:err.message})
-//   }
-// };
-
-
-// exports.test = (req,res) => {
-//   let primaryKey = 'itemCode'
-//   let includingAttr = [
-//     {model:Supplier, plain : true, raw: false, nest : false, as : 'supplier', attributes : ['supplierName']},
-//     {model:ItemPrice, plain : true, raw: false, nest : false, as: 'price', attributes : ['VNPrice', 'stkVVar', 'buyingPKR', 'stkCVar']}
-//   ]
-//   getIncludeName(Item, Supplier, primaryKey, includingAttr).then(items => {
-//     res.status(500).send(items)
-//   })
-// }

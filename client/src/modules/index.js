@@ -4,7 +4,7 @@ import {all}                from 'redux-saga/effects'
 import item, {itemSaga}         from './itemList'
 import quote, {quoteSaga}   from './quote'
 import mainSearch               from './mainSearch'
-import clients, {clientsSaga}   from './clients'
+import client, {clientSaga}   from './client'
 import dialogs                  from './dialogs'
 import loading                  from './loading';
 import supplier, {supplierSaga} from './supplier';
@@ -30,7 +30,7 @@ const rootReducer = combineReducers({
     quote,
     mainSearch,
     loading,
-    clients,
+    client,
     dialogs,
     auth,
     user,
@@ -55,7 +55,7 @@ export function* rootSaga () {
         tableSaga(),
         authtestSaga(),
         quoteSaga(),
-        clientsSaga(),
+        clientSaga(),
         basicInfoSaga(),
         supplierSaga(),
         querySaga(),

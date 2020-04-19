@@ -24,7 +24,7 @@ module.exports = setUpdate = (vals, ref, relAttr) => {
             } else {
                 let tempVal = {}
                 tempVal[key] = vals[key]
-                Item.update(tempVal, {where:ref})
+                relAttr.source.update(tempVal, {where:ref})
             }
         })
         resolve('item Sucecssfully updated')
