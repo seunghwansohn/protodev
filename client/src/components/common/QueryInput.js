@@ -76,7 +76,9 @@ const QueryInput = ({
   initialValue,
   filteredData,
   fixedVals,
-  setFixedVals
+  setFixedVals,
+  addedNew,
+  setAddedNew
 }) => {
   const dispatch = useDispatch()
 
@@ -91,7 +93,7 @@ const QueryInput = ({
 
   console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
-  console.log(filteredData)
+  console.log(reqType)
   
   //finding code와 Name 생성
   const getFirstKey = (obj) => {
@@ -190,14 +192,14 @@ const QueryInput = ({
     temp1.location = {index : addedNo, header : queryName}
     temp1.ref[primaryKey] = filteredData[addedNo][primaryKey]
     temp1.vals[queryCode] = selected.value[queryName]
-    if (reqType = 'fixSelect') {
+    if (reqType == 'fixSelect') {
       setFixedVals(
         produce(fixedVals, draft => {
           draft.push(temp1)
         })
       )
-    } else {
-
+    } else if (reqType == 'newAdded'){
+      console.log('레큐타입뉴에디드')
     }
 
     let tempObj = {

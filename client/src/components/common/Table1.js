@@ -1018,9 +1018,14 @@ const STTable = ({
                             reqType       = {queryColType}
                             dataType      = {dataType}
                             codeNName     = {getMatchedFinding(dataType)}
+                            primaryKey    = {primaryKey}
 
                             addedNo       = {index}
                             label         = {colAttr[header].dataType}
+                            initialValue  = {filteredData[index][header]}
+                            filteredData  = {filteredData}
+                            addedNew      = {addedNew}
+                            setAddedNew   = {setAddedNew}
                           />
                         </StyledTableCell>
                       )
