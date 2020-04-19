@@ -7,9 +7,10 @@ import * as supplier                                      from '../lib/api/suppl
 
 const initialState = {
     table : {
-        header : [],
-        contents : [],
-        update : false
+        header      : [],
+        contents    : [],
+        update      : false,
+        clicked     : {}
     }
 }
 
@@ -18,33 +19,38 @@ export const SET_INPUT_CHANGE       = 'supplier/SET_INPUT_CHANGE'
 export const SET_UPDATE_CHANGE      = 'supplier/SET_UPDATE_CHANGE'
 export const SET_CLICKED_TABLE_COL  = 'supplier/SET_CLICKED_TABLE_COL'
 
-const [SET_SUPPLIER_ADD, SET_SUPPLIER_ADD_SUCCESS, SET_SUPPLIER_ADD_FAILURE ] 
-= createRequestActionTypes('supplier/SET_SUPPLIER_ADD');
+const [SET_ADD, SET_ADD_SUCCESS, SET_ADD_FAILURE ] 
+= createRequestActionTypes('supplier/SET_ADD');
 const [SET_UPDATE, SET_UPDATE_SUCCESS, SET_UPDATE_FAILURE ] 
 = createRequestActionTypes('supplier/SET_UPDATE');
 const [SET_LOAD, SET_LOAD_SUCCESS, SET_LOAD_ADD_FAILURE ] 
 = createRequestActionTypes('supplier/SET_LOAD');
-const [SET_SUPPLIER_DELETE, SET_SUPPLIER_DELETE_SUCCESS, SET_SUPPLIER_DELETE_FAILURE ] 
+const [SET_DELETE, SET_DELETE_SUCCESS, SET_DELETE_FAILURE ] 
 = createRequestActionTypes('supplier/SET_DELETE');
+const [SET_SUBMIT_ADD_ITEM, SET_SUBMIT_ADD_ITEM_SUCCESS, SET_SUBMIT_ADD_ITEM_FAILURE ] 
+= createRequestActionTypes('supplier/SET_SUBMIT_ADD_ITEM');
 
-const supplierAddSaga       = createRequestSaga(SET_SUPPLIER_ADD, supplier.addNew);
-const supplierLoadSaga      = createRequestSaga(SET_LOAD, supplier.load);
-const supplierUpdateSaga    = createRequestSaga(SET_UPDATE, supplier.update);
-const supplierDeleteSaga    = createRequestSaga(SET_SUPPLIER_DELETE, supplier.del);
+const addSaga       = createRequestSaga(SET_ADD, supplier.addNew);
+const loadSaga      = createRequestSaga(SET_LOAD, supplier.load);
+const updateSaga    = createRequestSaga(SET_UPDATE, supplier.update);
+const deleteSaga    = createRequestSaga(SET_DELETE, supplier.del);
+const addItemSaga   = createRequestSaga(SET_SUBMIT_ADD_ITEM, supplier.addNew);
 
-export const setHeader          = createAction(SET_HEADER, columns => columns)
-export const setSupplierAdd     = createAction(SET_SUPPLIER_ADD, info => info)
-export const setSupplierLoad    = createAction(SET_LOAD)
-export const setUpdate  = createAction(SET_UPDATE, arr => arr)
-export const updateChange       = createAction(SET_UPDATE_CHANGE, ox => ox)
-export const setClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
-export const setSupplierDelete = createAction(SET_SUPPLIER_DELETE, code => code)
+export const actHeader          = createAction(SET_HEADER, columns => columns)
+export const actAdd             = createAction(SET_ADD, (addedNew, primaryKey, includingKeys, findingKeys) => ({addedNew, primaryKey, includingKeys, findingKeys}))
+export const actLoad            = createAction(SET_LOAD)
+export const actUpdate          = createAction(SET_UPDATE, obj => obj)
+export const actUpdateChange    = createAction(SET_UPDATE_CHANGE, ox => ox)
+export const actClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
+export const actDelete          = createAction(SET_DELETE, (type, code) => ({type, code}))
+export const actSubmitAddItem   = createAction(SET_SUBMIT_ADD_ITEM, item => item)
 
 export function* supplierSaga() {
-    yield takeLatest(SET_SUPPLIER_ADD, supplierAddSaga);
-    yield takeLatest(SET_LOAD, supplierLoadSaga);
-    yield takeLatest(SET_UPDATE, supplierUpdateSaga);
-    yield takeEvery(SET_SUPPLIER_DELETE, supplierDeleteSaga);
+    yield takeEvery    (SET_ADD,    addSaga);
+    yield takeLatest    (SET_LOAD,   loadSaga);
+    yield takeEvery     (SET_UPDATE, updateSaga);
+    yield takeEvery     (SET_DELETE, deleteSaga);
+    yield takeLatest    (SET_SUBMIT_ADD_ITEM, addItemSaga);
 }
 
 
@@ -58,12 +64,12 @@ function reducer (state = initialState, action) {
             return produce(state, draft => {
                 draft.table.header = action.payload
             })
-        case SET_SUPPLIER_ADD_SUCCESS:
+        case SET_ADD_SUCCESS:
             return produce(state, draft => {
                 draft.table.header = action.payload
                 draft.table.update = true
             })
-        case SET_SUPPLIER_ADD:
+        case SET_ADD:
             return produce(state, draft => {
             })
         case SET_UPDATE_SUCCESS:
@@ -72,9 +78,10 @@ function reducer (state = initialState, action) {
             })
         case SET_CLICKED_TABLE_COL:
             return produce(state, draft => {
+                draft.table.clicked = action.payload
             })
 
-        case SET_SUPPLIER_DELETE_SUCCESS:
+        case SET_DELETE_SUCCESS:
             return produce(state, draft => {
                 draft.table.header = action.payload
                 draft.table.update = true

@@ -79,6 +79,7 @@ const QueryInput = ({
   const containerNo = currentType + '_' + frameNo
 
   
+  console.log(label)
   
   //finding code와 Name 생성
   const getFirstKey = (obj) => {
@@ -133,8 +134,8 @@ const QueryInput = ({
         obj.currentNo   == currentNo && 
         obj.currentType == currentType && 
         obj.motherNo    == motherNo &&
-        obj.motherType  == motherType
-        // obj.clickedType == type 
+        obj.motherType  == motherType &&
+        obj.clickedType == type 
       ) {
         result = true
         console.log(result)
@@ -168,7 +169,7 @@ const QueryInput = ({
       title : 'supplier_' + frameNo,
       dialogType : 'supplierQuery',
       maxWidth : 'xl' ,
-      open : checkOpened('selectQuery'),
+      open : checkOpened('supplierQuery'),
       table : {
         tableButton : [
           {
@@ -194,7 +195,7 @@ const QueryInput = ({
       title : 'maker' + frameNo,
       dialogType : 'makerQuery',
       maxWidth : 'xl' ,
-      open : checkOpened('selectQuery'),
+      open : checkOpened('makerQuery'),
       table : {
         tableButton : [
           {
@@ -247,7 +248,7 @@ const QueryInput = ({
         clickedHeader : '',
         clickedIndex : '',
         clickedVal : '',
-        clickedType : '',
+        clickedType : DialogsAttr[label].dialogType,
         clickedPrimaryCode : '',
 
         dataType : dataType, 

@@ -508,6 +508,7 @@ let ItemAdd = ({
             }
             const selectedValue = getSelectedValue()
             let name = selectedValue && selectedValue.value ? selectedValue.value[obj.title] :''
+            console.log(name)
             return(
               <Grid item xs ={obj.size} className = {classes.marginBottom}>
                 <QueryInput

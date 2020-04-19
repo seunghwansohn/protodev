@@ -46,6 +46,9 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
 
   const classes = useStyles();
 
+  console.log(attr)
+
+  
   //개체 기본 속성
   const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
   const currentType = 'Query'

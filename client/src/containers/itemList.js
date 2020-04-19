@@ -78,7 +78,6 @@ const ItemListContainer = ({
     setClickedCol]     = useState({});
   const clicked        = useSelector(state => state.item.table.clicked)
   // const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
-  const [reqQueryCode, setReqQueryCode]  = useState('BF-50A')
 
   useEffect(() => {
     if (Object.keys(clickedCol).length > 0) {
@@ -376,7 +375,6 @@ const ItemListContainer = ({
     const {header, row, value, dataType, primaryCode, queryType} = clicked
     const {clickType} = tableAttr.colAttr[header] ? tableAttr.colAttr[header] : ''
     if (keys.length > 0) {
-      dispatch(actClickedTableCol(clicked))
       let aColAttr = tableAttr.colAttr[clicked.header]
       let {clickType, dataType} = aColAttr
       let queryType = ''
@@ -415,37 +413,6 @@ const ItemListContainer = ({
 
 
 
-
-  
-  //Api로부터 findingKeys를 받은 뒤
-  //input을 query창으로 형성할 컬럼의 목록을 arr로
-  const [findingCols, 
-      setFindingCols]                = useState([])
-  useEffect(() => {
-    let tempArr = []
-    findingKeys.map(obj => {
-      Object.keys(obj).map(asStr => {
-        Object.keys(obj[asStr]).map(codeKey => {
-          tempArr.push(obj[asStr][codeKey])
-        })
-      })
-    })
-    setFindingCols(tempArr)
-  },[findingKeys])
-
-
-  const getAsStrByColName = (colName) => {
-    let tempAsStr = ''
-    findingKeys.map(obj => {
-      Object.keys(obj).map(asStr => {
-        Object.keys(obj[asStr]).map(codeKey => {
-          tempAsStr = asStr
-        })
-      })
-    })
-    return tempAsStr
-  }
-
   const test = () => {
     // dispatch(loadAccount())
     // dispatch(onDialogOpen(true, detailQuery, clickedCol))
@@ -461,21 +428,6 @@ const ItemListContainer = ({
   }
 
 
-  const arrFunc = () => {
-    let Arr = []
-    const makeFieldAttrArr = (name, component) => {
-      const obj = {
-          name : name,
-          component : component,
-          label : spacelize(name)
-      }
-      Arr.push(obj)
-    }
-    makeFieldAttrArr('firstName', 'renderTextField')
-    makeFieldAttrArr('secondName', 'renderTextField')
-    return Arr
-  }
-
   return(
     <>
       <Button onClick = {test}>푸하하</Button>
@@ -483,14 +435,12 @@ const ItemListContainer = ({
           아이템에디디
         <ItemAdd 
           title       = {DialogsAttr.itemAdd.title} 
-          fieldsAttr  = {arrFunc()}
 
           motherType    = {currentType}
           motherFrameNo = {frameNo} 
           motherNo      = {currentNo}
 
           reqKey      = {primaryKey}
-          reqCode     = {reqQueryCode}
           attr        = {dialogInfo}
         ></ItemAdd>
       </DialogST>
@@ -513,7 +463,6 @@ const ItemListContainer = ({
           motherNo      = {currentNo}
 
           reqKey      = {primaryKey}
-          reqCode     = {reqQueryCode}
           attr        = {dialogInfo}
         ></Query>
       </DialogST>

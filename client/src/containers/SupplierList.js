@@ -6,14 +6,14 @@ import { setSearchKeyword }             from '../modules/mainSearch'
 import { onAlreadyPickedCheck }         from '../modules/quote'
 import { setAuthReset }                 from '../modules/auth'
 import { onDialogOpen }                 from '../modules/dialogs'
-import { getExchangeRate }              from '../modules/basicInfo'
+
 import {
     actUpdate, 
     actUpdateChange, 
     actClickedTableCol,
     actAdd,
     actDelete
-}                                       from '../modules/itemList'
+}                                       from '../modules/supplier'
 
 import DialogST     from '../components/common/dialogs/DialogST'
 import Table        from '../components/common/Table1'
@@ -22,11 +22,11 @@ import ButtonHeader from '../components/common/ButtonHeader'
 import spacelize                                from '../lib/spacelize'
 import {generateRandom}                         from '../lib/common';
 
+import ItemAdd      from '../components/ItemAdd'
 
 
 
-
-
+import Query        from '../components/Query'
 
 
 
@@ -74,15 +74,15 @@ const SupplierContainer = ({
 
     //테이블 클릭
     const [clickedCol, 
-        setClickedCol]     = useState({});
-    const clicked        = useSelector(state => state.supplier.table.clicked)
+        setClickedCol]      = useState({});
+    const clicked           = useSelector(state => state.supplier.table.clicked)
     // const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
 
     useEffect(() => {
-        if (Object.keys(clickedCol).length > 0) {
-            dispatch(actClickedTableCol(clickedCol))
-        } 
-      },[clickedCol])
+      if (Object.keys(clickedCol).length > 0) {
+          dispatch(actClickedTableCol(clickedCol))
+      } 
+    },[clickedCol])
 
     
       //테이블값 새로 추가
@@ -186,34 +186,53 @@ const SupplierContainer = ({
                 primary : true,
                 fixable : false,
                 defaultHided : true,
-                validate : ['code']
+                validate : ['code'],
+                dataType : dataType,
+                clickType : 'supplierQuery',
+                queryType : 'simpleQuery'
+
             },
             supplierName : {
                 fixable : true,
                 defaultHided : false,
                 nameKey : true,
                 dialog : getAsStrByColName('supplierName'),
-                validate : ['string']
+                validate : ['string'],
+                dataType : dataType,
+                clickType : 'supplierQuery',
+                queryType : 'simpleQuery'
             },
             country : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['string']
+                validate : ['string'],
+                dataType : dataType,
+                clickType : 'supplierQuery',
+                queryType : 'simpleQuery'
             },
             province : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['string']
+                validate : ['string'],
+                dataType : dataType,
+                clickType : 'supplierQuery',
+                queryType : 'simpleQuery'
             },
             ceo : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['string']
+                validate : ['string'],
+                dataType : dataType,
+                clickType : 'supplierQuery',
+                queryType : 'simpleQuery'
             },
             taxCode : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['string']
+                validate : ['string'],
+                dataType : dataType,
+                clickType : 'supplierQuery',
+                queryType : 'simpleQuery'
             },
             createdAt : {
                 fixable : false,
@@ -252,14 +271,14 @@ const SupplierContainer = ({
         return result
     }
     const DialogsAttr = {
-        itemAdd : {
+        detaeilQuery : {
             title : detailQuery,
             dialogType : detailQuery,
             maxWidth : 'md' ,
             open : checkOpened(detailQuery),
             scroll : 'paper'
         },
-        itemQuery : {
+        simpleQuery : {
             title : simpleQuery,
             dialogType : simpleQuery,
             maxWidth : 'xl' ,
@@ -279,6 +298,8 @@ const SupplierContainer = ({
     })
     },[dialogOpened])
 
+  
+    console.log(dialogInfo)
 
   //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
   useEffect(() => {
@@ -289,7 +310,6 @@ const SupplierContainer = ({
     const {header, row, value, dataType, primaryCode, queryType} = clicked ? clicked : ''
     const {clickType} = tableAttr.colAttr[header] ? tableAttr.colAttr[header] : ''
     if (keys.length > 0) {
-      dispatch(actClickedTableCol(clicked))
       let aColAttr = tableAttr.colAttr[clicked.header]
       let {clickType, dataType} = aColAttr
       let queryType = ''
@@ -324,31 +344,6 @@ const SupplierContainer = ({
   },[clicked])
 
 
-
-
-
-
-
-  
-  //Api로부터 findingKeys를 받은 뒤
-  //input을 query창으로 형성할 컬럼의 목록을 arr로
-  const [findingCols, 
-      setFindingCols]                = useState([])
-  useEffect(() => {
-    let tempArr = []
-    findingKeys.map(obj => {
-      Object.keys(obj).map(asStr => {
-        Object.keys(obj[asStr]).map(codeKey => {
-          tempArr.push(obj[asStr][codeKey])
-        })
-      })
-    })
-    setFindingCols(tempArr)
-  },[findingKeys])
-
-
-
-
   const test = () => {
     // dispatch(loadAccount())
     // dispatch(onDialogOpen(true, detailQuery, clickedCol))
@@ -364,34 +359,23 @@ const SupplierContainer = ({
   }
 
 
-  const arrFunc = () => {
-    let Arr = []
-    const makeFieldAttrArr = (name, component) => {
-      const obj = {
-          name : name,
-          component : component,
-          label : spacelize(name)
-      }
-      Arr.push(obj)
-    }
-    makeFieldAttrArr('firstName', 'renderTextField')
-    makeFieldAttrArr('secondName', 'renderTextField')
-    return Arr
-  }
+
 
   return(
       <>
         <Button onClick = {test}>푸하하</Button>
-        {/* <DialogST attr = {DialogsAttr.itemAdd}>
-          <ItemAdd 
-            title       = {DialogsAttr.itemAdd.title} 
-            fieldsAttr  = {arrFunc()}
-            motherType  = {type}
+        <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType} attr = {DialogsAttr.simpleQuery}>
+          <Query 
+            title       = {DialogsAttr.simpleQuery.title} 
+
+            motherType  = {currentType}
+            motherFrameNo = {frameNo} 
             motherNo    = {frameNo}
+
             reqKey      = {primaryKey}
-            reqCode     = {reqQueryCode}
-          ></ItemAdd>
-        </DialogST> */}
+            attr        = {dialogInfo}
+          ></Query>
+        </DialogST>
 
         <Table 
             motherFrameNo = {frameNo}

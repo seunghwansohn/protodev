@@ -943,6 +943,7 @@ const STTable = ({
 
                       const selectedValue = getSelectedValue()
                       let name = selectedValue && selectedValue.value ? selectedValue.value[header] :''
+                      console.log(name)
                       return(
                         <StyledTableCell>
                           <QueryInput
