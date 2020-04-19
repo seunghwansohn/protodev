@@ -19,15 +19,20 @@ import {actSetReqNo}        from '../../modules/query'
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SmallKeyPopUp          from './SmallKeyPopUp';
 
+import SearchIcon from '@material-ui/icons/Search';
+
 import styled   from 'styled-components';
 
 const TextFieldST = styled(TextField)`
   background-color: 
     ${props => {
-      if (props.isSelected == true) {
-        return '#ffffff'
+      console.log(props.validation)
+      if (props.validation == true) {
+        return '#1fffff'
       } else { 
         return '#ffe6ff'}}};
+  border: 4px dotted blue;
+
   label.Mui-focused {
     color: green;
     font-size : 18px;
@@ -64,7 +69,6 @@ const QueryInput = ({
   codeNName,
 
   addedNo,
-  selectedVal,
   label,
   initialValue
 }) => {
@@ -105,7 +109,7 @@ const QueryInput = ({
   const [queryName, setQueryName] = useState(codeNName ? getFirstVal(codeNName) : '')
 
 
-
+  console.log(reqType)
 
 
   //쿼리헤더관련
@@ -169,6 +173,7 @@ const QueryInput = ({
     dispatch(onDialogClose(tempObj))
   }
 
+  const [selectedVal, setSelectedVal] = useState(initialValue ? initialValue : '')
 
   const DialogsAttr = {
     supplier : {
@@ -190,6 +195,9 @@ const QueryInput = ({
                 clickedType : 'supplierQuery',
               }
               setInputVal(selected.value[queryName])
+              setSelectedVal (selected.value[queryName])
+              setIsSelected(true)
+
               dispatch(actSelect(frameNo, reqType, addedNo, selected))
               dispatch(onDialogClose(tempObj))
             },
@@ -221,6 +229,9 @@ const QueryInput = ({
                 clickedType : 'makaerQuery',
               }
               setInputVal(selected.value[queryName])
+              setSelectedVal (selected.value[queryName])
+              setIsSelected(true)
+
               dispatch(actSelect(frameNo, reqType, addedNo, selected))
               dispatch(onDialogClose(tempObj))
             },
@@ -275,11 +286,37 @@ const QueryInput = ({
     }
   }
 
+  const isShowLabel = () => {
+    let ox = true
+    if (reqType == 'fixSelect') {
+      ox = false
+    }
+    return ox
+  }
+
+  const isDiffrentFromSelected = () => {
+    let ox = false
+    console.log(selectedVal)
+    console.log(inputVal)
+    if (selectedVal !== inputVal) {
+      ox = true
+    }
+    console.log(ox)
+    return ox
+  }
+
+  const isValidated = () => {
+    let ox = false
+    if (!isDiffrentFromSelected()) {
+      ox = true
+    }
+    return ox
+  }
 
   return (
     <React.Fragment>
       <TextFieldST 
-        label       = {label}
+        label       = {isShowLabel() ? label : null}
         InputLabelProps={{
           shrink: true,
         }}
@@ -287,9 +324,10 @@ const QueryInput = ({
         onKeyPress  = {(event) => onKeyPressOnInput(event)}
         value       = {inputVal} 
         isSelected  = {isSelected}
+        validation  = {isValidated()}
         style       = {{width : '100%'}}
         InputProps = {{
-          endAdornment : <InputAdornment position="end"><SmallKeyPopUp>Find</SmallKeyPopUp></InputAdornment>
+          endAdornment : <InputAdornment position="end"><SearchIcon fontSize = {'small'}></SearchIcon></InputAdornment>
         }}
       />
       <DialogST attr = {DialogsAttr.supplier} motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType}>

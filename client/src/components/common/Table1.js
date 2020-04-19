@@ -891,7 +891,6 @@ const STTable = ({
                               codeNName     = {getMatchedFinding(dataType)}
 
                               addedNo       = {index}
-                              selectedVal   = {name}
                               label         = {colAttr[header].dataType}
                               initialValue  = {filteredData[index][header]}
                             />
@@ -1016,7 +1015,6 @@ const STTable = ({
                             codeNName     = {getMatchedFinding(dataType)}
 
                             addedNo       = {index}
-                            selectedVal   = {name}
                             label         = {colAttr[header].dataType}
                           />
                         </StyledTableCell>
