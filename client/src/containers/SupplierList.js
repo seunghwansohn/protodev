@@ -85,6 +85,7 @@ const SupplierContainer = ({
     },[clickedCol])
 
     
+    console.log(clicked)
       //테이블값 새로 추가
     const [addedNew, setAddedNew]               = useState([]);
     const onSubmitNewAdded = async () => {
@@ -254,9 +255,9 @@ const SupplierContainer = ({
 
 
     const checkOpened = (type) => {
+        console.log(type)
         let result = ''
         dialogOpened.map(obj => {
-          console.log(obj)
           if (
             obj.frameNo     == frameNo && 
             obj.currentNo   == currentNo && 
@@ -271,7 +272,7 @@ const SupplierContainer = ({
         return result
     }
     const DialogsAttr = {
-        detaeilQuery : {
+        detailQuery : {
             title : detailQuery,
             dialogType : detailQuery,
             maxWidth : 'md' ,
@@ -299,7 +300,6 @@ const SupplierContainer = ({
     },[dialogOpened])
 
   
-    console.log(dialogInfo)
 
   //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
   useEffect(() => {
@@ -322,8 +322,8 @@ const SupplierContainer = ({
         frameNo : frameNo,
         currentNo : currentNo,
         currentType : currentType, 
-        motherNo : null, 
-        motherType : null,
+        motherNo : motherNo, 
+        motherType : motherType,
 
         clickedHeader : header,
         clickedIndex : row,
@@ -334,6 +334,7 @@ const SupplierContainer = ({
         dataType : dataType, 
         initialFilter : '',
       }
+      console.log(tempObj)
       dispatch(onDialogOpen(tempObj))
     }
     dialogOpened.map(obj => {
@@ -370,7 +371,7 @@ const SupplierContainer = ({
 
             motherType  = {currentType}
             motherFrameNo = {frameNo} 
-            motherNo    = {frameNo}
+            motherNo    = {currentNo}
 
             reqKey      = {primaryKey}
             attr        = {dialogInfo}

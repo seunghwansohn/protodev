@@ -387,8 +387,8 @@ const ItemListContainer = ({
         frameNo : frameNo,
         currentNo : currentNo,
         currentType : currentType, 
-        motherNo : null, 
-        motherType : null,
+        motherNo : motherNo, 
+        motherType : motherType,
 
         clickedHeader : header,
         clickedIndex : row,
