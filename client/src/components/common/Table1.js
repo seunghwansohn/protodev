@@ -829,7 +829,36 @@ const STTable = ({
                     let isQueryCol      = isQuery(header)
                     let isColumnHided = isHidedCulumn(header)
 
+                    let queryColType  = 'fixSelect'
+
+
                     let primaryCode = getPrimaryCode(index)
+
+                    const getMatchedFinding = (type) => {
+                      let tempMatched = ''
+                      findingKeys.map(obj => {
+                        Object.keys(obj).map(key => {
+                          if (type == key) {
+                            tempMatched = obj
+                          }
+                        })
+                      })
+                      return tempMatched[type]
+                    }
+
+                    const getSelectedValue = (key) => {
+                      let values = null
+                      querySelected.map(obj => {
+                        if (obj.reqType == queryColType && obj.key == index) {
+                          values = obj.selected
+                        }
+                      })
+                      return values                        
+                    }
+
+                    const selectedValue = getSelectedValue()
+                    let name = selectedValue && selectedValue.value ? selectedValue.value[header] :''
+                    console.log(name)
 
                     if (!isColumnHided) {
                       if (fixable && isfixableCol) {
@@ -848,17 +877,23 @@ const STTable = ({
                           </StyledTableCell>
                         )
                       }else if (fixMode && isQueryCol) { 
+                        let dataType      =  colAttr[header].dataType
+
                         return (
                           <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
-                            <MiniHelperText 
-                              key = {header }
-                              value = {filteredData[index][header]} 
-                              onChange = {(event) => handleChangeInput(event, index, header)} 
-                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
-                              helperText = {updateHelperTexts[primaryCode] ? updateHelperTexts[primaryCode][header] : ''}
-                              InputProps = {{
-                                endAdornment : <InputAdornment position="end"><SmallKeyPopUp>Find</SmallKeyPopUp></InputAdornment>
-                              }}
+                            <QueryInput
+                              motherFrameNo = {frameNo}
+                              motherNo      = {currentNo}
+                              motherType    = {currentType}
+
+                              reqType       = {queryColType}
+                              dataType      = {dataType}
+                              codeNName     = {getMatchedFinding(dataType)}
+
+                              addedNo       = {index}
+                              selectedVal   = {name}
+                              label         = {colAttr[header].dataType}
+                              initialValue  = {filteredData[index][header]}
                             />
                           </StyledTableCell>
                         )

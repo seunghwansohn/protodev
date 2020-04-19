@@ -65,7 +65,8 @@ const QueryInput = ({
 
   addedNo,
   selectedVal,
-  label
+  label,
+  initialValue
 }) => {
   const dispatch = useDispatch()
 
@@ -74,15 +75,12 @@ const QueryInput = ({
   const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
   const [currentNo, setCurrentNo]  = useState(generateRandom())
 
-
   const currentType = 'selectQuery'
 
   console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
   const containerNo = currentType + '_' + frameNo
 
-  
-  console.log(label)
   
   //finding code와 Name 생성
   const getFirstKey = (obj) => {
@@ -191,7 +189,7 @@ const QueryInput = ({
                 currentType : currentType, 
                 clickedType : 'supplierQuery',
               }
-
+              setInputVal(selected.value[queryName])
               dispatch(actSelect(frameNo, reqType, addedNo, selected))
               dispatch(onDialogClose(tempObj))
             },
@@ -222,6 +220,7 @@ const QueryInput = ({
                 currentType : currentType, 
                 clickedType : 'makaerQuery',
               }
+              setInputVal(selected.value[queryName])
               dispatch(actSelect(frameNo, reqType, addedNo, selected))
               dispatch(onDialogClose(tempObj))
             },
@@ -236,19 +235,20 @@ const QueryInput = ({
     }
   }
 
+  console.log(initialValue)
 
   const selected          = useSelector(state => state.query[frameNo])
   const [isSelected, 
     setIsSelected]        = useState(false);
-  const [inputVal, setInputVal]              = useState('');
+  const [inputVal, setInputVal]              = useState(initialValue ? initialValue : '');
   const handleChangeInput = (event) => {
     setInputVal(event.target.value)
   }
-  useEffect(() => {
-    if (selected !== undefined) {
-      setInputVal(selectedVal)
-    }
-  },[selected])
+  // useEffect(() => {
+  //   if (selected !== undefined) {
+  //     setInputVal(selectedVal)
+  //   }
+  // },[selected])
 
   
   const onKeyPressOnInput = (event) => {
