@@ -1,12 +1,8 @@
 import React, { useState, useEffect }           from 'react'
 import { connect, useSelector, useDispatch }    from 'react-redux';
 
-import {checkedItem, IsThereSelected}   from '../modules/itemList'
-import { setSearchKeyword }             from '../modules/mainSearch'
 import { onAlreadyPickedCheck }         from '../modules/quote'
-import { setAuthReset }                 from '../modules/auth'
 import {onDialogOpen, onDialogClose}    from '../modules/dialogs'
-import { getExchangeRate }              from '../modules/basicInfo'
 import {
     actUpdate, 
     actUpdateChange, 
@@ -17,19 +13,12 @@ import {
 
 import DialogST     from '../components/common/dialogs/DialogST'
 import Table        from '../components/common/Table1'
-import ButtonHeader from '../components/common/ButtonHeader'
 
-import spacelize                      from '../lib/spacelize'
 import {generateRandom}               from '../lib/common';
 
 import ItemAdd      from '../components/ItemAdd'
-// import SupplierAdd from '../components/supplierAdd'
 
-import MakerQuery   from '../containers/MakerQuery'
-import ItemQuery    from '../containers/ItemQuery'
 import Query        from '../components/Query'
-
-
 import Button           from '@material-ui/core/Button';
 
 
@@ -70,14 +59,13 @@ const ItemListContainer = ({
   //테이블 업데이트
   const [fixedVals, setFixedVals]             = useState([]);
   const [updated, setUpdated]                 = useState(false);
-  const {update} = useSelector(({ item }) => ({ update : item.table.update }));
 
+  const {update} = useSelector(({ item }) => ({ update : item.table.update }));
 
   //테이블 클릭
   const [clickedCol, 
     setClickedCol]     = useState({});
   const clicked        = useSelector(state => state.item.table.clicked)
-  // const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
 
   useEffect(() => {
     if (Object.keys(clickedCol).length > 0) {
@@ -91,7 +79,6 @@ const ItemListContainer = ({
     await addedNew.map(obj => {
       dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
     })
-    // await dispatch(actAdd(addedNew, primaryKey, includingKeys))
     await getRawData()
     await setAddedNew([])
   }
@@ -135,6 +122,19 @@ const ItemListContainer = ({
     await setUpdated(true)
     await setSelected([])
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
   //table 관련 속성들
@@ -384,19 +384,19 @@ const ItemListContainer = ({
         }
       })
       let tempObj = {
-        frameNo : frameNo,
-        currentNo : currentNo,
+        frameNo     : frameNo,
+        currentNo   : currentNo,
         currentType : currentType, 
-        motherNo : motherNo, 
-        motherType : motherType,
+        motherNo    : motherNo, 
+        motherType  : motherType,
 
-        clickedHeader : header,
-        clickedIndex : row,
-        clickedVal : value,
-        clickedType : queryType,
-        clickedPrimaryCode : primaryCode,
+        clickedHeader       : header,
+        clickedIndex        : row,
+        clickedVal          : value,
+        clickedType         : queryType,
+        clickedPrimaryCode  : primaryCode,
 
-        dataType : dataType, 
+        dataType      : dataType, 
         initialFilter : '',
       }
       dispatch(onDialogOpen(tempObj))

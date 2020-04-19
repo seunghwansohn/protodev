@@ -1,11 +1,8 @@
 import React, { useState, useEffect }           from 'react'
 import { connect, useSelector, useDispatch }    from 'react-redux';
 
-import {checkedItem, IsThereSelected}   from '../modules/itemList'
-import { setSearchKeyword }             from '../modules/mainSearch'
-import { onAlreadyPickedCheck }         from '../modules/quote'
-import { setAuthReset }                 from '../modules/auth'
 import { onDialogOpen }                 from '../modules/dialogs'
+
 
 import {
     actUpdate, 
@@ -17,19 +14,11 @@ import {
 
 import DialogST     from '../components/common/dialogs/DialogST'
 import Table        from '../components/common/Table1'
-import ButtonHeader from '../components/common/ButtonHeader'
 
-import spacelize                                from '../lib/spacelize'
 import {generateRandom}                         from '../lib/common';
-
-import ItemAdd      from '../components/ItemAdd'
-
 
 
 import Query        from '../components/Query'
-
-
-
 import Button           from '@material-ui/core/Button';
 
 
@@ -48,7 +37,7 @@ const SupplierContainer = ({
     const dispatch = useDispatch();
 
     //개체 기본 속성
-    const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
+    const [frameNo, setFrameNo]      = useState(motherFrameNo ? motherFrameNo : generateRandom())
     const [currentNo, setCurrentNo]  = useState(generateRandom())
 
     const currentType = 'supplierList'
@@ -65,18 +54,18 @@ const SupplierContainer = ({
     const [includingKeys, 
         setIncludingKeys]               = useState([]);
     const [findingKeys, 
-        setFindingKeys]               = useState([]);
+        setFindingKeys]                 = useState([]);
 
     //테이블 업데이트
     const [fixedVals, setFixedVals]             = useState([]);
     const [updated, setUpdated]                 = useState(false);
-    const {update} = useSelector(({ item }) => ({ update : item.table.update }));
+
+    const {update} = useSelector(({ supplier }) => ({ update : supplier.table.update }));
 
     //테이블 클릭
     const [clickedCol, 
         setClickedCol]      = useState({});
     const clicked           = useSelector(state => state.supplier.table.clicked)
-    // const reqQueryCode   = tableRawData[clicked.row] ? tableRawData[clicked.row][primaryKey] : ""
 
     useEffect(() => {
       if (Object.keys(clickedCol).length > 0) {
@@ -84,15 +73,12 @@ const SupplierContainer = ({
       } 
     },[clickedCol])
 
-    
-    console.log(clicked)
-      //테이블값 새로 추가
+    //테이블값 새로 추가
     const [addedNew, setAddedNew]               = useState([]);
     const onSubmitNewAdded = async () => {
         await addedNew.map(obj => {
             dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
         })
-        // await dispatch(actAdd(addedNew, primaryKey, includingKeys))
         await getRawData()
         await setAddedNew([])
     }
@@ -104,7 +90,6 @@ const SupplierContainer = ({
     //테이블 필터
     const [filterKeyword, setFilterKeyword]     = useState('');
     const [filteredData, setFilteredData]       = useState(tableRawData);
-    
     
     //테이블 로드
     const getRawData = async () => {
@@ -129,7 +114,6 @@ const SupplierContainer = ({
     }
 
 
-    
     //테이블값 삭제
     const setDelete = async (codes) =>{
         await codes.map(code => {
@@ -319,22 +303,21 @@ const SupplierContainer = ({
         }
       })
       let tempObj = {
-        frameNo : frameNo,
-        currentNo : currentNo,
+        frameNo     : frameNo,
+        currentNo   : currentNo,
         currentType : currentType, 
-        motherNo : motherNo, 
-        motherType : motherType,
+        motherNo    : motherNo, 
+        motherType  : motherType,
 
-        clickedHeader : header,
-        clickedIndex : row,
-        clickedVal : value,
-        clickedType : queryType,
-        clickedPrimaryCode : primaryCode,
+        clickedHeader       : header,
+        clickedIndex        : row,
+        clickedVal          : value,
+        clickedType         : queryType,
+        clickedPrimaryCode  : primaryCode,
 
-        dataType : dataType, 
+        dataType      : dataType, 
         initialFilter : '',
       }
-      console.log(tempObj)
       dispatch(onDialogOpen(tempObj))
     }
     dialogOpened.map(obj => {
