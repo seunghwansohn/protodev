@@ -16,6 +16,9 @@ import { onDialogOpen,
 import { actSelect }        from '../../modules/query'
 import {actSetReqNo}        from '../../modules/query'
 
+import InputAdornment from '@material-ui/core/InputAdornment';
+import SmallKeyPopUp          from './SmallKeyPopUp';
+
 import styled   from 'styled-components';
 
 const TextFieldST = styled(TextField)`
@@ -159,7 +162,12 @@ const QueryInput = ({
   //findOneResult(검색 결과값 하나일 때) 기능
   const handleFindOneResult = (obj) => {
     setInputVal(obj[queryName])
-    let tempObj = {frameNo : frameNo, currentNo : currentNo, type : currentType, open : false}
+    let tempObj = {
+      frameNo : frameNo, 
+      currentNo : motherNo, 
+      currentType : motherType, 
+      // clickedType : dialogType,
+    }
     dispatch(onDialogClose(tempObj))
   }
 
@@ -177,7 +185,12 @@ const QueryInput = ({
             type  : 'select',
             func : function(selected){
               //inser버튼 클릭됐을 때 실행할 명령
-              let tempObj = {frameNo : frameNo, currentNo : motherNo, type : currentType, open : false}
+              let tempObj = {
+                frameNo : frameNo, 
+                currentNo : currentNo, 
+                currentType : currentType, 
+                clickedType : 'supplierQuery',
+              }
 
               dispatch(actSelect(frameNo, reqType, addedNo, selected))
               dispatch(onDialogClose(tempObj))
@@ -203,8 +216,12 @@ const QueryInput = ({
             type  : 'select',
             func : function(selected){
               //inser버튼 클릭됐을 때 실행할 명령
-              let tempObj = {frameNo : frameNo, currentNo : motherNo, type : currentType, open : false}
-
+              let tempObj = {
+                frameNo : frameNo, 
+                currentNo : currentNo, 
+                currentType : currentType, 
+                clickedType : 'makaerQuery',
+              }
               dispatch(actSelect(frameNo, reqType, addedNo, selected))
               dispatch(onDialogClose(tempObj))
             },
@@ -271,6 +288,9 @@ const QueryInput = ({
         value       = {inputVal} 
         isSelected  = {isSelected}
         style       = {{width : '100%'}}
+        InputProps = {{
+          endAdornment : <InputAdornment position="end"><SmallKeyPopUp>Find</SmallKeyPopUp></InputAdornment>
+        }}
       />
       <DialogST attr = {DialogsAttr.supplier} motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType}>
         <SupplierList

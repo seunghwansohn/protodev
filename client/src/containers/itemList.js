@@ -129,7 +129,7 @@ const ItemListContainer = ({
 
 
 
-
+console.log(findingKeys)
 
 
 
@@ -236,6 +236,7 @@ const ItemListContainer = ({
       makerName : {
           fixable : true,
           defaultHided : false,
+          query : true,
           validate : ['string'],
           dataType : 'maker',
           clickType : 'makerQuery',

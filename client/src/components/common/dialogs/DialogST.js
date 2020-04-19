@@ -66,6 +66,7 @@ export default function MaxWidthDialog({
       currentType : motherType, 
       clickedType : dialogType,
     }
+    console.log(tempObj)
     dispatch(onDialogClose(tempObj))
     if (onClose !== undefined) {
       onClose()

@@ -31,14 +31,17 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 
 import STInput          from '../common/Input';
+
 import InputAdornment from '@material-ui/core/InputAdornment';
+import SmallKeyPopUp          from './SmallKeyPopUp';
+
 import {generateRandom}     from '../../lib/common';
 
 
 import { actSelect, actSetFrame, actAddNewBlankQuery}               from '../../modules/query'
 
 
-import SmallKeyPopUp          from './SmallKeyPopUp';
+
 
 
 import QueryInput       from './QueryInput';
@@ -100,7 +103,6 @@ const StyledCheckBox = styled(Checkbox)`
 `
 const StyledTableCell = styled(TableCell)`
   background-color: ${props => props.fixMode ? props.fixable ? colors.fixable : colors.unFixable : '#ffffff'};
-  width : '10%';
   border-style : ${props => props.updated ? 'ridge':'none'};
   &:hover {
     background-color : #eef534;
@@ -461,10 +463,11 @@ const STTable = ({
     const primaryCode = getPrimaryCode(location.index)
     return updateValidationError[primaryCode][header] == true ? true : false
   }
+  //인풋값 fixed한 후 submit전에 엔터쳐서 임시로 확정
   const confirmInputFixedVal = () => {
+    console.log('컨펌인풋픽스드')
     const temp = {}
     const isNowError = checkNoValidationErrorAtAll()
-
     if (isNowError == true) {
     }else {
       setFixableCells(temp)  
@@ -473,6 +476,7 @@ const STTable = ({
           draft.push(tempFixedVal)
         })
       )
+      setTempFixedVal({})
     }
   }
   const onKeyPressOnInput = (e, index, header) => {
@@ -684,7 +688,12 @@ const STTable = ({
     console.log(addedNew)
   }
 
+  useEffect(() => {
+    console.log(selected)
+  },[selected])
 
+
+  console.log(selected)
   return (
     <React.Fragment>
       <Dialog
@@ -838,6 +847,21 @@ const STTable = ({
                             />
                           </StyledTableCell>
                         )
+                      }else if (fixMode && isQueryCol) { 
+                        return (
+                          <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
+                            <MiniHelperText 
+                              key = {header }
+                              value = {filteredData[index][header]} 
+                              onChange = {(event) => handleChangeInput(event, index, header)} 
+                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
+                              helperText = {updateHelperTexts[primaryCode] ? updateHelperTexts[primaryCode][header] : ''}
+                              InputProps = {{
+                                endAdornment : <InputAdornment position="end"><SmallKeyPopUp>Find</SmallKeyPopUp></InputAdornment>
+                              }}
+                            />
+                          </StyledTableCell>
+                        )
                       }else if (isInputCol) { 
                         return (
                           <StyledTableCell fixable = {isfixableCol}>
@@ -958,6 +982,7 @@ const STTable = ({
 
                             addedNo       = {index}
                             selectedVal   = {name}
+                            label         = {colAttr[header].dataType}
                           />
                         </StyledTableCell>
                       )

@@ -117,6 +117,7 @@ const SupplierContainer = ({
     //테이블값 삭제
     const setDelete = async (codes) =>{
         await codes.map(code => {
+          console.log(dataType, code[primaryKey])
             dispatch(actDelete(dataType, code[primaryKey]))
         })
         await setUpdated(true)
