@@ -650,6 +650,7 @@ const STTable = ({
     setAnswer : setAddCopiedNew
   }
 
+  console.log(fixedVals)
 
   console.log(addedNew)
 
@@ -889,10 +890,14 @@ const STTable = ({
                               reqType       = {queryColType}
                               dataType      = {dataType}
                               codeNName     = {getMatchedFinding(dataType)}
+                              primaryKey    = {primaryKey}
 
                               addedNo       = {index}
                               label         = {colAttr[header].dataType}
                               initialValue  = {filteredData[index][header]}
+                              filteredData  = {filteredData}
+                              fixedVals     = {fixedVals}
+                              setFixedVals  = {setFixedVals}
                             />
                           </StyledTableCell>
                         )

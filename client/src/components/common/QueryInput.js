@@ -21,6 +21,8 @@ import SmallKeyPopUp          from './SmallKeyPopUp';
 
 import SearchIcon from '@material-ui/icons/Search';
 
+import produce  from 'immer'
+
 import styled   from 'styled-components';
 
 const TextFieldST = styled(TextField)`
@@ -67,24 +69,29 @@ const QueryInput = ({
   reqType,
   dataType,
   codeNName,
+  primaryKey,
 
   addedNo,
   label,
-  initialValue
+  initialValue,
+  filteredData,
+  fixedVals,
+  setFixedVals
 }) => {
   const dispatch = useDispatch()
 
-  
+  console.log(primaryKey)
+  console.log(fixedVals)
   //개체 기본 속성
   const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
   const [currentNo, setCurrentNo]  = useState(generateRandom())
 
   const currentType = 'selectQuery'
+  const containerNo = currentType + '_' + frameNo
 
   console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
-  const containerNo = currentType + '_' + frameNo
-
+  console.log(filteredData)
   
   //finding code와 Name 생성
   const getFirstKey = (obj) => {
@@ -109,30 +116,38 @@ const QueryInput = ({
   const [queryName, setQueryName] = useState(codeNName ? getFirstVal(codeNName) : '')
 
 
-  console.log(reqType)
 
-
-  //쿼리헤더관련
+  //검색 및 foundOneResult 관련
   const [foundResult, 
     setFoundResult]               = useState({});
   const [queryVals, setQueryVals] = useState({})
-  const querySelected     = useSelector(state => state.quote.selected)
-
+  const querySelected             = useSelector(state => state.quote.selected)
   const {filter} = queryVals ? queryVals : ''
+  //findOneResult(검색 결과값 하나일 때) 기능
+  const handleFindOneResult = (obj) => {
+    setInputVal(obj[queryName])
+    let tempObj = {
+      frameNo : frameNo, 
+      currentNo : motherNo, 
+      currentType : motherType, 
+      // clickedType : dialogType,
+    }
+    dispatch(onDialogClose(tempObj))
+  }
+
 
 
   //다이얼로그 관련
   const dialogOpened    = useSelector(state => state.dialogs.opened)
   const checkOpened = (type) => {
-    console.log(type)
     let result = ''
     dialogOpened.map(obj => {
-      console.log(obj)
-      console.log('프레임넘버는 ', frameNo)
-      console.log('커런트넘버는 ', currentNo)
-      console.log('커런트타입은 ', currentType)
-      console.log('마더넘버는 ', motherNo)
-      console.log('마더타입은 ', motherType)
+      // console.log(obj)
+      // console.log('프레임넘버는 ', frameNo)
+      // console.log('커런트넘버는 ', currentNo)
+      // console.log('커런트타입은 ', currentType)
+      // console.log('마더넘버는 ', motherNo)
+      // console.log('마더타입은 ', motherType)
 
       if (
         obj.frameNo     == frameNo && 
@@ -149,7 +164,7 @@ const QueryInput = ({
     return result
   }
 
-  const getQeuryVal = () => {
+  const getQueryVal = () => {
     dialogOpened.map(obj => {
       if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
         setQueryVals(obj)
@@ -157,23 +172,44 @@ const QueryInput = ({
     })
   }
   useEffect(()=> {
-    getQeuryVal()
+    getQueryVal()
   },[dialogOpened])
 
 
-  //findOneResult(검색 결과값 하나일 때) 기능
-  const handleFindOneResult = (obj) => {
-    setInputVal(obj[queryName])
+  const [selectedVal, setSelectedVal] = useState(initialValue ? initialValue : '')
+
+  const setInputSelect = (selected, clickedType) => {
+    setInputVal(selected.value[queryName])
+    setSelectedVal (selected.value[queryName])
+    setIsSelected(true)
+    dispatch(actSelect(frameNo, reqType, addedNo, selected))
+
+    let temp1 = {}
+    temp1.ref = {}
+    temp1.vals = {}
+    temp1.location = {index : addedNo, header : queryName}
+    temp1.ref[primaryKey] = filteredData[addedNo][primaryKey]
+    temp1.vals[queryCode] = selected.value[queryName]
+    if (reqType = 'fixSelect') {
+      setFixedVals(
+        produce(fixedVals, draft => {
+          draft.push(temp1)
+        })
+      )
+    } else {
+
+    }
+
     let tempObj = {
       frameNo : frameNo, 
-      currentNo : motherNo, 
-      currentType : motherType, 
-      // clickedType : dialogType,
+      currentNo : currentNo, 
+      currentType : currentType, 
+      clickedType : clickedType,
     }
     dispatch(onDialogClose(tempObj))
   }
 
-  const [selectedVal, setSelectedVal] = useState(initialValue ? initialValue : '')
+
 
   const DialogsAttr = {
     supplier : {
@@ -188,18 +224,8 @@ const QueryInput = ({
             type  : 'select',
             func : function(selected){
               //inser버튼 클릭됐을 때 실행할 명령
-              let tempObj = {
-                frameNo : frameNo, 
-                currentNo : currentNo, 
-                currentType : currentType, 
-                clickedType : 'supplierQuery',
-              }
-              setInputVal(selected.value[queryName])
-              setSelectedVal (selected.value[queryName])
-              setIsSelected(true)
-
-              dispatch(actSelect(frameNo, reqType, addedNo, selected))
-              dispatch(onDialogClose(tempObj))
+              let clickedType = 'supplierQuery'
+              setInputSelect(selected, clickedType)
             },
             mother : containerNo
           },
@@ -222,18 +248,8 @@ const QueryInput = ({
             type  : 'select',
             func : function(selected){
               //inser버튼 클릭됐을 때 실행할 명령
-              let tempObj = {
-                frameNo : frameNo, 
-                currentNo : currentNo, 
-                currentType : currentType, 
-                clickedType : 'makaerQuery',
-              }
-              setInputVal(selected.value[queryName])
-              setSelectedVal (selected.value[queryName])
-              setIsSelected(true)
-
-              dispatch(actSelect(frameNo, reqType, addedNo, selected))
-              dispatch(onDialogClose(tempObj))
+              let clickedType = 'makerQuery'
+              setInputSelect(selected, clickedType)
             },
             mother : containerNo
           },
@@ -246,7 +262,6 @@ const QueryInput = ({
     }
   }
 
-  console.log(initialValue)
 
   const selected          = useSelector(state => state.query[frameNo])
   const [isSelected, 
@@ -255,11 +270,6 @@ const QueryInput = ({
   const handleChangeInput = (event) => {
     setInputVal(event.target.value)
   }
-  // useEffect(() => {
-  //   if (selected !== undefined) {
-  //     setInputVal(selectedVal)
-  //   }
-  // },[selected])
 
   
   const onKeyPressOnInput = (event) => {
