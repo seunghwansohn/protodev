@@ -41,7 +41,9 @@ import {generateRandom}     from '../../lib/common';
 import { actSelect, actSetFrame, actAddNewBlankQuery}               from '../../modules/query'
 
 
-
+import axios                from '../../lib/api/axios'
+import {getIncludingKeys,
+    withoutIncludingKeys }  from '../../lib/common'
 
 
 import QueryInput       from './QueryInput';
@@ -56,6 +58,14 @@ import {selectMultipleStates,
   unSelectMultipleStates}               from '../../lib/tableFuncs'
 import {checkDecimal, percent, hasWhiteSpace, maxValue, isPlus}        from '../../lib/validation';
 
+
+import {
+  actUpdate, 
+  actUpdateChange, 
+  actClickedTableCol,
+  actAdd,
+  actDelete
+}                                       from '../../modules/itemList'
 
 import styled   from "styled-components";
 import produce  from 'immer'
@@ -129,6 +139,7 @@ const STTable = ({
   motherFrameNo,  
   motherNo,
 
+  dataType,
   states, 
   setStates, 
 
@@ -137,30 +148,18 @@ const STTable = ({
 }) => {
   
   const {
-    rawData,
-    updated,
     clickedCol,
-    addedNew, 
     selected, 
-    filterKeyword, 
-    filteredData
   }                   = states
   const {
-    setRawData, 
-    setUpdated, 
     setClickedCol, 
-    setAddedNew, 
     setSelected, 
-    setFilterKeyword, 
-    setFilteredData
   }                   = setStates
 
   const {
     load, 
-    onSubmitUpdatedVals, 
     onDialogOpen, 
     onDelete, 
-    onSubmitNewAdded
   }                   = funcs
 
   const {
@@ -173,7 +172,6 @@ const STTable = ({
     initialFilter,
     directQuery,
     reqNo,
-    findingKeys
   }                   = attr
 
   const dispatch = useDispatch()
@@ -189,6 +187,54 @@ const STTable = ({
   console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
+  //api에서 tableRawData 및 key 설정
+  const [rawData, 
+    setRawData]                       = useState([])
+  const [includingKeys, 
+      setIncludingKeys]               = useState([]);
+  const [findingKeys, 
+      setFindingKeys]                 = useState([]);
+
+  const getRawData = async () => {
+    await axios.get('/api/' + dataType + '/load').then(res => {
+      setPrimaryKey(res.data.primaryKey)
+      setIncludingKeys(res.data.includingKeys)
+      setRawData(withoutIncludingKeys(res.data.vals))
+      setFindingKeys(res.data.findingKeys)
+    })
+  }
+  useEffect(() => {
+    getRawData()
+  },[])
+
+  //테이블 필터
+  const [filterKeyword, setFilterKeyword]     = useState('');
+  const [filteredData, setFilteredData]       = useState(rawData);
+
+  //테이블 새로 추가 state
+  const [addedNew, setAddedNew]               = useState([]);
+  const onSubmitNewAdded = async () => {
+    await addedNew.map(obj => {
+      dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
+    })
+    // await getRawData()
+    await setAddedNew([])
+  }
+
+
+  //테이블 업데이트
+  const [fixedVals, setFixedVals]             = useState([]);
+  const [updated, setUpdated]                 = useState(false);
+
+  const {update} = useSelector(({ item }) => ({ update : item.table.update }));
+  
+  if (update) {
+    // getRawData()
+    dispatch(actUpdateChange(false))
+    setUpdated(true)
+  }
+
+
   //초기 헤더 설정 기능
   let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
   const [tableHeaderVals, setTableHeaderVals] = useState([]);
@@ -201,6 +247,25 @@ const STTable = ({
     setTableHeaderVals(headers)
   },[rawData])
 
+  //테이블값 수정
+  const onSubmitUpdatedVals = async (fixedVals) => {
+  
+    await fixedVals.map(arr => {
+        dispatch(actUpdate(arr))
+    })
+    await setFixedVals([])
+  }
+    
+  //테이블값 삭제
+  const setDelete = async (codes) =>{
+    await codes.map(code => {
+        dispatch(actDelete(dataType, code[primaryKey]))
+    })
+    await setUpdated(true)
+    await setSelected([])
+  }
+
+    
 
   //각 컬럼 성격 설정 기능
   const [hided, setHided]                     = useState([]);
@@ -260,6 +325,8 @@ const STTable = ({
   const getPrimaryCode = (index) => {
     return filteredData[index][primaryKey]
   }
+
+
 
 
   //체크박스 체크 기능
@@ -449,7 +516,6 @@ const STTable = ({
 
 
   //값 update시 인풋 처리 기능
-  const [fixedVals, setFixedVals]           = useState([]);
   const [tempFixedVal, setTempFixedVal]     = useState({});
   const [updateHelperTexts, 
     setUpdateHelperTexts]                   = useState({})
@@ -658,6 +724,7 @@ const STTable = ({
   useEffect(() => {
     setFilteredData(rawData)
   },[rawData])
+
   useEffect(() => {
     if (filteredData.length == 1 && initialFilter == filterKeyword) { 
       console.log('검색결과 하나임')
@@ -1056,7 +1123,7 @@ const STTable = ({
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"
-        count={filteredData.length}
+        count={filteredData ? filteredData.length : ''}
         rowsPerPage={rowsPerPage}
         page={page}
         onChangePage={handleChangePage}

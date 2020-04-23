@@ -37,30 +37,26 @@ const ItemListContainer = ({
   const dispatch = useDispatch();
 
   //개체 기본 속성
-  const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
-  const [currentNo, setCurrentNo]  = useState(generateRandom())
+  const [frameNo, setFrameNo]       = useState(motherFrameNo ? motherFrameNo : generateRandom())
+  const [currentNo, setCurrentNo]   = useState(generateRandom())
 
   const currentType = 'itemList'
-  const containerNo = currentType + '_' + frameNo
+  // const containerNo = currentType + '_' + frameNo
   const dataType = 'item'
 
   console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
   //테이블 관련
-  const [tableRawData, 
-    setTableRawData]                = useState([])
+  // const [tableRawData, 
+  //   setTableRawData]                  = useState([])
   const [primaryKey, setPrimaryKey]   = useState('');
   const [includingKeys, 
       setIncludingKeys]               = useState([]);
   const [findingKeys, 
-      setFindingKeys]               = useState([]);
+      setFindingKeys]                 = useState([]);
   
-  //테이블 업데이트
-  const [fixedVals, setFixedVals]             = useState([]);
-  const [updated, setUpdated]                 = useState(false);
 
-  const {update} = useSelector(({ item }) => ({ update : item.table.update }));
 
   //테이블 클릭
   const [clickedCol, 
@@ -73,95 +69,25 @@ const ItemListContainer = ({
     } 
   },[clickedCol])
 
-  //테이블 새로 추가 state
-  const [addedNew, setAddedNew]               = useState([]);
-  const onSubmitNewAdded = async () => {
-    await addedNew.map(obj => {
-      dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
-    })
-    await getRawData()
-    await setAddedNew([])
-  }
+
 
 
   //테이블 셀렉트
   const [selected, setSelected]         = useState([]);
 
-  //테이블 필터
-  const [filterKeyword, setFilterKeyword]     = useState('');
-  const [filteredData, setFilteredData]       = useState(tableRawData);
-
-  //테이블 로드
-  const getRawData = async () => {
-    await axios.get('/api/' + dataType + '/load').then(res => {
-      setPrimaryKey(res.data.primaryKey)
-      setIncludingKeys(res.data.includingKeys)
-      setTableRawData(withoutIncludingKeys(res.data.vals))
-      setFindingKeys(res.data.findingKeys)
-    })
-  }
-  useEffect(() => {
-    getRawData()
-  },[])
-
-  //테이블값 수정
-  const onSubmitUpdatedVals = async (fixedVals) => {
-    
-    await fixedVals.map(arr => {
-        dispatch(actUpdate(arr))
-    })
-    await setFixedVals([])
-  }
-  
-
-  //테이블값 삭제
-  const setDelete = async (codes) =>{
-    await codes.map(code => {
-        dispatch(actDelete(dataType, code[primaryKey]))
-    })
-    await setUpdated(true)
-    await setSelected([])
-  }
-
-
-
-
-
-
-
-console.log(findingKeys)
-
-
-
-
-
-
 
   //table 관련 속성들
   const tableStates = {
-    rawData         : tableRawData,
-    updated         : updated,
     clickedCol      : clickedCol,
-    addedNew        : addedNew,
     selected        : selected,
-    filterKeyword   : filterKeyword,
-    filteredData    : filteredData
   }
   const setTableStates = {
-    setTableRawData     : setTableRawData,
-    setUpdated          : setUpdated,
     setClickedCol       : setClickedCol,
-    setAddedNew         : setAddedNew,
     setSelected         : setSelected,
-    setFilterKeyword    : setFilterKeyword,
-    setFilteredData     : setFilteredData
   }
   const funcs = {
-    load : getRawData,
-    onSubmitUpdatedVals : onSubmitUpdatedVals,
+    // load : getRawData,
     onDialogOpen : onDialogOpen,
-    onDelete : setDelete,
-    onSubmitNewAdded : onSubmitNewAdded
   }
   const tableAttr = {
     flagAble : true,
@@ -308,7 +234,7 @@ console.log(findingKeys)
         func : function(selected){
             dispatch(onAlreadyPickedCheck(selected.value))
         },
-        mother : containerNo
+        // mother : containerNo
       },
     ],
     findingKeys
@@ -365,7 +291,6 @@ console.log(findingKeys)
     })
   },[dialogOpened])
 
-  console.log(dialogInfo)
 
   //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
   useEffect(() => {
@@ -422,11 +347,7 @@ console.log(findingKeys)
   }
 
 
-  if (update) {
-    getRawData()
-    dispatch(actUpdateChange(false))
-    setUpdated(true)
-  }
+
 
 
   return(
@@ -451,6 +372,7 @@ console.log(findingKeys)
         motherFrameNo = {frameNo} 
         motherNo      = {currentNo}
 
+        dataType      = {dataType}
         states        = {tableStates}
         setStates     = {setTableStates}
         attr          = {tableAttr}
