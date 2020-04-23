@@ -23,49 +23,46 @@ import List             from '@material-ui/core/List';
 import ListItemText     from '@material-ui/core/ListItemText';
 import ListSubheader    from '@material-ui/core/ListSubheader';
 
-import PopQuestionDlg      from '../common/dialogs/PopQuestionDlg';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
+import PopQuestionDlg     from '../common/dialogs/PopQuestionDlg';
+import DialogActions      from '@material-ui/core/DialogActions';
+import DialogContent      from '@material-ui/core/DialogContent';
+import DialogContentText  from '@material-ui/core/DialogContentText';
+import DialogTitle        from '@material-ui/core/DialogTitle';
+import Dialog             from '@material-ui/core/Dialog';
 
-import STInput          from '../common/Input';
+import STInput            from '../common/Input';
+import InputAdornment     from '@material-ui/core/InputAdornment';
+import QueryInput         from './QueryInput';
+import TextField          from '@material-ui/core/TextField';
 
-import InputAdornment from '@material-ui/core/InputAdornment';
-import SmallKeyPopUp          from './SmallKeyPopUp';
+import SmallKeyPopUp      from './SmallKeyPopUp';
 
 import {generateRandom}     from '../../lib/common';
-
-
-import { actSelect, actSetFrame, actAddNewBlankQuery}               from '../../modules/query'
-
-
 import axios                from '../../lib/api/axios'
 import {getIncludingKeys,
     withoutIncludingKeys }  from '../../lib/common'
-
-
-import QueryInput       from './QueryInput';
-
-
-import TextField from '@material-ui/core/TextField';
-
 
 import spacelize                        from '../../lib/spacelize'
 import filterArrayBySearchKeyword       from '../../lib/filterArrayBySearchKeyword'
 import {selectMultipleStates, 
   unSelectMultipleStates}               from '../../lib/tableFuncs'
-import {checkDecimal, percent, hasWhiteSpace, maxValue, isPlus}        from '../../lib/validation';
+import {checkDecimal, 
+  percent, 
+  hasWhiteSpace, 
+  maxValue, isPlus}                     from '../../lib/validation';
+    
 
-
+import { actSelect, 
+  actSetFrame, 
+  actAddNewBlankQuery}    from '../../modules/query'
 import {
   actUpdate, 
   actUpdateChange, 
   actClickedTableCol,
   actAdd,
   actDelete
-}                                       from '../../modules/itemList'
+}                         from '../../modules/itemList'
+
 
 import styled   from "styled-components";
 import produce  from 'immer'
@@ -88,7 +85,6 @@ const useStyles = makeStyles({
   tableHeader: {
     backgroundColor: '#5F9EA0',
     fontSize :18
-
   }
 });
 
@@ -134,7 +130,6 @@ const MiniHelperText = styled(TextField)`
 `
 
 const STTable = ({
-
   motherType,
   motherFrameNo,  
   motherNo,
@@ -148,18 +143,7 @@ const STTable = ({
 }) => {
   
   const {
-    clickedCol,
-    selected, 
-  }                   = states
-  const {
-    setClickedCol, 
-    setSelected, 
-  }                   = setStates
-
-  const {
-    load, 
     onDialogOpen, 
-    onDelete, 
   }                   = funcs
 
   const {
@@ -194,7 +178,6 @@ const STTable = ({
       setIncludingKeys]               = useState([]);
   const [findingKeys, 
       setFindingKeys]                 = useState([]);
-
   const getRawData = async () => {
     await axios.get('/api/' + dataType + '/load').then(res => {
       setPrimaryKey(res.data.primaryKey)
@@ -207,9 +190,39 @@ const STTable = ({
     getRawData()
   },[])
 
+
   //테이블 필터
   const [filterKeyword, setFilterKeyword]     = useState('');
   const [filteredData, setFilteredData]       = useState(rawData);
+  //검색어 필터 기능
+  useEffect(() => {
+    setFilteredData(rawData)
+  },[rawData])
+  useEffect(() => {
+    if (filteredData.length == 1 && initialFilter == filterKeyword) { 
+      console.log('검색결과 하나임')
+      if (directQuery && setFindOneResult && typeof setFindOneResult == "function") {
+        setFindOneResult(filteredData[0])
+        console.log('검색결과하나입력')
+        dispatch(onDialogOpen(false, 'client_' + frameNo))
+      }
+    }
+  },[filteredData])
+  const onInputFilterKeyword = (e) => {
+    e.preventDefault(); 
+    setFilterKeyword(e.target.value)
+  }
+  useEffect(() => {
+    setFilterKeyword(initialFilter)
+  },[initialFilter])
+  useEffect(() => {
+    if (filterKeyword !== null && filterKeyword !== undefined && filterKeyword !== ''){
+      setFilteredData(filterArrayBySearchKeyword(filterKeyword, rawData, primaryKey))
+    } else {
+      setFilteredData(rawData)
+    }
+  },[filterKeyword, rawData])
+
 
   //테이블 새로 추가 state
   const [addedNew, setAddedNew]               = useState([]);
@@ -220,7 +233,6 @@ const STTable = ({
     // await getRawData()
     await setAddedNew([])
   }
-
 
   //테이블 업데이트
   const [fixedVals, setFixedVals]             = useState([]);
@@ -247,6 +259,7 @@ const STTable = ({
     setTableHeaderVals(headers)
   },[rawData])
 
+
   //테이블값 수정
   const onSubmitUpdatedVals = async (fixedVals) => {
   
@@ -264,8 +277,6 @@ const STTable = ({
     await setUpdated(true)
     await setSelected([])
   }
-
-    
 
   //각 컬럼 성격 설정 기능
   const [hided, setHided]                     = useState([]);
@@ -326,15 +337,6 @@ const STTable = ({
     return filteredData[index][primaryKey]
   }
 
-
-
-
-  //체크박스 체크 기능
-  const isChecked       = name => selected.indexOf(name) !== -1;
-  const [allSelected, 
-    setAllselected]     = useState(false);
-
-
   //업데이트 기능
   const [showUpdatedSign, setShowUpdatedSign] = useState(false);
   useEffect(() => {
@@ -384,7 +386,58 @@ const STTable = ({
 
 
 
-  //컬럼 클릭 기능
+
+  //테이블 클릭
+  const [clickedCol, 
+    setClickedCol]     = useState({});
+
+  useEffect(() => {
+    if (Object.keys(clickedCol).length > 0) {
+        dispatch(actClickedTableCol(clickedCol))
+    } 
+  },[clickedCol])
+
+  //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
+  useEffect(() => {
+    let keys = Object.keys(clickedCol)
+    const {colAttr} = attr
+    const colAttrKeys = Object.keys(colAttr)
+
+    const {header, row, value, dataType, primaryCode, queryType} = clickedCol
+    const {clickType} = attr.colAttr[header] ? attr.colAttr[header] : ''
+    if (keys.length > 0) {
+      let aColAttr = attr.colAttr[clickedCol.header]
+      let {clickType, dataType} = aColAttr
+      let queryType = ''
+      colAttrKeys.map(key => {
+        if (key == header) {
+          queryType = colAttr[key].queryType
+        }
+      })
+      let tempObj = {
+        frameNo     : frameNo,
+        currentNo   : currentNo,
+        currentType : currentType, 
+        motherNo    : motherNo, 
+        motherType  : motherType,
+
+        clickedHeader       : header,
+        clickedIndex        : row,
+        clickedVal          : value,
+        clickedType         : queryType,
+        clickedPrimaryCode  : primaryCode,
+
+        dataType      : dataType, 
+        initialFilter : '',
+      }
+      // dispatch(onDialogOpen(tempObj))
+    }
+    // dialogOpened.map(obj => {
+    //   if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
+    //     setDialogInfo(obj)
+    //   }
+    // })
+  },[clickedCol])
   //  --값 update 후 다른 컬럼 클릭했을 때
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false)
   const handleCloseConfirmDialog = () => {
@@ -413,6 +466,8 @@ const STTable = ({
     }
   }
 
+  console.log(clickedCol)
+    
 
   //Validation기능
   const checkValid = (index, header, value) => {
@@ -439,7 +494,6 @@ const STTable = ({
     }
     return tempArr
   }
-
   //    -- QueryInput error props 반환용 함수
   const getValid = (header) => {
     let valid = ''
@@ -479,9 +533,6 @@ const STTable = ({
     )
     // dispatch(actAddNewBlankQuery(frameNo))
   }
-
-
-
   //newAdded 값 변경 기능
   const handleChangeNewAddedInput = (event, index, header) => {
     const temp = event.target.value
@@ -511,8 +562,6 @@ const STTable = ({
       )
     }
   }
-
-
 
 
   //값 update시 인풋 처리 기능
@@ -685,8 +734,6 @@ const STTable = ({
     setPage(0);
   };
 
-
-
   //CoppiedNew 기능
   const [addCopiedNewDialogOpen, 
     setAddCopiedNewDialogOpen]          = useState(false)
@@ -716,41 +763,11 @@ const STTable = ({
     setAnswer : setAddCopiedNew
   }
 
-  console.log(fixedVals)
 
-  console.log(addedNew)
-
-  //검색어 필터 기능
-  useEffect(() => {
-    setFilteredData(rawData)
-  },[rawData])
-
-  useEffect(() => {
-    if (filteredData.length == 1 && initialFilter == filterKeyword) { 
-      console.log('검색결과 하나임')
-      if (directQuery && setFindOneResult && typeof setFindOneResult == "function") {
-        setFindOneResult(filteredData[0])
-        console.log('검색결과하나입력')
+  //테이블 셀렉트
+  const [selected, setSelected]         = useState([]);
 
 
-        dispatch(onDialogOpen(false, 'client_' + frameNo))
-      }
-    }
-  },[filteredData])
-  const onInputFilterKeyword = (e) => {
-    e.preventDefault(); 
-    setFilterKeyword(e.target.value)
-  }
-  useEffect(() => {
-    setFilterKeyword(initialFilter)
-  },[initialFilter])
-  useEffect(() => {
-    if (filterKeyword !== null && filterKeyword !== undefined && filterKeyword !== ''){
-      setFilteredData(filterArrayBySearchKeyword(filterKeyword, rawData, primaryKey))
-    } else {
-      setFilteredData(rawData)
-    }
-  },[filterKeyword, rawData])
 
   const check = () => {
     console.log(addedNew)
@@ -761,7 +778,6 @@ const STTable = ({
   },[selected])
 
 
-  console.log(selected)
   return (
     <React.Fragment>
       <Dialog
@@ -869,7 +885,6 @@ const STTable = ({
             {filteredData ? stableSort(filteredData, getComparator(order, orderBy))
              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
              .map((row, index) => {
-              const isItemSelected = isChecked(row)
               const labelId = `enhanced-table-checkbox-${index}`;
               return(
                 <TableRow 
@@ -878,7 +893,6 @@ const STTable = ({
                   {attr.flagAble ? 
                     <TableCell padding="checkbox">
                       <StyledCheckBox
-                        checked={isItemSelected}
                         inputProps={{ 'aria-labelledby': labelId }}
                         onClick={event => handleClickFlag(row, null, selected, setSelected)}
                       />
@@ -1133,7 +1147,7 @@ const STTable = ({
       <Button onClick = {onAddNewBlank}>add New</Button>
       <Button onClick = {() => onSubmitNewAdded(addedNew)}>     Submit New </Button>
       <Button onClick = {() => onSubmitUpdatedVals(fixedVals)}> Submit     </Button>
-      {selected && selected.length !== 0 ? <Button onClick = {() => {onDelete(selected)}}>Delete</Button> :''}
+      {selected && selected.length !== 0 ? <Button onClick = {() => {setDelete(selected)}}>Delete</Button> :''}
       {selected && selected.length !== 0 ? <Button onClick = {() => {onClickCopiedNew(selected)}}>Copied New</Button> :''}
 
     </React.Fragment>

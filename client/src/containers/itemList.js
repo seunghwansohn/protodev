@@ -21,13 +21,6 @@ import ItemAdd      from '../components/ItemAdd'
 import Query        from '../components/Query'
 import Button           from '@material-ui/core/Button';
 
-
-import axios                from '../lib/api/axios'
-import {getIncludingKeys,
-    withoutIncludingKeys }  from '../lib/common'
-
-
-
 const ItemListContainer = ({
   motherFrameNo, 
   motherType, 
@@ -42,14 +35,11 @@ const ItemListContainer = ({
 
   const currentType = 'itemList'
   // const containerNo = currentType + '_' + frameNo
-  const dataType = 'item'
+  const dataType    = 'item'
 
   console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
-  //테이블 관련
-  // const [tableRawData, 
-  //   setTableRawData]                  = useState([])
   const [primaryKey, setPrimaryKey]   = useState('');
   const [includingKeys, 
       setIncludingKeys]               = useState([]);
@@ -57,36 +47,7 @@ const ItemListContainer = ({
       setFindingKeys]                 = useState([]);
   
 
-
-  //테이블 클릭
-  const [clickedCol, 
-    setClickedCol]     = useState({});
-  const clicked        = useSelector(state => state.item.table.clicked)
-
-  useEffect(() => {
-    if (Object.keys(clickedCol).length > 0) {
-        dispatch(actClickedTableCol(clickedCol))
-    } 
-  },[clickedCol])
-
-
-
-
-  //테이블 셀렉트
-  const [selected, setSelected]         = useState([]);
-
-
-  //table 관련 속성들
-  const tableStates = {
-    clickedCol      : clickedCol,
-    selected        : selected,
-  }
-  const setTableStates = {
-    setClickedCol       : setClickedCol,
-    setSelected         : setSelected,
-  }
   const funcs = {
-    // load : getRawData,
     onDialogOpen : onDialogOpen,
   }
   const tableAttr = {
@@ -291,62 +252,12 @@ const ItemListContainer = ({
     })
   },[dialogOpened])
 
-
-  //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
-  useEffect(() => {
-    let keys = Object.keys(clicked)
-    const {colAttr} = tableAttr
-    const colAttrKeys = Object.keys(colAttr)
-
-    const {header, row, value, dataType, primaryCode, queryType} = clicked
-    const {clickType} = tableAttr.colAttr[header] ? tableAttr.colAttr[header] : ''
-    if (keys.length > 0) {
-      let aColAttr = tableAttr.colAttr[clicked.header]
-      let {clickType, dataType} = aColAttr
-      let queryType = ''
-      colAttrKeys.map(key => {
-        if (key == header) {
-          queryType = colAttr[key].queryType
-        }
-      })
-      let tempObj = {
-        frameNo     : frameNo,
-        currentNo   : currentNo,
-        currentType : currentType, 
-        motherNo    : motherNo, 
-        motherType  : motherType,
-
-        clickedHeader       : header,
-        clickedIndex        : row,
-        clickedVal          : value,
-        clickedType         : queryType,
-        clickedPrimaryCode  : primaryCode,
-
-        dataType      : dataType, 
-        initialFilter : '',
-      }
-      dispatch(onDialogOpen(tempObj))
-    }
-    dialogOpened.map(obj => {
-      if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
-        setDialogInfo(obj)
-      }
-    })
-  },[clicked])
-
-
-
-
-
-
   const test = () => {
     // dispatch(loadAccount())
     // dispatch(onDialogOpen(true, detailQuery, clickedCol))
     // console.log(checkOpened('itemName'))
     checkOpened()
   }
-
-
 
 
 
@@ -373,8 +284,6 @@ const ItemListContainer = ({
         motherNo      = {currentNo}
 
         dataType      = {dataType}
-        states        = {tableStates}
-        setStates     = {setTableStates}
         attr          = {tableAttr}
         funcs         = {funcs}
       ></Table>
