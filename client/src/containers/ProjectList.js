@@ -2,7 +2,7 @@ import React, { useState, useEffect }           from 'react'
 import { connect, useSelector, useDispatch }    from 'react-redux';
 
 import { setAuthReset }                 from '../modules/auth'
-import { onDialogOpen }                 from '../modules/dialogs'
+import { actDialogOpen }                 from '../modules/dialogs'
 import { getExchangeRate }              from '../modules/basicInfo'
 import {
     actUpdate, 
@@ -141,10 +141,10 @@ const ProjectList = ({motherType, motherNo, subTableAttr}) => {
         if (includingKeys.price.includes(clicked.header)) {
           dispatch(actClickedTableCol(clickedCol))
           dispatch(loadAccount(clickedCol))
-          dispatch(onDialogOpen(true, detailQuery, clickedCol))
+          dispatch(actDialogOpen(true, detailQuery, clickedCol))
         }else{
           dispatch(actClickedTableCol(clickedCol))
-          dispatch(onDialogOpen(true, simpleQuery, clickedCol))
+          dispatch(actDialogOpen(true, simpleQuery, clickedCol))
         }
       } 
     },[clicked])
@@ -201,7 +201,7 @@ const ProjectList = ({motherType, motherNo, subTableAttr}) => {
 
     const test = () => {
         // dispatch(loadAccount())
-        // dispatch(onDialogOpen(true, detailQuery, clickedCol))
+        // dispatch(actDialogOpen(true, detailQuery, clickedCol))
         console.log(getAsStrByColName('itemName'))
     }
 
@@ -236,7 +236,7 @@ const ProjectList = ({motherType, motherNo, subTableAttr}) => {
     const funcs = {
         load : getRawData,
         onSubmitUpdatedVals : onSubmitUpdatedVals,
-        onDialogOpen : onDialogOpen,
+        actDialogOpen : actDialogOpen,
         onDelete : setDelete,
         onSubmitNewAdded : onSubmitNewAdded
     }

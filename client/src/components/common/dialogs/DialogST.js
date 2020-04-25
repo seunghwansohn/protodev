@@ -11,7 +11,7 @@ import camelize         from '../../../lib/camelize'
 import {generateRandom} from '../../../lib/common';
 
 import { useDispatch } from 'react-redux';
-import { onDialogClose, onDialogOpen } from '../../../modules/dialogs'
+import { actDialogClose, actDialogOpen } from '../../../modules/dialogs'
 
 
 const useStyles = makeStyles(theme => ({
@@ -67,7 +67,7 @@ export default function MaxWidthDialog({
       clickedType : dialogType,
     }
     console.log(tempObj)
-    dispatch(onDialogClose(tempObj))
+    dispatch(actDialogClose(tempObj))
     if (onClose !== undefined) {
       onClose()
     }

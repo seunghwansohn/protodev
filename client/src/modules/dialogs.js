@@ -11,8 +11,8 @@ const initialState = {
 export const ON_DIALOG_OPEN  = 'dialog/ON_DIALOG_OPEN'
 export const ON_DIALOG_CLOSE  = 'dialog/ON_DIALOG_CLOSE'
 
-export const onDialogOpen = createAction(ON_DIALOG_OPEN, obj => obj)
-export const onDialogClose = createAction(ON_DIALOG_CLOSE, obj => obj)
+export const actDialogOpen = createAction(ON_DIALOG_OPEN, obj => obj)
+export const actDialogClose = createAction(ON_DIALOG_CLOSE, obj => obj)
 
 function reducer (state = initialState, action) {
   switch (action.type) {

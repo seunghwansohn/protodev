@@ -30,7 +30,7 @@ import {
     actDelete
 
  } from '../modules/quote'
- import { onDialogOpen } from '../modules/dialogs'
+ import { actDialogOpen } from '../modules/dialogs'
 
  import { actSetFilter } from '../modules/client'
 
@@ -86,7 +86,7 @@ const MakingQuote = ({motherType, motherNo, subTableAttr}) => {
     const queryHeaderfuncs = () => {
         const onSetClose = (type) => {
             const ox = false
-            dispatch(onFuncsDialog.onDialogOpen(ox,type))
+            dispatch(onFuncsDialog.actDialogOpen(ox,type))
         }
         const onRecordToDB = () => {
             dispatch(recordQuote(quoteProp.table))
@@ -109,7 +109,7 @@ const MakingQuote = ({motherType, motherNo, subTableAttr}) => {
                 dispatch(actQuery(frameNo, type, title, e.target.value))
                 dispatch(actSubmit(tempObj))
                 dispatch(actSetFilter(frameNo, title, e.target.value))
-                dispatch(onDialogOpen(true, daialogNo))
+                dispatch(actDialogOpen(true, daialogNo))
             }
         }
         const funcsObj = {

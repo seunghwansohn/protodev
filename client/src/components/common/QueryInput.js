@@ -11,8 +11,8 @@ import DialogST             from './dialogs/DialogST'
 
 import {generateRandom}     from '../../lib/common';
 
-import { onDialogOpen, 
-  onDialogClose }           from '../../modules/dialogs'
+import { actDialogOpen, 
+  actDialogClose }           from '../../modules/dialogs'
 import { actSelect }        from '../../modules/query'
 import {actSetReqNo}        from '../../modules/query'
 
@@ -134,7 +134,7 @@ const QueryInput = ({
       currentType : motherType, 
       // clickedType : dialogType,
     }
-    dispatch(onDialogClose(tempObj))
+    dispatch(actDialogClose(tempObj))
   }
 
 
@@ -208,7 +208,7 @@ const QueryInput = ({
       currentType : currentType, 
       clickedType : clickedType,
     }
-    dispatch(onDialogClose(tempObj))
+    dispatch(actDialogClose(tempObj))
   }
 
 
@@ -294,7 +294,7 @@ const QueryInput = ({
         dataType : dataType, 
         initialFilter : '',
       }
-      dispatch(onDialogOpen(tempObj))
+      dispatch(actDialogOpen(tempObj))
     }
   }
 

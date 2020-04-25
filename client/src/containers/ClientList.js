@@ -1,7 +1,7 @@
 import React, { useState, useEffect }           from 'react'
 import { connect, useSelector, useDispatch }    from 'react-redux';
 
-import { onDialogOpen }                 from '../modules/dialogs'
+import { actDialogOpen }                 from '../modules/dialogs'
 
 
 import {
@@ -160,7 +160,7 @@ const ClientContainer = ({
     const funcs = {
         load : getRawData,
         onSubmitUpdatedVals : onSubmitUpdatedVals,
-        onDialogOpen : onDialogOpen,
+        actDialogOpen : actDialogOpen,
         onDelete : setDelete,
         onSubmitNewAdded : onSubmitNewAdded
     }
@@ -300,7 +300,7 @@ const ClientContainer = ({
         dataType      : dataType, 
         initialFilter : '',
       }
-      dispatch(onDialogOpen(tempObj))
+      dispatch(actDialogOpen(tempObj))
     }
     dialogOpened.map(obj => {
       if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
@@ -313,7 +313,7 @@ const ClientContainer = ({
   console.log(clickedCol)
   const test = () => {
     // dispatch(loadAccount())
-    // dispatch(onDialogOpen(true, detailQuery, clickedCol))
+    // dispatch(actDialogOpen(true, detailQuery, clickedCol))
     // console.log(checkOpened('itemName'))
     checkOpened()
   }

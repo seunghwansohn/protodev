@@ -16,7 +16,7 @@ import {
     setDelete
 }                            from '../modules/task'
 
-import { onDialogOpen }      from '../modules/dialogs'
+import { actDialogOpen }      from '../modules/dialogs'
 
 
 const tableAttr = {
@@ -85,7 +85,7 @@ const TaskList = props => {
     useEffect(() => {
         if (Object.keys(clickedCol).length > 0) {
             dispatch(setClickedTableCol(clickedCol))
-            dispatch(onDialogOpen(true, type, clickedCol))
+            dispatch(actDialogOpen(true, type, clickedCol))
         } 
     },[clickedCol])
     
@@ -114,7 +114,7 @@ const TaskList = props => {
     const funcs = {
         load : getRawData,
         onSubmitUpdatedVals : onSubmitUpdatedVals,
-        onDialogOpen : onDialogOpen,
+        actDialogOpen : actDialogOpen,
         onDelete : onDelete,
         onSubmitNewAdded : onSubmitNewAdded
     }

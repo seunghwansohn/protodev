@@ -142,11 +142,12 @@ const STTable = ({
 
   attr, 
   funcs, 
+  acts
 }) => {
   
   const {
     onDialogOpen, 
-  }                   = funcs
+  }                   = acts
 
   const {
     flagAble,
@@ -438,7 +439,7 @@ const STTable = ({
         dataType      : dataType, 
         initialFilter : '',
       }
-      dispatch(onDialogOpen(tempObj))
+      onDialogOpen(tempObj)
     }
     console.log(dialogOpened)
     dialogOpened.map(obj => {

@@ -2,7 +2,7 @@ import React, { useState, useEffect }           from 'react'
 import { connect, useSelector, useDispatch }    from 'react-redux';
 
 import { onAlreadyPickedCheck }         from '../modules/quote'
-import {onDialogOpen, onDialogClose}    from '../modules/dialogs'
+import {actDialogOpen, actDialogClose}    from '../modules/dialogs'
 import {
     actUpdate, 
     actUpdateChange, 
@@ -54,12 +54,18 @@ const ItemListContainer = ({
   
 
   const acts = {
-    
+    onDialogOpen : function (argObj) {
+      let tempObj = argObj
+      tempObj.frameNo = frameNo
+      tempObj.currentNo = currentNo
+      tempObj.currentType = currentType
+      tempObj.motherNo = motherNo
+      tempObj.motherType = motherType
+      dispatch(actDialogOpen(tempObj))
+    }
   }
 
-  const funcs = {
-    onDialogOpen : onDialogOpen,
-  }
+
   const tableAttr = {
     flagAble : true,
     fixModeAble : true,
@@ -296,7 +302,7 @@ const ItemListContainer = ({
 
         dataType      = {dataType}
         attr          = {tableAttr}
-        funcs         = {funcs}
+        acts          = {acts}
       ></Table>
 
       <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType} attr = {DialogsAttr.itemQuery}>
