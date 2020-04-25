@@ -4,7 +4,7 @@ import { logout } from '../../modules/user'
 import { useDispatch, useSelector } from 'react-redux';
 import { signIn } from '../../modules/auth'
 import { authtest } from '../../modules/authtest'
-
+import { actDebugMode } from '../../modules/common'
 
 import {
 //   BrowserRouter as Router,
@@ -24,11 +24,16 @@ const PaginationBlock = styled.div`
     }
 `;
 
+
 const MainHeader = () => {
     const { user } = useSelector(({ user }) => ({ user: user.user }));
     const {loginJustNow} = useSelector(({ auth }) => ({ loginJustNow: auth.justNow }));
     
     const dispatch = useDispatch();
+
+    const onClickDebugMoe = () => {
+        dispatch(actDebugMode())
+    }
     const onLogout = () => {
         dispatch(logout());
     }
@@ -86,7 +91,7 @@ const MainHeader = () => {
                     <Link to="/project">Project</Link>
                 </li>
 
-                <li><button onClick = {onSignIn}>확인</button></li>
+                <li><button onClick = {onClickDebugMoe}>디버그모드</button></li>
                 Login: {user ? user.username : '없음'}
                 <Button onClick = {onLogout}>로그아웃</Button>
                 <Button onClick = {onCheck}> 체크 </Button>

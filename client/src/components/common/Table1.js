@@ -51,6 +51,8 @@ import {checkDecimal,
   hasWhiteSpace, 
   maxValue, isPlus}                     from '../../lib/validation';
     
+import Paper from '@material-ui/core/Paper';
+
 
 import { actSelect, 
   actSetFrame, 
@@ -167,6 +169,8 @@ const STTable = ({
 
   const currentType = motherType + 'Table'
   const containerNo = currentType + '_' + frameNo
+
+  const debugMode                   = useSelector(state => state.common.debugMode)
 
   console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
@@ -385,12 +389,16 @@ const STTable = ({
   }
 
 
+  //다이얼로그 관련
+  const dialogOpened                  = useSelector(state => state.dialogs.opened)
+  const [dialogInfo, setDialogInfo]   = useState({})
+  const simpleQuery = 'simpleQuery'
+  const detailQuery = 'detailQuery'
 
 
   //테이블 클릭
   const [clickedCol, 
     setClickedCol]     = useState({});
-
   useEffect(() => {
     if (Object.keys(clickedCol).length > 0) {
         dispatch(actClickedTableCol(clickedCol))
@@ -430,14 +438,16 @@ const STTable = ({
         dataType      : dataType, 
         initialFilter : '',
       }
-      // dispatch(onDialogOpen(tempObj))
+      dispatch(onDialogOpen(tempObj))
     }
-    // dialogOpened.map(obj => {
-    //   if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
-    //     setDialogInfo(obj)
-    //   }
-    // })
+    console.log(dialogOpened)
+    dialogOpened.map(obj => {
+      if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
+        setDialogInfo(obj)
+      }
+    })
   },[clickedCol])
+
   //  --값 update 후 다른 컬럼 클릭했을 때
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false)
   const handleCloseConfirmDialog = () => {
@@ -780,6 +790,8 @@ const STTable = ({
 
   return (
     <React.Fragment>
+      {debugMode ? <Paper style = {{color : 'red'}}> 프레임넘버는 {frameNo}, 현Comp는 {currentType}, {currentNo}, 마더comp는 {motherType}, {motherNo} </Paper>: '디버그모드false'}
+
       <Dialog
         open = {openConfirmDialog}
         onClose = {handleCloseConfirmDialog}

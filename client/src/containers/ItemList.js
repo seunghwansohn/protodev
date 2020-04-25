@@ -21,6 +21,9 @@ import ItemAdd      from '../components/ItemAdd'
 import Query        from '../components/Query'
 import Button           from '@material-ui/core/Button';
 
+import Paper from '@material-ui/core/Paper';
+
+
 const ItemListContainer = ({
   motherFrameNo, 
   motherType, 
@@ -32,6 +35,9 @@ const ItemListContainer = ({
   //개체 기본 속성
   const [frameNo, setFrameNo]       = useState(motherFrameNo ? motherFrameNo : generateRandom())
   const [currentNo, setCurrentNo]   = useState(generateRandom())
+  const debugMode                   = useSelector(state => state.common.debugMode)
+
+  console.log(debugMode)
 
   const currentType = 'itemList'
   // const containerNo = currentType + '_' + frameNo
@@ -46,6 +52,10 @@ const ItemListContainer = ({
   const [findingKeys, 
       setFindingKeys]                 = useState([]);
   
+
+  const acts = {
+    
+  }
 
   const funcs = {
     onDialogOpen : onDialogOpen,
@@ -263,6 +273,7 @@ const ItemListContainer = ({
 
   return(
     <>
+      {debugMode ? <Paper style = {{color : 'red'}}> 프레임넘버는 {frameNo}, 현Comp는 {currentType}, {currentNo}, 마더comp는 {motherType}, {motherNo} </Paper>: '디버그모드false'}
       <Button onClick = {test}>푸하하</Button>
       <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType} attr = {DialogsAttr.itemAdd}>
           아이템에디디
