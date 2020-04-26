@@ -45,6 +45,8 @@ require('./routes/maker.routes')(app)
 require('./routes/quotes.routes')(app)
 require('./routes/project.routes')(app)
 require('./routes/task.routes')(app)
+require('./routes/expense.routes')(app)
+
 
 const port = process.env.PORT || 5000;
 

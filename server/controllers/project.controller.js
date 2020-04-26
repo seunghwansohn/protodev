@@ -60,13 +60,13 @@ exports.addNew = (req, res) => {
       console.log(err.message)
     }
 };
-
 exports.load = (req, res) => {
-    const includingAttr = getIncludingAttr(relAttr)
-    const findingAttr   = getFindingAttr(relAttr)
-  
-    getIncludeName(Project, Project, primaryKey, findingAttr, includingAttr).then(items => {
-      res.status(200).send(items)
+    Project.findAll({
+      include:[{model : Note, as : 'tasks'}]
+    }).then(project => {
+            result = project
+        }).then(() => {
+            res.status(200).send(result);
     })
 };
 

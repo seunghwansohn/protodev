@@ -146,7 +146,10 @@ const STTable = ({
 }) => {
   
   const {
-    onDialogOpen, 
+    onDialogOpen,
+    onSubmitNewAdded,
+    onSubmitUpdatedVals,
+    onDelete
   }                   = acts
 
   const {
@@ -172,9 +175,6 @@ const STTable = ({
   const containerNo = currentType + '_' + frameNo
 
   const debugMode                   = useSelector(state => state.common.debugMode)
-
-  console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
-
 
   //api에서 tableRawData 및 key 설정
   const [rawData, 
@@ -231,22 +231,19 @@ const STTable = ({
 
   //테이블 새로 추가 state
   const [addedNew, setAddedNew]               = useState([]);
-  const onSubmitNewAdded = async () => {
+  const onClickSubmitNewAdded = async () => {
     await addedNew.map(obj => {
-      dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
+      onSubmitNewAdded(obj, primaryKey, includingKeys, findingKeys)
     })
-    // await getRawData()
     await setAddedNew([])
   }
 
   //테이블 업데이트
   const [fixedVals, setFixedVals]             = useState([]);
   const [updated, setUpdated]                 = useState(false);
-
   const {update} = useSelector(({ item }) => ({ update : item.table.update }));
-  
   if (update) {
-    // getRawData()
+    getRawData()
     dispatch(actUpdateChange(false))
     setUpdated(true)
   }
@@ -266,21 +263,21 @@ const STTable = ({
 
 
   //테이블값 수정
-  const onSubmitUpdatedVals = async (fixedVals) => {
-  
+  const onClickSubmitUpdatedVals = async (fixedVals) => {
     await fixedVals.map(arr => {
-        dispatch(actUpdate(arr))
+      onSubmitUpdatedVals(arr)
+        // dispatch(actUpdate(arr))
     })
     await setFixedVals([])
   }
     
   //테이블값 삭제
-  const setDelete = async (codes) =>{
+  const onClickDelete = async (codes) =>{
     await codes.map(code => {
-        dispatch(actDelete(dataType, code[primaryKey]))
+        onDelete(dataType, code[primaryKey])
     })
-    await setUpdated(true)
     await setSelected([])
+    await setUpdated(true)
   }
 
   //각 컬럼 성격 설정 기능
@@ -351,7 +348,9 @@ const STTable = ({
         setShowUpdatedSign(false)
         setFixedVals([])
       }, 3000);
+      getRawData()
       setUpdated(false)
+      
     }
   },[updated])
 
@@ -476,9 +475,6 @@ const STTable = ({
       setClickedCol(tempObj2)
     }
   }
-
-  console.log(clickedCol)
-    
 
   //Validation기능
   const checkValid = (index, header, value) => {
@@ -777,8 +773,6 @@ const STTable = ({
 
   //테이블 셀렉트
   const [selected, setSelected]         = useState([]);
-
-
 
   const check = () => {
     console.log(addedNew)
@@ -1158,9 +1152,9 @@ const STTable = ({
       />
 
       <Button onClick = {onAddNewBlank}>add New</Button>
-      <Button onClick = {() => onSubmitNewAdded(addedNew)}>     Submit New </Button>
-      <Button onClick = {() => onSubmitUpdatedVals(fixedVals)}> Submit     </Button>
-      {selected && selected.length !== 0 ? <Button onClick = {() => {setDelete(selected)}}>Delete</Button> :''}
+      <Button onClick = {() => onClickSubmitNewAdded(addedNew)}>     Submit New </Button>
+      <Button onClick = {() => onClickSubmitUpdatedVals(fixedVals)}> Submit     </Button>
+      {selected && selected.length !== 0 ? <Button onClick = {() => {onClickDelete(selected)}}>Delete</Button> :''}
       {selected && selected.length !== 0 ? <Button onClick = {() => {onClickCopiedNew(selected)}}>Copied New</Button> :''}
 
     </React.Fragment>

@@ -124,6 +124,7 @@ export const ProjectTaskList = () => {
 
   const getProjectTaskListData = async () => {
     await axios.get('/api/' + 'project' + '/load').then(res => {
+        
         setProjects(res.data)
         setTmpRawData(res.data)
     })
@@ -239,7 +240,7 @@ export const ProjectTaskList = () => {
   },[checkedArr])
   return (
     <React.Fragment>
-
+      바보냐
       <CommentDialog
         states    = {dialogStates}
         setStates = {dialogSetStates}
@@ -252,7 +253,7 @@ export const ProjectTaskList = () => {
           const level = 0
           return (
             <React.Fragment key = {index}>
-              <ExpantionPane 
+              <ExpansionPane 
                 key   = {index}
                 title = {projectName} 
                 shortDesc = {shortDesc} 
@@ -276,7 +277,7 @@ export const ProjectTaskList = () => {
                   )
                 })()
                 :'노트없음'}
-              </ExpantionPane>
+              </ExpansionPane>
 
             </React.Fragment>
           )

@@ -37,8 +37,6 @@ const ItemListContainer = ({
   const [currentNo, setCurrentNo]   = useState(generateRandom())
   const debugMode                   = useSelector(state => state.common.debugMode)
 
-  console.log(debugMode)
-
   const currentType = 'itemList'
   // const containerNo = currentType + '_' + frameNo
   const dataType    = 'item'
@@ -62,6 +60,18 @@ const ItemListContainer = ({
       tempObj.motherNo = motherNo
       tempObj.motherType = motherType
       dispatch(actDialogOpen(tempObj))
+    },
+    onSubmitNewAdded : function (obj, primaryKey, includingKeys, findingKeys) {
+      dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
+    },
+    // onUpdate : function (obj, primaryKey, includingKeys, findingKeys) {
+    //   dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
+    // },
+    onSubmitUpdatedVals : function (arr) {
+      dispatch(actUpdate(arr))
+    },
+    onDelete : function(dataType, primaryCode) {
+      dispatch(actDelete(dataType, primaryCode))
     }
   }
 

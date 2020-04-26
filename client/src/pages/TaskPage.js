@@ -1,9 +1,11 @@
 import React from 'react';
-import TaskList from '../containers/TaskList';
+// import TaskList from '../containers/TaskList';
+import SingleTask from '../components/singleTask';
+
 
 const Task = () => {
   return (
-    <TaskList></TaskList>
+    <SingleTask></SingleTask>
   );
 };
 

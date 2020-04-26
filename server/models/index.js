@@ -37,6 +37,8 @@ db.makerNote    = require("../models/maker.notes.model.js")(sequelize, Sequelize
 db.project      = require("../models/project.model.js")(sequelize, Sequelize);
 db.projectNote  = require("../models/project.notes.model.js")(sequelize, Sequelize);
 db.task         = require("../models/task.model.js")(sequelize, Sequelize);
+db.expense      = require("../models/expense.model.js")(sequelize, Sequelize);
+
 
 db.role.belongsToMany(db.user, {
     through: "user_roles", //through : 둘을 연결해주는 table을 하나 생성하여 여기를 통해 연결됨
