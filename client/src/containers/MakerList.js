@@ -49,12 +49,13 @@ const MakerContainer = ({
 
     //테이블 관련
     const [tableRawData, 
-        setTableRawData]                = useState([])
-    const [primaryKey, setPrimaryKey]   = useState('');
+        setTableRawData]                = useState([])    
     const [includingKeys, 
         setIncludingKeys]               = useState([]);
     const [findingKeys, 
         setFindingKeys]                 = useState([]);
+    const [primaryKey, setPrimaryKey]   = useState('');
+
 
     //테이블 업데이트
     const [fixedVals, setFixedVals]             = useState([]);

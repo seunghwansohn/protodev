@@ -17,6 +17,10 @@ import Typography from '@material-ui/core/Typography';
 import produce  from 'immer'
 import styled   from 'styled-components';
 
+import axios                from '../lib/api/axios'
+import {getIncludingKeys,
+    withoutIncludingKeys }  from '../lib/common'
+
 const MiniPlaylistAddIcon = styled(PlaylistAddIcon)`
   .MuiButton-root{
     min-width : 30px;
@@ -35,11 +39,48 @@ const ExpenseTable = () => {
   }
 
   const [rawData, setRawData]         = useState([])
+  const [primaryKey, setPrimaryKey]   = useState('');
+  const [includingKeys, 
+      setIncludingKeys]               = useState([]);
+  const [findingKeys, 
+      setFindingKeys]                 = useState([]);
+
   const [handleData, setHandleData]   = useState([])
   const [expanded, setExpanded]       = useState([]);
 
+  const dataType = 'expense'
+  const getRawData = async () => {
+    await axios.get('/api/' + dataType + '/load').then(res => {
+        setPrimaryKey(res.data.primaryKey)
+        setIncludingKeys(res.data.includingKeys)
+        setRawData(withoutIncludingKeys(res.data.vals))
+        setFindingKeys(res.data.findingKeys)
+    })
+  }
 
+  const colAttr = {
+    id : {
+      primary : true,
+      fixable : false,
+      defaultHided : false,
+      validate : ['code'],
+      dataType : dataType,
+      clickType : 'itemQuery',
+      queryType : 'simpleQuery'
+    },
+    description : {
+      fixable : true,
+      defaultHided : false,
+      validate : ['code'],
+      dataType : dataType,
+      clickType : 'itemQuery',
+      queryType : 'simpleQuery'
+    },
+  }
+  const headers = Object.keys(colAttr)
 
+  console.log(headers)
+  console.log(handleData)
 
   const handleExpandClick = (idx) => {
     setExpanded(
@@ -48,6 +89,10 @@ const ExpenseTable = () => {
       })
     )
   };
+
+  useEffect(() => {
+    getRawData()
+  },[])
 
   useEffect(() => {
     setRawData(
@@ -62,6 +107,7 @@ const ExpenseTable = () => {
     )
   },[])
 
+  console.log(handleData)
   useEffect(() => {
     setHandleData(rawData)
   },[rawData])
@@ -79,11 +125,22 @@ const ExpenseTable = () => {
       바보임?
       <TableContainer>
         <TableHead>
+
           <TableRow>
             <TableCell>
               detail
             </TableCell>
+            {headers.map(header =>{
+              return (
+                <TableCell>
+                  {header}
+                </TableCell>
+              )
+            })}
           </TableRow>
+       
+
+
         </TableHead>
         <TableBody>
           {handleData.map((obj, idx) => {
@@ -104,29 +161,38 @@ const ExpenseTable = () => {
                       <ExpandMoreIcon />
                     </MiniButton>
                   </TableCell>
+                  {headers.map(header => {
+                    return (
+                      <TableCell>
+                        {obj[header]}
+                      </TableCell>
+                    )
+                  })}
                 </TableRow>
-                <Collapse in={expanded[idx]} timeout="auto" unmountOnExit style = {{paddingLeft : '200px'}}>
-                  <Typography paragraph>
-                    Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
-                    minutes.
-                  </Typography>
-                  <TableContainer>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell>
-                          예랄랄라
-                        </TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow>
-                        <TableCell>
-                          예럴럴러
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </TableContainer>
-                </Collapse>
+                <TableRow>
+                  <Collapse in={expanded[idx]} timeout="auto" unmountOnExit style = {{paddingLeft : '200px'}}>
+                    <Typography paragraph>
+                      Heat 1/2 cup of the broth in a pot until simmering, add saffron and set aside for 10
+                      minutes.
+                    </Typography>
+                    <TableContainer>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>
+                            예랄랄라
+                          </TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow>
+                          <TableCell>
+                            예럴럴러
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </TableContainer>
+                  </Collapse>
+                </TableRow>
               </>
             )
           })}

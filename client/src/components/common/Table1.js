@@ -141,7 +141,6 @@ const STTable = ({
   setStates, 
 
   attr, 
-  funcs, 
   acts
 }) => {
   
@@ -276,7 +275,7 @@ const STTable = ({
     await codes.map(code => {
         onDelete(dataType, code[primaryKey])
     })
-    await setSelected([])
+    setSelected([])
     await setUpdated(true)
   }
 
@@ -332,8 +331,17 @@ const STTable = ({
   const isInput       = name => inputCols.indexOf(name) !== -1;
   const isCalValue    = name => calValueCols.indexOf(name) !== -1;
   const isQuery       = name => queryCols.indexOf(name) !== -1;
+  const isSelected    = code => {
+    let ox = false
+    selected.map(obj => {
+      if (obj[primaryKey] == code) {
+        ox = true
+      }
+    })
+    return ox
+  }
 
-
+  console.log(hided)
   //인덱스값만 넣어서 primaryCode를 얻는 기능
   const getPrimaryCode = (index) => {
     return filteredData[index][primaryKey]
@@ -893,15 +901,19 @@ const STTable = ({
              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
              .map((row, index) => {
               const labelId = `enhanced-table-checkbox-${index}`;
+              // console.log(filteredData[row])
+              const isSelectedRow = isSelected(filteredData[index][primaryKey])
+              console.log(isSelectedRow)
               return(
                 <TableRow 
                   key = {tableHeaderVals[index]}
                 >
                   {attr.flagAble ? 
-                    <TableCell padding="checkbox">
+                    <TableCell style = {{padding : '0px', margin : '0px'}}>
                       <StyledCheckBox
                         inputProps={{ 'aria-labelledby': labelId }}
                         onClick={event => handleClickFlag(row, null, selected, setSelected)}
+                        checked= {isSelectedRow}
                       />
                     </TableCell>:''
                   }
