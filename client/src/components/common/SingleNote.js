@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { connect, useSelector, useDispatch } from 'react-redux';
-import Notes            from '../components/common/notes';
 import TextField          from '@material-ui/core/TextField';
 import Dialog             from '@material-ui/core/Dialog';
 import NotesIcon from '@material-ui/icons/Notes';

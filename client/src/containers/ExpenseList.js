@@ -148,8 +148,26 @@ const ExpenseListContainer = ({
         queryType : 'simpleQuery',
         size      : '60px'
       },
-
-
+      memo : {
+        fixable : true,
+        defaultHided : false,
+        validate : ['string'],
+        type     : 'singleNote',
+        dataType : 'maker',
+        clickType : 'makerQuery',
+        queryType : 'simpleQuery',
+        size      : '60px'
+      },
+      memoAuthorized : {
+        fixable : true,
+        defaultHided : false,
+        validate : ['string'],
+        type     : 'singleNote',
+        dataType : 'maker',
+        clickType : 'makerQuery',
+        queryType : 'simpleQuery',
+        size      : '60px'
+      },
       createdAt : {
           fixable : false,
           defaultHided : true,

@@ -54,6 +54,8 @@ import {checkDecimal,
 import Paper from '@material-ui/core/Paper';
 
 import DropZone            from './DropZone';
+import SingleNote          from './SingleNote';
+
 
 
 import { actSelect, 
@@ -273,7 +275,6 @@ const STTable = ({
     await setFixedVals([])
   }
 
-  console.log(fixedVals)
     
   //테이블값 삭제
   const onClickDelete = async (codes) =>{
@@ -361,6 +362,14 @@ const STTable = ({
     }
     return ox
   }
+  const isSingleNoteType  = header => {
+    let ox = false
+    let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
+    if (type == 'singleNote') {
+      ox = true
+    }
+    return ox
+  }
 
 
 
@@ -404,9 +413,7 @@ const STTable = ({
     )
   }
 
-  console.log(selectedVal)
 
-  console.log(hided)
   //인덱스값만 넣어서 primaryCode를 얻는 기능
   const getPrimaryCode = (index) => {
     return filteredData[index][primaryKey]
@@ -513,7 +520,6 @@ const STTable = ({
       }
       onDialogOpen(tempObj)
     }
-    console.log(dialogOpened)
     dialogOpened.map(obj => {
       if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
         setDialogInfo(obj)
@@ -722,7 +728,6 @@ const STTable = ({
     }
   }
 
-  console.log(tempFixedVal)
 
 
   
@@ -971,7 +976,6 @@ const STTable = ({
               const labelId = `enhanced-table-checkbox-${index}`;
               // console.log(filteredData[row])
               const isSelectedRow = isSelected(filteredData[index][primaryKey])
-              console.log(isSelectedRow)
               return(
                 <TableRow 
                   key = {tableHeaderVals[index]}
@@ -990,18 +994,18 @@ const STTable = ({
                   </StyledTableCell>
 
                   {tableHeaderVals.map((header) => {
-                    let fixable         = checkColFixable(index, header)
-                    let fixed           = checkCellFixed(index, header)
-                    let isfixableCol    = isFixable(header)
-                    let isInputCol      = isInput(header)
-                    let isCalValueCol   = isCalValue(header)
-                    let isQueryCol      = isQuery(header)
-                    let isColumnHided   = isHidedCulumn(header)
-                    let isSelectTypeCol = isSelectType(header)
-                    let isFileTypeCol   = isFileType(header)
+                    let fixable             = checkColFixable(index, header)
+                    let fixed               = checkCellFixed(index, header)
+                    let isfixableCol        = isFixable(header)
+                    let isInputCol          = isInput(header)
+                    let isCalValueCol       = isCalValue(header)
+                    let isQueryCol          = isQuery(header)
+                    let isColumnHided       = isHidedCulumn(header)
+                    let isSelectTypeCol     = isSelectType(header)
+                    let isFileTypeCol       = isFileType(header)
+                    let isSingleNoteTypeCol = isSingleNoteType(header)
 
                     let queryColType  = 'fixSelect'
-
 
                     let primaryCode = getPrimaryCode(index)
 
@@ -1029,7 +1033,6 @@ const STTable = ({
 
                     const selectedValue = getSelectedValue()
                     let name = selectedValue && selectedValue.value ? selectedValue.value[header] :''
-                    console.log(name)
 
                     if (!isColumnHided) {
                       if (fixable && isfixableCol) {
@@ -1048,7 +1051,6 @@ const STTable = ({
                           </StyledTableCell>
                         )
                       } else if (isSelectTypeCol){
-                        console.log(selectedVal[index])
                         return(
                           <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
                             <Select 
@@ -1068,6 +1070,17 @@ const STTable = ({
                               />
                             </StyledTableCell>
                         )
+                      } else if (isSingleNoteTypeCol){
+                        let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
+                        return(
+                          <StyledTableCell fixable = {isfixableCol} size = {size}>
+
+                            <SingleNote 
+                              // onChange = {event => handleChangeSelect(event, index)}
+                              // options={selectOptions.sort} 
+                            />
+                          </StyledTableCell>
+                        ) 
                       } else if (fixMode && isQueryCol) { 
                         let dataType      =  colAttr[header].dataType
 
@@ -1201,7 +1214,6 @@ const STTable = ({
 
                           const selectedValue = getSelectedValue()
                           let name = selectedValue && selectedValue.value ? selectedValue.value[header] :''
-                          console.log(name)
                           return(
                             <StyledTableCell>
                               <QueryInput
