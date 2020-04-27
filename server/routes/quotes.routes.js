@@ -26,6 +26,7 @@ module.exports = function(app) {
 
   app.post("/api/addfiles", upload.array('images', 10), (req, res) => {
     const file = req.files
+    console.log(file)
     if (file == [] || file == undefined) {
       const error = new Error('Please upload a file')
       error.httpStatusCode = 400

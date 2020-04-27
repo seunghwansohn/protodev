@@ -17,6 +17,8 @@ import DialogTitle        from '@material-ui/core/DialogTitle';
 
 import Paper from '@material-ui/core/Paper';
 
+import Button           from '@material-ui/core/Button';
+
 
 
 // const pdfBuffer = require('fs').readFileSync('/some/path/example.pdf');
@@ -111,6 +113,7 @@ const DropZone = () => {
         fullWidth = 'lg'
       >
         <DialogTitle id="alert-dialog-title">Are you confirm the data you input?</DialogTitle>
+        <Button onClick = {addFiles}>제출</Button>
         <Paper elevation={0}>
           <div {...getRootProps()}>
             <input {...getInputProps()} />
