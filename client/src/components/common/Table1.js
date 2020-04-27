@@ -57,18 +57,12 @@ import Paper from '@material-ui/core/Paper';
 import { actSelect, 
   actSetFrame, 
   actAddNewBlankQuery}    from '../../modules/query'
-import {
-  actUpdate, 
-  actUpdateChange, 
-  actClickedTableCol,
-  actAdd,
-  actDelete
-}                         from '../../modules/itemList'
 
 
 import styled   from "styled-components";
 import produce  from 'immer'
 
+import Select from 'react-select'
 
 const colors = {
   fixable : '#fff4e2',
@@ -115,6 +109,9 @@ const StyledTableCell = styled(TableCell)`
   &:hover {
     background-color : #eef534;
   }
+  width : ${props => props.size};
+  padding : 0px;
+  margin : 0px;
 `
 
 const StyledInput = styled(Input)`
@@ -128,6 +125,7 @@ const MiniHelperText = styled(TextField)`
   .MuiFormHelperText-root {
     font-size : 11px;
     color : red;
+    width : 100%;
   }
 `
 
@@ -148,7 +146,9 @@ const STTable = ({
     onDialogOpen,
     onSubmitNewAdded,
     onSubmitUpdatedVals,
-    onDelete
+    onDelete,
+    onTableCol,
+    onUpdateChange
   }                   = acts
 
   const {
@@ -243,7 +243,7 @@ const STTable = ({
   const {update} = useSelector(({ item }) => ({ update : item.table.update }));
   if (update) {
     getRawData()
-    dispatch(actUpdateChange(false))
+    onUpdateChange(false)
     setUpdated(true)
   }
 
@@ -269,6 +269,8 @@ const STTable = ({
     })
     await setFixedVals([])
   }
+
+  console.log(fixedVals)
     
   //테이블값 삭제
   const onClickDelete = async (codes) =>{
@@ -340,6 +342,57 @@ const STTable = ({
     })
     return ox
   }
+  const isSelectType  = header => {
+    let ox = false
+    let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
+    if (type == 'select') {
+      ox = true
+    }
+    return ox
+  }
+
+
+  //selectType 관련
+  const [selectOptions, setSelectOptions] = useState({})
+  const [selectedVal, setSelectedVal]     = useState({})
+
+  useEffect(() => {
+    let colAttrKeys = Object.keys(colAttr)
+    colAttrKeys.map(async key => {
+      let type = await colAttr[key].type ? colAttr[key].type : ''
+      if (type == 'select') {
+        // console.log(type)
+        let dataType = await colAttr[key].dataType
+        await axios.get('/api/' + dataType + '/load').then(res => {
+          let tempOptionsArr = []
+          let tempNamesArr = []
+          let vals = res.data.vals
+          let code = colAttr[key].code
+          let name = colAttr[key].name
+          vals.map(obj => {
+            let tempObj = {}
+            tempObj.value = obj[code]
+            tempObj.label = obj[name]
+            tempOptionsArr.push(tempObj)
+          })
+          setSelectOptions(
+            produce(selectOptions, draft => {
+              draft[key] = tempOptionsArr
+            })
+          )
+        })
+      }
+    })
+  },[])
+  const handleChangeSelect = (event, index) => {
+    setSelectedVal(
+      produce(selectedVal, draft => {
+        draft[index] = event
+      })
+    )
+  }
+
+  console.log(selectedVal)
 
   console.log(hided)
   //인덱스값만 넣어서 primaryCode를 얻는 기능
@@ -409,7 +462,7 @@ const STTable = ({
     setClickedCol]     = useState({});
   useEffect(() => {
     if (Object.keys(clickedCol).length > 0) {
-        dispatch(actClickedTableCol(clickedCol))
+      onTableCol(clickedCol)
     } 
   },[clickedCol])
 
@@ -657,6 +710,7 @@ const STTable = ({
     }
   }
 
+  console.log(tempFixedVal)
 
 
   
@@ -791,6 +845,8 @@ const STTable = ({
   },[selected])
 
 
+
+
   return (
     <React.Fragment>
       {debugMode ? <Paper style = {{color : 'red'}}> 프레임넘버는 {frameNo}, 현Comp는 {currentType}, {currentNo}, 마더comp는 {motherType}, {motherNo} </Paper>: '디버그모드false'}
@@ -854,15 +910,15 @@ const STTable = ({
           <StyledTableHeader>
             <TableRow>
               {tableHeaderVals && attr.flagAble ? 
-                <StyledTableCell></StyledTableCell>:''
+                <StyledTableCell size = '10px'></StyledTableCell>:''
               }
-              {tableHeaderVals !== [] ? <StyledTableCell>No</StyledTableCell> : ''}  
+              {tableHeaderVals !== [] ? <StyledTableCell size = '10px'>No</StyledTableCell> : ''}  
               {tableHeaderVals ? tableHeaderVals.map((header, index) => {
                 const isColumnHided = isHidedCulumn(header)
                 if (!isColumnHided) {
                   return (
-                    <TableCell key = {index}>
-                      {header}
+                    <TableCell key = {index} style = {{textAlign : 'center'}}>
+                      {spacelize(header)}
                       <Menu
                         key="menu"
                         open={checkMenuActivated(header)}
@@ -922,14 +978,14 @@ const STTable = ({
                   </StyledTableCell>
 
                   {tableHeaderVals.map((header) => {
-                    let fixable = checkColFixable(index, header)
-                    let fixed = checkCellFixed(index, header)
-                    let isfixableCol = isFixable(header)
-                    let isInputCol   = isInput(header)
+                    let fixable         = checkColFixable(index, header)
+                    let fixed           = checkCellFixed(index, header)
+                    let isfixableCol    = isFixable(header)
+                    let isInputCol      = isInput(header)
                     let isCalValueCol   = isCalValue(header)
                     let isQueryCol      = isQuery(header)
-                    let isColumnHided = isHidedCulumn(header)
-
+                    let isColumnHided   = isHidedCulumn(header)
+                    let isSelectTypeCol = isSelectType(header)
                     let queryColType  = 'fixSelect'
 
 
@@ -977,7 +1033,15 @@ const STTable = ({
                             />
                           </StyledTableCell>
                         )
-                      }else if (fixMode && isQueryCol) { 
+                      } else if (isSelectTypeCol){
+                        console.log(selectedVal[index])
+                        return(
+                          <Select 
+                            onChange = {event => handleChangeSelect(event, index)}
+                            options={selectOptions.sort} 
+                          />
+                        )
+                      } else if (fixMode && isQueryCol) { 
                         let dataType      =  colAttr[header].dataType
 
                         return (
@@ -1034,8 +1098,9 @@ const STTable = ({
                         )
                       }
                       else if (true) {
+                        let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
                         return(
-                          <StyledTableCell fixMode = {fixMode} fixable = {isfixableCol} onClick = {() => {onClickCols(row[header], index, header)}}>
+                          <StyledTableCell fixMode = {fixMode} size = {size} fixable = {isfixableCol} onClick = {() => {onClickCols(row[header], index, header)}}>
                             {row[header]}
                           </StyledTableCell>
                         )
@@ -1069,81 +1134,91 @@ const STTable = ({
             {addedNew && addedNew.length > 0 ? addedNew.map((row, index) => {
               return (
                 <TableRow>
-                <StyledCheckBox
+                  <StyledCheckBox
 
-                />
-                <StyledTableCell>{index + 1}<button onClick = {check}></button></StyledTableCell>
-                {headers.map((header, idx6) => {
-                  const isColumnHided = isHidedCulumn(header)
-                  let   isQueryCol    = isQuery(header)
-                  let   valid         = getValid(header)
-                  if (!isColumnHided && header !== 'id') {
-                    if (isQueryCol) {
-                      let queryColType  = 'newAdded'
-                      let findingKey    = header
-                      let dataType      =  colAttr[header].dataType
+                  />
+                  <StyledTableCell>{index + 1}<button onClick = {check}></button></StyledTableCell>
+                    {headers.map((header, idx6) => {
+                      const isColumnHided = isHidedCulumn(header)
+                      let   isQueryCol    = isQuery(header)
+                      let   valid         = getValid(header)
+                      let   isSelectTypeCol = isSelectType(header)
 
-                      const getMatchedFinding = (type) => {
-                        let tempMatched = ''
-                        findingKeys.map(obj => {
-                          Object.keys(obj).map(key => {
-                            if (type == key) {
-                              tempMatched = obj
-                            }
-                          })
-                        })
-                        return tempMatched[type]
-                      }
+                      if (!isColumnHided && header !== 'id') {
+                        if (isQueryCol) {
+                          let queryColType  = 'newAdded'
+                          let findingKey    = header
+                          let dataType      =  colAttr[header].dataType
 
-                      const getSelectedValue = (key) => {
-                        let values = null
-                        querySelected.map(obj => {
-                          if (obj.reqType == queryColType && obj.key == index) {
-                            values = obj.selected
+                          const getMatchedFinding = (type) => {
+                            let tempMatched = ''
+                            findingKeys.map(obj => {
+                              Object.keys(obj).map(key => {
+                                if (type == key) {
+                                  tempMatched = obj
+                                }
+                              })
+                            })
+                            return tempMatched[type]
                           }
-                        })
-                        return values                        
+
+                          const getSelectedValue = (key) => {
+                            let values = null
+                            querySelected.map(obj => {
+                              if (obj.reqType == queryColType && obj.key == index) {
+                                values = obj.selected
+                              }
+                            })
+                            return values                        
+                          }
+
+                          const selectedValue = getSelectedValue()
+                          let name = selectedValue && selectedValue.value ? selectedValue.value[header] :''
+                          console.log(name)
+                          return(
+                            <StyledTableCell>
+                              <QueryInput
+                                motherFrameNo = {frameNo}
+                                motherNo      = {currentNo}
+                                motherType    = {currentType}
+
+                                reqType       = {queryColType}
+                                dataType      = {dataType}
+                                codeNName     = {getMatchedFinding(dataType)}
+                                primaryKey    = {primaryKey}
+
+                                addedNo       = {index}
+                                label         = {colAttr[header].dataType}
+                                initialValue  = {filteredData[index][header]}
+                                filteredData  = {filteredData}
+                                addedNew      = {addedNew}
+                                setAddedNew   = {setAddedNew}
+                              />
+                            </StyledTableCell>
+                          )
+                        } else if (isSelectTypeCol) {
+                          return (
+                            <Select 
+                              onChange = {event => handleChangeSelect(event, index)}
+                              options={selectOptions.sort} 
+                            />
+                          )
+                        } else {
+                            return(
+                              <StyledTableCell>
+                                <MiniHelperText
+                                  value      = {row[header]}
+                                  error      = {newAddedError[index][header]} 
+                                  style      = {{width : '100%'}}
+                                  onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
+                                  onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
+                                  helperText = {newAddedhelperTexts[index][header]}
+                                />
+                              </StyledTableCell>
+                            )
+                        }
                       }
-
-                      const selectedValue = getSelectedValue()
-                      let name = selectedValue && selectedValue.value ? selectedValue.value[header] :''
-                      console.log(name)
-                      return(
-                        <StyledTableCell>
-                          <QueryInput
-                            motherFrameNo = {frameNo}
-                            motherNo      = {currentNo}
-                            motherType    = {currentType}
-
-                            reqType       = {queryColType}
-                            dataType      = {dataType}
-                            codeNName     = {getMatchedFinding(dataType)}
-                            primaryKey    = {primaryKey}
-
-                            addedNo       = {index}
-                            label         = {colAttr[header].dataType}
-                            initialValue  = {filteredData[index][header]}
-                            filteredData  = {filteredData}
-                            addedNew      = {addedNew}
-                            setAddedNew   = {setAddedNew}
-                          />
-                        </StyledTableCell>
-                      )
-                    }else {
-                      return(
-                        <StyledTableCell>
-                          <MiniHelperText
-                            value      = {row[header]}
-                            error      = {newAddedError[index][header]} 
-                            onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
-                            onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
-                            helperText = {newAddedhelperTexts[index][header]}
-                          />
-                        </StyledTableCell>
-                      )
-                    }
-                  }
-                })}
+                  })}
                 </TableRow>
               )})
             :''}

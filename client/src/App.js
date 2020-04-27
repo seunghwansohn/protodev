@@ -12,6 +12,10 @@ import MakersPage from './pages/MakersPage';
 import QuotesPage from './pages/quotesPage';
 import ProjectPage from './pages/projectPage';
 import TaskPage from './pages/TaskPage';
+import ExpensePage from './pages/ExpensePage';
+import DragFilesTest from './pages/dragFilesAndUpload';
+
+
 
 import About from './containers/About'
 import {
@@ -64,8 +68,17 @@ function App() {
                 <ProjectPage></ProjectPage>
               </Route>
 
+              
+              <Route path = "/expense" >
+                <ExpensePage></ExpensePage>
+              </Route>
+
               <Route path = "/task" >
                 <TaskPage></TaskPage>
+              </Route>
+
+              <Route path = "/dragfiles" >
+                <DragFilesTest></DragFilesTest>
               </Route>
 
               <Route component = {ClientPage} path = "/client" exact/>

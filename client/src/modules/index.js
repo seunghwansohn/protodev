@@ -15,6 +15,8 @@ import maker, { makerSaga }     from './maker';
 import query, { querySaga }     from './query';
 import project, { projectSaga } from './project';
 import task, { taskSaga }       from './task';
+import expense, {expenseSaga}   from './expense';
+
 
 
 import common, { commonSaga}                   from './common';
@@ -62,7 +64,8 @@ export function* rootSaga () {
         commonSaga(),
         makerSaga(),
         projectSaga(),
-        taskSaga()
+        taskSaga(),
+        expenseSaga()
     ])
 }
 

@@ -6,13 +6,15 @@ import pdf from 'pdf-thumbnail';
 
 import {useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
+import produce       from 'immer'
+
 
 // const pdfBuffer = require('fs').readFileSync('/some/path/example.pdf');
 
 
 const TestPage = () => {
-  const [file, setFile]           = useState([])
-  const [fileName, setFileName]           = useState()
+  const [file, setFile]                   = useState([])
+  const [fileName, setFileName]           = useState([])
 
   // const pdfBuffer = fs.readFileSync('/SuppliersPage.js')
 
@@ -26,9 +28,19 @@ const TestPage = () => {
   }
 
   const handleFileChange = e => {
-    setFileName(e.target.value)
+    setFileName(
+      produce(fileName, draft => {
+        draft.push(e.target.value)
+      })
+    )
     console.log(e.target)
-    setFile(e.target.files[0])
+    setFile(
+      produce(file, draft => {
+        e.target.files.map(file => {
+          draft.push(file)
+        })
+      })
+    )
   }
     
   const addFiles = () => {
@@ -64,27 +76,28 @@ const TestPage = () => {
     // })
   }
 
-  const onDrop = useCallback(acceptedFiles => {
-    console.log('파일드롬됨')
-    setFile(acceptedFiles)
-  }, [])
-  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+  const onDrop = (acceptedFiles) => {
+    console.log(acceptedFiles)
+    setFile(
+      produce(file, draft => {
+        acceptedFiles.map(newFile => {
+          draft.push(newFile)
+        })
+      })
+    )
+  }
+
   console.log(file)
+
+  const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+
   return (
     <React.Fragment>
       <form onSubmit = {handleFormSubmit}>
-        프로필 이미지: <input type="file" name="file" file={file} value = {fileName} onChange={handleFileChange}></input>
+        이미지: <input type="file" name="file" file={file} value = {fileName} onChange={handleFileChange}></input>
         {/* <input type = "flie" name = "file" onChange = {e=> handleFileInput(e)}></input> */}
         <button type="submit">추가하기</button>
       </form>
-
-      {file.map(file => {
-        return (
-          <img src = {URL.createObjectURL(file)}></img>
-        )
-      })}
-
-      {file && file.length > 0 ? <img src = {URL.createObjectURL(file[0])}></img> : ''}
 
       <div {...getRootProps()}>
         <input {...getInputProps()} />
@@ -93,7 +106,17 @@ const TestPage = () => {
             <p>Drop the files here ...</p> :
             <p>Drag 'n' drop some files here, or click to select files</p>
         }
-      </div>
+      </div>  
+
+      {file.map(file => {
+        return (
+          <img src = {URL.createObjectURL(file)}></img>
+        )
+      })}
+
+      {/* {file && file.length > 0 ? <img src = {URL.createObjectURL(file[0])}></img> : ''} */}
+
+
 
     </React.Fragment>
   );

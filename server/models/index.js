@@ -38,6 +38,7 @@ db.project      = require("../models/project.model.js")(sequelize, Sequelize);
 db.projectNote  = require("../models/project.notes.model.js")(sequelize, Sequelize);
 db.task         = require("../models/task.model.js")(sequelize, Sequelize);
 db.expense      = require("../models/expense.model.js")(sequelize, Sequelize);
+db.expenseSort  = require("../models/expenseSort.model.js")(sequelize, Sequelize);
 
 
 db.role.belongsToMany(db.user, {

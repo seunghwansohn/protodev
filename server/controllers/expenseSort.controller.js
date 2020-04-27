@@ -21,13 +21,13 @@ const setNameToCode = require("../lib/setNameToCode");
 
 const {produce} = require ('immer')
 
-const Expense = db.expense;
+const ExpenseSort = db.expenseSort;
 
 const Role = db.role;
 const Project = db.project;
 
 const relAttr = {
-  source : Expense,
+  source : ExpenseSort,
   rels : [
     // {
     //   target: Project,
@@ -81,7 +81,7 @@ exports.update = async (req, res) => {
 exports.load = (req, res) => {
   const includingAttr = getIncludingAttr(relAttr)
   const findingAttr   = getFindingAttr(relAttr)
-  getIncludeName(Expense, primaryKey, findingAttr, includingAttr).then(expenses => {
+  getIncludeName(relAttr.source, primaryKey, findingAttr, includingAttr).then(expenses => {
     res.status(200).send(expenses)
   })
 };

@@ -46,8 +46,6 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
 
   const classes = useStyles();
 
-  console.log(attr)
-
 
   //개체 기본 속성
   const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
@@ -98,6 +96,11 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
         {type : 'divider', typoGraphy : 'basicInfo'}
       ],
       client : [
+        {type : 'primary', newRow : true, size : 5, title: 'clientCode', style:'regular'},
+        {type : 'fixable', newRow : true, size : 7, title: 'clientName', style:'regular'},
+        {type : 'divider', typoGraphy : 'basicInfo'}
+      ],
+      expense : [
         {type : 'primary', newRow : true, size : 5, title: 'clientCode', style:'regular'},
         {type : 'fixable', newRow : true, size : 7, title: 'clientName', style:'regular'},
         {type : 'divider', typoGraphy : 'basicInfo'}
