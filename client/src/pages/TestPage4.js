@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { connect, useSelector, useDispatch } from 'react-redux';
-import DropZone            from '../components/common/DropZone';
+import Notes            from '../components/common/notes';
 
 
 const TestPage = () => {
   return (
-    <DropZone></DropZone>
+    <Notes></Notes>
   )
 }
 
