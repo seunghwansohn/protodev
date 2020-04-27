@@ -3,7 +3,7 @@ import MainHeader from './containers/common/MainHeader'
 import LoginPages from './pages/loginPages'
 import ItemListPage from './pages/ItemListPage'
 import ClientPage from './pages/clientPage'
-import TestPage from './pages/TestPage1'
+import TestPage from './pages/TestPage4'
 import TestPage3 from './pages/TestPage3'
 
 import SuppliersPage from './pages/SuppliersPage'
@@ -13,7 +13,6 @@ import QuotesPage from './pages/quotesPage';
 import ProjectPage from './pages/projectPage';
 import TaskPage from './pages/TaskPage';
 import ExpensePage from './pages/ExpensePage';
-import DragFilesTest from './pages/dragFilesAndUpload';
 
 
 
@@ -77,9 +76,7 @@ function App() {
                 <TaskPage></TaskPage>
               </Route>
 
-              <Route path = "/dragfiles" >
-                <DragFilesTest></DragFilesTest>
-              </Route>
+
 
               <Route component = {ClientPage} path = "/client" exact/>
       </div>

@@ -138,6 +138,17 @@ const ExpenseListContainer = ({
         clickType : 'makerQuery',
         queryType : 'simpleQuery'
       },
+      fileAddr : {
+        fixable : true,
+        defaultHided : false,
+        validate : ['string'],
+        type     : 'file',
+        dataType : 'maker',
+        clickType : 'makerQuery',
+        queryType : 'simpleQuery',
+        size      : '60px'
+      },
+
 
       createdAt : {
           fixable : false,

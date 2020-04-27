@@ -53,6 +53,8 @@ import {checkDecimal,
     
 import Paper from '@material-ui/core/Paper';
 
+import DropZone            from './DropZone';
+
 
 import { actSelect, 
   actSetFrame, 
@@ -109,6 +111,7 @@ const StyledTableCell = styled(TableCell)`
   &:hover {
     background-color : #eef534;
   }
+  max-width : ${props => props.size};
   width : ${props => props.size};
   padding : 0px;
   margin : 0px;
@@ -350,6 +353,15 @@ const STTable = ({
     }
     return ox
   }
+  const isFileType  = header => {
+    let ox = false
+    let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
+    if (type == 'file') {
+      ox = true
+    }
+    return ox
+  }
+
 
 
   //selectType 관련
@@ -986,6 +998,8 @@ const STTable = ({
                     let isQueryCol      = isQuery(header)
                     let isColumnHided   = isHidedCulumn(header)
                     let isSelectTypeCol = isSelectType(header)
+                    let isFileTypeCol   = isFileType(header)
+
                     let queryColType  = 'fixSelect'
 
 
@@ -1036,10 +1050,23 @@ const STTable = ({
                       } else if (isSelectTypeCol){
                         console.log(selectedVal[index])
                         return(
-                          <Select 
-                            onChange = {event => handleChangeSelect(event, index)}
-                            options={selectOptions.sort} 
-                          />
+                          <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
+                            <Select 
+                              onChange = {event => handleChangeSelect(event, index)}
+                              options={selectOptions.sort} 
+                            />
+                          </StyledTableCell>
+                        )
+                      } else if (isFileTypeCol){
+                          let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
+                          return(
+                            <StyledTableCell fixable = {isfixableCol} size = {size}>
+
+                              <DropZone 
+                                // onChange = {event => handleChangeSelect(event, index)}
+                                // options={selectOptions.sort} 
+                              />
+                            </StyledTableCell>
                         )
                       } else if (fixMode && isQueryCol) { 
                         let dataType      =  colAttr[header].dataType
