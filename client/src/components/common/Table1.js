@@ -555,6 +555,8 @@ const STTable = ({
     }
   }
 
+
+
   //Validation기능
   const checkValid = (index, header, value) => {
     let tempArr = []
@@ -861,9 +863,6 @@ const STTable = ({
     console.log(selected)
   },[selected])
 
-
-
-
   return (
     <React.Fragment>
       {debugMode ? <Paper style = {{color : 'red'}}> 프레임넘버는 {frameNo}, 현Comp는 {currentType}, {currentNo}, 마더comp는 {motherType}, {motherNo} </Paper>: '디버그모드false'}
@@ -1047,7 +1046,7 @@ const STTable = ({
                               InputProps = {{
                                 endAdornment : <InputAdornment position="end"><SmallKeyPopUp>Enter</SmallKeyPopUp><SmallKeyPopUp>Tab</SmallKeyPopUp></InputAdornment>
                               }}
-                            />
+                            />ㄷㄷㄷ
                           </StyledTableCell>
                         )
                       } else if (isSelectTypeCol){
@@ -1078,6 +1077,10 @@ const STTable = ({
                             <SingleNote 
                               // onChange = {event => handleChangeSelect(event, index)}
                               // options={selectOptions.sort} 
+                              value = {filteredData[index][header]}
+                              onChange = {(event) => handleChangeInput(event, index, header)}
+                              onSubmit = {confirmInputFixedVal}
+
                             />
                           </StyledTableCell>
                         ) 
@@ -1115,7 +1118,7 @@ const STTable = ({
                               startAdornment={<InputAdornment position="start">$</InputAdornment>}
                               value = {filteredData[index][header]} 
                               onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
-                            />
+                            />fdf
                           </StyledTableCell>
                         )
                       }else if (isCalValueCol) { 

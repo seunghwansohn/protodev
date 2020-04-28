@@ -6,7 +6,11 @@ import NotesIcon from '@material-ui/icons/Notes';
 import Button                                   from '@material-ui/core/Button';
 
 
-const TestPage = () => {
+const TestPage = ({
+  value, 
+  onChange, 
+  onSubmit
+}) => {
 
   const [openedDialog, setOpenedDialog]   = React.useState(false)
   const handleCloseDialog = () => {
@@ -16,8 +20,9 @@ const TestPage = () => {
     setOpenedDialog(true)
   }
 
-  const onSubmit = () => {
-
+  const onClickSubmit = () => {
+    onSubmit()
+    handleCloseDialog()
   }
 
   return (
@@ -29,13 +34,15 @@ const TestPage = () => {
         open = {openedDialog}
       >
         <TextField
+          value = {value}
           placeholder="MultiLine with rows: 2 and rowsMax: 4"
           multiline
           rows={10}
           rowsMax={10}
           style = {{width : '500px'}}
+          onChange = {onChange}
         />
-        <Button variant="contained" color="primary" onClick = {onSubmit}>
+        <Button variant="contained" color="primary" onClick = {onClickSubmit}>
             Submit
         </Button>
         <Button variant="contained" color="secondary" onClick = {handleCloseDialog}>
