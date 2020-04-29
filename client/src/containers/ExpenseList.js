@@ -90,9 +90,10 @@ const ExpenseListContainer = ({
         defaultHided : true,
         validate : ['string'],
         dataType : dataType,
+        defaultCodeType : 'yymmddhhminRandom',
         clickType : 'expenseQuery',
         queryType : 'simpleQuery',
-        size : '100px'
+        size : '180px'
       },
       description : {
           fixable : true,

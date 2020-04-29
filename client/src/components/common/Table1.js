@@ -43,6 +43,8 @@ import {getIncludingKeys,
     withoutIncludingKeys }  from '../../lib/common'
 
 import spacelize                        from '../../lib/spacelize'
+import {getDate_yyyymmddhhmm}             from '../../lib/getDate'
+
 import filterArrayBySearchKeyword       from '../../lib/filterArrayBySearchKeyword'
 import {selectMultipleStates, 
   unSelectMultipleStates}               from '../../lib/tableFuncs'
@@ -605,8 +607,17 @@ const STTable = ({
   //--------------------------
   const onAddNewBlank = () => {
     let tempObj = {}
+    let colAttrKeys = Object.keys(colAttr)
     headers.map(header => {
-      tempObj[header] = null
+      console.log(header)
+      if (colAttr[header] && colAttr[header].defaultCodeType && colAttr[header].defaultCodeType ==  'yymmddhhminRandom') {
+        let dateTime = getDate_yyyymmddhhmm()
+        let randomNo = generateRandom(100,999)
+        console.log(dateTime, randomNo)
+        tempObj[header] = dateTime + randomNo
+      } else {
+        tempObj[header] = null
+      }
     })
     setAddedNew(
       produce(addedNew, draft => {
@@ -768,7 +779,7 @@ const STTable = ({
   },[querySelected])
  
 
-console.log(primaryKey)
+console.log(addedNew)
   //헤더 메뉴 기능
   const [menuActivated, setMenuActivated]     = useState('');
   const [menuAnchoredEl, setMenuAnchoredEl]   = useState(null);
@@ -1054,14 +1065,14 @@ console.log(primaryKey)
                           </StyledTableCell>
                         )
                       } else if (isSelectTypeCol){
-                        return(
-                          <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
-                            <Select 
-                              onChange = {event => handleChangeSelect(event, index)}
-                              options={selectOptions.sort} 
-                            />
-                          </StyledTableCell>
-                        )
+                          return(
+                            <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
+                              <Select 
+                                onChange = {event => handleChangeSelect(event, index)}
+                                options={selectOptions.sort} 
+                              />
+                            </StyledTableCell>
+                          )
                       } else if (isFileTypeCol){
                           let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
                           return(
@@ -1190,6 +1201,9 @@ console.log(primaryKey)
                       let   isQueryCol    = isQuery(header)
                       let   valid         = getValid(header)
                       let   isSelectTypeCol = isSelectType(header)
+                      let isFileTypeCol       = isFileType(header)
+                      let isSingleNoteTypeCol = isSingleNoteType(header)
+
 
                       if (!isColumnHided && header !== 'id') {
                         if (isQueryCol) {
@@ -1243,12 +1257,31 @@ console.log(primaryKey)
                             </StyledTableCell>
                           )
                         } else if (isSelectTypeCol) {
-                          return (
-                            <Select 
-                              onChange = {event => handleChangeSelect(event, index)}
-                              options={selectOptions.sort} 
-                            />
-                          )
+                            return (
+                              <Select 
+                                onChange = {event => handleChangeSelect(event, index)}
+                                options={selectOptions.sort} 
+                              />
+                            )
+                        } else if (isSingleNoteTypeCol) {
+                            return (
+                              <StyledTableCell>
+                                <SingleNote
+                                  fixMode   =  {true} 
+                                  onChange  =  {event => handleChangeSelect(event, index)}
+                                />
+                              </StyledTableCell>
+                            )
+                        } else if (isFileTypeCol) {
+                            return (
+                              <StyledTableCell>
+
+                                <DropZone 
+                                  // onChange = {event => handleChangeSelect(event, index)}
+                                  // options={selectOptions.sort} 
+                                />
+                              </StyledTableCell>
+                            )
                         } else {
                             return(
                               <StyledTableCell>

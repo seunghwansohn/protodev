@@ -1,5 +1,9 @@
 export var generateRandom = function (min, max) {
-    var ranNum = Math.floor(Math.random()*(999999-100001+1)) + 100001;
+    
+    var ranNum = min && max ? 
+        Math.floor(Math.random()*(max-min+1)) + min
+        : 
+        Math.floor(Math.random()*(999999-100001+1)) + 100001
     return ranNum;
 }
 

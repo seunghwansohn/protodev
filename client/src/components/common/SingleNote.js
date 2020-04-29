@@ -4,10 +4,12 @@ import TextField          from '@material-ui/core/TextField';
 import Dialog             from '@material-ui/core/Dialog';
 import NotesIcon from '@material-ui/icons/Notes';
 import Button                                   from '@material-ui/core/Button';
+import CreateIcon from '@material-ui/icons/Create';
 
 
 const TestPage = ({
-  value, 
+  value,
+  fixMode, 
   onChange, 
   onSubmit
 }) => {
@@ -27,9 +29,15 @@ const TestPage = ({
 
   return (
     <>
-      <Button onClick = {handleDialogOpen}>
-        <NotesIcon></NotesIcon>
-      </Button>
+      {fixMode ? 
+        <Button onClick = {handleDialogOpen}>
+          <CreateIcon></CreateIcon>
+        </Button>
+        : 
+        <Button onClick = {handleDialogOpen}>
+          <NotesIcon></NotesIcon>
+        </Button>
+      } 
       <Dialog
         open = {openedDialog}
       >
