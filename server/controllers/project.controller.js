@@ -8,6 +8,7 @@ const getIncludeName = require("../lib/getIncludeName");
 const getIncludingArr = require("../lib/getIncludingArr");
 const getIncludingAttr = require("../lib/getIncludingAttr");
 const getFindingAttr = require("../lib/getFindingAttr");
+const getIncludeNameFindOne = require("../lib/getIncludeNameFindOne");
 
 
 const getCreateObj = require("../lib/getCreateObj");
@@ -40,6 +41,8 @@ const relAttr = {
 const Op = db.Sequelize.Op;
 const primaryKey   = 'projectCode'
 
+const includingAttr = getIncludingAttr(relAttr)
+const findingAttr   = getFindingAttr(relAttr)
 
 exports.addNew = (req, res) => {
     const Arr = req.body
@@ -117,17 +120,15 @@ exports.update = async (req, res) => {
 };
 
 exports.query = (req, res) => {
-
-    const header = req.body.header
-    const tempObj = {}
-    tempObj[header] = req.body.value
-
-    Main.findOne({where:tempObj})
-    .then(res => {
-        console.log(res)
-        result = res.dataValues
-    }).then(() => res.status(200).send(result) )
-};
+    let {queryObj} = req.body
+    console.log(queryObj)
+    console.log(queryObj)
+    let where = queryObj
+  
+    getIncludeNameFindOne(relAttr.source, primaryKey, where, findingAttr, includingAttr).then(items => {
+      res.status(200).send(items)
+    })
+  };
   
 exports.addNotes = (req, res) => {
     const {obj} = req.body

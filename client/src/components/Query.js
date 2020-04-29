@@ -105,6 +105,11 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
         {type : 'fixable', newRow : true, size : 7, title: 'clientName', style:'regular'},
         {type : 'divider', typoGraphy : 'basicInfo'}
       ],
+      project : [
+        {type : 'primary', newRow : true, size : 5, title: 'projectCode', style:'regular'},
+        {type : 'fixable', newRow : true, size : 7, title: 'projectName', style:'regular'},
+        {type : 'divider', typoGraphy : 'basicInfo'}
+      ],
     }
     return tempObj
   }

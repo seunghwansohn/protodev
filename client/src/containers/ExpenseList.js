@@ -175,10 +175,10 @@ const ExpenseListContainer = ({
         defaultHided : false,
         validate : ['string'],
         query    : true,
-        dataType : 'maker', 
+        dataType : 'project', 
         clickType : 'makerQuery',
         queryType : 'simpleQuery',
-        size      : '60px'
+        size      : '100px'
       },
       createdAt : {
           fixable : false,
@@ -191,15 +191,15 @@ const ExpenseListContainer = ({
           dataType : dataType,
       },
     },
-    tableButton : [
-      {
-        title : 'insert',
-        func : function(selected){
-            dispatch(onAlreadyPickedCheck(selected.value))
-        },
-        // mother : containerNo
-      },
-    ],
+    // tableButton : [
+    //   {
+    //     title : 'insert',
+    //     func : function(selected){
+    //         dispatch(onAlreadyPickedCheck(selected.value))
+    //     },
+    //     // mother : containerNo
+    //   },
+    // ],
     findingKeys
   }
 
