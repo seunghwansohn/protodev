@@ -39,7 +39,7 @@ const relAttr = {
 }
 
 const Op = db.Sequelize.Op;
-const primaryKey   = 'id'
+const primaryKey   = 'expenseCode'
 
 
 const includingAttr = getIncludingAttr(relAttr)

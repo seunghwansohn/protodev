@@ -5,7 +5,7 @@ var multer = require('multer'); // multer모듈 적용 (for 파일업로드)
 // SET STORAGE
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'uploads')
+      cb(null, 'uploads/gaeguri')
     },
     filename: function (req, file, cb) {
       cb(null, file.originalname)

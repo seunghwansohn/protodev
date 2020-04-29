@@ -84,14 +84,15 @@ const ExpenseListContainer = ({
     flagAble : true,
     fixModeAble : true,
     colAttr : {
-      id : {
-          primary : true,
-          fixable : false,
-          defaultHided : false,
-          validate : ['code'],
-          dataType : dataType,
-          clickType : 'expenseQuery',
-          queryType : 'simpleQuery'
+      expenseCode : {
+        primary : true,
+        fixable : true,
+        defaultHided : true,
+        validate : ['string'],
+        dataType : dataType,
+        clickType : 'expenseQuery',
+        queryType : 'simpleQuery',
+        size : '100px'
       },
       description : {
           fixable : true,

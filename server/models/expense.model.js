@@ -1,5 +1,10 @@
 module.exports = (sequelize, Sequelize) => {
     const Expense = sequelize.define("expense", {
+      expenseCode: {
+        type: Sequelize.STRING,
+        unique: true,
+        allowNull: false
+      },
       description: {
         type: Sequelize.STRING,
         unique: false,

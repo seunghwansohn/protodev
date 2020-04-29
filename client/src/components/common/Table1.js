@@ -180,6 +180,10 @@ const STTable = ({
 
   const debugMode                   = useSelector(state => state.common.debugMode)
 
+  const { user } = useSelector(({ user }) => ({ user: user.user }));
+
+
+  console.log(user)
   //api에서 tableRawData 및 key 설정
   const [rawData, 
     setRawData]                       = useState([])
@@ -764,7 +768,7 @@ const STTable = ({
   },[querySelected])
  
 
-
+console.log(primaryKey)
   //헤더 메뉴 기능
   const [menuActivated, setMenuActivated]     = useState('');
   const [menuAnchoredEl, setMenuAnchoredEl]   = useState(null);
