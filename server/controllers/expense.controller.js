@@ -22,6 +22,8 @@ const setNameToCode = require("../lib/setNameToCode");
 const {produce} = require ('immer')
 
 const Expense = db.expense;
+const ExpenseSort = db.expenseSort;
+
 
 const Role = db.role;
 const Project = db.project;
@@ -29,12 +31,13 @@ const Project = db.project;
 const relAttr = {
   source : Expense,
   rels : [
-    // {
-    //   target: Project,
-    //   relType : 'including',
-    //   asStr : 'price',
-    //   attributes :['VNPrice', 'stkVVar', 'buyingPKR', 'stkCVar']
-    // }
+    {
+      target: Project,
+      relType : 'finding',
+      asStr : 'project',
+      attributes :['projectName'],
+      primaryCode : 'projectCode'
+    }
   ]
 }
 

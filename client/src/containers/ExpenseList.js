@@ -96,13 +96,13 @@ const ExpenseListContainer = ({
         size : '180px'
       },
       description : {
-          fixable : true,
-          defaultHided : false,
-          validate : ['string'],
-          dataType : dataType,
-          clickType : 'expenseQuery',
-          queryType : 'simpleQuery',
-          size : '300px'
+        fixable : true,
+        defaultHided : false,
+        validate : ['string'],
+        dataType : dataType,
+        clickType : 'expenseQuery',
+        queryType : 'simpleQuery',
+        size : '300px'
       },
       sort : {
         fixable : true,
@@ -165,6 +165,16 @@ const ExpenseListContainer = ({
         defaultHided : false,
         validate : ['string'],
         type     : 'singleNote',
+        dataType : 'maker',
+        clickType : 'makerQuery',
+        queryType : 'simpleQuery',
+        size      : '60px'
+      },
+      projectName : {
+        fixable : true,
+        defaultHided : false,
+        validate : ['string'],
+        query    : true,
         dataType : 'maker',
         clickType : 'makerQuery',
         queryType : 'simpleQuery',
