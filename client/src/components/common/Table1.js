@@ -98,12 +98,18 @@ const StyledTableHeader = styled(TableHead)`
   background-color: #e4f4e5;
 `
 const StyledTableBody = styled(TableBody)`
+  .MuiTableCell-root {
+    padding : 0px;
+    padding-left : 10px;
+    padding-right : 10px;
+  }
   background-color: #7772e5;
   &:hover {
     background-color : #e4f4e5;
   }
 `
 const StyledCheckBox = styled(Checkbox)`
+
   background-color: #ffffff;
   &:hover {
     background-color : #e4f4e5;
@@ -117,8 +123,6 @@ const StyledTableCell = styled(TableCell)`
   }
   max-width : ${props => props.size};
   width : ${props => props.size};
-  padding : 0px;
-  margin : 0px;
 `
 
 const StyledInput = styled(Input)`
@@ -129,8 +133,11 @@ const StyledInput = styled(Input)`
   }
 `
 const MiniHelperText = styled(TextField)`
+  .MuiInput-root	 {
+    font-size : 13px;
+  }
   .MuiFormHelperText-root {
-    font-size : 11px;
+    font-size : 7px;
     color : red;
     width : 100%;
   }
@@ -382,7 +389,7 @@ const STTable = ({
   //selectType 관련
   const [selectOptions, setSelectOptions] = useState({})
   const [selectedVal, setSelectedVal]     = useState({})
-
+  const [selectMenuOpened, setSelectMenuOpened]     = useState([])
   useEffect(() => {
     let colAttrKeys = Object.keys(colAttr)
     colAttrKeys.map(async key => {
@@ -412,12 +419,38 @@ const STTable = ({
     })
   },[])
   const handleChangeSelect = (event, index) => {
+    const {value, label} = event
     setSelectedVal(
       produce(selectedVal, draft => {
-        draft[index] = event
+        draft[index] = value
       })
     )
   }
+  const handleClickSelectChoose = (event, idx) => {
+    if (event.key !== 'Enter') {
+      setSelectMenuOpened(
+        produce(selectMenuOpened, draft => {
+          draft[idx] = true
+        })
+      )
+    } else if (event.key == 'Enter') {
+      setSelectMenuOpened(
+        produce(selectMenuOpened, draft => {
+          console.log(idx)
+          draft[idx] = false
+        })
+      )
+    }
+  }
+  useEffect(() => {
+    let tempArr = []
+    filteredData.map((data, index) => {
+      tempArr.push(false)
+    })
+    setSelectMenuOpened(tempArr)
+  },[filteredData])
+
+  console.log(selectMenuOpened)
 
 
   //인덱스값만 넣어서 primaryCode를 얻는 기능
@@ -936,7 +969,7 @@ console.log(addedNew)
       {fixModeAble ? <button onClick = { onSetfixMode }>fixmode</button> :''}
 
       <TableContainer>
-        <StyledTable size = {'small'}>
+        <StyledTable>
 
           <StyledTableHeader>
             <TableRow>
@@ -948,7 +981,7 @@ console.log(addedNew)
                 const isColumnHided = isHidedCulumn(header)
                 if (!isColumnHided) {
                   return (
-                    <TableCell key = {index} style = {{textAlign : 'center'}}>
+                    <StyledTableCell key = {index} style = {{textAlign : 'center'}}>
                       {spacelize(header)}
                       <Menu
                         key="menu"
@@ -968,15 +1001,15 @@ console.log(addedNew)
                           <ListItemText>fefe</ListItemText>
                         </List>
                       </Menu>
-                    </TableCell>
+                    </StyledTableCell>
                   )
                 }
               }) : ''}
               {tableButton ? tableButton.map((obj, index) => {
                 return(
-                  <TableCell key = {index}>
+                  <StyledTableCell key = {index}>
                     {obj.title}
-                  </TableCell>
+                  </StyledTableCell>
                 )
               }):''}
 
@@ -993,15 +1026,16 @@ console.log(addedNew)
               return(
                 <TableRow 
                   key = {tableHeaderVals[index]}
+                  // style = {{height : '200px'}}
                 >
                   {attr.flagAble ? 
-                    <TableCell style = {{padding : '0px', margin : '0px'}}>
+                    <StyledTableCell style = {{padding : '0px', margin : '0px'}}>
                       <StyledCheckBox
                         inputProps={{ 'aria-labelledby': labelId }}
                         onClick={event => handleClickFlag(row, null, selected, setSelected)}
                         checked= {isSelectedRow}
                       />
-                    </TableCell>:''
+                    </StyledTableCell>:''
                   }
                   <StyledTableCell>
                     {index+1}
@@ -1054,6 +1088,8 @@ console.log(addedNew)
                           <StyledTableCell fixable = {isfixableCol}>
                             <MiniHelperText 
                               key = {header }
+                              size       = 'small'
+                              style = {{width : '100%'}}
                               value = {filteredData[index][header]} 
                               onChange = {(event) => handleChangeInput(event, index, header)} 
                               onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
@@ -1061,15 +1097,21 @@ console.log(addedNew)
                               InputProps = {{
                                 endAdornment : <InputAdornment position="end"><SmallKeyPopUp>Enter</SmallKeyPopUp><SmallKeyPopUp>Tab</SmallKeyPopUp></InputAdornment>
                               }}
-                            />ㄷㄷㄷ
+                            />
                           </StyledTableCell>
                         )
                       } else if (isSelectTypeCol){
+
                           return(
                             <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
                               <Select 
+                                key = {'select' + index}
                                 onChange = {event => handleChangeSelect(event, index)}
                                 options={selectOptions.sort} 
+                                menuIsOpen = {selectMenuOpened[index]}
+                                // onInputChange = {event => handleClickSelectOpen(event, index)}
+                                // openMenuOnClick = {event => handleClickSelectChoose(index)}
+                                onKeyDown = {event => handleClickSelectChoose(event, index)}
                               />
                             </StyledTableCell>
                           )
@@ -1192,10 +1234,10 @@ console.log(addedNew)
             {addedNew && addedNew.length > 0 ? addedNew.map((row, index) => {
               return (
                 <TableRow>
-                  <StyledCheckBox
-
-                  />
-                  <StyledTableCell>{index + 1}<button onClick = {check}></button></StyledTableCell>
+                  <StyledTableCell style = {{padding : '0px', margin : '0px'}}>
+                    <StyledCheckBox/>
+                  </StyledTableCell>
+                  <StyledTableCell>{index + 1}</StyledTableCell>
                     {headers.map((header, idx6) => {
                       const isColumnHided = isHidedCulumn(header)
                       let   isQueryCol    = isQuery(header)
@@ -1258,10 +1300,16 @@ console.log(addedNew)
                           )
                         } else if (isSelectTypeCol) {
                             return (
-                              <Select 
-                                onChange = {event => handleChangeSelect(event, index)}
-                                options={selectOptions.sort} 
-                              />
+                              <StyledTableCell>
+                                <Select 
+                                  key = {'select' + index}
+                                  onChange = {event => handleChangeSelect(event, index)}
+                                  options={selectOptions.sort} 
+                                  menuIsOpen = {selectMenuOpened[index]}
+                                  onKeyDown = {event => handleClickSelectChoose(event, index)}
+
+                                />
+                              </StyledTableCell>
                             )
                         } else if (isSingleNoteTypeCol) {
                             return (
@@ -1287,9 +1335,12 @@ console.log(addedNew)
                             return(
                               <StyledTableCell>
                                 <MiniHelperText
+                                  key        = {header }
                                   value      = {row[header]}
+                                  style      = {{width: '100%'}}
+                                  size       = 'small'
                                   error      = {newAddedError[index][header]} 
-                                  style      = {{width : '100%'}}
+                                  style      = {{width : '100%', fontSize : '7px'}}
                                   onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
                                   onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
                                   helperText = {newAddedhelperTexts[index][header]}

@@ -175,7 +175,7 @@ const ExpenseListContainer = ({
         defaultHided : false,
         validate : ['string'],
         query    : true,
-        dataType : 'maker',
+        dataType : 'maker', 
         clickType : 'makerQuery',
         queryType : 'simpleQuery',
         size      : '60px'
