@@ -19,6 +19,9 @@ import Paper from '@material-ui/core/Paper';
 
 import Button           from '@material-ui/core/Button';
 
+import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+
+
 
 
 // const pdfBuffer = require('fs').readFileSync('/some/path/example.pdf');
@@ -28,7 +31,7 @@ const StyledDiv = styled.div`
 `
 
 
-const DropZone = () => {
+const DropZone = ({fixMode}) => {
   const [file, setFile]                   = useState([])
   const [fileName, setFileName]           = useState([])
   const [openedDialog, setOpenedDialog]   = useState(false)
@@ -99,12 +102,21 @@ const DropZone = () => {
 
   return (
     <React.Fragment>
+      {fixMode ? 
+        <StyledDiv {...getRootProps()}>
+          <input {...getInputProps()} />
+          {
+            <CloudUploadIcon></CloudUploadIcon>
+          }
+        </StyledDiv>  
+      : 
       <StyledDiv {...getRootProps()}>
         <input {...getInputProps()} />
         {
           <ArchiveIcon></ArchiveIcon>
         }
       </StyledDiv>  
+      }
 
       <Dialog
         open = {openedDialog}

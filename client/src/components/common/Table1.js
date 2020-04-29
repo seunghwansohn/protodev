@@ -1276,7 +1276,8 @@ console.log(addedNew)
                             return (
                               <StyledTableCell>
 
-                                <DropZone 
+                                <DropZone
+                                  fixMode = {true} 
                                   // onChange = {event => handleChangeSelect(event, index)}
                                   // options={selectOptions.sort} 
                                 />
