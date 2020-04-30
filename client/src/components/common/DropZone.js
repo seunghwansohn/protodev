@@ -31,11 +31,12 @@ const StyledDiv = styled.div`
 `
 
 
-const DropZone = ({fixMode}) => {
+const DropZone = ({fixMode, dataType, primaryKey, primaryCode}) => {
   const [file, setFile]                   = useState([])
   const [fileName, setFileName]           = useState([])
   const [openedDialog, setOpenedDialog]   = useState(false)
 
+  console.log(dataType, primaryKey, primaryCode)
   // const pdfBuffer = fs.readFileSync('/SuppliersPage.js')
 
 
@@ -70,16 +71,16 @@ const DropZone = ({fixMode}) => {
   const addFiles = () => {
     const url = '/api/addfiles';
     var formData = new FormData();
-    console.log(file)
-    formData.append('location', '푸하하')
-    formData.append('type', 'expense')
+    formData.append('location', primaryCode)
+    formData.append('type', dataType)
+    formData.append('primaryKey', primaryKey)
+    formData.append('primaryCode', primaryCode)
+
     file.map(a => {formData.append(`images`, a)})
     const config = {
       headers: {
         'content-type': 'multipart/form-data'
       },
-      type : 'expense',
-      destination : '푸하하'
     }
     axios.post(url, formData, config)
   }

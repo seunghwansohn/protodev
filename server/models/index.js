@@ -39,6 +39,8 @@ db.projectNote  = require("../models/project.notes.model.js")(sequelize, Sequeli
 db.task         = require("../models/task.model.js")(sequelize, Sequelize);
 db.expense      = require("../models/expense.model.js")(sequelize, Sequelize);
 db.expenseSort  = require("../models/expenseSort.model.js")(sequelize, Sequelize);
+db.files        = require("../models/files.model.js")(sequelize, Sequelize);
+
 
 
 db.role.belongsToMany(db.user, {
@@ -79,6 +81,9 @@ db.maker.belongsTo(db.makerNote,
 
 db.project.hasMany(db.projectNote, 
     {as : "tasks", foreignKey: 'projectCode', sourceKey: 'projectCode'})
+        
+db.expense.hasMany(db.files, 
+    {as : "files", foreignKey: 'relCode', sourceKey: 'expenseCode'})
         
 db.ROLES = ["user", "admin", "moderator"];
 

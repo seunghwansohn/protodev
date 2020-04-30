@@ -27,6 +27,8 @@ const ExpenseSort = db.expenseSort;
 
 const Role = db.role;
 const Project = db.project;
+const Files = db.files;
+
 
 const relAttr = {
   source : Expense,
@@ -37,6 +39,13 @@ const relAttr = {
       asStr : 'project',
       attributes :['projectName'],
       primaryCode : 'projectCode'
+    },
+    {
+      target: Files,
+      relType : 'including',
+      asStr : 'files',
+      attributes :['addresses'],
+      primaryCode : 'relCode'
     }
   ]
 }

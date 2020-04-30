@@ -899,6 +899,7 @@ console.log(addedNew)
     setAnswer : setAddCopiedNew
   }
 
+  console.log(primaryKey)
 
   //테이블 셀렉트
   const [selected, setSelected]         = useState([]);
@@ -1123,6 +1124,13 @@ console.log(addedNew)
                               <DropZone 
                                 // onChange = {event => handleChangeSelect(event, index)}
                                 // options={selectOptions.sort} 
+                                motherFrameNo = {frameNo}
+                                motherNo      = {currentNo}
+                                motherType    = {currentType}
+
+                                dataType       = {dataType}
+                                primaryKey     = {primaryKey}
+                                primaryCode    = {primaryCode}
                               />
                             </StyledTableCell>
                         )

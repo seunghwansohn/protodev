@@ -1,78 +1,63 @@
 
-var multer = require('multer'); // multer모듈 적용 (for 파일업로드)
+const db = require("../models");
+const config = require("../config/auth.config");
+const multer = require('multer'); // multer모듈 적용 (for 파일업로드)
+
+const Expense = db.expense;
+const ExpenseSort = db.expenseSort;
+const Files = db.files;
 
 
-const upload = (type, location) => {
-    let fullLocation = 'uploads/' + type + '/' + location
-    let storage = multer.diskStorage({
-      destination: function (req, file, cb) {
-        console.log('레큐크크', req)
-        cb(null, fullLocation)
-      },
-      filename: function (req, file, cb) {
-        cb(null, file.originalname)
-      }
-    })
-    return multer({ storage: storage });
-}
+// const relAttr = {
+//   source : Item,
+//   rels : [
+//     {
+//       target: Supplier,
+//       relType : 'finding',
+//       asStr : 'supplier',
+//       attributes : ['supplierName'],
+//       primaryCode : 'supplierCode'
+//     },
+//     {
+//       target: Maker,
+//       relType : 'finding',
+//       asStr : 'maker',
+//       attributes : ['makerName'],
+//       primaryCode : 'makerCode'
+//     },
+//     {
+//       target: ItemPrice,
+//       relType : 'including',
+//       asStr : 'price',
+//       attributes :['VNPrice', 'stkVVar', 'buyingPKR', 'stkCVar']
+//     }
+//   ]
+// }
+
 
 exports.uploadFile = (req, res) => {
-    console.log(req)
-    const file      = req.files
-    let   location  = req.body.location
-    let   type      = req.body.type
-    // console.log('레큐파람은 ', req.params.id)
-    // Note.findAll({where : {projectCode : req.params.id}}
-    // ).then(notes => {
-    //     console.log(notes)
-    //     result = notes
-    // }).then(() => {
-    //     res.status(200).send(result);
-    // })
-    upload(type, location).array('images', 10)
+    const file        = req.files
+    let   location    = req.body.location
+    let   type        = req.body.type
+    let   primaryKey  = req.body.primaryKey
+    let   primaryCode = req.body.primaryCode
+
+    let   files       = req.files
+
+    let   Source    = db[type]
+    
+    let where = {}
+    where[primaryKey] = primaryCode
+
+    console.log(req.files)
+
+    files.map(file => {
+      Files.create({
+        type : type,
+        relCode : primaryCode,
+        addresses : file.path
+      })
+    })
 };  
   
 
-// var upload = (type, location) => {
-//     let fullLocation = 'uploads/' + type + '/' + location
-//     let storage = multer.diskStorage({
-//       destination: function (req, file, cb) {
-//         cb(null, fullLocation)
-//       },
-//       filename: function (req, file, cb) {
-//         cb(null, file.originalname)
-//       }
-//     })
-//     return multer({ storage: storage });
-// }
-  
-    
-
-// module.exports = function(app) {
-//     app.use(function(req, res, next) {
-//       res.header(
-//         "Access-Control-Allow-Headers",
-//         "x-access-token, Origin, Content-Type, Accept"
-//       );
-//       next();
-//     });
-  
-//     app.post("/api/addfiles", upload().array('images', 10), (req, res) => {
-//       // console.log(req)
-//       const file = req.files
-//       let location = req.body.location
-//       let type     = req.body.type
-  
-//       console.log(location)
-//       // console.log(file)
-//       if (file == [] || file == undefined) {
-//         const error = new Error('Please upload a file')
-//         error.httpStatusCode = 400
-//         return next(error)
-//       }
-//         res.send('upload Succeccfully')
-      
-//     })
-  
-//   };
-  
