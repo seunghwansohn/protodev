@@ -71,15 +71,17 @@ const DropZone = ({fixMode}) => {
     const url = '/api/addfiles';
     var formData = new FormData();
     console.log(file)
-
+    formData.append('location', '푸하하')
+    formData.append('type', 'expense')
     file.map(a => {formData.append(`images`, a)})
-    console.log(formData.entries())
     const config = {
       headers: {
         'content-type': 'multipart/form-data'
-      }
+      },
+      type : 'expense',
+      destination : '푸하하'
     }
-    return axios.post(url, formData, config)
+    axios.post(url, formData, config)
   }
     
     

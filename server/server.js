@@ -42,12 +42,12 @@ require('./routes/client.routes')(app)
 require('./routes/supplier.routes')(app)
 require('./routes/common.routes')(app)
 require('./routes/maker.routes')(app)
-require('./routes/quotes.routes')(app)
+// require('./routes/quotes.routes')(app)
 require('./routes/project.routes')(app)
 require('./routes/task.routes')(app)
 require('./routes/expense.routes')(app)
 require('./routes/expenseSort.routes')(app)
-
+require('./routes/uploadFile.routes')(app)
 
 
 const port = process.env.PORT || 5000;

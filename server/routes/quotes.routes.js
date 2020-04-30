@@ -2,17 +2,30 @@ const controller = require("../controllers/quotes.controller");
 
 var multer = require('multer'); // multer모듈 적용 (for 파일업로드)
 
-// SET STORAGE
-var storage = multer.diskStorage({
+// let location = ''
+// let fullLocation = 'uploads/' + location
+// // SET STORAGE
+// var storage = multer.diskStorage({
+//     destination: function (req, file, cb) {
+//       cb(null, fullLocation)
+//     },
+//     filename: function (req, file, cb) {
+//       cb(null, file.originalname)
+//     }
+// })
+   
+var upload = (type, location) => {
+  let fullLocation = 'uploads/' + type + '/' + location
+  let storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      cb(null, 'uploads/gaeguri')
+      cb(null, fullLocation)
     },
     filename: function (req, file, cb) {
       cb(null, file.originalname)
     }
-})
-   
-var upload = multer({ storage: storage });
+  })
+  return multer({ storage: storage });
+}
 
   
 module.exports = function(app) {
@@ -24,9 +37,14 @@ module.exports = function(app) {
     next();
   });
 
-  app.post("/api/addfiles", upload.array('images', 10), (req, res) => {
+  app.post("/api/addfiles", upload().array('images', 10), (req, res) => {
+    // console.log(req)
     const file = req.files
-    console.log(file)
+    let location = req.body.location
+    let type     = req.body.type
+
+    console.log(location)
+    // console.log(file)
     if (file == [] || file == undefined) {
       const error = new Error('Please upload a file')
       error.httpStatusCode = 400
@@ -37,6 +55,3 @@ module.exports = function(app) {
   })
 
 };
-
-
-
