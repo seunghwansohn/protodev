@@ -19,7 +19,7 @@ import styled   from 'styled-components';
 
 import axios                from '../lib/api/axios'
 import {getIncludingKeys,
-    withoutIncludingKeys }  from '../lib/common'
+    withoutKeys }  from '../lib/common'
 
 const MiniPlaylistAddIcon = styled(PlaylistAddIcon)`
   .MuiButton-root{
@@ -53,7 +53,7 @@ const ExpenseTable = () => {
     await axios.get('/api/' + dataType + '/load').then(res => {
         setPrimaryKey(res.data.primaryKey)
         setIncludingKeys(res.data.includingKeys)
-        setRawData(withoutIncludingKeys(res.data.vals))
+        setRawData(withoutKeys(res.data.vals))
         setFindingKeys(res.data.findingKeys)
     })
   }

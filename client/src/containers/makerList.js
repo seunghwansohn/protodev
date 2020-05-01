@@ -24,7 +24,7 @@ import Button           from '@material-ui/core/Button';
 
 import axios                from '../lib/api/axios'
 import {getIncludingKeys,
-    withoutIncludingKeys }  from '../lib/common'
+    withoutKeys }  from '../lib/common'
 
 
 
@@ -97,7 +97,7 @@ const MakerContainer = ({
         await axios.get('/api/' + dataType + '/load').then(res => {
             setPrimaryKey(res.data.primaryKey)
             setIncludingKeys(res.data.includingKeys)
-            setTableRawData(withoutIncludingKeys(res.data.vals))
+            setTableRawData(withoutKeys(res.data.vals))
             setFindingKeys(res.data.findingKeys)
         })
     }

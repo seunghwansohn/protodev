@@ -40,7 +40,8 @@ import SmallKeyPopUp      from './SmallKeyPopUp';
 import {generateRandom}     from '../../lib/common';
 import axios                from '../../lib/api/axios'
 import {getIncludingKeys,
-    withoutIncludingKeys }  from '../../lib/common'
+    withoutKeys,
+    getOnlyFiles }  from '../../lib/common'
 
 import spacelize                        from '../../lib/spacelize'
 import {getDate_yyyymmddhhmm}             from '../../lib/getDate'
@@ -195,23 +196,35 @@ const STTable = ({
   console.log(user)
   //api에서 tableRawData 및 key 설정
   const [rawData, 
-    setRawData]                       = useState([])
+    setRawData]                     = useState([])
   const [includingKeys, 
-      setIncludingKeys]               = useState([]);
+    setIncludingKeys]               = useState([]);
+  const [filesKeys, 
+    setFilesKeys]                   = useState([]);
   const [findingKeys, 
-      setFindingKeys]                 = useState([]);
+    setFindingKeys]                 = useState([]);
+  const [attachedFiles, 
+    setAttachedFiles]               = useState([]);
+
   const getRawData = async () => {
     await axios.get('/api/' + dataType + '/load').then(res => {
+      console.log(res.data.vals[0].files)
       setPrimaryKey(res.data.primaryKey)
       setIncludingKeys(res.data.includingKeys)
-      setRawData(withoutIncludingKeys(res.data.vals))
       setFindingKeys(res.data.findingKeys)
+      setFilesKeys(res.data.filesKeys)
+
+      if (filesKeys) {
+        setAttachedFiles(getOnlyFiles(res.data.vals))
+      }
+      setRawData(withoutKeys(res.data.vals))
     })
   }
   useEffect(() => {
     getRawData()
   },[])
 
+  console.log(attachedFiles)
 
   //테이블 필터
   const [filterKeyword, setFilterKeyword]     = useState('');
@@ -1131,6 +1144,8 @@ console.log(addedNew)
                                 dataType       = {dataType}
                                 primaryKey     = {primaryKey}
                                 primaryCode    = {primaryCode}
+
+                                files          = {attachedFiles[index]}
                               />
                             </StyledTableCell>
                         )

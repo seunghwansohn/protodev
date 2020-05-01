@@ -21,6 +21,7 @@ import Button           from '@material-ui/core/Button';
 
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
+import {generateRandom}     from '../../lib/common';
 
 
 
@@ -31,14 +32,28 @@ const StyledDiv = styled.div`
 `
 
 
-const DropZone = ({fixMode, dataType, primaryKey, primaryCode}) => {
+const DropZone = ({
+  fixMode, 
+  dataType, 
+  primaryKey, 
+  primaryCode, 
+  files
+}) => {
   const [file, setFile]                   = useState([])
+  const [requestNo, setRequestNo]         = useState('')
+
   const [fileName, setFileName]           = useState([])
   const [openedDialog, setOpenedDialog]   = useState(false)
 
   console.log(dataType, primaryKey, primaryCode)
   // const pdfBuffer = fs.readFileSync('/SuppliersPage.js')
 
+  console.log(file)
+
+
+  useEffect(() => {
+    setRequestNo(generateRandom())
+  },[])
 
   const handleCloseDialog = () => {
     setOpenedDialog(false)
@@ -68,6 +83,8 @@ const DropZone = ({fixMode, dataType, primaryKey, primaryCode}) => {
     )
   }
     
+  console.log(requestNo)
+
   const addFiles = () => {
     const url = '/api/addfiles';
     var formData = new FormData();
@@ -75,6 +92,7 @@ const DropZone = ({fixMode, dataType, primaryKey, primaryCode}) => {
     formData.append('type', dataType)
     formData.append('primaryKey', primaryKey)
     formData.append('primaryCode', primaryCode)
+    formData.append('requestNo', requestNo)
 
     file.map(a => {formData.append(`images`, a)})
     const config = {
@@ -138,11 +156,16 @@ const DropZone = ({fixMode, dataType, primaryKey, primaryCode}) => {
           </div>
         </Paper>
         {file.map(file => {
-          console.log(file)
+          console.log(typeof file)
           const realWidth = file.naturalWidth
           console.log(realWidth)
           return (
             <img src = {URL.createObjectURL(file)} height = 'auto' width = '100%'></img>
+          )
+        })}
+        {files.map(file => {
+          return (
+            <img src = {'/' + file} height = 'auto' width = '100%'></img>
           )
         })}
       </Dialog>

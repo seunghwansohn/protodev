@@ -9,6 +9,8 @@ const getIncludeNameFindOne = require("../lib/getIncludeNameFindOne");
 const getIncludingArr = require("../lib/getIncludingArr");
 const getIncludingAttr = require("../lib/getIncludingAttr");
 const getFindingAttr = require("../lib/getFindingAttr");
+const getFilesAttr   = require("../lib/getFilesAttr");
+
 const getIncludeAttrArr = require("../lib/getIncludeAttrArr");
 const getMatchedAttr = require("../lib/getMatchedAttr");
 const setUpdate = require("../lib/setUpdate");
@@ -29,7 +31,6 @@ const Role = db.role;
 const Project = db.project;
 const Files = db.files;
 
-
 const relAttr = {
   source : Expense,
   rels : [
@@ -42,7 +43,7 @@ const relAttr = {
     },
     {
       target: Files,
-      relType : 'including',
+      relType : 'files',
       asStr : 'files',
       attributes :['addresses'],
       primaryCode : 'relCode'
@@ -56,6 +57,10 @@ const primaryKey   = 'expenseCode'
 
 const includingAttr = getIncludingAttr(relAttr)
 const findingAttr   = getFindingAttr(relAttr)
+const filesAttr     = getFilesAttr(relAttr)
+
+console.log(filesAttr)
+
 
 exports.addNew = (req, res) => {
   const {addedNew, primaryKey, includingKeys, findingKeys} = req.body
@@ -93,7 +98,7 @@ exports.update = async (req, res) => {
 exports.load = (req, res) => {
   const includingAttr = getIncludingAttr(relAttr)
   const findingAttr   = getFindingAttr(relAttr)
-  getIncludeName(Expense, primaryKey, findingAttr, includingAttr).then(expenses => {
+  getIncludeName(Expense, primaryKey, findingAttr, includingAttr, filesAttr).then(expenses => {
     res.status(200).send(expenses)
   })
 };

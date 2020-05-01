@@ -33,6 +33,7 @@ app.get('/', (req,res) => {
   res.send({message: "Welcome to bezkoder application." })
 });
 
+app.use(express.static('public'));
 
 require('./routes/auth.routes')(app)
 require('./routes/user.routes')(app)

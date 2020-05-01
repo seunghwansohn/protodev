@@ -14,13 +14,22 @@
 // }
 
 
-module.exports = function (source, primaryKey, findingAttr, includingAttr) {
+module.exports = function (source, primaryKey, findingAttr, includingAttr, filesAttr) {
   let includingKeys = {}
   let findingKeys = []
+  let filesKeys = []
+
   let afterIncluding = ''
 
   includingAttr.map(obj => {
     includingKeys[obj.as] = (obj.attributes)
+  })
+
+  filesAttr.map(obj => {
+    let tempObj = {}
+    tempObj[obj.as] = {}
+    tempObj[obj.as][obj.primaryCode] = obj.attributes[0]
+    filesKeys.push(tempObj)
   })
 
   findingAttr.map(obj => {
@@ -31,9 +40,11 @@ module.exports = function (source, primaryKey, findingAttr, includingAttr) {
   })
 
 
-  let concatedAttr = includingAttr.concat(findingAttr)
+  let concatedAttr  = includingAttr.concat(findingAttr)
+  concatedAttr      = concatedAttr.concat(filesAttr)
 
   console.log(concatedAttr)
+
   return source.findAll({
     include : concatedAttr
   }).then(async arr => {
@@ -54,14 +65,14 @@ module.exports = function (source, primaryKey, findingAttr, includingAttr) {
         let as = await attr.as
         let primaryCode = await attr.primaryCode
 
-        console.log('타겟코드는 ', targetCodes)
-        console.log('애즈는 ', as)
-        console.log('프라이머리코드는 ', primaryCode)
+        // console.log('타겟코드는 ', targetCodes)
+        // console.log('애즈는 ', as)
+        // console.log('프라이머리코드는 ', primaryCode)
 
         await targetCodes.map(async targetCode => {
-          console.log(obj.dataValues)
+          // console.log(obj.dataValues)
           if (obj.dataValues[as] !== null && obj.dataValues[as] !== undefined) {
-            console.log('애즈는 낫눌 ', obj.dataValues[as])
+            // console.log('애즈는 낫눌 ', obj.dataValues[as])
             obj.dataValues[targetCode] = await obj.dataValues[as].dataValues[targetCode]
             await delete obj.dataValues[as]
             await delete obj.dataValues[primaryCode]
@@ -69,7 +80,7 @@ module.exports = function (source, primaryKey, findingAttr, includingAttr) {
         })
       })
     })
-    afterIncluding = await {primaryKey : primaryKey, includingKeys : includingKeys, findingKeys : findingKeys, vals :arr}
+    afterIncluding = await {primaryKey : primaryKey, includingKeys : includingKeys, findingKeys : findingKeys, filesKeys : filesKeys, vals :arr}
     return afterIncluding
   })
 }

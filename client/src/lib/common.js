@@ -15,10 +15,12 @@ export const getIncludingKeys = (arr) => {
     return tempArr
 }
 
-export const withoutIncludingKeys = (arr) => {
+export const withoutKeys = (arr) => {
     let tempArr = []
     arr.map(obj => {
         delete obj.includingKeys
+        delete obj.files
+
         tempArr.push(obj)
     })
     return tempArr
@@ -35,7 +37,18 @@ export const getIncludingKeys1 = (arr) => {
     return tempArr
 }
 
-// export const withoutIncludingKeys1 = (arr) => {
+export const getOnlyFiles = (arr) => {
+    console.log(arr)
+    let tempArr = []
+    arr.map(obj => {
+        console.log(typeof obj.files)
+        tempArr.push(obj.files)
+    })
+    console.log(tempArr)
+    return tempArr
+}
+
+// export const withoutKeys1 = (arr) => {
 //     let tempArr = []
 //     arr.map(obj => {
 //         Object.keys(obj).map(key => 
