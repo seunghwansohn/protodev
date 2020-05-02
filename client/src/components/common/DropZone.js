@@ -38,6 +38,11 @@ import ListSubheader from '@material-ui/core/ListSubheader';
 import IconButton from '@material-ui/core/IconButton';
 import InfoIcon from '@material-ui/icons/Info';
 
+import AddIcon from '@material-ui/icons/Add';
+
+
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
@@ -51,6 +56,21 @@ const useStyles = makeStyles((theme) => ({
 
 const StyledDiv = styled.div`
   width : 30px;
+`
+
+const StyledGridListTile = styled(GridListTile)`
+  .MuiSvgIcon-root {
+    width : 5em;
+    height : 5em;
+    color : rgba(0, 0, 0, 0.51);
+    font-size : 2em;
+  }
+  .MuiPaper-root {
+    color : rgba(0, 0, 0, 0.51);
+  }
+  .MuiGridListTile-tile {
+    text-align: center;
+  }
 `
 
 
@@ -68,6 +88,8 @@ const DropZone = ({
 
   const [fileName, setFileName]           = useState([])
   const [openedDialog, setOpenedDialog]   = useState(false)
+  const [openedTileDialog, setOpenedTileDialog]   = useState({})
+
 
   const [attachedFiles, setAttachedFiles] = useState([])
 
@@ -123,7 +145,20 @@ const DropZone = ({
     })
   },[requestNo])
 
-  console.log(attachedFiles)
+  useEffect(() => {
+    let tempObj = {}
+
+    attachedFiles.map(file => {
+      let lastSlash = file.lastIndexOf('/')
+      let length = file.length  
+      let originalFileName = file.slice(lastSlash + 1, length-4)
+      tempObj[originalFileName] = false
+
+    })
+    setOpenedTileDialog(tempObj)
+  },[attachedFiles])
+
+  console.log(openedTileDialog)
   const addFiles = () => {
     const url = '/api/addfiles';
     var formData = new FormData();
@@ -143,6 +178,23 @@ const DropZone = ({
   }
     
     
+  const handleOpenTileDialog = (originalFileName) => {
+    console.log(originalFileName)
+    setOpenedTileDialog(
+      produce(openedTileDialog, draft => {
+        draft[originalFileName] = true
+      })
+    )
+  }
+
+  const handleCloseTileDialog = async (originalFileName) => {
+    console.log(originalFileName)
+    let tempObj = await {...openedTileDialog}
+    tempObj[originalFileName] = await false
+    await setOpenedTileDialog(tempObj)
+  }
+
+  console.log(openedTileDialog)
 
   const onDrop = (acceptedFiles) => {
     console.log(acceptedFiles)
@@ -155,6 +207,8 @@ const DropZone = ({
       })
     )
   }
+
+
 
   console.log(file)
 
@@ -183,33 +237,53 @@ const DropZone = ({
       >
         <DialogTitle id="alert-dialog-title">Are you confirm the data you input?</DialogTitle>
         <Button onClick = {addFiles}>제출</Button>
-        <Paper elevation={0}>
-          <div {...getRootProps()}>
-            <input {...getInputProps()} />
-              {isDragActive ?
-                <p>Drop the files here ...</p> :
-                <p>Drag 'n' drop some files here, or click to select files</p>}
-          </div>
-        </Paper>
+
 
         <GridList cols = {4} cellHeight={360} className={classes.gridList}>
-          <GridListTile key="Subheader" cols={1} style={{ height: 'auto' }}>
-            <ListSubheader component="div">December</ListSubheader>
-          </GridListTile>
-          {attachedFiles.map((tile) => (
-            <GridListTile cols={1} key={tile}>
-              <img src={tile} alt={tile.title} />
-              <GridListTileBar
-                title={tile.title}
-                subtitle={<span>by: {tile.author}</span>}
-                actionIcon={
-                  <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
-                    <InfoIcon />
-                  </IconButton>
-                }
-              />
-            </GridListTile>
-          ))}
+          <StyledGridListTile key="Subheader" cols={1} style={{ height: 'auto' }}>
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+                {isDragActive ?
+                  <p>Drop the files here ...</p> :
+                  <p>Drag 'n' drop some files here, or click to select files</p>}
+            </div>
+            <AddIcon></AddIcon>
+            
+          </StyledGridListTile>
+          {attachedFiles.map((file, idx) => {
+            let lastSlash = file.lastIndexOf('/')
+            let length = file.length  
+            let originalFileName = file.slice(lastSlash + 1, length-4)
+            return(
+              <GridListTile onClick = {event => {handleOpenTileDialog(originalFileName)}} cols={1} key={file}>
+                <img src={file} alt={file.title} />
+                <GridListTileBar
+                  title={file.title}
+                  subtitle={<span>by: {file.author}</span>}
+                  actionIcon={
+                    <IconButton aria-label={`info about ${file.title}`} className={classes.icon}>
+                      <InfoIcon />
+                    </IconButton>
+                  }
+                />
+                <Dialog
+                  key = {'tile' + idx}
+                  open = {openedTileDialog[originalFileName]}
+                  onClose = {(event) => handleCloseTileDialog(originalFileName)}
+                  maxWidth = 'md'
+                  fullWidth = 'lg'
+                >
+                  <img src = {file}></img>
+                  <Button
+                    onClick = {event => {handleCloseTileDialog(originalFileName)}}
+                  >
+                    Close
+                  </Button>
+
+                </Dialog>
+              </GridListTile>
+            )
+          })}
         </GridList>
       </Dialog>
     </React.Fragment>
