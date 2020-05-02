@@ -91,6 +91,7 @@ exports.loadFiles = (req, res) => {
       where : where
     }).then(result => {
       result.map(async file => {
+        console.log(file.dataValues)
         const location = file.dataValues.addresses
         let lastSlash = location.lastIndexOf('/')
         let length = location.length  
@@ -100,15 +101,11 @@ exports.loadFiles = (req, res) => {
         const tempFileAddr = '/temp/' + reqNo + '/' + originalFileName
         fileList.push(tempFileAddr)
 
-        // const fileName = file.dataValues
-        // // console.log(fileName)
         await fs.readFile(location, async (err, data) => {
           await fs.writeFile('../client/public' + tempFileAddr, data, (err) => {
             if (err) throw err;
           })
-          // await formData.append(`image`, fileType)
         })
-        // await console.log(formData)
       })
     res.send(fileList)
     })

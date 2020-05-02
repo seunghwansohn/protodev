@@ -25,12 +25,16 @@ module.exports = function (source, primaryKey, findingAttr, includingAttr, files
     includingKeys[obj.as] = (obj.attributes)
   })
 
-  filesAttr.map(obj => {
-    let tempObj = {}
-    tempObj[obj.as] = {}
-    tempObj[obj.as][obj.primaryCode] = obj.attributes[0]
-    filesKeys.push(tempObj)
-  })
+
+  if (filesAttr) {
+    filesAttr.map(obj => {
+      let tempObj = {}
+      tempObj[obj.as] = {}
+      tempObj[obj.as][obj.primaryCode] = obj.attributes[0]
+      filesKeys.push(tempObj)
+    })
+  }
+
 
   findingAttr.map(obj => {
     let tempObj = {}
@@ -41,7 +45,10 @@ module.exports = function (source, primaryKey, findingAttr, includingAttr, files
 
 
   let concatedAttr  = includingAttr.concat(findingAttr)
-  concatedAttr      = concatedAttr.concat(filesAttr)
+  
+  if (filesAttr) {
+    concatedAttr      = concatedAttr.concat(filesAttr)
+  }
 
   console.log(concatedAttr)
 

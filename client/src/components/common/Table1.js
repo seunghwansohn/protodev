@@ -411,6 +411,7 @@ const STTable = ({
         // console.log(type)
         let dataType = await colAttr[key].dataType
         await axios.get('/api/' + dataType + '/load').then(res => {
+          console.log(res.data)
           let tempOptionsArr = []
           let tempNamesArr = []
           let vals = res.data.vals
@@ -431,13 +432,50 @@ const STTable = ({
       }
     })
   },[])
-  const handleChangeSelect = (event, index) => {
+  const handleChangeSelect = (event, index, header) => {
     const {value, label} = event
     setSelectedVal(
       produce(selectedVal, draft => {
         draft[index] = value
       })
     )
+    setFilteredData(
+      produce(filteredData, draft => {
+        draft[index][header] = value
+      })
+    )
+    let temp1 = {}
+    temp1.ref = {}
+    temp1.vals = {}
+    temp1.location = {index : index, header, header}
+    temp1.ref[primaryKey] = filteredData[index][primaryKey]
+    temp1.vals[header] = value
+    setTempFixedVal(temp1)
+    const validArr = checkValid(index, header, value)
+    let joinedValidStr = validArr.join(', ')
+    const primaryCode = getPrimaryCode(index)
+    setUpdateHelperTexts(    
+      produce(updateHelperTexts, draft => {
+        draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
+        draft[primaryCode][header] = joinedValidStr
+      })
+    )
+    if (validArr.length > 0) {
+      setUpdateValidationError(    
+        produce(updateValidationError, draft => {
+          draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
+          draft[primaryCode][header] = true
+        })
+      )
+    } else {
+      setUpdateValidationError(    
+        produce(updateValidationError, draft => {
+          draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
+          draft[primaryCode][header] = false
+        })
+      )
+
+    }
   }
   const handleClickSelectChoose = (event, idx) => {
     if (event.key !== 'Enter') {
@@ -843,6 +881,7 @@ console.log(addedNew)
   const handleClickFlag = selectMultipleStates
   const unhide          = unSelectMultipleStates
 
+  console.log(tempFixedVal)
 
 
   //정렬 기능
@@ -1120,7 +1159,7 @@ console.log(addedNew)
                             <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
                               <Select 
                                 key = {'select' + index}
-                                onChange = {event => handleChangeSelect(event, index)}
+                                onChange = {event => handleChangeSelect(event, index, header)}
                                 options={selectOptions.sort} 
                                 menuIsOpen = {selectMenuOpened[index]}
                                 // onInputChange = {event => handleClickSelectOpen(event, index)}

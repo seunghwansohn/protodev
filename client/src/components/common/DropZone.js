@@ -40,6 +40,7 @@ import InfoIcon from '@material-ui/icons/Info';
 
 import AddIcon from '@material-ui/icons/Add';
 
+import GetAppIcon from '@material-ui/icons/GetApp';
 
 
 
@@ -50,6 +51,9 @@ const useStyles = makeStyles((theme) => ({
   media: {
     height: '100%',
     paddingTop: '56.25%', // 16:9
+  },
+  icon: {
+    color: 'white',
   },
 }));
 // const pdfBuffer = require('fs').readFileSync('/some/path/example.pdf');
@@ -178,7 +182,8 @@ const DropZone = ({
   }
     
     
-  const handleOpenTileDialog = (originalFileName) => {
+  const handleOpenTileDialog = (event, originalFileName) => {
+    event.preventDefault()
     console.log(originalFileName)
     setOpenedTileDialog(
       produce(openedTileDialog, draft => {
@@ -209,7 +214,7 @@ const DropZone = ({
   }
 
 
-
+  console.log(attachedFiles)
   console.log(file)
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
@@ -250,22 +255,31 @@ const DropZone = ({
             <AddIcon></AddIcon>
             
           </StyledGridListTile>
+
           {attachedFiles.map((file, idx) => {
             let lastSlash = file.lastIndexOf('/')
             let length = file.length  
             let originalFileName = file.slice(lastSlash + 1, length-4)
             return(
-              <GridListTile onClick = {event => {handleOpenTileDialog(originalFileName)}} cols={1} key={file}>
-                <img src={file} alt={file.title} />
+              <GridListTile onClick = {event => {handleOpenTileDialog(event, originalFileName)}} cols={1} key={file}>
+                <img src={file} alt={file.title} /> */}
                 <GridListTileBar
                   title={file.title}
                   subtitle={<span>by: {file.author}</span>}
+                  titlePosition="top"
                   actionIcon={
-                    <IconButton aria-label={`info about ${file.title}`} className={classes.icon}>
-                      <InfoIcon />
+                    <IconButton onClick = {event => {console.log('버튼클릭1')}} aria-label={`info about ${file.title}`} className={classes.icon}>
+                      <InfoIcon fontSize = {'inherit'} onClick = {event => {
+                        event.preventDefault()
+                        console.log('버튼클릭1')
+                        }}/>
+                      <GetAppIcon fontSize = {'inherit'} onClick = {event => {console.log('버튼클릭2')}}/>
                     </IconButton>
                   }
+                  actionPosition="left"
+
                 />
+                안녕하신가
                 <Dialog
                   key = {'tile' + idx}
                   open = {openedTileDialog[originalFileName]}
