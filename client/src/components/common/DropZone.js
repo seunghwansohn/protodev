@@ -45,6 +45,9 @@ const DropZone = ({
   const [fileName, setFileName]           = useState([])
   const [openedDialog, setOpenedDialog]   = useState(false)
 
+  const [attachedFiles, setAttachedFiles] = useState([])
+
+
   console.log(dataType, primaryKey, primaryCode)
   // const pdfBuffer = fs.readFileSync('/SuppliersPage.js')
 
@@ -82,9 +85,21 @@ const DropZone = ({
       })
     )
   }
-    
-  console.log(requestNo)
 
+  const onClickArchiveIcon = () => {
+    setOpenedDialog(true)
+  }
+    
+  useEffect(( )=> {
+    const url = '/api/query/files'
+    if (requestNo !== '')
+    axios.post(url, {relCode : primaryCode, reqNo : requestNo}).then(res => {
+      console.log(res)
+      setAttachedFiles(res.data)
+    })
+  },[requestNo])
+
+  console.log(attachedFiles)
   const addFiles = () => {
     const url = '/api/addfiles';
     var formData = new FormData();
@@ -131,11 +146,8 @@ const DropZone = ({
           }
         </StyledDiv>  
       : 
-      <StyledDiv {...getRootProps()}>
-        <input {...getInputProps()} />
-        {
-          <ArchiveIcon></ArchiveIcon>
-        }
+      <StyledDiv>
+          <ArchiveIcon onClick = {event => {onClickArchiveIcon()}}></ArchiveIcon>
       </StyledDiv>  
       }
 
@@ -163,9 +175,9 @@ const DropZone = ({
             <img src = {URL.createObjectURL(file)} height = 'auto' width = '100%'></img>
           )
         })}
-        {files.map(file => {
+        {attachedFiles.map(file => {
           return (
-            <img src = {'/' + file} height = 'auto' width = '100%'></img>
+            <img src = {file} height = 'auto' width = '100%'></img>
           )
         })}
       </Dialog>

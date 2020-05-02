@@ -68,43 +68,53 @@ exports.uploadFile = (req, res) => {
   
 
 exports.loadFiles = (req, res) => {
-  const where = req.body
-
+  let where = {relcode : req.body.relCode}
+  let reqNo = req.body.reqNo
+  console.log(reqNo)
   const file        = req.files
   let   location    = req.body.location
   let   type        = req.body.type
   let   primaryKey  = req.body.primaryKey
   let   primaryCode = req.body.primaryCode
 
+  let   fileList    = []
   let   files       = req.files
 
   let   Source    = db[type]
 
   let formData = new FormData();
 
+  fs.mkdir('../client/public/temp/' + reqNo, { recursive: true }, (err) => {
+    if (err) throw err;
 
     Files.findAll({
       where : where
-    }).then(res => {
-      res.map(async file => {
+    }).then(result => {
+      result.map(async file => {
         const location = file.dataValues.addresses
-        
-        let No = location.lastIndexOf('/')
+        let lastSlash = location.lastIndexOf('/')
         let length = location.length  
-        let originalFileName = location.slice(No + 1, length)
+        let originalFileName = location.slice(lastSlash + 1, length)
 
         console.log(originalFileName)
+        const tempFileAddr = '/temp/' + reqNo + '/' + originalFileName
+        fileList.push(tempFileAddr)
+
         // const fileName = file.dataValues
         // // console.log(fileName)
-        // await fs.readFile(location, async (err, data) => {
-        //   await fs.writeFile('../client/public/joru.txt', data, (err) => {
-        //     if (err) throw err;
-        //   })
-        //   await formData.append(`image`, fileType)
-        // })
+        await fs.readFile(location, async (err, data) => {
+          await fs.writeFile('../client/public' + tempFileAddr, data, (err) => {
+            if (err) throw err;
+          })
+          // await formData.append(`image`, fileType)
+        })
         // await console.log(formData)
       })
+    res.send(fileList)
     })
+  });
+
+
 
   // files.map(file => {
   //   Files.create({

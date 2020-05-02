@@ -25,3 +25,5 @@ yarn-error.log*
 #database.json
 database.json
 .env
+
+/public/temp
