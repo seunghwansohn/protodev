@@ -23,8 +23,30 @@ import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
 import {generateRandom}     from '../../lib/common';
 
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardMedia from '@material-ui/core/CardMedia';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
 
+import { makeStyles } from '@material-ui/core/styles';
 
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import GridListTileBar from '@material-ui/core/GridListTileBar';
+import ListSubheader from '@material-ui/core/ListSubheader';
+import IconButton from '@material-ui/core/IconButton';
+import InfoIcon from '@material-ui/icons/Info';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    maxWidth: 345,
+  },
+  media: {
+    height: '100%',
+    paddingTop: '56.25%', // 16:9
+  },
+}));
 // const pdfBuffer = require('fs').readFileSync('/some/path/example.pdf');
 
 const StyledDiv = styled.div`
@@ -39,6 +61,8 @@ const DropZone = ({
   primaryCode, 
   files
 }) => {
+  const classes = useStyles();
+
   const [file, setFile]                   = useState([])
   const [requestNo, setRequestNo]         = useState('')
 
@@ -167,19 +191,26 @@ const DropZone = ({
                 <p>Drag 'n' drop some files here, or click to select files</p>}
           </div>
         </Paper>
-        {file.map(file => {
-          console.log(typeof file)
-          const realWidth = file.naturalWidth
-          console.log(realWidth)
-          return (
-            <img src = {URL.createObjectURL(file)} height = 'auto' width = '100%'></img>
-          )
-        })}
-        {attachedFiles.map(file => {
-          return (
-            <img src = {file} height = 'auto' width = '100%'></img>
-          )
-        })}
+
+        <GridList cols = {4} cellHeight={360} className={classes.gridList}>
+          <GridListTile key="Subheader" cols={1} style={{ height: 'auto' }}>
+            <ListSubheader component="div">December</ListSubheader>
+          </GridListTile>
+          {attachedFiles.map((tile) => (
+            <GridListTile cols={1} key={tile}>
+              <img src={tile} alt={tile.title} />
+              <GridListTileBar
+                title={tile.title}
+                subtitle={<span>by: {tile.author}</span>}
+                actionIcon={
+                  <IconButton aria-label={`info about ${tile.title}`} className={classes.icon}>
+                    <InfoIcon />
+                  </IconButton>
+                }
+              />
+            </GridListTile>
+          ))}
+        </GridList>
       </Dialog>
     </React.Fragment>
   );
