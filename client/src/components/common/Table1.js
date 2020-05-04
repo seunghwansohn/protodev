@@ -60,6 +60,15 @@ import DropZone            from './DropZone';
 import SingleNote          from './SingleNote';
 
 
+import {actDialogOpen, actDialogClose}    from '../../modules/dialogs'
+import {
+    actUpdate, 
+    actUpdateChange, 
+    actClickedTableCol,
+    actAdd,
+    actDelete
+}                                       from '../../modules/expense'
+
 
 import { actSelect, 
   actSetFrame, 
@@ -154,9 +163,37 @@ const STTable = ({
   setStates, 
 
   attr, 
-  acts
 }) => {
   
+  const acts = {
+    onDialogOpen : function (argObj) {
+      let tempObj = argObj
+      tempObj.frameNo = frameNo
+      tempObj.currentNo = currentNo
+      tempObj.currentType = currentType
+      tempObj.motherNo = motherNo
+      tempObj.motherType = motherType
+      dispatch(actDialogOpen(tempObj))
+    },
+    onSubmitNewAdded : function (obj, primaryKey, includingKeys, findingKeys) {
+      dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
+    },
+    onSubmitUpdatedVals : function (arr) {
+      console.log(arr)
+      dispatch(actUpdate(arr))
+    },
+    onDelete : function(dataType, primaryCode) {
+      dispatch(actDelete(dataType, primaryCode))
+    },
+    onTableCol : function(clickedCol) {
+      dispatch(actClickedTableCol(clickedCol))
+    },
+    onUpdateChange : function(clickedCol) {
+      dispatch(actUpdateChange(false))
+    }
+  }
+
+  console.log(dataType)
   const {
     onDialogOpen,
     onSubmitNewAdded,
@@ -208,8 +245,8 @@ const STTable = ({
 
   const getRawData = async () => {
     await axios.get('/api/' + dataType + '/load').then(res => {
-      console.log(res.data.vals[0].files)
       setPrimaryKey(res.data.primaryKey)
+      console.log(res.data)
       setIncludingKeys(res.data.includingKeys)
       setFindingKeys(res.data.findingKeys)
       setFilesKeys(res.data.filesKeys)
@@ -217,6 +254,7 @@ const STTable = ({
       if (filesKeys) {
         setAttachedFiles(getOnlyFiles(res.data.vals))
       }
+      console.log(res.data.vals)
       setRawData(withoutKeys(res.data.vals))
     })
   }

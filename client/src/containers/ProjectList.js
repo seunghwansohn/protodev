@@ -307,6 +307,12 @@ const ProjectList = ({motherType, motherNo, subTableAttr}) => {
                 defaultHided : false,
                 validate : ['number', 'max15'],
             },
+            desc : {
+                fixable : true,
+                defaultHided : false,
+                validate : ['number', 'max15'],
+                size : '200px'
+            },
             buyingPKR : {
                 fixable : true,
                 defaultHided : false,
@@ -342,6 +348,7 @@ const ProjectList = ({motherType, motherNo, subTableAttr}) => {
         ],
     }
 
+    console.log(dataType)
     
     const arrFunc = () => {
       let Arr = []
@@ -375,6 +382,7 @@ const ProjectList = ({motherType, motherNo, subTableAttr}) => {
           <Table 
               motherType  = {type}
               motherNo    = {frameNo}
+              dataType    = {dataType}
               states      = {tableStates}
               setStates   = {setTableStates}
               attr        = {tableAttr}

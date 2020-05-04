@@ -285,7 +285,7 @@ const QueryInput = ({
         frameNo : 'project' + frameNo,
         initialFilter : filter ? filter : '',
         directQuery : true,
-        acts : {}
+        dataType : 'project'
       },
     }
   }

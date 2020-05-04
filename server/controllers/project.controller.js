@@ -9,6 +9,7 @@ const getIncludingArr = require("../lib/getIncludingArr");
 const getIncludingAttr = require("../lib/getIncludingAttr");
 const getFindingAttr = require("../lib/getFindingAttr");
 const getIncludeNameFindOne = require("../lib/getIncludeNameFindOne");
+const getFilesAttr   = require("../lib/getFilesAttr");
 
 
 const getCreateObj = require("../lib/getCreateObj");
@@ -43,6 +44,7 @@ const primaryKey   = 'projectCode'
 
 const includingAttr = getIncludingAttr(relAttr)
 const findingAttr   = getFindingAttr(relAttr)
+const filesAttr     = getFilesAttr(relAttr)
 
 exports.addNew = (req, res) => {
     const Arr = req.body
@@ -63,13 +65,20 @@ exports.addNew = (req, res) => {
       console.log(err.message)
     }
 };
+// exports.load = (req, res) => {
+//     Project.findAll({
+//       include:[{model : Note, as : 'tasks'}]
+//     }).then(project => {
+//             result = project
+//         }).then(() => {
+//             res.status(200).send(result);
+//     })
+// };
+
 exports.load = (req, res) => {
-    Project.findAll({
-      include:[{model : Note, as : 'tasks'}]
-    }).then(project => {
-            result = project
-        }).then(() => {
-            res.status(200).send(result);
+    getIncludeName(relAttr.source, primaryKey, findingAttr, includingAttr, filesAttr).then(expenses => {
+        console.log()
+      res.status(200).send(expenses)
     })
 };
 
