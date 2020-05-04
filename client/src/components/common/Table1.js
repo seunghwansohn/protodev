@@ -438,10 +438,10 @@ console.log(filteredData)
     }
     return ox
   }
-  const isChkBoxType  = header => {
+  const isApproveChkBoxType  = header => {
     let ox = false
     let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
-    if (type == 'checkBox') {
+    if (type == 'approveCheckBox') {
       ox = true
     }
     return ox
@@ -846,26 +846,41 @@ console.log(filteredData)
       setTempFixedVal({})
     }
   }
-
-  console.log(fixedVals)
   const onKeyPressOnInput = (e, index, header) => {
     if (e.key === "Enter") {
       confirmInputFixedVal()
     }
   }
-  const handleChangeInput = (e, index, header) => {
+  const handleChangeInput = (e, index, header, memo) => {
     setFilteredData(
       produce(filteredData, draft => {
         draft[index][header] = e.target.value 
       })
     )
+    const {type} = e.target
+
     let temp1 = {}
     temp1.ref = {}
     temp1.vals = {}
     temp1.location = {index : index, header, header}
-    temp1.ref[primaryKey] = filteredData[index][primaryKey]
-    temp1.vals[header] = e.target.value
 
+    if (Object.keys(tempFixedVal).length > 0) {
+      temp1 = tempFixedVal
+    }
+
+    temp1.ref[primaryKey] = filteredData[index][primaryKey]
+    if (memo) {
+      temp1.vals[header + 'Memo'] = e.target.value
+    } else {
+      if (type == 'checkbox') {
+        temp1.vals[header] = e.target.checked
+      } else {
+        temp1.vals[header] = e.target.value
+      }
+    }
+    if (colAttr[header].type == 'approveCheckBox') {
+      temp1.vals[header + 'By'] = user.username
+    }
     setTempFixedVal(temp1)
     const validArr = checkValid(index, header, e.target.value)
     let joinedValidStr = validArr.join(', ')
@@ -1175,7 +1190,7 @@ console.log(addedNew)
                     let isSelectTypeCol     = isSelectType(header)
                     let isFileTypeCol       = isFileType(header)
                     let isSingleNoteTypeCol = isSingleNoteType(header)
-                    let isChkBoxTypeCol     = isChkBoxType(header)
+                    let isApproveChkBoxTypeCol     = isApproveChkBoxType(header)
 
 
                     let queryColType  = 'fixSelect'
@@ -1306,7 +1321,7 @@ console.log(addedNew)
                             />
                           </StyledTableCell>
                         )
-                      } else if (!fixMode && isChkBoxTypeCol) { 
+                      } else if (!fixMode && isApproveChkBoxTypeCol) { 
                           let dataType      =  colAttr[header].dataType
 
                           return (
@@ -1316,17 +1331,10 @@ console.log(addedNew)
                                 motherNo      = {currentNo}
                                 motherType    = {currentType}
 
-                                reqType       = {queryColType}
-                                dataType      = {dataType}
-                                codeNName     = {getMatchedFinding(dataType)}
-                                primaryKey    = {primaryKey}
-
-                                addedNo       = {index}
-                                label         = {colAttr[header].dataType}
-                                initialValue  = {filteredData[index][header]}
-                                filteredData  = {filteredData}
-                                fixedVals     = {fixedVals}
-                                setFixedVals  = {setFixedVals}
+                                onChange = {(event) => handleChangeInput(event, index, header)}
+                                onChangeMemo = {(event) => handleChangeInput(event, index, header, true)}
+                                onSubmit = {confirmInputFixedVal}
+                                user     = {user}
                               >
 
                               </ChkBoxWithAlert>

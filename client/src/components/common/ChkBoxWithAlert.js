@@ -9,7 +9,7 @@ import Badge from '@material-ui/core/Badge';
 
 
 
-const ChkBoxWithAlert = ({motherFrameNo}) => {
+const ChkBoxWithAlert = ({motherFrameNo, onChange, onChangeMemo, user}) => {
 
     const [open, setOpen]       = useState(false)
     const [checked, setChecked] = useState(false)
@@ -17,20 +17,22 @@ const ChkBoxWithAlert = ({motherFrameNo}) => {
 
     const handleChangeMemo = (e) => {
         setMemo(e.target.value)
+        onChangeMemo(e)
     }
 
     const handleChange = (e) => {
         setChecked(!checked)
         setOpen(true)
+        onChange(e)
     }
 
     const handleCloseDialog = (e) => {
         setOpen(false)
     }
+    console.log(user)
 
     return (
         <>  
-
             <Dialog
                 open = {open}
                 onClose = {handleCloseDialog}
@@ -63,7 +65,11 @@ const ChkBoxWithAlert = ({motherFrameNo}) => {
                     
                 </Button>
             : ''    
-        }
+            }
+            {checked ? 
+                user.username
+            : '' 
+            }
 
         </>
     )
