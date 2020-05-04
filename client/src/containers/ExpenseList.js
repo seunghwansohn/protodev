@@ -86,7 +86,7 @@ const ExpenseListContainer = ({
     colAttr : {
       expenseCode : {
         primary : true,
-        fixable : true,
+        fixable : false,
         defaultHided : true,
         validate : ['string'],
         dataType : dataType,

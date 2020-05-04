@@ -320,7 +320,7 @@ console.log(filteredData)
 
 
   //초기 헤더 설정 기능
-  let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
+  let headers = colAttr && Object.keys(colAttr).length > 0 ? Object.keys(colAttr) : []
   const [tableHeaderVals, setTableHeaderVals] = useState([]);
   // -- 아예 삭제할 컬럼 설정
   useEffect(() => {

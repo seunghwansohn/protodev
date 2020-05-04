@@ -91,6 +91,10 @@ const MainHeader = () => {
                     <Link to="/project">Project</Link>
                 </li>
 
+                <li>
+                    <Link to="/expense">Expense</Link>
+                </li>
+
                 <li><button onClick = {onClickDebugMoe}>디버그모드</button></li>
                 Login: {user ? user.username : '없음'}
                 <Button onClick = {onLogout}>로그아웃</Button>

@@ -244,89 +244,65 @@ const ProjectList = ({motherType, motherNo, subTableAttr}) => {
         flagAble : true,
         fixModeAble : true,
         colAttr : {
-            itemCode : {
+            projectCode : {
                 primary : true,
                 fixable : false,
-                defaultHided : false,
-                validate : ['code']
-            },
-            itemName : {
-                fixable : true,
-                defaultHided : false,
-                validate : ['string']
-            },
-            description : {
-                fixable : true,
                 defaultHided : true,
-                validate : ['string']
+                validate : ['string'],
+                dataType : dataType,
+                clickType : 'expenseQuery',
+                queryType : 'simpleQuery',
+                size : '50px'
+
             },
-            weight : {
-                fixable : true,
-                defaultHided : true,
-                validate : ['maxValue5', 'number']
-            },
-            width : {
-                fixable : true,
-                defaultHided : true,
-                validate : ['maxValue5', 'number']
-            },
-            depth : {
-                fixable : true,
-                defaultHided : true,
-                validate : ['maxValue5', 'number']
-            },
-            height : {
-                fixable : true,
-                defaultHided : true,
-                validate : ['maxValue5', 'number']
-            },
-            importTaxRate : {
+            projectName : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['percent', 'plus', 'decimal2', 'number']
+                validate : ['string'],
+                dataType : dataType,
+                clickType : 'expenseQuery',
+                queryType : 'simpleQuery',
+                size : '200px'
+
             },
-            maker : {
+            client : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['string']
+                validate : ['string'],
+                dataType : 'client',
+                clickType : 'expenseQuery',
+                queryType : 'simpleQuery',
+                size : '80px'
             },
-            makerModelNo : {
+            shortDesc : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['string']
+                validate : ['string'],
+                size : '100px'
             },
-            supplierName : {
+            estimatedAmount : {
                 fixable : true,
                 defaultHided : false,
-                query : true,
-                dialog : getAsStrByColName('supplierName'),
-                validate : ['string']
+                validate : ['maxValue5', 'number'],
+                dataType : dataType,
+                clickType : 'expenseQuery',
+                queryType : 'simpleQuery',
+                size : '200px'
             },
-            VNPrice : {
+            estimatedTime : {
                 fixable : true,
                 defaultHided : false,
-                validate : ['number', 'max15'],
+                validate : ['maxValue5', 'number'],
+                dataType : dataType,
+                clickType : 'expenseQuery',
+                queryType : 'simpleQuery',
+                size : '100px'
             },
             desc : {
                 fixable : true,
                 defaultHided : false,
                 validate : ['number', 'max15'],
-                size : '200px'
-            },
-            buyingPKR : {
-                fixable : true,
-                defaultHided : false,
-                validate : ['number'],
-            },
-            stkVVar : {
-                fixable : true,
-                defaultHided : true,
-                validate : ['decimal2', 'max1', 'number'],
-            },
-            stkCVar : {
-                fixable : true,
-                defaultHided : true,
-                validate : ['decimal2', 'max1', 'number'],
+                size : '400px'
             },
             createdAt : {
                 fixable : false,

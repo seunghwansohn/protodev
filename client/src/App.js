@@ -67,7 +67,6 @@ function App() {
                 <ProjectPage></ProjectPage>
               </Route>
 
-              
               <Route path = "/expense" >
                 <ExpensePage></ExpensePage>
               </Route>
