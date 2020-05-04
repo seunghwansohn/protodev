@@ -9,8 +9,18 @@ import Badge from '@material-ui/core/Badge';
 
 
 
-const ChkBoxWithAlert = ({motherFrameNo, onChange, onChangeMemo, user}) => {
+const ChkBoxWithAlert = ({
+    motherFrameNo, 
+    fixMode,
+    onChange, 
+    onChangeMemo, 
+    user,
+    onSubmit,
+    val,
+    attr
+}) => {
 
+    const {byCode, checkCode, memoCode} = attr
     const [open, setOpen]       = useState(false)
     const [checked, setChecked] = useState(false)
     const [memo, setMemo]       = useState('')
@@ -26,10 +36,17 @@ const ChkBoxWithAlert = ({motherFrameNo, onChange, onChangeMemo, user}) => {
         onChange(e)
     }
 
+    console.log(val)
+    const handleSaveNClose = (e) => {
+        onSubmit()
+        setOpen(false)
+    }
+
     const handleCloseDialog = (e) => {
         setOpen(false)
     }
     console.log(user)
+    console.log(attr)
 
     return (
         <>  
@@ -50,26 +67,39 @@ const ChkBoxWithAlert = ({motherFrameNo, onChange, onChangeMemo, user}) => {
                     onChange = {handleChangeMemo}
                 />
 
+                <Button onClick = {handleSaveNClose}>Save & Close</Button>
                 <Button onClick = {handleCloseDialog}>Close</Button>
             </Dialog>
-            <Checkbox
-                checked  = {checked}
-                onChange = {handleChange}     
-            >
-            </Checkbox>
-            {memo ? 
-                <Button>
-                    <Badge badgeContent={'t'} color="secondary">
-                        <NoteIcon></NoteIcon>
-                    </Badge>
-                    
-                </Button>
-            : ''    
+
+            {fixMode ? 
+                <>
+                    <Checkbox
+                        checked  = {checked}
+                        onChange = {handleChange}     
+                    >
+                    </Checkbox>
+                    {memo ? 
+                        <Button>
+                            <Badge badgeContent={'t'} color="secondary">
+                                <NoteIcon></NoteIcon>
+                            </Badge>
+                            
+                        </Button>
+                    : ''    
+                    }
+                    {checked ? 
+                        user.username
+                    : '' 
+                    }
+                </>
+
+            : 
+                <>
+                    By: {user.username}
+                    {val[memoCode] ? '메모 있음' : '메모없음'}
+                </>
             }
-            {checked ? 
-                user.username
-            : '' 
-            }
+
 
         </>
     )

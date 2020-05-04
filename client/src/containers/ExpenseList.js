@@ -132,14 +132,6 @@ const ExpenseListContainer = ({
         queryType : 'simpleQuery',
         size : '40px'
       },
-      authorizedBy : {
-        fixable : true,
-        defaultHided : false,
-        validate : ['string'],
-        dataType : 'maker',
-        clickType : 'makerQuery',
-        queryType : 'simpleQuery'
-      },
       fileAddr : {
         fixable : true,
         defaultHided : false,
@@ -161,24 +153,17 @@ const ExpenseListContainer = ({
         size      : '60px'
       },
       approved : {
-        fixable : true,
-        defaultHided : false,
-        validate : ['string'],
-        type     : 'approveCheckBox',
-        dataType : 'maker',
-        clickType : 'makerQuery',
-        queryType : 'simpleQuery',
-        size      : '60px'
-      },
-      memoAuthorized : {
-        fixable : true,
-        defaultHided : false,
-        validate : ['string'],
-        type     : 'singleNote',
-        dataType : 'maker',
-        clickType : 'makerQuery',
-        queryType : 'simpleQuery',
-        size      : '60px'
+        fixable       : true,
+        defaultHided  : false,
+        validate      : ['string'],
+        type          : 'approveCheckBox',
+        checkCode     : 'approved',
+        byCode        : 'approvedBy',
+        memoCode      : 'approvedMemo',
+        dataType      : 'maker',
+        clickType     : 'makerQuery',
+        queryType     : 'simpleQuery',
+        size          : '60px'
       },
       projectName : {
         fixable : true,

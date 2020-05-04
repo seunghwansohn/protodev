@@ -319,6 +319,8 @@ const STTable = ({
   }
 
 console.log(filteredData)
+console.log(fixedVals)
+
 
 
   //초기 헤더 설정 기능
@@ -826,7 +828,7 @@ console.log(filteredData)
     return ox
   }
 
-  console.log(tempFixedVal)
+  console.log(filteredData)
   //인풋값 fixed한 후 submit전에 엔터쳐서 임시로 확정
   const confirmInputFixedVal = () => {
     console.log('컨펌인풋픽스드')
@@ -1046,6 +1048,9 @@ console.log(addedNew)
     console.log(addedNew)
   }
 
+  console.log(tableHeaderVals)
+
+
   useEffect(() => {
     console.log(selected)
   },[selected])
@@ -1158,13 +1163,13 @@ console.log(addedNew)
           <StyledTableBody>
             {filteredData ? stableSort(filteredData, getComparator(order, orderBy))
              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-             .map((row, index) => {
-              const labelId = `enhanced-table-checkbox-${index}`;
+             .map((row, idxRow) => {
+              const labelId = `enhanced-table-checkbox-${idxRow}`;
               // console.log(filteredData[row])
-              const isSelectedRow = isSelected(filteredData[index][primaryKey])
+              const isSelectedRow = isSelected(filteredData[idxRow][primaryKey])
               return(
                 <TableRow 
-                  key = {tableHeaderVals[index]}
+                  key = {tableHeaderVals[idxRow]}
                   // style = {{height : '200px'}}
                 >
                   {attr.flagAble ? 
@@ -1177,12 +1182,11 @@ console.log(addedNew)
                     </StyledTableCell>:''
                   }
                   <StyledTableCell>
-                    {index+1}
+                    {idxRow+1}
                   </StyledTableCell>
-
                   {tableHeaderVals.map((header) => {
-                    let fixable             = checkColFixable(index, header)
-                    let fixed               = checkCellFixed(index, header)
+                    let fixable             = checkColFixable(idxRow, header)
+                    let fixed               = checkCellFixed(idxRow, header)
                     let isfixableCol        = isFixable(header)
                     let isInputCol          = isInput(header)
                     let isCalValueCol       = isCalValue(header)
@@ -1196,7 +1200,7 @@ console.log(addedNew)
 
                     let queryColType  = 'fixSelect'
 
-                    let primaryCode = getPrimaryCode(index)
+                    let primaryCode = getPrimaryCode(idxRow)
 
                     const getMatchedFinding = (type) => {
                       let tempMatched = ''
@@ -1213,7 +1217,7 @@ console.log(addedNew)
                     const getSelectedValue = (key) => {
                       let values = null
                       querySelected.map(obj => {
-                        if (obj.reqType == queryColType && obj.key == index) {
+                        if (obj.reqType == queryColType && obj.key == idxRow) {
                           values = obj.selected
                         }
                       })
@@ -1231,9 +1235,9 @@ console.log(addedNew)
                               key = {header }
                               size       = 'small'
                               style = {{width : '100%'}}
-                              value = {filteredData[index][header]} 
-                              onChange = {(event) => handleChangeInput(event, index, header)} 
-                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
+                              value = {filteredData[idxRow][header]} 
+                              onChange = {(event) => handleChangeInput(event, idxRow, header)} 
+                              onKeyPress = {(event) => onKeyPressOnInput(event, idxRow, header)}
                               helperText = {updateHelperTexts[primaryCode] ? updateHelperTexts[primaryCode][header] : ''}
                               InputProps = {{
                                 endAdornment : <InputAdornment position="end"><SmallKeyPopUp>Enter</SmallKeyPopUp><SmallKeyPopUp>Tab</SmallKeyPopUp></InputAdornment>
@@ -1246,13 +1250,13 @@ console.log(addedNew)
                           return(
                             <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
                               <Select 
-                                key = {'select' + index}
-                                onChange = {event => handleChangeSelect(event, index, header)}
+                                key = {'select' + idxRow}
+                                onChange = {event => handleChangeSelect(event, idxRow, header)}
                                 options={selectOptions.sortName} 
-                                menuIsOpen = {selectMenuOpened[index]}
+                                menuIsOpen = {selectMenuOpened[idxRow]}
                                 // onInputChange = {event => handleClickSelectOpen(event, index)}
                                 // openMenuOnClick = {event => handleClickSelectChoose(index)}
-                                onKeyDown = {event => handleClickSelectChoose(event, index)}
+                                onKeyDown = {event => handleClickSelectChoose(event, idxRow)}
                               />
                             </StyledTableCell>
                           )
@@ -1260,7 +1264,7 @@ console.log(addedNew)
 
                         return(
                           <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
-                            {filteredData[index][header]}
+                            {filteredData[idxRow][header]}
                           </StyledTableCell>
                         )
                       } else if (isFileTypeCol){
@@ -1269,7 +1273,7 @@ console.log(addedNew)
                             <StyledTableCell fixable = {isfixableCol} size = {size}>
 
                               <DropZone 
-                                // onChange = {event => handleChangeSelect(event, index)}
+                                // onChange = {event => handleChangeSelect(event, idxRow)}
                                 // options={selectOptions.sort} 
                                 motherFrameNo = {frameNo}
                                 motherNo      = {currentNo}
@@ -1279,7 +1283,7 @@ console.log(addedNew)
                                 primaryKey     = {primaryKey}
                                 primaryCode    = {primaryCode}
 
-                                files          = {attachedFiles[index]}
+                                files          = {attachedFiles[idxRow]}
                               />
                             </StyledTableCell>
                         )
@@ -1291,8 +1295,8 @@ console.log(addedNew)
                             <SingleNote 
                               // onChange = {event => handleChangeSelect(event, index)}
                               // options={selectOptions.sort} 
-                              value = {filteredData[index][header]}
-                              onChange = {(event) => handleChangeInput(event, index, header)}
+                              value = {filteredData[idxRow][header]}
+                              onChange = {(event) => handleChangeInput(event, idxRow, header)}
                               onSubmit = {confirmInputFixedVal}
 
                             />
@@ -1313,39 +1317,35 @@ console.log(addedNew)
                               codeNName     = {getMatchedFinding(dataType)}
                               primaryKey    = {primaryKey}
 
-                              addedNo       = {index}
+                              addedNo       = {idxRow}
                               label         = {colAttr[header].dataType}
-                              initialValue  = {filteredData[index][header]}
+                              initialValue  = {filteredData[idxRow][header]}
                               filteredData  = {filteredData}
                               fixedVals     = {fixedVals}
                               setFixedVals  = {setFixedVals}
                             />
                           </StyledTableCell>
                         )
-                      } else if (!fixMode && isApproveChkBoxTypeCol) { 
+                      } else if (isApproveChkBoxTypeCol) { 
                           let dataType      =  colAttr[header].dataType
-                          console.log(user)
-                          return (
-                            <>
-                              <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
-                                {user.username}
-                              </StyledTableCell>
-                            </>
-                          )
-                      } else if (fixMode && isApproveChkBoxTypeCol) { 
-                          let dataType      =  colAttr[header].dataType
-
+                          console.log(header)
+                          console.log(colAttr[header])
                           return (
                             <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
                               <ChkBoxWithAlert
                                 motherFrameNo = {frameNo}
                                 motherNo      = {currentNo}
                                 motherType    = {currentType}
+                                
+                                fixMode       = {fixMode}
 
-                                onChange = {(event) => handleChangeInput(event, index, header)}
-                                onChangeMemo = {(event) => handleChangeInput(event, index, header, true)}
-                                onSubmit = {confirmInputFixedVal}
-                                user     = {user}
+                                onChange      = {(event) => handleChangeInput(event, idxRow, header)}
+                                onChangeMemo  = {(event) => handleChangeInput(event, idxRow, header, true)}
+                                onSubmit      = {confirmInputFixedVal}
+                                
+                                user          = {user}
+                                val           = {filteredData[idxRow]}
+                                attr          = {colAttr[header]}
                               >
 
                               </ChkBoxWithAlert>
@@ -1355,12 +1355,12 @@ console.log(addedNew)
                         return (
                           <StyledTableCell fixable = {isfixableCol}>
                             <StyledInput 
-                              onChange = {(event) => handleChangeInput(event, index, header)} 
+                              onChange = {(event) => handleChangeInput(event, idxRow, header)} 
                               key = {header }
                               endAdornment = {<InputAdornment position="start">fdfe</InputAdornment>}
                               startAdornment={<InputAdornment position="start">$</InputAdornment>}
-                              value = {filteredData[index][header]} 
-                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
+                              value = {filteredData[idxRow][header]} 
+                              onKeyPress = {(event) => onKeyPressOnInput(event, idxRow, header)}
                             />fdf
                           </StyledTableCell>
                         )
@@ -1369,16 +1369,16 @@ console.log(addedNew)
                           <StyledTableCell fixable = {isfixableCol}>
                             <StyledInput
                               disable 
-                              onChange = {(event) => handleChangeInput(event, index, header)} 
+                              onChange = {(event) => handleChangeInput(event, idxRow, header)} 
                               key = {header }
-                              value = {colAttr[header].value(index)} 
-                              onKeyPress = {(event) => onKeyPressOnInput(event, index, header)}
+                              value = {colAttr[header].value(idxRow)} 
+                              onKeyPress = {(event) => onKeyPressOnInput(event, idxRow, header)}
                             />
                           </StyledTableCell>
                         )
                       }else if (fixed) {
                         return(
-                          <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], index, header)}}>
+                          <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], idxRow, header)}}>
                             {row[header]}
                           </StyledTableCell>
                         )
@@ -1386,7 +1386,7 @@ console.log(addedNew)
                       else if (true) {
                         let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
                         return(
-                          <StyledTableCell fixMode = {fixMode} size = {size} fixable = {isfixableCol} onClick = {() => {onClickCols(row[header], index, header)}}>
+                          <StyledTableCell fixMode = {fixMode} size = {size} fixable = {isfixableCol} onClick = {() => {onClickCols(row[header], idxRow, header)}}>
                             {row[header]}
                           </StyledTableCell>
                         )
@@ -1401,9 +1401,9 @@ console.log(addedNew)
                         <button onClick = {e => {
                           let selected = {}
                           selected[nameKey] = {}
-                          selected[nameKey].name = filteredData[index][nameKey]
+                          selected[nameKey].name = filteredData[idxRow][nameKey]
                           selected[nameKey].primaryKey = primaryKey
-                          selected[nameKey].primaryValue = filteredData[index][primaryKey]
+                          selected[nameKey].primaryValue = filteredData[idxRow][primaryKey]
                           selected.value = row
                           button.func(selected)
                         }}>

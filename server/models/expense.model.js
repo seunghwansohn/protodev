@@ -25,11 +25,7 @@ module.exports = (sequelize, Sequelize) => {
         unique: false,
         allowNull: false
       },
-      authorizedBy: {
-        type: Sequelize.STRING,
-        unique: false,
-        allowNull: false
-      },
+
       fileAddr: {
         type: Sequelize.STRING,
         unique: false,
@@ -50,6 +46,21 @@ module.exports = (sequelize, Sequelize) => {
         unique: false,
         allowNull: true
       },
+      approved: {
+        type: Sequelize.STRING,
+        unique: false,
+        allowNull: false
+      },
+      approvedBy: {
+        type: Sequelize.STRING,
+        unique: false,
+        allowNull: false
+      },
+      approvedMemo: {
+        type: Sequelize.STRING,
+        unique: false,
+        allowNull: false
+      }
     });
     return Expense;
 };
