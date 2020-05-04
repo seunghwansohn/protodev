@@ -455,6 +455,7 @@ console.log(filteredData)
   const [selectMenuOpened, setSelectMenuOpened]     = useState([])
   useEffect(() => {
     let colAttrKeys = Object.keys(colAttr)
+    console.log(colAttrKeys)
     colAttrKeys.map(async key => {
       let type = await colAttr[key].type ? colAttr[key].type : ''
       if (type == 'select') {
@@ -1322,6 +1323,16 @@ console.log(addedNew)
                           </StyledTableCell>
                         )
                       } else if (!fixMode && isApproveChkBoxTypeCol) { 
+                          let dataType      =  colAttr[header].dataType
+                          console.log(user)
+                          return (
+                            <>
+                              <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
+                                {user.username}
+                              </StyledTableCell>
+                            </>
+                          )
+                      } else if (fixMode && isApproveChkBoxTypeCol) { 
                           let dataType      =  colAttr[header].dataType
 
                           return (
