@@ -47,7 +47,14 @@ const relAttr = {
       asStr : 'files',
       attributes :['addresses'],
       primaryCode : 'relCode'
-    }
+    },
+    {
+      target: ExpenseSort,
+      relType : 'finding',
+      asStr : 'sort',
+      attributes :['sortName'],
+      primaryCode : 'sortCode'
+    },
   ]
 }
 
@@ -113,7 +120,7 @@ exports.delete = async (req, res) => {
 
 exports.query = (req, res) => {
   let {queryObj} = req.body
-  console.log(queryObj)
+  console.log('쿼리오브젝', queryObj)
   let where = queryObj
 
   getIncludeNameFindOne(Expense, primaryKey, where, findingAttr, includingAttr).then(expenses => {

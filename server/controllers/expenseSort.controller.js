@@ -81,8 +81,9 @@ exports.update = async (req, res) => {
 exports.load = (req, res) => {
   const includingAttr = getIncludingAttr(relAttr)
   const findingAttr   = getFindingAttr(relAttr)
-  getIncludeName(relAttr.source, primaryKey, findingAttr, includingAttr).then(expenses => {
-    res.status(200).send(expenses)
+  getIncludeName(relAttr.source, primaryKey, findingAttr, includingAttr).then(expenseSort => {
+    console.log('익스펜스솔트', expenseSort)
+    res.status(200).send(expenseSort)
   })
 };
 
@@ -96,7 +97,7 @@ exports.delete = async (req, res) => {
 
 exports.query = (req, res) => {
   let {queryObj} = req.body
-  console.log(queryObj)
+  console.log('쿼리오브젝', queryObj)
   let where = queryObj
 
   getIncludeNameFindOne(Expense, primaryKey, where, findingAttr, includingAttr).then(expenses => {

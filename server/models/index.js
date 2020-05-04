@@ -84,6 +84,10 @@ db.project.hasMany(db.projectNote,
         
 db.expense.hasMany(db.files, 
     {as : "files", foreignKey: 'relCode', sourceKey: 'expenseCode'})
+
+db.expense.belongsTo(db.expenseSort, 
+    {as : "sort", through: "expense_expenseSort", foreignKey: 'sortCode', targetKey: 'sortCode'})
+
         
 db.ROLES = ["user", "admin", "moderator"];
 

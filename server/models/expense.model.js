@@ -10,7 +10,7 @@ module.exports = (sequelize, Sequelize) => {
         unique: false,
         allowNull: false
       },
-      sort: {
+      sortCode: {
         type: Sequelize.STRING,
         unique: false,
         allowNull: true

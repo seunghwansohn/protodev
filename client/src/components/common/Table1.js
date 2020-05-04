@@ -278,6 +278,8 @@ const STTable = ({
     setUpdated(true)
   }
 
+console.log(filteredData)
+
 
   //초기 헤더 설정 기능
   let headers = rawData && rawData.length > 0 ? Object.keys(rawData[0]) : []
@@ -417,12 +419,14 @@ const STTable = ({
           let vals = res.data.vals
           let code = colAttr[key].code
           let name = colAttr[key].name
+          console.log(code, name)
           vals.map(obj => {
             let tempObj = {}
             tempObj.value = obj[code]
             tempObj.label = obj[name]
             tempOptionsArr.push(tempObj)
           })
+          console.log(tempOptionsArr)
           setSelectOptions(
             produce(selectOptions, draft => {
               draft[key] = tempOptionsArr
@@ -432,6 +436,8 @@ const STTable = ({
       }
     })
   },[])
+
+  console.log(selectOptions)
   const handleChangeSelect = (event, index, header) => {
     const {value, label} = event
     setSelectedVal(
@@ -550,8 +556,9 @@ const STTable = ({
   }
   const checkCellFixed = (index, header) => {
     let ox = false
+    console.log(fixedVals)
     fixedVals.map(obj => {
-      if (obj.location.index == index && Object.keys(obj.vals).includes(header)) {
+      if (!obj == {} && obj.location.index == index && Object.keys(obj.vals).includes(header)) {
         ox = true
       }
     })
@@ -760,11 +767,17 @@ const STTable = ({
 
   //방금 고친 값 발리데이션 에러 있는지 체크
   const checkNoValidationErrorAtAll = () =>{
-    const {location} = tempFixedVal
-    const {header} = location
-    const primaryCode = getPrimaryCode(location.index)
-    return updateValidationError[primaryCode][header] == true ? true : false
+    let ox = false
+    if (!tempFixedVal == {}) {
+      const {location} = tempFixedVal
+      const {header} = location ? location : ''
+      const primaryCode = getPrimaryCode(location.index)
+      ox = updateValidationError[primaryCode][header] == true ? true : false
+    }
+    return ox
   }
+
+  console.log(tempFixedVal)
   //인풋값 fixed한 후 submit전에 엔터쳐서 임시로 확정
   const confirmInputFixedVal = () => {
     console.log('컨펌인풋픽스드')
@@ -772,15 +785,21 @@ const STTable = ({
     const isNowError = checkNoValidationErrorAtAll()
     if (isNowError == true) {
     }else {
-      setFixableCells(temp)  
-      setFixedVals(
-        produce(fixedVals, draft => {
-          draft.push(tempFixedVal)
-        })
-      )
+      setFixableCells(temp)
+      console.log(tempFixedVal)
+      if(tempFixedVal && Object.keys(tempFixedVal).length > 0)  {
+        setFixedVals(
+          produce(fixedVals, draft => {
+            console.log(tempFixedVal)
+            draft.push(tempFixedVal)
+          })
+        )
+      }
       setTempFixedVal({})
     }
   }
+
+  console.log(fixedVals)
   const onKeyPressOnInput = (e, index, header) => {
     if (e.key === "Enter") {
       confirmInputFixedVal()
@@ -881,7 +900,6 @@ console.log(addedNew)
   const handleClickFlag = selectMultipleStates
   const unhide          = unSelectMultipleStates
 
-  console.log(tempFixedVal)
 
 
   //정렬 기능
@@ -951,7 +969,11 @@ console.log(addedNew)
     setAnswer : setAddCopiedNew
   }
 
-  console.log(primaryKey)
+
+  console.log(fixedVals)
+  console.log(tempFixedVal)
+  console.log(filteredData)
+
 
   //테이블 셀렉트
   const [selected, setSelected]         = useState([]);
@@ -1153,14 +1175,14 @@ console.log(addedNew)
                             />
                           </StyledTableCell>
                         )
-                      } else if (isSelectTypeCol){
+                      } else if (isSelectTypeCol && fixMode){
 
                           return(
                             <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
                               <Select 
                                 key = {'select' + index}
                                 onChange = {event => handleChangeSelect(event, index, header)}
-                                options={selectOptions.sort} 
+                                options={selectOptions.sortName} 
                                 menuIsOpen = {selectMenuOpened[index]}
                                 // onInputChange = {event => handleClickSelectOpen(event, index)}
                                 // openMenuOnClick = {event => handleClickSelectChoose(index)}
@@ -1168,6 +1190,13 @@ console.log(addedNew)
                               />
                             </StyledTableCell>
                           )
+                      } else if (isSelectTypeCol && !fixMode){
+
+                        return(
+                          <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
+                            {filteredData[index][header]}
+                          </StyledTableCell>
+                        )
                       } else if (isFileTypeCol){
                           let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
                           return(

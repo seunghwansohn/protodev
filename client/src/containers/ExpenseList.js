@@ -104,7 +104,7 @@ const ExpenseListContainer = ({
         queryType : 'simpleQuery',
         size : '300px'
       },
-      sort : {
+      sortName : {
         fixable : true,
         defaultHided : false,
         validate : ['string'],

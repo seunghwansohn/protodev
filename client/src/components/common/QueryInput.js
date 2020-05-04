@@ -4,7 +4,8 @@ import { connect, useSelector, useDispatch } from 'react-redux';
 import TextField                  from '@material-ui/core/TextField'
 
 import SupplierList from '../../containers/SupplierList'
-import MakerList from '../../containers/MakerList'
+import MakerList    from '../../containers/MakerList'
+import ProjectList  from '../../containers/ProjectList'
 
 
 import DialogST             from './dialogs/DialogST'
@@ -261,6 +262,31 @@ const QueryInput = ({
         initialFilter : filter ? filter : '',
         directQuery : true
       },
+    },
+    project : {
+      title : 'project' + frameNo,
+      dialogType : 'projectQuery',
+      maxWidth : 'xl' ,
+      open : checkOpened('projectQuery'),
+      table : {
+        tableButton : [
+          {
+            title : 'insert',
+            type  : 'select',
+            func : function(selected){
+              //inser버튼 클릭됐을 때 실행할 명령
+              let clickedType = 'projectQuery'
+              setInputSelect(selected, clickedType)
+            },
+            mother : containerNo
+          },
+        ],
+        setFindOneResult : handleFindOneResult,
+        frameNo : 'project' + frameNo,
+        initialFilter : filter ? filter : '',
+        directQuery : true,
+        acts : {}
+      },
     }
   }
 
@@ -357,6 +383,14 @@ const QueryInput = ({
           motherNo            = {currentNo}
           subTableAttr        = {DialogsAttr.maker.table}
         ></MakerList>
+      </DialogST>
+      <DialogST attr = {DialogsAttr.project} motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType}>
+        <ProjectList
+          motherType          = {currentType}
+          motherFrameNo       = {frameNo}
+          motherNo            = {currentNo}
+          subTableAttr        = {DialogsAttr.project.table}
+        ></ProjectList>
       </DialogST>
 
     </React.Fragment>
