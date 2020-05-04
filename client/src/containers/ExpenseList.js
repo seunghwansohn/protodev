@@ -160,6 +160,16 @@ const ExpenseListContainer = ({
         queryType : 'simpleQuery',
         size      : '60px'
       },
+      approve : {
+        fixable : true,
+        defaultHided : false,
+        validate : ['string'],
+        type     : 'checkBox',
+        dataType : 'maker',
+        clickType : 'makerQuery',
+        queryType : 'simpleQuery',
+        size      : '60px'
+      },
       memoAuthorized : {
         fixable : true,
         defaultHided : false,

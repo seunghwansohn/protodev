@@ -31,6 +31,8 @@ import DialogTitle        from '@material-ui/core/DialogTitle';
 import Dialog             from '@material-ui/core/Dialog';
 
 import STInput            from '../common/Input';
+import ChkBoxWithAlert    from '../common/ChkBoxWithAlert';
+
 import InputAdornment     from '@material-ui/core/InputAdornment';
 import QueryInput         from './QueryInput';
 import TextField          from '@material-ui/core/TextField';
@@ -432,6 +434,14 @@ console.log(filteredData)
     let ox = false
     let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
     if (type == 'singleNote') {
+      ox = true
+    }
+    return ox
+  }
+  const isChkBoxType  = header => {
+    let ox = false
+    let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
+    if (type == 'checkBox') {
       ox = true
     }
     return ox
@@ -1165,6 +1175,8 @@ console.log(addedNew)
                     let isSelectTypeCol     = isSelectType(header)
                     let isFileTypeCol       = isFileType(header)
                     let isSingleNoteTypeCol = isSingleNoteType(header)
+                    let isChkBoxTypeCol     = isChkBoxType(header)
+
 
                     let queryColType  = 'fixSelect'
 
@@ -1294,7 +1306,33 @@ console.log(addedNew)
                             />
                           </StyledTableCell>
                         )
-                      }else if (isInputCol) { 
+                      } else if (!fixMode && isChkBoxTypeCol) { 
+                          let dataType      =  colAttr[header].dataType
+
+                          return (
+                            <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
+                              <ChkBoxWithAlert
+                                motherFrameNo = {frameNo}
+                                motherNo      = {currentNo}
+                                motherType    = {currentType}
+
+                                reqType       = {queryColType}
+                                dataType      = {dataType}
+                                codeNName     = {getMatchedFinding(dataType)}
+                                primaryKey    = {primaryKey}
+
+                                addedNo       = {index}
+                                label         = {colAttr[header].dataType}
+                                initialValue  = {filteredData[index][header]}
+                                filteredData  = {filteredData}
+                                fixedVals     = {fixedVals}
+                                setFixedVals  = {setFixedVals}
+                              >
+
+                              </ChkBoxWithAlert>
+                            </StyledTableCell>
+                          )
+                      } else if (isInputCol) { 
                         return (
                           <StyledTableCell fixable = {isfixableCol}>
                             <StyledInput 
