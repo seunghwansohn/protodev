@@ -311,14 +311,15 @@ const STTable = ({
   //테이블 업데이트
   const [fixedVals, setFixedVals]             = useState([]);
   const [updated, setUpdated]                 = useState(false);
-  const {update} = useSelector(({ item }) => ({ update : item.table.update }));
+  const {update} = useSelector((state => state[dataType].table))
+
   if (update) {
     getRawData()
     onUpdateChange(false)
     setUpdated(true)
   }
 
-console.log(filteredData)
+console.log(update)
 console.log(fixedVals)
 
 
@@ -580,7 +581,6 @@ console.log(fixedVals)
       }, 3000);
       getRawData()
       setUpdated(false)
-      
     }
   },[updated])
 
@@ -611,14 +611,19 @@ console.log(fixedVals)
   const checkCellFixed = (index, header) => {
     let ox = false
     console.log(fixedVals)
+    console.log(header)
+    
     fixedVals.map(obj => {
-      if (!obj == {} && obj.location.index == index && Object.keys(obj.vals).includes(header)) {
+      console.log(Object.keys(obj.vals).includes(header))
+      if (Object.keys(obj).length > 0 && obj.location.index == index && Object.keys(obj.vals).includes(header)) {
+        console.log('트루')
         ox = true
       }
     })
     return ox
   }
 
+  console.log(fixedVals)
 
   //다이얼로그 관련
   const dialogOpened                  = useSelector(state => state.dialogs.opened)
@@ -705,8 +710,6 @@ console.log(fixedVals)
       setClickedCol(tempObj2)
     }
   }
-
-
 
   //Validation기능
   const checkValid = (index, header, value) => {
@@ -1199,7 +1202,7 @@ console.log(addedNew)
                     let isFileTypeCol       = isFileType(header)
                     let isSingleNoteTypeCol = isSingleNoteType(header)
                     let isApproveChkBoxTypeCol     = isApproveChkBoxType(header)
-
+                    console.log(fixed)
 
                     let queryColType  = 'fixSelect'
 

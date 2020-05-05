@@ -87,7 +87,8 @@ const ItemListContainer = ({
           validate : ['code'],
           dataType : dataType,
           clickType : 'itemQuery',
-          queryType : 'simpleQuery'
+          queryType : 'simpleQuery',
+          size : '150px'
       },
       itemName : {
           fixable : true,
@@ -95,8 +96,8 @@ const ItemListContainer = ({
           validate : ['string'],
           dataType : dataType,
           clickType : 'itemQuery',
-          queryType : 'simpleQuery'
-
+          queryType : 'simpleQuery',
+          size : '300px'
       },
       description : {
           fixable : true,
@@ -153,7 +154,8 @@ const ItemListContainer = ({
           validate : ['string'],
           dataType : 'maker',
           clickType : 'makerQuery',
-          queryType : 'simpleQuery'
+          queryType : 'simpleQuery',
+          size : '100px'
       },
       makerModelNo : {
           fixable : true,
@@ -161,7 +163,8 @@ const ItemListContainer = ({
           validate : ['string'],
           dataType : dataType,
           clickType : 'itemQuery',
-          queryType : 'simpleQuery'
+          queryType : 'simpleQuery',
+          size : '100px'
       },
       supplierName : {
           fixable : true,
@@ -178,7 +181,8 @@ const ItemListContainer = ({
           validate : ['number', 'max15'],
           dataType : dataType,
           clickType : 'itemQuery',
-          queryType : 'detailQuery'
+          queryType : 'detailQuery',
+          size : '100px'
       },
       buyingPKR : {
           fixable : true,
