@@ -498,7 +498,7 @@ console.log(fixedVals)
     )
     setFilteredData(
       produce(filteredData, draft => {
-        draft[index][header] = value
+        draft[index][header] = label
       })
     )
     let temp1 = {}
@@ -506,7 +506,7 @@ console.log(fixedVals)
     temp1.vals = {}
     temp1.location = {index : index, header, header}
     temp1.ref[primaryKey] = filteredData[index][primaryKey]
-    temp1.vals[header] = value
+    temp1.vals[colAttr[header].code] = value
     setTempFixedVal(temp1)
     const validArr = checkValid(index, header, value)
     let joinedValidStr = validArr.join(', ')
@@ -542,12 +542,15 @@ console.log(fixedVals)
         })
       )
     } else if (event.key == 'Enter') {
+      console.log('엔터눌림')
       setSelectMenuOpened(
         produce(selectMenuOpened, draft => {
           console.log(idx)
           draft[idx] = false
         })
       )
+      confirmInputFixedVal()
+
     }
   }
   useEffect(() => {

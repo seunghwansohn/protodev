@@ -96,7 +96,10 @@ const ChkBoxWithAlert = ({
             : 
                 <>
                     By: {user.username}
-                    {val[memoCode] ? '메모 있음' : '메모없음'}
+                    {val[memoCode] ? 
+                    <Button>
+                       <NoteIcon></NoteIcon> 
+                    </Button> : ''}
                 </>
             }
 

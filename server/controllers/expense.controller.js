@@ -93,7 +93,7 @@ exports.addNew = (req, res) => {
 exports.update = async (req, res) => {
   let data = req.body
   let { ref,vals } = data
-  console.log(data)
+  console.log('데이타', data)
   console.log(ref)
   console.log(vals)
 
