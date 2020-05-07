@@ -7,7 +7,7 @@ import Button                                   from '@material-ui/core/Button';
 import CreateIcon from '@material-ui/icons/Create';
 
 
-const TestPage = ({
+const SingleNote = ({
   value,
   fixMode, 
   onChange, 
@@ -27,6 +27,7 @@ const TestPage = ({
     handleCloseDialog()
   }
 
+  console.log(fixMode)
   return (
     <>
       {fixMode ? 
@@ -50,9 +51,12 @@ const TestPage = ({
           style = {{width : '500px'}}
           onChange = {onChange}
         />
-        <Button variant="contained" color="primary" onClick = {onClickSubmit}>
+        {fixMode ? 
+          <Button variant="contained" color="primary" onClick = {onClickSubmit}>
             Submit
-        </Button>
+          </Button>
+          : ''
+        }
         <Button variant="contained" color="secondary" onClick = {handleCloseDialog}>
             Close
         </Button>
@@ -62,4 +66,4 @@ const TestPage = ({
 }
 
 
-export default TestPage
+export default SingleNote

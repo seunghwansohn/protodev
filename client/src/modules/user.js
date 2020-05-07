@@ -40,7 +40,10 @@ export function* userSaga() {
 }
 
 const initialState = {
-  user: null,
+  user: {
+    username : null
+  },
+  username : null,
   checkError: null,
 };
 

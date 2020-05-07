@@ -6,6 +6,7 @@ import { Typography } from '@material-ui/core';
 import TextField          from '@material-ui/core/TextField';
 import NoteIcon from '@material-ui/icons/Note';
 import Badge from '@material-ui/core/Badge';
+import CreateIcon from '@material-ui/icons/Create';
 
 
 
@@ -17,7 +18,8 @@ const ChkBoxWithAlert = ({
     user,
     onSubmit,
     val,
-    attr
+    attr,
+    newMode
 }) => {
 
     const {byCode, checkCode, memoCode} = attr
@@ -36,6 +38,8 @@ const ChkBoxWithAlert = ({
         onChange(e)
     }
 
+    console.log(user)
+
     console.log(val)
     const handleSaveNClose = (e) => {
         onSubmit()
@@ -48,9 +52,11 @@ const ChkBoxWithAlert = ({
     console.log(user)
     console.log(attr)
 
+    console.log(val)
+
     return (
         <>  
-            <Dialog
+            {/* <Dialog
                 open = {open}
                 onClose = {handleCloseDialog}
                 maxWidth = 'md'
@@ -69,9 +75,9 @@ const ChkBoxWithAlert = ({
 
                 <Button onClick = {handleSaveNClose}>Save & Close</Button>
                 <Button onClick = {handleCloseDialog}>Close</Button>
-            </Dialog>
+            </Dialog> */}
 
-            {fixMode ? 
+            {fixMode || newMode? 
                 <>
                     <Checkbox
                         checked  = {checked}
@@ -96,12 +102,18 @@ const ChkBoxWithAlert = ({
             : 
                 <>
                     By: {user.username}
-                    {val[memoCode] ? 
+                    {val && val[memoCode] ? 
                     <Button>
-                       <NoteIcon></NoteIcon> 
-                    </Button> : ''}
+                        <NoteIcon></NoteIcon> 
+                    </Button> : ''} 
                 </>
             }
+
+            {newMode ?
+                <Button>
+                    <CreateIcon></CreateIcon> 
+                </Button> 
+            : ''}
 
 
         </>

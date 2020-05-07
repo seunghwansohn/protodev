@@ -85,6 +85,7 @@ import Select from 'react-select'
 const colors = {
   fixable : '#fff4e2',
   unFixable : '#D3D3D3',
+  fixed : '#FF7F50'
 }
 const useStyles = makeStyles({
   root: {
@@ -128,7 +129,16 @@ const StyledCheckBox = styled(Checkbox)`
   }
 `
 const StyledTableCell = styled(TableCell)`
-  background-color: ${props => props.fixMode ? props.fixable ? colors.fixable : colors.unFixable : '#ffffff'};
+  background-color: ${
+    props => props.fixMode ? 
+      props.fixable ? 
+        props.fixed ?
+          colors.fixed
+        : colors.fixable
+      : colors.unFixable 
+    : '#ffffff'
+  };
+
   border-style : ${props => props.updated ? 'ridge':'none'};
   &:hover {
     background-color : #eef534;
@@ -181,7 +191,6 @@ const STTable = ({
       dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
     },
     onSubmitUpdatedVals : function (arr) {
-      console.log(arr)
       dispatch(actUpdate(arr))
     },
     onDelete : function(dataType, primaryCode) {
@@ -195,7 +204,6 @@ const STTable = ({
     }
   }
 
-  console.log(dataType)
   const {
     onDialogOpen,
     onSubmitNewAdded,
@@ -232,7 +240,6 @@ const STTable = ({
   const { user } = useSelector(({ user }) => ({ user: user.user }));
 
 
-  console.log(user)
   //api에서 tableRawData 및 key 설정
   const [rawData, 
     setRawData]                     = useState([])
@@ -248,7 +255,6 @@ const STTable = ({
   const getRawData = async () => {
     await axios.get('/api/' + dataType + '/load').then(res => {
       setPrimaryKey(res.data.primaryKey)
-      console.log(res.data)
       setIncludingKeys(res.data.includingKeys)
       setFindingKeys(res.data.findingKeys)
       setFilesKeys(res.data.filesKeys)
@@ -256,7 +262,6 @@ const STTable = ({
       if (filesKeys) {
         setAttachedFiles(getOnlyFiles(res.data.vals))
       }
-      console.log(res.data.vals)
       setRawData(withoutKeys(res.data.vals))
     })
   }
@@ -319,8 +324,6 @@ const STTable = ({
     setUpdated(true)
   }
 
-console.log(update)
-console.log(fixedVals)
 
 
 
@@ -458,27 +461,23 @@ console.log(fixedVals)
   const [selectMenuOpened, setSelectMenuOpened]     = useState([])
   useEffect(() => {
     let colAttrKeys = Object.keys(colAttr)
-    console.log(colAttrKeys)
     colAttrKeys.map(async key => {
       let type = await colAttr[key].type ? colAttr[key].type : ''
       if (type == 'select') {
         // console.log(type)
         let dataType = await colAttr[key].dataType
         await axios.get('/api/' + dataType + '/load').then(res => {
-          console.log(res.data)
           let tempOptionsArr = []
           let tempNamesArr = []
           let vals = res.data.vals
           let code = colAttr[key].code
           let name = colAttr[key].name
-          console.log(code, name)
           vals.map(obj => {
             let tempObj = {}
             tempObj.value = obj[code]
             tempObj.label = obj[name]
             tempOptionsArr.push(tempObj)
           })
-          console.log(tempOptionsArr)
           setSelectOptions(
             produce(selectOptions, draft => {
               draft[key] = tempOptionsArr
@@ -488,8 +487,6 @@ console.log(fixedVals)
       }
     })
   },[])
-
-  console.log(selectOptions)
   const handleChangeSelect = (event, index, header) => {
     const {value, label} = event
     setSelectedVal(
@@ -532,7 +529,6 @@ console.log(fixedVals)
           draft[primaryCode][header] = false
         })
       )
-
     }
   }
   const handleClickSelectChoose = (event, idx) => {
@@ -546,12 +542,10 @@ console.log(fixedVals)
       console.log('엔터눌림')
       setSelectMenuOpened(
         produce(selectMenuOpened, draft => {
-          console.log(idx)
           draft[idx] = false
         })
       )
       confirmInputFixedVal()
-
     }
   }
   useEffect(() => {
@@ -561,8 +555,6 @@ console.log(fixedVals)
     })
     setSelectMenuOpened(tempArr)
   },[filteredData])
-
-  console.log(selectMenuOpened)
 
 
   //인덱스값만 넣어서 primaryCode를 얻는 기능
@@ -610,20 +602,14 @@ console.log(fixedVals)
   }
   const checkCellFixed = (index, header) => {
     let ox = false
-    console.log(fixedVals)
-    console.log(header)
-    
     fixedVals.map(obj => {
-      console.log(Object.keys(obj.vals).includes(header))
       if (Object.keys(obj).length > 0 && obj.location.index == index && Object.keys(obj.vals).includes(header)) {
-        console.log('트루')
         ox = true
       }
     })
     return ox
   }
 
-  console.log(fixedVals)
 
   //다이얼로그 관련
   const dialogOpened                  = useSelector(state => state.dialogs.opened)
@@ -757,11 +743,9 @@ console.log(fixedVals)
     let tempObj = {}
     let colAttrKeys = Object.keys(colAttr)
     headers.map(header => {
-      console.log(header)
       if (colAttr[header] && colAttr[header].defaultCodeType && colAttr[header].defaultCodeType ==  'yymmddhhminRandom') {
         let dateTime = getDate_yyyymmddhhmm()
         let randomNo = generateRandom(100,999)
-        console.log(dateTime, randomNo)
         tempObj[header] = dateTime + randomNo
       } else {
         tempObj[header] = null
@@ -813,6 +797,30 @@ console.log(fixedVals)
       )
     }
   }
+  //newAddedSelectType 값 변경 기능
+  const [addedNewSelectedVal, setAddedNewSelectedVal]             = useState({})
+  const [addedNewSelectMenuOpened, setAddedNewSelectMenuOpened]   = useState([])
+  const handleChangeNewAddedSelect = (event, index, header) => {
+    console.log(event)
+    console.log(index)
+    const {value, label} = event
+    const temp = value
+    setAddedNewSelectedVal(
+      produce(addedNewSelectedVal, draft => {
+        draft[index] = value
+      })
+    )
+    setAddedNew(
+      produce(addedNew, draft => {
+        delete draft[index][header]
+        draft[index][colAttr[header].code] = temp
+      })
+    )
+  }
+
+  console.log(addedNewSelectedVal)
+  console.log(fixedVals)
+  console.log(addedNew)
 
 
   //값 update시 인풋 처리 기능
@@ -861,6 +869,7 @@ console.log(fixedVals)
     }
   }
   const handleChangeInput = (e, index, header, memo) => {
+    console.log(header)
     setFilteredData(
       produce(filteredData, draft => {
         draft[index][header] = e.target.value 
@@ -1202,7 +1211,8 @@ console.log(addedNew)
                     let isFileTypeCol       = isFileType(header)
                     let isSingleNoteTypeCol = isSingleNoteType(header)
                     let isApproveChkBoxTypeCol     = isApproveChkBoxType(header)
-                    console.log(fixed)
+
+                    let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
 
                     let queryColType  = 'fixSelect'
 
@@ -1236,7 +1246,7 @@ console.log(addedNew)
                     if (!isColumnHided) {
                       if (fixable && isfixableCol) {
                         return (
-                          <StyledTableCell fixable = {isfixableCol}>
+                          <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol}>
                             <MiniHelperText 
                               key = {header }
                               size       = 'small'
@@ -1254,7 +1264,7 @@ console.log(addedNew)
                       } else if (isSelectTypeCol && fixMode){
 
                           return(
-                            <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
+                            <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} style = {{width:'150px'}}>
                               <Select 
                                 key = {'select' + idxRow}
                                 onChange = {event => handleChangeSelect(event, idxRow, header)}
@@ -1269,18 +1279,15 @@ console.log(addedNew)
                       } else if (isSelectTypeCol && !fixMode){
 
                         return(
-                          <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
+                          <StyledTableCell fixable = {isfixableCol} size = {size}>
                             {filteredData[idxRow][header]}
                           </StyledTableCell>
                         )
                       } else if (isFileTypeCol){
-                          let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
                           return(
-                            <StyledTableCell fixable = {isfixableCol} size = {size}>
+                            <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} size = {size}>
 
                               <DropZone 
-                                // onChange = {event => handleChangeSelect(event, idxRow)}
-                                // options={selectOptions.sort} 
                                 motherFrameNo = {frameNo}
                                 motherNo      = {currentNo}
                                 motherType    = {currentType}
@@ -1294,16 +1301,14 @@ console.log(addedNew)
                             </StyledTableCell>
                         )
                       } else if (isSingleNoteTypeCol){
-                        let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
                         return(
-                          <StyledTableCell fixable = {isfixableCol} size = {size}>
+                          <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} size = {size}>
 
                             <SingleNote 
-                              // onChange = {event => handleChangeSelect(event, index)}
-                              // options={selectOptions.sort} 
                               value = {filteredData[idxRow][header]}
                               onChange = {(event) => handleChangeInput(event, idxRow, header)}
                               onSubmit = {confirmInputFixedVal}
+                              fixMode = {fixMode}
 
                             />
                           </StyledTableCell>
@@ -1312,7 +1317,7 @@ console.log(addedNew)
                         let dataType      =  colAttr[header].dataType
 
                         return (
-                          <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
+                          <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} style = {{width:'150px'}}>
                             <QueryInput
                               motherFrameNo = {frameNo}
                               motherNo      = {currentNo}
@@ -1334,10 +1339,8 @@ console.log(addedNew)
                         )
                       } else if (isApproveChkBoxTypeCol) { 
                           let dataType      =  colAttr[header].dataType
-                          console.log(header)
-                          console.log(colAttr[header])
                           return (
-                            <StyledTableCell fixable = {isfixableCol} style = {{width:'150px'}}>
+                            <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} style = {{width:'150px'}}>
                               <ChkBoxWithAlert
                                 motherFrameNo = {frameNo}
                                 motherNo      = {currentNo}
@@ -1382,22 +1385,15 @@ console.log(addedNew)
                             />
                           </StyledTableCell>
                         )
-                      }else if (fixed) {
-                        return(
-                          <StyledTableCell updated = {showUpdatedSign} style = {{backgroundColor : "lightblue"}} onClick = {() => {onClickCols(row[header], idxRow, header)}}>
-                            {row[header]}
-                          </StyledTableCell>
-                        )
                       }
                       else if (true) {
-                        let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
                         return(
-                          <StyledTableCell fixMode = {fixMode} size = {size} fixable = {isfixableCol} onClick = {() => {onClickCols(row[header], idxRow, header)}}>
+                          <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} onClick = {() => {onClickCols(row[header], idxRow, header)}}>
                             {row[header]}
                           </StyledTableCell>
                         )
                       }
-                  }
+                    }
                   })}
 
                   {tableButton ? tableButton.map((button, idx4) => {
@@ -1423,7 +1419,7 @@ console.log(addedNew)
             }) :''}
 
 
-            {addedNew && addedNew.length > 0 ? addedNew.map((row, index) => {
+            {addedNew && addedNew.length > 0 ? addedNew.map((idxRow, index) => {
               return (
                 <TableRow>
                   <StyledTableCell style = {{padding : '0px', margin : '0px'}}>
@@ -1437,6 +1433,9 @@ console.log(addedNew)
                       let   isSelectTypeCol = isSelectType(header)
                       let isFileTypeCol       = isFileType(header)
                       let isSingleNoteTypeCol = isSingleNoteType(header)
+                      let isApproveChkBoxTypeCol     = isApproveChkBoxType(header)
+                      let fixed               = checkCellFixed(idxRow, header)
+                      let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
 
 
                       if (!isColumnHided && header !== 'id') {
@@ -1495,8 +1494,8 @@ console.log(addedNew)
                               <StyledTableCell>
                                 <Select 
                                   key = {'select' + index}
-                                  onChange = {event => handleChangeSelect(event, index)}
-                                  options={selectOptions.sort} 
+                                  onChange = {event => handleChangeNewAddedSelect(event, index, header)}
+                                  options={selectOptions.sortName} 
                                   menuIsOpen = {selectMenuOpened[index]}
                                   onKeyDown = {event => handleClickSelectChoose(event, index)}
 
@@ -1523,22 +1522,46 @@ console.log(addedNew)
                                 />
                               </StyledTableCell>
                             )
+                        } else if (isApproveChkBoxTypeCol) { 
+                          let dataType      =  colAttr[header].dataType
+                          return (
+                            <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} style = {{width:'150px'}}>
+                              <ChkBoxWithAlert
+                                motherFrameNo = {frameNo}
+                                motherNo      = {currentNo}
+                                motherType    = {currentType}
+                                
+                                fixMode       = {fixMode}
+                                newMode       = {true}
+
+                                onChange      = {(event) => handleChangeNewAddedInput(event, idxRow, header)}
+                                onChangeMemo  = {(event) => handleChangeNewAddedInput(event, idxRow, header, true)}
+                                onSubmit      = {confirmInputFixedVal}
+                                
+                                user          = {user}
+                                val           = {filteredData[idxRow]}
+                                attr          = {colAttr[header]}
+                              >
+
+                              </ChkBoxWithAlert>
+                            </StyledTableCell>
+                          )
                         } else {
-                            return(
-                              <StyledTableCell>
-                                <MiniHelperText
-                                  key        = {header }
-                                  value      = {row[header]}
-                                  style      = {{width: '100%'}}
-                                  size       = 'small'
-                                  error      = {newAddedError[index][header]} 
-                                  style      = {{width : '100%', fontSize : '7px'}}
-                                  onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
-                                  onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
-                                  helperText = {newAddedhelperTexts[index][header]}
-                                />
-                              </StyledTableCell>
-                            )
+                          return(
+                            <StyledTableCell>
+                              <MiniHelperText
+                                key        = {header }
+                                value      = {idxRow[header]}
+                                style      = {{width: '100%'}}
+                                size       = 'small'
+                                error      = {newAddedError[index][header]} 
+                                style      = {{width : '100%', fontSize : '7px'}}
+                                onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
+                                onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
+                                helperText = {newAddedhelperTexts[index][header]}
+                              />
+                            </StyledTableCell>
+                          )
                         }
                       }
                   })}
