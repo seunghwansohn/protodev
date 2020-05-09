@@ -110,7 +110,7 @@ const ChkBoxWithAlert = ({
                 </>
             }
 
-            {newMode ?
+            {newMode && !memo ?
                 <Button>
                     <CreateIcon></CreateIcon> 
                 </Button> 

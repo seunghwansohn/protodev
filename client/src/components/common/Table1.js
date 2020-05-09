@@ -770,30 +770,36 @@ const STTable = ({
     // dispatch(actAddNewBlankQuery(frameNo))
   }
   //newAdded 값 변경 기능
-  const handleChangeNewAddedInput = (event, index, header) => {
+  const handleChangeNewAddedInput = (event, index, header, memo) => {
     let type = ''
-    let tempVal = ''
+    let tempVal = {}
     
     console.log(index)
     if (Object.keys(event)[0] == 'value') {
-      tempVal = event.value
+      tempVal[header] = event.value
     } else {
       type = event.target.type
     }
-
-    if (type == 'checkbox') {
-      tempVal = event.target.checked
-    } else {
-      tempVal = event.target.value
+    if (colAttr[header].type == 'approveCheckBox') {
+      tempVal[header + 'By'] = user.username
     }
 
-    console.log(type, tempVal, index, header)
+    if (memo) {
+      tempVal[header + 'Memo'] = event.target.value
+    } else {
+      if (type == 'checkbox') {
+        tempVal[header] = event.target.checked
+      } else {
+        tempVal[header] = event.target.value
+      }
+    }
+
+    console.log(tempVal)
     setAddedNew(
       produce(addedNew, draft => {
-        draft[index][header] = tempVal
+        draft[index] = Object.assign(draft[index], tempVal)
       })
     )
-    console.log(index, header, tempVal)
     const validArr = checkValid(index, header, tempVal)
     let joinedValidStr = validArr.join(', ')
     setNewAddedHelperTexts(    
