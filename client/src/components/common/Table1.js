@@ -141,7 +141,7 @@ const StyledTableCell = styled(TableCell)`
 
   border-style : ${props => props.updated ? 'ridge':'none'};
   &:hover {
-    background-color : #eef534;
+    font-weight: bold;
   }
   max-width : ${props => props.size};
   width : ${props => props.size};
@@ -152,6 +152,7 @@ const StyledInput = styled(Input)`
   width: ${props => props.width ? props.width : 'auto'};
   &:hover {
     background-color : #eef534;
+    font-weight: bold;
   }
 `
 const MiniHelperText = styled(TextField)`
@@ -770,13 +771,30 @@ const STTable = ({
   }
   //newAdded 값 변경 기능
   const handleChangeNewAddedInput = (event, index, header) => {
-    const temp = event.target.value
+    let type = ''
+    let tempVal = ''
+    
+    console.log(index)
+    if (Object.keys(event)[0] == 'value') {
+      tempVal = event.value
+    } else {
+      type = event.target.type
+    }
+
+    if (type == 'checkbox') {
+      tempVal = event.target.checked
+    } else {
+      tempVal = event.target.value
+    }
+
+    console.log(type, tempVal, index, header)
     setAddedNew(
       produce(addedNew, draft => {
-        draft[index][header] = temp
+        draft[index][header] = tempVal
       })
     )
-    const validArr = checkValid(index, header, event.target.value)
+    console.log(index, header, tempVal)
+    const validArr = checkValid(index, header, tempVal)
     let joinedValidStr = validArr.join(', ')
     setNewAddedHelperTexts(    
       produce(newAddedhelperTexts, draft => {
@@ -1419,13 +1437,13 @@ console.log(addedNew)
             }) :''}
 
 
-            {addedNew && addedNew.length > 0 ? addedNew.map((idxRow, index) => {
+            {addedNew && addedNew.length > 0 ? addedNew.map((row, idxRow) => {
               return (
                 <TableRow>
                   <StyledTableCell style = {{padding : '0px', margin : '0px'}}>
                     <StyledCheckBox/>
                   </StyledTableCell>
-                  <StyledTableCell>{index + 1}</StyledTableCell>
+                  <StyledTableCell>{idxRow + 1}</StyledTableCell>
                     {headers.map((header, idx6) => {
                       const isColumnHided = isHidedCulumn(header)
                       let   isQueryCol    = isQuery(header)
@@ -1459,7 +1477,7 @@ console.log(addedNew)
                           const getSelectedValue = (key) => {
                             let values = null
                             querySelected.map(obj => {
-                              if (obj.reqType == queryColType && obj.key == index) {
+                              if (obj.reqType == queryColType && obj.key == idxRow) {
                                 values = obj.selected
                               }
                             })
@@ -1480,9 +1498,9 @@ console.log(addedNew)
                                 codeNName     = {getMatchedFinding(dataType)}
                                 primaryKey    = {primaryKey}
 
-                                addedNo       = {index}
+                                addedNo       = {idxRow}
                                 label         = {colAttr[header].dataType}
-                                initialValue  = {filteredData[index][header]}
+                                initialValue  = {filteredData[idxRow][header]}
                                 filteredData  = {filteredData}
                                 addedNew      = {addedNew}
                                 setAddedNew   = {setAddedNew}
@@ -1493,11 +1511,11 @@ console.log(addedNew)
                             return (
                               <StyledTableCell>
                                 <Select 
-                                  key = {'select' + index}
-                                  onChange = {event => handleChangeNewAddedSelect(event, index, header)}
+                                  key = {'select' + idxRow}
+                                  onChange = {event => handleChangeNewAddedSelect(event, idxRow, header)}
                                   options={selectOptions.sortName} 
-                                  menuIsOpen = {selectMenuOpened[index]}
-                                  onKeyDown = {event => handleClickSelectChoose(event, index)}
+                                  menuIsOpen = {selectMenuOpened[idxRow]}
+                                  onKeyDown = {event => handleClickSelectChoose(event, idxRow)}
 
                                 />
                               </StyledTableCell>
@@ -1506,8 +1524,9 @@ console.log(addedNew)
                             return (
                               <StyledTableCell>
                                 <SingleNote
-                                  fixMode   =  {true} 
-                                  onChange  =  {event => handleChangeSelect(event, index)}
+                                  newMode   =  {true} 
+                                  onChange  =  {event => handleChangeNewAddedInput(event, idxRow, header)}
+                                  onSubmit  =  {event => handleChangeNewAddedInput(event, idxRow, header)}
                                 />
                               </StyledTableCell>
                             )
@@ -1517,13 +1536,14 @@ console.log(addedNew)
 
                                 <DropZone
                                   fixMode = {true} 
-                                  // onChange = {event => handleChangeSelect(event, index)}
+                                  // onChange = {event => handleChangeSelect(event, idxRow)}
                                   // options={selectOptions.sort} 
                                 />
                               </StyledTableCell>
                             )
                         } else if (isApproveChkBoxTypeCol) { 
                           let dataType      =  colAttr[header].dataType
+                          console.log(idxRow)
                           return (
                             <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} style = {{width:'150px'}}>
                               <ChkBoxWithAlert
@@ -1551,14 +1571,14 @@ console.log(addedNew)
                             <StyledTableCell>
                               <MiniHelperText
                                 key        = {header }
-                                value      = {idxRow[header]}
+                                value      = {row[header]}
                                 style      = {{width: '100%'}}
                                 size       = 'small'
-                                error      = {newAddedError[index][header]} 
+                                error      = {newAddedError[idxRow][header]} 
                                 style      = {{width : '100%', fontSize : '7px'}}
-                                onChange   = {(event) => handleChangeNewAddedInput(event, index, header)} 
-                                onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, index, header)}
-                                helperText = {newAddedhelperTexts[index][header]}
+                                onChange   = {(event) => handleChangeNewAddedInput(event, idxRow, header)} 
+                                onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, idxRow, header)}
+                                helperText = {newAddedhelperTexts[idxRow][header]}
                               />
                             </StyledTableCell>
                           )

@@ -33,6 +33,7 @@ const ChkBoxWithAlert = ({
     }
 
     const handleChange = (e) => {
+        console.log(e.target)
         setChecked(!checked)
         setOpen(true)
         onChange(e)
@@ -56,7 +57,7 @@ const ChkBoxWithAlert = ({
 
     return (
         <>  
-            {/* <Dialog
+            <Dialog
                 open = {open}
                 onClose = {handleCloseDialog}
                 maxWidth = 'md'
@@ -75,7 +76,7 @@ const ChkBoxWithAlert = ({
 
                 <Button onClick = {handleSaveNClose}>Save & Close</Button>
                 <Button onClick = {handleCloseDialog}>Close</Button>
-            </Dialog> */}
+            </Dialog>
 
             {fixMode || newMode? 
                 <>

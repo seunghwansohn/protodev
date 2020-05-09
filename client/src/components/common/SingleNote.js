@@ -11,7 +11,8 @@ const SingleNote = ({
   value,
   fixMode, 
   onChange, 
-  onSubmit
+  onSubmit,
+  newMode
 }) => {
 
   const [openedDialog, setOpenedDialog]   = React.useState(false)
@@ -23,11 +24,19 @@ const SingleNote = ({
   }
 
   const onClickSubmit = () => {
-    onSubmit()
+    let tempObj = {}
+    tempObj.value = memo
+    onSubmit(tempObj)
     handleCloseDialog()
   }
 
   console.log(fixMode)
+  console.log(newMode)
+
+  //메모부분 
+  const [memo, setMemo]   = React.useState('')
+
+console.log(memo.target)
   return (
     <>
       {fixMode ? 
@@ -49,9 +58,9 @@ const SingleNote = ({
           rows={10}
           rowsMax={10}
           style = {{width : '500px'}}
-          onChange = {onChange}
+          onChange = {newMode ? event => {setMemo(event.target.value)} : onChange}
         />
-        {fixMode ? 
+        {fixMode || newMode ? 
           <Button variant="contained" color="primary" onClick = {onClickSubmit}>
             Submit
           </Button>
