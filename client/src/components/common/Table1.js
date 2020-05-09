@@ -189,6 +189,7 @@ const STTable = ({
       dispatch(actDialogOpen(tempObj))
     },
     onSubmitNewAdded : function (obj, primaryKey, includingKeys, findingKeys) {
+      console.log('뉴애디드')
       dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
     },
     onSubmitUpdatedVals : function (arr) {
@@ -774,25 +775,28 @@ const STTable = ({
     let type = ''
     let tempVal = {}
     
-    console.log(index)
+    console.log(event)
+    console.log(memo)
     if (Object.keys(event)[0] == 'value') {
       tempVal[header] = event.value
+      console.log(tempVal)
     } else {
       type = event.target.type
-    }
-    if (colAttr[header].type == 'approveCheckBox') {
-      tempVal[header + 'By'] = user.username
-    }
-
-    if (memo) {
-      tempVal[header + 'Memo'] = event.target.value
-    } else {
-      if (type == 'checkbox') {
-        tempVal[header] = event.target.checked
+      if (colAttr[header].type == 'approveCheckBox') {
+        tempVal[header + 'By'] = user.username
+      }
+  
+      if (memo) {
+        tempVal[header + 'Memo'] = event.target.value
       } else {
-        tempVal[header] = event.target.value
+        if (type == 'checkbox') {
+          tempVal[header] = event.target.checked
+        } else {
+          tempVal[header] = event.target.value
+        }
       }
     }
+
 
     console.log(tempVal)
     setAddedNew(

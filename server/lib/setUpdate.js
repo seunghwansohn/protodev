@@ -8,7 +8,6 @@ module.exports = setUpdate = (vals, ref, relAttr) => {
                 tempMatched.relType = rel.relType
             }
         })
-        console.log('템프매치드', tempMatched)
         return tempMatched
     }
 

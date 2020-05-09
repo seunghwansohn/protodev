@@ -50,8 +50,6 @@ module.exports = function (source, primaryKey, findingAttr, includingAttr, files
     concatedAttr      = concatedAttr.concat(filesAttr)
   }
 
-  console.log(concatedAttr)
-
   return source.findAll({
     include : concatedAttr
   }).then(async arr => {

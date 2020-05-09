@@ -25,7 +25,6 @@ module.exports = setNameToCode = (relAttr, findingKeys, addedObj) => {
   })
 
   return rels[relIdx].target.findOne({where:where, attributes :[targetCode]}, ).then(result => {
-    console.log('리절트는 ', result)
     let tempObj = Object.assign(addedObj, result.dataValues)
     delete tempObj[reqName]
     return tempObj

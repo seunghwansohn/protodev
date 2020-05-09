@@ -49,17 +49,17 @@ module.exports = (sequelize, Sequelize) => {
       approved: {
         type: Sequelize.STRING,
         unique: false,
-        allowNull: false
+        allowNull: true
       },
       approvedBy: {
         type: Sequelize.STRING,
         unique: false,
-        allowNull: false
+        allowNull: true
       },
       approvedMemo: {
         type: Sequelize.STRING,
         unique: false,
-        allowNull: false
+        allowNull: true
       }
     });
     return Expense;

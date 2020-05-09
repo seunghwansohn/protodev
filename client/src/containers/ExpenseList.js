@@ -62,6 +62,7 @@ const ExpenseListContainer = ({
       dispatch(actDialogOpen(tempObj))
     },
     onSubmitNewAdded : function (obj, primaryKey, includingKeys, findingKeys) {
+      console.log('뉴애디드')
       dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
     },
     onSubmitUpdatedVals : function (arr) {

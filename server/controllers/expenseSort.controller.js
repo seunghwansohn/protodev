@@ -82,7 +82,6 @@ exports.load = (req, res) => {
   const includingAttr = getIncludingAttr(relAttr)
   const findingAttr   = getFindingAttr(relAttr)
   getIncludeName(relAttr.source, primaryKey, findingAttr, includingAttr).then(expenseSort => {
-    console.log('익스펜스솔트', expenseSort)
     res.status(200).send(expenseSort)
   })
 };

@@ -44,6 +44,5 @@ module.exports = getCreateObj = async (addedNew, primaryKey, primaryCode, includ
         await delete addedNew[key]
       })
     })
-    await console.log('리절트에디드뉴는 ', addedNew)
     return await addedNew
 }

@@ -73,6 +73,7 @@ exports.addNew = (req, res) => {
   const {addedNew, primaryKey, includingKeys, findingKeys} = req.body
   const primaryCode   = addedNew[primaryKey]
   
+  console.log(req.body)
   let addedNewRmTime  = rmTimeFromReq(addedNew)
 
   const includings  = {}
@@ -81,9 +82,12 @@ exports.addNew = (req, res) => {
   const createObj     = getCreateObj(addedNewRmTime, primaryKey, primaryCode, includingKeys, findingKeys)
 
   createObj.then(result => {
+    console.log('리절트', result)
+    console.log('인클루딩', includingArr)
     Expense.create(result, {include:includingArr}).then(() => {
       res.status(200).send('Expense Suceessfully Added')
     }).catch((err) => {
+      console.log({message:err.message})
       res.status(500).send({message:err.message})
     })
   })
