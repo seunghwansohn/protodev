@@ -23,4 +23,13 @@ export const checkDecimal = (num, limit) => {
     
     return funcCompare(Num, numberFixed)
 }
+
+export const required = (val) => {
+    console.log('발발', val)
+    let valid = false
+    if (val == null || val === null || val == undefined || val == '') {
+        valid = true
+    }
+    return valid
+}
   

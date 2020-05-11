@@ -54,7 +54,10 @@ import {selectMultipleStates,
 import {checkDecimal, 
   percent, 
   hasWhiteSpace, 
-  maxValue, isPlus}                     from '../../lib/validation';
+  maxValue, 
+  isPlus,
+  required
+}                     from '../../lib/validation';
     
 import Paper from '@material-ui/core/Paper';
 
@@ -80,7 +83,8 @@ import { actSelect,
 import styled   from "styled-components";
 import produce  from 'immer'
 
-import Select from 'react-select'
+import Select from './Select'
+import { object } from 'joi';
 
 const colors = {
   fixable : '#fff4e2',
@@ -164,6 +168,10 @@ const MiniHelperText = styled(TextField)`
     color : red;
     width : 100%;
   }
+`
+
+const StyledTableContainer = styled(TableContainer)`
+  height : ${props => props.size ? props.size : 'auto'};
 `
 
 const STTable = ({
@@ -490,6 +498,11 @@ const STTable = ({
     })
   },[])
   const handleChangeSelect = (event, index, header) => {
+    console.log(header)
+    const attrs = Object.keys(colAttr)
+    const attr  = attrs[header]
+
+    console.log(attr)
     const {value, label} = event
     setSelectedVal(
       produce(selectedVal, draft => {
@@ -508,6 +521,11 @@ const STTable = ({
     temp1.ref[primaryKey] = filteredData[index][primaryKey]
     temp1.vals[colAttr[header].code] = value
     setTempFixedVal(temp1)
+    setFixedVals(
+      produce(fixedVals, draft => {
+        draft.push(temp1)
+      })
+    )
     const validArr = checkValid(index, header, value)
     let joinedValidStr = validArr.join(', ')
     const primaryCode = getPrimaryCode(index)
@@ -701,6 +719,7 @@ const STTable = ({
 
   //Validation기능
   const checkValid = (index, header, value) => {
+    console.log('체크밸리드중')
     let tempArr = []
     let funcs = {    
       number : val => val && isNaN(Number(val)) ? 'Only Number' : undefined,
@@ -713,10 +732,13 @@ const STTable = ({
       maxValue5 : val => val && maxValue(val, 5) ? 'Value is exceed maximum' : undefined,
       max1 : val => val && maxValue(val, 1) ? 'Value is exceed maximum' : undefined,
       max15 : val => val && maxValue(val, 15) ? 'Value is exceed maximum' : undefined,
-      decimal2 : val => val && checkDecimal(val, 2) == true ? '1.xx (o), 1.xxx (x)' : undefined
+      decimal2 : val => val && checkDecimal(val, 2) == true ? '1.xx (o), 1.xxx (x)' : undefined,
+      required : val => (val !== undefined || val !== null) && required(val) == true ? 'required' : undefined
     }
     if (colAttr[header].validate) {
+      console.log(value)
       colAttr[header].validate.map(str => {
+        console.log(str)
         if (funcs[str] && funcs[str](value) !== undefined) {
           tempArr.push(funcs[str](value))
         }
@@ -742,7 +764,11 @@ const STTable = ({
   const [newAddedError, setNewAddedError] = useState([])
   //--------------------------
   const onAddNewBlank = () => {
+    console.log(addedNew.length)
+    const lengthBefore = addedNew.length
+    const lengthNow    = lengthBefore + 1
     let tempObj = {}
+    let tempObjH     = {}
     let colAttrKeys = Object.keys(colAttr)
     headers.map(header => {
       if (colAttr[header] && colAttr[header].defaultCodeType && colAttr[header].defaultCodeType ==  'yymmddhhminRandom') {
@@ -750,61 +776,73 @@ const STTable = ({
         let randomNo = generateRandom(100,999)
         tempObj[header] = dateTime + randomNo
       } else {
-        tempObj[header] = null
+        tempObj[header] = ''
       }
+      const validArr = checkValid('', header, '')
+      let joinedValidStr = validArr.join(', ')
+      console.log(joinedValidStr)
+
+      tempObjH[header] = joinedValidStr
+
+      setNewAddedHelperTexts(    
+        produce(newAddedhelperTexts, draft => {
+          console.log(tempObjH)
+          draft.push(tempObjH)
+        })
+      )
+      console.log(newAddedhelperTexts)
+      let tempOx = {}
+      tempOx[header] = false
+      if (validArr == []) {
+        tempOx[header] = true
+      }
+      setNewAddedError(    
+        produce(newAddedError, draft => {
+          draft.push(tempOx)
+        })
+      )
     })
     setAddedNew(
       produce(addedNew, draft => {
         draft.push(tempObj)
       }) 
     )
-    setNewAddedHelperTexts(
-      produce(newAddedhelperTexts, draft => {
-        draft.push({})
-      })
-    )
-    setNewAddedError(
-      produce(newAddedError, draft => {
-        draft.push({})
-      })
-    )
     // dispatch(actAddNewBlankQuery(frameNo))
   }
   //newAdded 값 변경 기능
   const handleChangeNewAddedInput = (event, index, header, memo) => {
     let type = ''
-    let tempVal = {}
-    
-    console.log(event)
-    console.log(memo)
+    let tempValObj = {}
+    let val = ''
+    console.log('뉴에디드체인지중')
     if (Object.keys(event)[0] == 'value') {
-      tempVal[header] = event.value
-      console.log(tempVal)
+      tempValObj[header] = event.value
+      val = event.value
     } else {
       type = event.target.type
       if (colAttr[header].type == 'approveCheckBox') {
-        tempVal[header + 'By'] = user.username
+        tempValObj[header + 'By'] = user.username
       }
-  
       if (memo) {
-        tempVal[header + 'Memo'] = event.target.value
+        tempValObj[header + 'Memo'] = event.target.value
       } else {
         if (type == 'checkbox') {
-          tempVal[header] = event.target.checked
+          tempValObj[header] = event.target.checked
+          val = event.target.checked
         } else {
-          tempVal[header] = event.target.value
+          tempValObj[header] = event.target.value
+          console.log(event.target.value)
+          val = event.target.value
         }
       }
     }
-
-
-    console.log(tempVal)
     setAddedNew(
       produce(addedNew, draft => {
-        draft[index] = Object.assign(draft[index], tempVal)
+        draft[index] = Object.assign(draft[index], tempValObj)
       })
     )
-    const validArr = checkValid(index, header, tempVal)
+    console.log(val)
+    const validArr = checkValid(index, header, val)
     let joinedValidStr = validArr.join(', ')
     setNewAddedHelperTexts(    
       produce(newAddedhelperTexts, draft => {
@@ -850,6 +888,7 @@ const STTable = ({
   console.log(fixedVals)
   console.log(addedNew)
 
+  console.log(newAddedhelperTexts)
 
   //값 update시 인풋 처리 기능
   const [tempFixedVal, setTempFixedVal]     = useState({});
@@ -1082,6 +1121,7 @@ console.log(addedNew)
   console.log(fixedVals)
   console.log(tempFixedVal)
   console.log(filteredData)
+  const [tableSize, setTableSize] = useState(null)
 
 
   //테이블 셀렉트
@@ -1155,8 +1195,8 @@ console.log(addedNew)
 
       {fixModeAble ? <button onClick = { onSetfixMode }>fixmode</button> :''}
 
-      <TableContainer>
-        <StyledTable>
+      <StyledTableContainer size = {tableSize}>
+        <StyledTable >
 
           <StyledTableHeader>
             <TableRow>
@@ -1297,10 +1337,10 @@ console.log(addedNew)
                                 key = {'select' + idxRow}
                                 onChange = {event => handleChangeSelect(event, idxRow, header)}
                                 options={selectOptions.sortName} 
-                                menuIsOpen = {selectMenuOpened[idxRow]}
+                                // menuIsOpen = {selectMenuOpened[idxRow]}
                                 // onInputChange = {event => handleClickSelectOpen(event, index)}
                                 // openMenuOnClick = {event => handleClickSelectChoose(index)}
-                                onKeyDown = {event => handleClickSelectChoose(event, idxRow)}
+                                // onKeyDown = {event => handleClickSelectChoose(event, idxRow)}
                               />
                             </StyledTableCell>
                           )
@@ -1602,7 +1642,7 @@ console.log(addedNew)
 
           </StyledTableBody>
         </StyledTable>
-      </TableContainer>
+      </StyledTableContainer>
       
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}

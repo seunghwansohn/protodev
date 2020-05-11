@@ -118,11 +118,11 @@ const ExpenseListContainer = ({
       unitCost : {
         fixable : true,
         defaultHided : false,
-        validate : ['string'],
+        validate : ['number', 'max15', 'required'],
         dataType : 'maker',
         clickType : 'makerQuery',
         queryType : 'simpleQuery',
-        size : '80px'
+        size : '80px',
       },
       qty : {
         fixable : true,
@@ -131,7 +131,8 @@ const ExpenseListContainer = ({
         dataType : 'maker',
         clickType : 'makerQuery',
         queryType : 'simpleQuery',
-        size : '40px'
+        size : '40px',
+        validate : ['number', 'maxValue5'],
       },
       fileAddr : {
         fixable : true,
