@@ -76,7 +76,7 @@ const ItemListContainer = ({
   }
 
 
-  const tableAttr = {
+  let tableAttr = {
     flagAble : true,
     fixModeAble : true,
     colAttr : {
@@ -234,6 +234,7 @@ const ItemListContainer = ({
       gMotherType : motherType
     }
   }
+  tableAttr = Object.assign(tableAttr, subTableAttr)
 
   //다이얼로그 관련
   const dialogOpened                  = useSelector(state => state.dialogs.opened)
@@ -244,7 +245,6 @@ const ItemListContainer = ({
   const checkOpened = (type) => {
     let result = ''
     dialogOpened.map(obj => {
-      console.log(obj)
       if (
         obj.frameNo     == frameNo && 
         obj.currentNo   == currentNo && 

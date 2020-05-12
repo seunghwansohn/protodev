@@ -66,7 +66,6 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
     fixMode == false ? setFixMode(true) : setFixMode(false)
   }
 
-  
   //primary키 설정
   //queryProps조회해서 프라이머리 키 받아서 react state로 설정
 
@@ -101,8 +100,8 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
         {type : 'divider', typoGraphy : 'basicInfo'}
       ],
       expense : [
-        {type : 'primary', newRow : true, size : 5, title: 'clientCode', style:'regular'},
-        {type : 'fixable', newRow : true, size : 7, title: 'clientName', style:'regular'},
+        {type : 'primary', newRow : true, size : 5, title: 'expenseCode', style:'regular'},
+        {type : 'fixable', newRow : true, size : 7, title: 'description', style:'regular'},
         {type : 'divider', typoGraphy : 'basicInfo'}
       ],
       project : [

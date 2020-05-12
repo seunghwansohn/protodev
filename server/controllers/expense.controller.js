@@ -123,11 +123,13 @@ exports.delete = async (req, res) => {
 
 
 exports.query = (req, res) => {
+  console.log(req.body)
   let {queryObj} = req.body
   console.log('쿼리오브젝', queryObj)
   let where = queryObj
 
   getIncludeNameFindOne(Expense, primaryKey, where, findingAttr, includingAttr).then(expenses => {
+    console.log(expenses)
     res.status(200).send(expenses)
   })
 };

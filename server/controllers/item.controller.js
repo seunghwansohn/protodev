@@ -109,8 +109,9 @@ exports.delete = async (req, res) => {
 
 
 exports.query = (req, res) => {
+  console.log(req.body)
   let {queryObj} = req.body
-  console.log(queryObj)
+  // console.log(queryObj)
   let where = queryObj
 
   getIncludeNameFindOne(Item, primaryKey, where, findingAttr, includingAttr).then(items => {
