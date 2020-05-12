@@ -188,12 +188,13 @@ const STTable = ({
   
   const acts = {
     onDialogOpen : function (argObj) {
+      console.log('온다열로')
       let tempObj = argObj
       tempObj.frameNo = frameNo
-      tempObj.currentNo = currentNo
-      tempObj.currentType = currentType
-      tempObj.motherNo = motherNo
-      tempObj.motherType = motherType
+      tempObj.currentNo = motherNo
+      tempObj.currentType = motherType
+      tempObj.motherNo = gMotherAttr.gMotherNo
+      tempObj.motherType = gMotherAttr.gMotherType
       dispatch(actDialogOpen(tempObj))
     },
     onSubmitNewAdded : function (obj, primaryKey, includingKeys, findingKeys) {
@@ -232,6 +233,7 @@ const STTable = ({
     initialFilter,
     directQuery,
     reqNo,
+    gMotherAttr
   }                   = attr
 
   const dispatch = useDispatch()
@@ -656,13 +658,11 @@ const STTable = ({
       onTableCol(clickedCol)
     } 
   },[clickedCol])
-
   //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
   useEffect(() => {
     let keys = Object.keys(clickedCol)
     const {colAttr} = attr
     const colAttrKeys = Object.keys(colAttr)
-
     const {header, row, value, dataType, primaryCode, queryType} = clickedCol
     const {clickType} = attr.colAttr[header] ? attr.colAttr[header] : ''
     if (keys.length > 0) {
@@ -727,6 +727,8 @@ const STTable = ({
     }
   }
 
+
+  console.log(dialogOpened)
   //Validation기능
   const checkValid = (index, header, value) => {
     let tempArr = []
@@ -1133,8 +1135,6 @@ const STTable = ({
 
   const check = () => {
   }
-
-
 
   useEffect(() => {
   },[selected])

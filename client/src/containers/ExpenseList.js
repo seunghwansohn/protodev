@@ -53,6 +53,7 @@ const ExpenseListContainer = ({
 
   const acts = {
     onDialogOpen : function (argObj) {
+      console.log('온다얼로그')
       let tempObj = argObj
       tempObj.frameNo = frameNo
       tempObj.currentNo = currentNo
@@ -197,7 +198,11 @@ const ExpenseListContainer = ({
     //     // mother : containerNo
     //   },
     // ],
-    findingKeys
+    findingKeys,
+    gMotherAttr : {
+      gMotherNo : motherNo,
+      gMotherType : motherType
+    }
   }
   tableAttr = Object.assign(tableAttr, subTableAttr)
 
@@ -210,11 +215,12 @@ const ExpenseListContainer = ({
   const checkOpened = (type) => {
     let result = ''
     dialogOpened.map(obj => {
+      console.log(obj)
       if (
-        obj.frameNo     == frameNo && 
-        obj.currentNo   == currentNo && 
-        obj.currentType == currentType && 
-        obj.motherNo    == motherNo &&
+        obj.frameNo     == frameNo && //ㅇ
+        obj.currentNo   == currentNo && //ㅇ
+        obj.currentType == currentType && //ㅇ
+        obj.motherNo    == motherNo && //
         obj.motherType  == motherType &&
         obj.clickedType == type 
       ) {
@@ -260,6 +266,7 @@ const ExpenseListContainer = ({
   }
 
 
+  console.log(dialogOpened)
 
   return(
     <>

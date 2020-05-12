@@ -228,7 +228,11 @@ const ItemListContainer = ({
         // mother : containerNo
       },
     ],
-    findingKeys
+    findingKeys,
+    gMotherAttr : {
+      gMotherNo : motherNo,
+      gMotherType : motherType
+    }
   }
 
   //다이얼로그 관련
