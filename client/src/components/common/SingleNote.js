@@ -30,8 +30,7 @@ const SingleNote = ({
     handleCloseDialog()
   }
 
-  console.log(fixMode)
-  console.log(newMode)
+
 
   //메모부분 
   const [memo, setMemo]   = React.useState('')

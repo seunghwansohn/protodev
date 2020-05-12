@@ -197,7 +197,6 @@ const STTable = ({
       dispatch(actDialogOpen(tempObj))
     },
     onSubmitNewAdded : function (obj, primaryKey, includingKeys, findingKeys) {
-      console.log('뉴애디드')
       dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
     },
     onSubmitUpdatedVals : function (arr) {
@@ -279,7 +278,6 @@ const STTable = ({
     getRawData()
   },[])
 
-  console.log(attachedFiles)
 
   //테이블 필터
   const [filterKeyword, setFilterKeyword]     = useState('');
@@ -498,11 +496,9 @@ const STTable = ({
     })
   },[])
   const handleChangeSelect = (event, index, header) => {
-    console.log(header)
     const attrs = Object.keys(colAttr)
     const attr  = attrs[header]
 
-    console.log(attr)
     const {value, label} = event
     setSelectedVal(
       produce(selectedVal, draft => {
@@ -559,7 +555,6 @@ const STTable = ({
         })
       )
     } else if (event.key == 'Enter') {
-      console.log('엔터눌림')
       setSelectMenuOpened(
         produce(selectMenuOpened, draft => {
           draft[idx] = false
@@ -602,7 +597,22 @@ const STTable = ({
   const [fixableCells, setFixableCells]       = useState({});
   const onSetfixMode = () => {
     if (fixModeAble) {
-      fixMode ? setFixMode(false) : setFixMode(true)
+      if (fixMode) {
+        setFixMode(false)
+        if (colAttr[primaryKey].defaultHided) {
+          setHided(
+            produce(hided, draft => {
+              hided.push(primaryKey)
+            })
+          )
+        }
+      } else {
+        setFixMode(true)
+        let newHided = hided.filter(function(str) { //픽스모드 on시 primaryKey 컬럼이 숨겨져있을 경우 unhide.
+          return str !== primaryKey
+        })
+        setHided(newHided)
+      }
     }
     else if (!fixModeAble) {
       setFixMode(false)
@@ -719,7 +729,6 @@ const STTable = ({
 
   //Validation기능
   const checkValid = (index, header, value) => {
-    console.log('체크밸리드중')
     let tempArr = []
     let funcs = {    
       number : val => val && isNaN(Number(val)) ? 'Only Number' : undefined,
@@ -736,9 +745,7 @@ const STTable = ({
       required : val => (val !== undefined || val !== null) && required(val) == true ? 'required' : undefined
     }
     if (colAttr[header].validate) {
-      console.log(value)
       colAttr[header].validate.map(str => {
-        console.log(str)
         if (funcs[str] && funcs[str](value) !== undefined) {
           tempArr.push(funcs[str](value))
         }
@@ -764,7 +771,6 @@ const STTable = ({
   const [newAddedError, setNewAddedError] = useState([])
   //--------------------------
   const onAddNewBlank = () => {
-    console.log(addedNew.length)
     const lengthBefore = addedNew.length
     const lengthNow    = lengthBefore + 1
     let tempObj = {}
@@ -780,17 +786,14 @@ const STTable = ({
       }
       const validArr = checkValid('', header, '')
       let joinedValidStr = validArr.join(', ')
-      console.log(joinedValidStr)
 
       tempObjH[header] = joinedValidStr
 
       setNewAddedHelperTexts(    
         produce(newAddedhelperTexts, draft => {
-          console.log(tempObjH)
           draft.push(tempObjH)
         })
       )
-      console.log(newAddedhelperTexts)
       let tempOx = {}
       tempOx[header] = false
       if (validArr == []) {
@@ -814,7 +817,6 @@ const STTable = ({
     let type = ''
     let tempValObj = {}
     let val = ''
-    console.log('뉴에디드체인지중')
     if (Object.keys(event)[0] == 'value') {
       tempValObj[header] = event.value
       val = event.value
@@ -831,7 +833,6 @@ const STTable = ({
           val = event.target.checked
         } else {
           tempValObj[header] = event.target.value
-          console.log(event.target.value)
           val = event.target.value
         }
       }
@@ -841,7 +842,6 @@ const STTable = ({
         draft[index] = Object.assign(draft[index], tempValObj)
       })
     )
-    console.log(val)
     const validArr = checkValid(index, header, val)
     let joinedValidStr = validArr.join(', ')
     setNewAddedHelperTexts(    
@@ -867,8 +867,6 @@ const STTable = ({
   const [addedNewSelectedVal, setAddedNewSelectedVal]             = useState({})
   const [addedNewSelectMenuOpened, setAddedNewSelectMenuOpened]   = useState([])
   const handleChangeNewAddedSelect = (event, index, header) => {
-    console.log(event)
-    console.log(index)
     const {value, label} = event
     const temp = value
     setAddedNewSelectedVal(
@@ -884,11 +882,7 @@ const STTable = ({
     )
   }
 
-  console.log(addedNewSelectedVal)
-  console.log(fixedVals)
-  console.log(addedNew)
 
-  console.log(newAddedhelperTexts)
 
   //값 update시 인풋 처리 기능
   const [tempFixedVal, setTempFixedVal]     = useState({});
@@ -909,23 +903,36 @@ const STTable = ({
     return ox
   }
 
-  console.log(filteredData)
   //인풋값 fixed한 후 submit전에 엔터쳐서 임시로 확정
   const confirmInputFixedVal = () => {
-    console.log('컨펌인풋픽스드')
     const temp = {}
     const isNowError = checkNoValidationErrorAtAll()
     if (isNowError == true) {
     }else {
       setFixableCells(temp)
-      console.log(tempFixedVal)
       if(tempFixedVal && Object.keys(tempFixedVal).length > 0)  {
-        setFixedVals(
-          produce(fixedVals, draft => {
-            console.log(tempFixedVal)
-            draft.push(tempFixedVal)
-          })
-        )
+        let existOx  = false
+        let existIdx = ''
+        fixedVals.map((obj, idx) => {
+          if (obj.location.index == tempFixedVal.location.index && obj.location.header == tempFixedVal.location.header) {
+            existOx = true
+            existIdx = idx
+          }
+        })
+        if (existOx) {
+          console.log('픽스값 이미 존재')
+          setFixedVals(
+            produce(fixedVals, draft => {
+              draft[existIdx] = tempFixedVal
+            })
+          )
+        } else {
+          setFixedVals(
+            produce(fixedVals, draft => {
+              draft.push(tempFixedVal)
+            })
+          )
+        }
       }
       setTempFixedVal({})
     }
@@ -936,13 +943,13 @@ const STTable = ({
     }
   }
   const handleChangeInput = (e, index, header, memo) => {
-    console.log(header)
     setFilteredData(
       produce(filteredData, draft => {
         draft[index][header] = e.target.value 
       })
     )
     const {type} = e.target
+
 
     let temp1 = {}
     temp1.ref = {}
@@ -992,11 +999,11 @@ const STTable = ({
           draft[primaryCode][header] = false
         })
       )
-
     }
   }
 
-
+  console.log(fixedVals)
+  console.log(primaryKey)
 
   
   //쿼리인풋 기능
@@ -1030,7 +1037,6 @@ const STTable = ({
   },[querySelected])
  
 
-console.log(addedNew)
   //헤더 메뉴 기능
   const [menuActivated, setMenuActivated]     = useState('');
   const [menuAnchoredEl, setMenuAnchoredEl]   = useState(null);
@@ -1118,9 +1124,7 @@ console.log(addedNew)
   }
 
 
-  console.log(fixedVals)
-  console.log(tempFixedVal)
-  console.log(filteredData)
+
   const [tableSize, setTableSize] = useState(null)
 
 
@@ -1128,14 +1132,11 @@ console.log(addedNew)
   const [selected, setSelected]         = useState([]);
 
   const check = () => {
-    console.log(addedNew)
   }
 
-  console.log(tableHeaderVals)
 
 
   useEffect(() => {
-    console.log(selected)
   },[selected])
 
   return (
@@ -1151,7 +1152,6 @@ console.log(addedNew)
         onKeyPress={(event) => {
           event.preventDefault()
           if (event.key == 'Enter') {
-            console.log('엔터키눌림')
             confirmInputFixedVal()
             handleCloseConfirmDialog()
           }
@@ -1400,6 +1400,7 @@ console.log(addedNew)
                               label         = {colAttr[header].dataType}
                               initialValue  = {filteredData[idxRow][header]}
                               filteredData  = {filteredData}
+
                               fixedVals     = {fixedVals}
                               setFixedVals  = {setFixedVals}
                             />

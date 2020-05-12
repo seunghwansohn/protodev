@@ -98,10 +98,8 @@ const DropZone = ({
   const [attachedFiles, setAttachedFiles] = useState([])
 
 
-  console.log(dataType, primaryKey, primaryCode)
   // const pdfBuffer = fs.readFileSync('/SuppliersPage.js')
 
-  console.log(file)
 
 
   useEffect(() => {
@@ -116,7 +114,6 @@ const DropZone = ({
     e.preventDefault()
     addFiles()
     .then((response) => {
-      console.log(response.data);
     })
   }
 
@@ -126,7 +123,6 @@ const DropZone = ({
         draft.push(e.target.value)
       })
     )
-    console.log(e.target)
     setFile(
       produce(file, draft => {
         e.target.files.map(file => {
@@ -144,7 +140,6 @@ const DropZone = ({
     const url = '/api/query/files'
     if (requestNo !== '')
     axios.post(url, {relCode : primaryCode, reqNo : requestNo}).then(res => {
-      console.log(res)
       setAttachedFiles(res.data)
     })
   },[requestNo])
@@ -162,7 +157,6 @@ const DropZone = ({
     setOpenedTileDialog(tempObj)
   },[attachedFiles])
 
-  console.log(openedTileDialog)
   const addFiles = () => {
     const url = '/api/addfiles';
     var formData = new FormData();
@@ -184,7 +178,6 @@ const DropZone = ({
     
   const handleOpenTileDialog = (event, originalFileName) => {
     event.preventDefault()
-    console.log(originalFileName)
     setOpenedTileDialog(
       produce(openedTileDialog, draft => {
         draft[originalFileName] = true
@@ -193,16 +186,13 @@ const DropZone = ({
   }
 
   const handleCloseTileDialog = async (originalFileName) => {
-    console.log(originalFileName)
     let tempObj = await {...openedTileDialog}
     tempObj[originalFileName] = await false
     await setOpenedTileDialog(tempObj)
   }
 
-  console.log(openedTileDialog)
 
   const onDrop = (acceptedFiles) => {
-    console.log(acceptedFiles)
     setOpenedDialog(true)
     setFile(
       produce(file, draft => {
@@ -212,10 +202,6 @@ const DropZone = ({
       })
     )
   }
-
-
-  console.log(attachedFiles)
-  console.log(file)
 
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
 

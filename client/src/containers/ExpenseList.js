@@ -62,11 +62,9 @@ const ExpenseListContainer = ({
       dispatch(actDialogOpen(tempObj))
     },
     onSubmitNewAdded : function (obj, primaryKey, includingKeys, findingKeys) {
-      console.log('뉴애디드')
       dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
     },
     onSubmitUpdatedVals : function (arr) {
-      console.log(arr)
       dispatch(actUpdate(arr))
     },
     onDelete : function(dataType, primaryCode) {
@@ -81,7 +79,7 @@ const ExpenseListContainer = ({
   }
 
 
-  const tableAttr = {
+  let tableAttr = {
     flagAble : true,
     fixModeAble : true,
     colAttr : {
@@ -103,7 +101,9 @@ const ExpenseListContainer = ({
         dataType : dataType,
         clickType : 'expenseQuery',
         queryType : 'simpleQuery',
-        size : '300px'
+        size : '300px',
+        validate : ['required'],
+
       },
       sortName : {
         fixable : true,
@@ -132,7 +132,7 @@ const ExpenseListContainer = ({
         clickType : 'makerQuery',
         queryType : 'simpleQuery',
         size : '40px',
-        validate : ['number', 'maxValue5'],
+        validate : ['number', 'maxValue5', 'required'],
       },
       fileAddr : {
         fixable : true,
@@ -199,6 +199,7 @@ const ExpenseListContainer = ({
     // ],
     findingKeys
   }
+  tableAttr = Object.assign(tableAttr, subTableAttr)
 
   //다이얼로그 관련
   const dialogOpened                  = useSelector(state => state.dialogs.opened)
@@ -209,7 +210,6 @@ const ExpenseListContainer = ({
   const checkOpened = (type) => {
     let result = ''
     dialogOpened.map(obj => {
-      console.log(obj)
       if (
         obj.frameNo     == frameNo && 
         obj.currentNo   == currentNo && 
@@ -251,8 +251,6 @@ const ExpenseListContainer = ({
     })
   },[dialogOpened])
 
-  console.log(dialogInfo)
-  console.log(dialogOpened)
 
   const test = () => {
     // dispatch(loadAccount())

@@ -36,10 +36,15 @@ const ProjectList = ({motherType, motherNo, subTableAttr}) => {
 
     //개체 기본 속성
     const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
+    const [currentNo, setCurrentNo]   = useState(generateRandom())
+
     const type = 'projectList'
+    const currentType = 'projectList'
+
     const containerNo = type + '_' + frameNo
     const dataType = 'project'
-    // console.log('현Comp는 (', type, ', ', frameNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
+
+    console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
     //다이얼로그 관련
@@ -240,7 +245,7 @@ const ProjectList = ({motherType, motherNo, subTableAttr}) => {
         onDelete : setDelete,
         onSubmitNewAdded : onSubmitNewAdded
     }
-    const tableAttr = {
+    let tableAttr = {
         flagAble : true,
         fixModeAble : true,
         colAttr : {
@@ -318,11 +323,14 @@ const ProjectList = ({motherType, motherNo, subTableAttr}) => {
                 title : 'insert',
                 func : function(selected){
                     // dispatch(onAlreadyPickedCheck(selected.value))
+                    console.log('버튼눌림')
                 },
                 mother : containerNo
             },
         ],
     }
+
+    tableAttr = Object.assign(tableAttr, subTableAttr)
 
     console.log(dataType)
     

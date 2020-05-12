@@ -38,13 +38,10 @@ export const getIncludingKeys1 = (arr) => {
 }
 
 export const getOnlyFiles = (arr) => {
-    console.log(arr)
     let tempArr = []
     arr.map(obj => {
-        console.log(typeof obj.files)
         tempArr.push(obj.files)
     })
-    console.log(tempArr)
     return tempArr
 }
 

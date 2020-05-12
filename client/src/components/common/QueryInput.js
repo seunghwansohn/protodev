@@ -29,7 +29,6 @@ import styled   from 'styled-components';
 const TextFieldST = styled(TextField)`
   background-color: 
     ${props => {
-      console.log(props.validation)
       if (props.validation == true) {
         return '#1fffff'
       } else { 
@@ -83,8 +82,7 @@ const QueryInput = ({
 }) => {
   const dispatch = useDispatch()
 
-  console.log(primaryKey)
-  console.log(fixedVals)
+
   //개체 기본 속성
   const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
   const [currentNo, setCurrentNo]  = useState(generateRandom())
@@ -94,7 +92,6 @@ const QueryInput = ({
 
   console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
-  console.log(reqType)
   
   //finding code와 Name 생성
   const getFirstKey = (obj) => {
@@ -161,7 +158,6 @@ const QueryInput = ({
         obj.clickedType == type 
       ) {
         result = true
-        console.log(result)
       }
     })
     return result
@@ -193,6 +189,8 @@ const QueryInput = ({
     temp1.location = {index : addedNo, header : queryName}
     temp1.ref[primaryKey] = filteredData[addedNo][primaryKey]
     temp1.vals[queryCode] = selected.value[queryName]
+
+
     if (reqType == 'fixSelect') {
       setFixedVals(
         produce(fixedVals, draft => {
@@ -200,7 +198,6 @@ const QueryInput = ({
         })
       )
     } else if (reqType == 'newAdded'){
-      console.log('레큐타입뉴에디드')
     }
 
     let tempObj = {
@@ -303,7 +300,6 @@ const QueryInput = ({
   const onKeyPressOnInput = (event) => {
     setInputVal(event.target.value)
     if(event.key == "Enter") {
-      console.log('엔터눌림')
       let tempObj = {
         frameNo : frameNo,
         currentNo : currentNo,
@@ -334,12 +330,9 @@ const QueryInput = ({
 
   const isDiffrentFromSelected = () => {
     let ox = false
-    console.log(selectedVal)
-    console.log(inputVal)
     if (selectedVal !== inputVal) {
       ox = true
     }
-    console.log(ox)
     return ox
   }
 

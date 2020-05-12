@@ -33,15 +33,10 @@ const ChkBoxWithAlert = ({
     }
 
     const handleChange = (e) => {
-        console.log(e.target)
         setChecked(!checked)
         setOpen(true)
         onChange(e)
     }
-
-    console.log(user)
-
-    console.log(val)
     const handleSaveNClose = (e) => {
         onSubmit()
         setOpen(false)
@@ -50,10 +45,6 @@ const ChkBoxWithAlert = ({
     const handleCloseDialog = (e) => {
         setOpen(false)
     }
-    console.log(user)
-    console.log(attr)
-
-    console.log(val)
 
     return (
         <>  
