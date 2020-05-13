@@ -17,4 +17,6 @@ module.exports = function(app) {
   app.post("/api/expense/delete/", controller.delete);
   app.post("/api/expense/update/", controller.update);
   app.post("/api/expense/addNew", controller.addNew)
+  app.post("/api/expense/notes/add", controller.addNotes);
+  app.get("/api/expense/notes/load/:id", controller.loadNotes);
 };

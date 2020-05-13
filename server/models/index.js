@@ -39,6 +39,7 @@ db.projectNote  = require("../models/project.notes.model.js")(sequelize, Sequeli
 db.task         = require("../models/task.model.js")(sequelize, Sequelize);
 db.expense      = require("../models/expense.model.js")(sequelize, Sequelize);
 db.expenseSort  = require("../models/expenseSort.model.js")(sequelize, Sequelize);
+db.expenseNote  = require("../models/expense.notes.model.js")(sequelize, Sequelize);
 db.files        = require("../models/files.model.js")(sequelize, Sequelize);
 
 

@@ -71,13 +71,10 @@ let Notes = props => {
 
 
     const onDeleteNewNote = (i) => {
-
       const filteredArr = newNotesArr.filter((val, index) => {
           return index !== i
       })
-
       setNewNotesArr(filteredArr)
-
     }
 
     const handleArrChange = (e, index) => {
@@ -103,6 +100,7 @@ let Notes = props => {
     }
 
     useEffect(() => {
+      console.log('프라이머리코드')
       loadNotes()
     },[primaryCode])
 
@@ -140,6 +138,8 @@ let Notes = props => {
       <React.Fragment>
         {title}
         <Grid container className = {classes.grid} spacing={0}>
+          <ExistNotesTable></ExistNotesTable>
+
           {newNotesArr.map((val, index) => {
             return (
             <React.Fragment>
@@ -158,7 +158,7 @@ let Notes = props => {
             )
           })}
 
-          <ExistNotesTable></ExistNotesTable>
+
         </Grid>
         <Button variant="contained" color="primary" onClick = {onSubmit}>
             Submit

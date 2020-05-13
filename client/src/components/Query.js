@@ -222,7 +222,12 @@ console.log(dataType)
         })}
       </Grid>
 
-      <Notes type = {currentType} primaryKey = {primaryKey} primaryCode = {primaryCode}></Notes>
+      <Notes 
+        type = {dataType} 
+        primaryKey = {primaryKey} 
+        primaryCode = {primaryCode}>
+      </Notes>
+
       <Button onClick = {onModeChange}>모드 변경</Button>
       <Button onClick = {onFixedVal}>Update</Button>
 

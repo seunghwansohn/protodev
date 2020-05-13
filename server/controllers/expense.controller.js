@@ -25,7 +25,7 @@ const {produce} = require ('immer')
 
 const Expense = db.expense;
 const ExpenseSort = db.expenseSort;
-
+const ExpenseNote = db.expenseNote;
 
 const Role = db.role;
 const Project = db.project;
@@ -65,8 +65,6 @@ const primaryKey   = 'expenseCode'
 const includingAttr = getIncludingAttr(relAttr)
 const findingAttr   = getFindingAttr(relAttr)
 const filesAttr     = getFilesAttr(relAttr)
-
-console.log(filesAttr)
 
 
 exports.addNew = (req, res) => {
@@ -133,3 +131,33 @@ exports.query = (req, res) => {
     res.status(200).send(expenses)
   })
 };
+
+
+exports.addNotes = (req, res) => {
+  const {obj} = req.body
+  // console.log(obj)
+  try {
+    ExpenseNote.create({
+          note: obj.note,
+          expenseCode : obj.primaryCode
+      }).then(() => {
+          res.send({type: obj.type + obj.randomNo, message: "Notes added successfully" });
+      })
+  }
+      catch (err) {
+          res.status(500).send({message:err.message})
+          console.log(err.message)
+  }
+};
+
+
+exports.loadNotes = (req, res) => {
+  console.log('레큐파람은 ', req.params.id)
+  ExpenseNote.findAll({where : {expenseCode : req.params.id}}
+  ).then(notes => {
+      console.log('노트는', notes)
+      result = notes
+  }).then(() => {
+      res.status(200).send(result);
+  })
+};  
