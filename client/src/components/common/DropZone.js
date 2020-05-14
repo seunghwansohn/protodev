@@ -7,6 +7,8 @@ import {useDropzone} from 'react-dropzone'
 import produce       from 'immer'
 import ArchiveIcon from '@material-ui/icons/Archive';
 
+import FiberNewIcon from '@material-ui/icons/FiberNew';
+
 import styled from 'styled-components'
 
 import Dialog             from '@material-ui/core/Dialog';
@@ -42,6 +44,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 import GetAppIcon from '@material-ui/icons/GetApp';
 
+import Badge from '@material-ui/core/Badge';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -74,6 +77,13 @@ const StyledGridListTile = styled(GridListTile)`
   }
   .MuiGridListTile-tile {
     text-align: center;
+  }
+`
+
+const StyledGridListTileBar = styled(GridListTileBar)`
+  .MuiGridListTileBar-title {
+    color : ${props => props.fontColor};
+    font-weight : bold;
   }
 `
 
@@ -244,6 +254,35 @@ const DropZone = ({
             <AddIcon></AddIcon>
             
           </StyledGridListTile>
+          <GridListTile>
+            {file.map((file, idx) => {
+              return(
+                  <img src = {URL.createObjectURL(file)} height = 'auto' width = '300px'></img>
+                )
+              })
+            }
+            <StyledGridListTileBar
+              id = 'pahaha'
+              className = 'puhihi'
+              titlePosition="top"
+              title="Newly Uploaded"
+              style={{background : `rgba( 191, 255, 253, 0.8 )`, color : '#575151'}}
+              fontColor = {'red'}
+              actionIcon = {
+                <IconButton>
+                  <FiberNewIcon
+                    fontSize = 'large'
+                    color = 'primary'
+                    style = {{opacity : 1}}
+                  ></FiberNewIcon>
+
+                </IconButton>
+
+              }
+            ></StyledGridListTileBar>
+
+          </GridListTile>
+
 
           {attachedFiles.map((file, idx) => {
             let lastSlash = file.lastIndexOf('/')
@@ -288,12 +327,7 @@ const DropZone = ({
             )
           })}
 
-          {file.map((file, idx) => {
-            return(
-              <img src = {URL.createObjectURL(file)} height = 'auto' width = '40%'></img>
-            )
-          })
-          }
+
         </GridList>
       </Dialog>
     </React.Fragment>
