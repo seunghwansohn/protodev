@@ -10,6 +10,17 @@ import InputLabel                               from '@material-ui/core/InputLab
 import Button                                   from '@material-ui/core/Button';
 import Paper                                    from '@material-ui/core/Paper';
 
+import Table            from '@material-ui/core/Table';
+import TableBody        from '@material-ui/core/TableBody';
+import TableCell        from '@material-ui/core/TableCell';
+import TableContainer   from '@material-ui/core/TableContainer';
+import TableHead        from '@material-ui/core/TableHead';
+import TableRow         from '@material-ui/core/TableRow';
+import TablePagination  from '@material-ui/core/TablePagination';
+
+import Divider from '@material-ui/core/Divider';
+
+
 import {setAddNotes, setUpdated}                from '../../modules/common';
 
 import {convertSeqDateTime}                     from '../../lib/deSequelize';
@@ -17,6 +28,8 @@ import {generateRandom}                         from '../../lib/common';
 
 import axios                                    from '../../lib/api/axios';
 import produce                                  from 'immer'
+
+import styled   from "styled-components";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -32,6 +45,64 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+const StyledInput = styled(Input)`
+  background-color: ${
+    props => props.confirmed ?
+      '#eef534'
+      :
+      ''
+  };
+  .MuiInputBase-input {
+    padding : '0px';
+  }
+  .MuiInput-root	 {
+    padding : '0px';
+  }
+`
+
+const StyledTableContainer = styled(TableContainer)`
+  .MuiTableCell-root {
+    padding : 5px;
+  }
+`
+
+const StyledDiv = styled.div`
+  padding : 10px;
+  padding-bottom: 20px;
+`
+
+const StyledDivider = styled(Divider)`
+  margin-top : 100px;
+  margin-bottom : 100px;
+`
+
+const MarginDivider = () => {
+  return (
+    <div style = {{marginTop : '30px', marginBottom : '30px'}}>
+      <Divider/>
+    </div>
+  )
+}
+// const StyledTableCell = styled(TableCell)`
+//   background-color: ${
+//     props => props.fixMode ? 
+//       props.fixable ? 
+//         props.fixed ?
+//           colors.fixed
+//         : colors.fixable
+//       : colors.unFixable 
+//     : '#ffffff'
+//   };
+
+//   border-style : ${props => props.updated ? 'ridge':'none'};
+//   &:hover {
+//     font-weight: bold;
+//   }
+//   max-width : ${props => props.size};
+//   width : ${props => props.size};
+// `
+
+
 let Notes = props => {
 
     const classes     = useStyles();
@@ -42,6 +113,8 @@ let Notes = props => {
     const blankNotes  = [[]];
 
     const [newNotesArr, setNewNotesArr]       = React.useState(['']);
+    const [confirmedNewNotes, 
+      setConfirmedNewNotes]                      = React.useState(['$$$']);
     const [existNotes, setExistNotes]         = React.useState([]);
     const [title, setTitle]                   = React.useState('');
     const [deletedJustNow, setDeletedJustNow] = React.useState(false);
@@ -62,6 +135,7 @@ let Notes = props => {
         const typeRandomNumbered = type + randomNo
         loadNotes()
         dispatch(setUpdated({type : typeRandomNumbered, ox : false}))
+        setNewNotesArr([''])
       }
     },[update])
 
@@ -85,12 +159,39 @@ let Notes = props => {
       );
     };
 
-    const onAddBlankNote = () => {
-      setNewNotesArr([...newNotesArr,  [...blankNotes] ]);
-    };
+    const handleNewKeyPress = (e, index) => {
+      if (e.key =='Enter'){
+        console.log('엔터눌림')
+        let arrLength     = newNotesArr.length
+        let strNowLength  = newNotesArr[index].length
+        let strLastLength = newNotesArr[arrLength - 1].length
+        let isVacantNow   = strNowLength > 0 ? false : true
+        let isVacantLast  = strLastLength > 0 ? false : true
+        let isLastNow     = (arrLength -1) == index ? true : false
+
+        console.log(arrLength, isVacantNow, isVacantLast, isLastNow, index)
+        setConfirmedNewNotes(
+          produce(confirmedNewNotes, draft => {
+            draft[index] = e.target.value
+          })
+        );
+      }
+    }
+
+    const isConfirmed = (index) =>{
+      let ox = false
+      if (newNotesArr[index] == confirmedNewNotes[index]) {
+        ox = true
+      }
+      console.log(ox)
+      return ox
+    }
 
     const onSubmit = async () => {
-      await newNotesArr.map(note => {
+      let filteredArr = confirmedNewNotes.filter(function (el) {
+        return el !== '$$$'
+      })
+      await filteredArr.map(note => {
         if (note !== null && note !== undefined && note !== [] && note !== '') {
           dispatch(setAddNotes({type, primaryCode, note, randomNo}))
         } else {
@@ -100,10 +201,10 @@ let Notes = props => {
     }
 
     useEffect(() => {
-      console.log('프라이머리코드')
       loadNotes()
     },[primaryCode])
 
+    //노트 입력시 다음 노트 자동 추가
     useEffect(() => {
       const arrLength = newNotesArr.length
       if (newNotesArr[arrLength -1].length == 1) {
@@ -112,25 +213,46 @@ let Notes = props => {
             draft.push('')
           })
         );
+        setConfirmedNewNotes(
+          produce(confirmedNewNotes, draft => {
+            draft.push('$$$')
+          })
+        );
       }
     },[newNotesArr[newNotesArr.length - 1]])
 
     const ExistNotesTable = () => {
       return(
-      <React.Fragment>
-          {existNotes ? existNotes.map(noteObj => {
+      <StyledDiv>
+          <StyledTableContainer>
+            <TableHead>
+              <TableRow>
+                <TableCell>
+                  Notes
+                </TableCell>
+                <TableCell>
+                  Date
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {existNotes ? existNotes.map(noteObj => {
+                const yymmdd = convertSeqDateTime(noteObj.createdAt).yymmdd
+                  return(
+                    <TableRow>
+                      <TableCell style = {{width : '100rem', margin : '0px', padding :'0px'}}>
+                        {noteObj.note}
+                      </TableCell>
+                      <TableCell style = {{width : '0.5rem'}}>
+                        {yymmdd}
+                      </TableCell>
+                    </TableRow>
+                  )
+              }) : ''}
+            </TableBody>
+          </StyledTableContainer>
 
-            const yymmdd = convertSeqDateTime(noteObj.createdAt).yymmdd
-
-            return(
-            <Grid item xs = {12}>
-              <Paper>
-                  {noteObj.note}{yymmdd}
-              </Paper>
-            </Grid>
-            )
-          }) : ''}
-      </React.Fragment>
+      </StyledDiv>
       )
     }
 
@@ -140,13 +262,25 @@ let Notes = props => {
         <Grid container className = {classes.grid} spacing={0}>
           <ExistNotesTable></ExistNotesTable>
 
+          <Divider 
+            variant = {'fullWidth'}
+          />
+
           {newNotesArr.map((val, index) => {
+            let isConfirmedVal = isConfirmed(index)
             return (
-            <React.Fragment>
+            <>
               <Grid item xs = {11}>
                 <FormControl key = {index} className = {classes.fieldItem}>
                   <InputLabel>{'notes ' + (index)}</InputLabel>
-                  <Input type = 'text' id={index} value={newNotesArr[index]} onChange={e => handleArrChange(e, index)}/>
+                  <StyledInput 
+                    type = 'text' 
+                    id={index} 
+                    value={newNotesArr[index]} 
+                    onChange={e => handleArrChange(e, index)}
+                    onKeyDown = {e => handleNewKeyPress(e, index)}
+                    confirmed = {isConfirmedVal}
+                  />
                 </FormControl>
               </Grid>
               <Grid item xs = {1}>
@@ -154,12 +288,17 @@ let Notes = props => {
                   Delete
                 </Button>
               </Grid>
-            </React.Fragment>
+            </>
             )
           })}
 
 
         </Grid>
+
+        <MarginDivider 
+            variant = {'fullWidth'}
+        />
+
         <Button variant="contained" color="primary" onClick = {onSubmit}>
             Submit
         </Button>

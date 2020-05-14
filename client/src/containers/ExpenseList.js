@@ -240,7 +240,7 @@ const ExpenseListContainer = ({
     expenseQuery : {
       title : simpleQuery,
       dialogType : simpleQuery,
-      maxWidth : 'xl' ,
+      maxWidth : 'md' ,
       open : checkOpened(simpleQuery)
     }
   }
