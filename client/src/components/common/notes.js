@@ -99,12 +99,31 @@ const StyledDiv = styled.div`
 // `
 
 
-let Notes = props => {
+let Notes = (
+  {
+    type,
+    primaryCode, 
+    motherFrameNo, 
+    motherType,
+    dataType,
+    primaryKey,
+    fixMode,
+  }) => {
+
+    //개체 기본 속성
+    const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
+    const [currentNo, setCurrentNo]  = useState(generateRandom())
+  
+    const currentType = motherType + 'Table'
+    const containerNo = currentType + '_' + frameNo
+  
+    const debugMode                   = useSelector(state => state.common.debugMode)
+  
+    const { user } = useSelector(({ user }) => ({ user: user.user }));
 
     const classes     = useStyles();
     const dispatch    = useDispatch();
     
-    const {type, primaryCode} = props
 
     const blankNotes  = [[]];
 
@@ -312,10 +331,20 @@ let Notes = props => {
           marginBottom = '10px'
         />
 
-        <DropZoneGallery>
+        <DropZoneGallery
+          motherFrameNo = {frameNo}
+          motherNo      = {currentNo}
+          motherType    = {currentType}
 
+          dataType       = {dataType}
+          primaryKey     = {primaryKey}
+          primaryCode    = {primaryCode}
+            
+          fixMode        = {fixMode}
+          // files          = {attachedFiles[idxRow]}
+        >
         </DropZoneGallery>
-        
+
         <Button variant="contained" color="primary" onClick = {onSubmit}>
             Submit
         </Button>

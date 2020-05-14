@@ -7,6 +7,8 @@ import {useDropzone} from 'react-dropzone'
 import produce       from 'immer'
 import ArchiveIcon from '@material-ui/icons/Archive';
 
+import FiberNewIcon from '@material-ui/icons/FiberNew';
+
 import styled from 'styled-components'
 
 import Dialog             from '@material-ui/core/Dialog';
@@ -42,6 +44,7 @@ import AddIcon from '@material-ui/icons/Add';
 
 import GetAppIcon from '@material-ui/icons/GetApp';
 
+import Badge from '@material-ui/core/Badge';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -62,7 +65,16 @@ const StyledDiv = styled.div`
   width : 30px;
 `
 
+
+const StyledGridList = styled(GridList)`
+  .MuiIconButton-root {
+    padding : 4px;
+  }
+`
 const StyledGridListTile = styled(GridListTile)`
+  .MuiGridListTile-root {
+    background : rgba(224, 222, 222, 0.4);
+  }
   .MuiSvgIcon-root {
     width : 5em;
     height : 5em;
@@ -71,10 +83,31 @@ const StyledGridListTile = styled(GridListTile)`
   }
   .MuiPaper-root {
     color : rgba(0, 0, 0, 0.51);
+    background : rgba(224, 222, 222, 0.4);
+
   }
   .MuiGridListTile-tile {
     text-align: center;
+    background : rgba(224, 222, 222, 0.4);
   }
+`
+
+const StyledGridListTileBar = styled(GridListTileBar)`
+  .MuiGridListTileBar-root {
+    height : 28px;
+  };
+  .MuiGridListTileBar-title {
+    color : ${props => props.fontColor};
+    font-weight : bold;
+    font-size : 13px;
+  };
+  .MuiGridListTileBar-titleWrap {
+    margin : 7px;
+  };
+  .MuiGridListTileBar-rootSubtitle {
+    height : 28px;
+  };
+
 `
 
 
@@ -99,6 +132,9 @@ const DropZone = ({
 
 
   // const pdfBuffer = fs.readFileSync('/SuppliersPage.js')
+
+  console.log(file)
+  console.log(attachedFiles)
 
 
 
@@ -207,11 +243,8 @@ const DropZone = ({
 
   return (
     <React.Fragment>
-      <Button onClick = {addFiles}>제출</Button>
-
-
-      <GridList cols = {4} cellHeight={360} className={classes.gridList}>
-        <StyledGridListTile key="Subheader" cols={1} style={{ height: 'auto' }}>
+      <StyledGridList cols = {6} cellHeight={250}>
+        <StyledGridListTile key="Subheader" cols={1} >
           <div {...getRootProps()}>
             <input {...getInputProps()} />
               {isDragActive ?
@@ -221,31 +254,87 @@ const DropZone = ({
           <AddIcon></AddIcon>
           
         </StyledGridListTile>
+        
+        {file.length > 0 ?
+          <StyledGridListTile>
+          {file.map((file, idx) => {
+            return(
+                <img src = {URL.createObjectURL(file)} height = 'auto' width = '300px'></img>
+              )
+            })
+          }
+          <StyledGridListTileBar
+            id = 'pahaha'
+            className = 'puhihi'
+            titlePosition="top"
+            title="Newly Uploaded"
+            style={
+              {
+                background : `rgba( 191, 255, 253, 0.9 )`,
+                color : '#575151', 
+                height : '45px'
+              }
+            }
+            fontColor = {'black'}
+            actionIcon = {
+              <FiberNewIcon
+                color = 'primary'
+                style = {{opacity : 1, width : '30px'}}
+              ></FiberNewIcon>
+            }
+          ></StyledGridListTileBar>
+
+        </StyledGridListTile>
+          : ''
+        }
+
+
 
         {attachedFiles.map((file, idx) => {
           let lastSlash = file.lastIndexOf('/')
           let length = file.length  
           let originalFileName = file.slice(lastSlash + 1, length-4)
+          console.log(file)
           return(
-            <GridListTile onClick = {event => {handleOpenTileDialog(event, originalFileName)}} cols={1} key={file}>
+            <StyledGridListTile 
+              onClick = {event => {handleOpenTileDialog(event, originalFileName)}} 
+              cols={1} 
+              key={file}
+            >
               <img src={file} alt={file.title} /> */}
-              <GridListTileBar
-                title={file.title}
-                subtitle={<span>by: {file.author}</span>}
+              <StyledGridListTileBar
                 titlePosition="top"
+                title={originalFileName}
+                subtitle={<span>by: {file.author}</span>}
+                style={
+                  {
+                    background : `rgba( 209, 255, 196, 0.9 )`, 
+                    // color : '#8cbdf5', 
+                    height : '45px'
+                  }
+                }
+                fontColor = {'black'}
                 actionIcon={
-                  <IconButton onClick = {event => {console.log('버튼클릭1')}} aria-label={`info about ${file.title}`} className={classes.icon}>
-                    <InfoIcon fontSize = {'inherit'} onClick = {event => {
+                  <IconButton 
+                    onClick = {event => {console.log('버튼클릭1')}} 
+                    aria-label={`info about ${file.title}`}
+                    style = {{padding : '0px'}}
+                  >
+                    {/* <InfoIcon fontSize = {'inherit'} onClick = {event => {
                       event.preventDefault()
                       console.log('버튼클릭1')
-                      }}/>
-                    <GetAppIcon fontSize = {'inherit'} onClick = {event => {console.log('버튼클릭2')}}/>
+                      }}/> */}
+                    <GetAppIcon 
+                      fontSize = {'inherit'} 
+                      onClick = {event => {console.log('버튼클릭2')}} 
+                      style = {{opacity : 1, width : '30px'}}
+
+                    />
                   </IconButton>
                 }
-                actionPosition="left"
+                actionPosition="right"
 
               />
-              안녕하신가
               <Dialog
                 key = {'tile' + idx}
                 open = {openedTileDialog[originalFileName]}
@@ -261,10 +350,12 @@ const DropZone = ({
                 </Button>
 
               </Dialog>
-            </GridListTile>
+            </StyledGridListTile>
           )
         })}
-      </GridList>
+
+
+      </StyledGridList>
     </React.Fragment>
   );
 }

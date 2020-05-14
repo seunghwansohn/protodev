@@ -128,6 +128,9 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
   },[queryProps])
 
 console.log(dataType)
+const [attachedFiles, 
+  setAttachedFiles]               = useState([]);
+  
   
   //api값을 받아와 설정
   const getRawData = async () => {
