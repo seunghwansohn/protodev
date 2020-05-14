@@ -18,6 +18,9 @@ import TableHead        from '@material-ui/core/TableHead';
 import TableRow         from '@material-ui/core/TableRow';
 import TablePagination  from '@material-ui/core/TablePagination';
 
+import DropZoneGallery            from './DropZoneGallery';
+
+
 
 import PopQuestionDlg     from '../common/dialogs/PopQuestionDlg';
 
@@ -309,6 +312,10 @@ let Notes = props => {
           marginBottom = '10px'
         />
 
+        <DropZoneGallery>
+
+        </DropZoneGallery>
+        
         <Button variant="contained" color="primary" onClick = {onSubmit}>
             Submit
         </Button>

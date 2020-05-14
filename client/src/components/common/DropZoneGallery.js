@@ -100,9 +100,6 @@ const DropZone = ({
 
   // const pdfBuffer = fs.readFileSync('/SuppliersPage.js')
 
-  console.log(file)
-  console.log(attachedFiles)
-
 
 
   useEffect(() => {
@@ -210,92 +207,64 @@ const DropZone = ({
 
   return (
     <React.Fragment>
-      {fixMode ? 
-        <StyledDiv {...getRootProps()}>
-          <input {...getInputProps()} />
-          {
-            <CloudUploadIcon></CloudUploadIcon>
-          }
-        </StyledDiv>  
-      : 
-      <StyledDiv>
-          <ArchiveIcon onClick = {event => {onClickArchiveIcon()}}></ArchiveIcon>
-      </StyledDiv>  
-      }
-
-      <Dialog
-        open = {openedDialog}
-        onClose = {handleCloseDialog}
-        maxWidth = 'md'
-        fullWidth = 'lg'
-      >
-        <DialogTitle id="alert-dialog-title">Are you confirm the data you input?</DialogTitle>
-        <Button onClick = {addFiles}>제출</Button>
+      <Button onClick = {addFiles}>제출</Button>
 
 
-        <GridList cols = {4} cellHeight={360} className={classes.gridList}>
-          <StyledGridListTile key="Subheader" cols={1} style={{ height: 'auto' }}>
-            <div {...getRootProps()}>
-              <input {...getInputProps()} />
-                {isDragActive ?
-                  <p>Drop the files here ...</p> :
-                  <p>Drag 'n' drop some files here, or click to select files</p>}
-            </div>
-            <AddIcon></AddIcon>
-            
-          </StyledGridListTile>
+      <GridList cols = {4} cellHeight={360} className={classes.gridList}>
+        <StyledGridListTile key="Subheader" cols={1} style={{ height: 'auto' }}>
+          <div {...getRootProps()}>
+            <input {...getInputProps()} />
+              {isDragActive ?
+                <p>Drop the files here ...</p> :
+                <p>Drag 'n' drop some files here, or click to select files</p>}
+          </div>
+          <AddIcon></AddIcon>
+          
+        </StyledGridListTile>
 
-          {attachedFiles.map((file, idx) => {
-            let lastSlash = file.lastIndexOf('/')
-            let length = file.length  
-            let originalFileName = file.slice(lastSlash + 1, length-4)
-            return(
-              <GridListTile onClick = {event => {handleOpenTileDialog(event, originalFileName)}} cols={1} key={file}>
-                <img src={file} alt={file.title} /> */}
-                <GridListTileBar
-                  title={file.title}
-                  subtitle={<span>by: {file.author}</span>}
-                  titlePosition="top"
-                  actionIcon={
-                    <IconButton onClick = {event => {console.log('버튼클릭1')}} aria-label={`info about ${file.title}`} className={classes.icon}>
-                      <InfoIcon fontSize = {'inherit'} onClick = {event => {
-                        event.preventDefault()
-                        console.log('버튼클릭1')
-                        }}/>
-                      <GetAppIcon fontSize = {'inherit'} onClick = {event => {console.log('버튼클릭2')}}/>
-                    </IconButton>
-                  }
-                  actionPosition="left"
+        {attachedFiles.map((file, idx) => {
+          let lastSlash = file.lastIndexOf('/')
+          let length = file.length  
+          let originalFileName = file.slice(lastSlash + 1, length-4)
+          return(
+            <GridListTile onClick = {event => {handleOpenTileDialog(event, originalFileName)}} cols={1} key={file}>
+              <img src={file} alt={file.title} /> */}
+              <GridListTileBar
+                title={file.title}
+                subtitle={<span>by: {file.author}</span>}
+                titlePosition="top"
+                actionIcon={
+                  <IconButton onClick = {event => {console.log('버튼클릭1')}} aria-label={`info about ${file.title}`} className={classes.icon}>
+                    <InfoIcon fontSize = {'inherit'} onClick = {event => {
+                      event.preventDefault()
+                      console.log('버튼클릭1')
+                      }}/>
+                    <GetAppIcon fontSize = {'inherit'} onClick = {event => {console.log('버튼클릭2')}}/>
+                  </IconButton>
+                }
+                actionPosition="left"
 
-                />
-                안녕하신가
-                <Dialog
-                  key = {'tile' + idx}
-                  open = {openedTileDialog[originalFileName]}
-                  onClose = {(event) => handleCloseTileDialog(originalFileName)}
-                  maxWidth = 'md'
-                  fullWidth = 'lg'
+              />
+              안녕하신가
+              <Dialog
+                key = {'tile' + idx}
+                open = {openedTileDialog[originalFileName]}
+                onClose = {(event) => handleCloseTileDialog(originalFileName)}
+                maxWidth = 'md'
+                fullWidth = 'lg'
+              >
+                <img src = {file}></img>
+                <Button
+                  onClick = {event => {handleCloseTileDialog(originalFileName)}}
                 >
-                  <img src = {file}></img>
-                  <Button
-                    onClick = {event => {handleCloseTileDialog(originalFileName)}}
-                  >
-                    Close
-                  </Button>
+                  Close
+                </Button>
 
-                </Dialog>
-              </GridListTile>
-            )
-          })}
-
-          {file.map((file, idx) => {
-            return(
-              <img src = {URL.createObjectURL(file)} height = 'auto' width = '40%'></img>
-            )
-          })
-          }
-        </GridList>
-      </Dialog>
+              </Dialog>
+            </GridListTile>
+          )
+        })}
+      </GridList>
     </React.Fragment>
   );
 }

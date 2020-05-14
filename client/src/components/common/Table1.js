@@ -1363,7 +1363,8 @@ const STTable = ({
                                 dataType       = {dataType}
                                 primaryKey     = {primaryKey}
                                 primaryCode    = {primaryCode}
-
+                                 
+                                fixMode        = {fixMode}
                                 files          = {attachedFiles[idxRow]}
                               />
                             </StyledTableCell>
