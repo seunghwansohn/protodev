@@ -73,7 +73,7 @@ const InputDialog = ({attr}) => {
         aria-labelledby="draggable-dialog-title"
       >
         <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
-          Result?
+          Result? {question}
         </DialogTitle>        
         <DialogContent>
           <TextField

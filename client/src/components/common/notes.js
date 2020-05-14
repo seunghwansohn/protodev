@@ -1,4 +1,4 @@
-import React, {useEffect}             from 'react'
+import React, {useEffect, useState}             from 'react'
 
 import { useSelector, useDispatch }    from 'react-redux';
 
@@ -18,7 +18,11 @@ import TableHead        from '@material-ui/core/TableHead';
 import TableRow         from '@material-ui/core/TableRow';
 import TablePagination  from '@material-ui/core/TablePagination';
 
-import Divider from '@material-ui/core/Divider';
+
+import PopQuestionDlg     from '../common/dialogs/PopQuestionDlg';
+
+
+import MarginDivider from './design/MarginDivider'
 
 
 import {setAddNotes, setUpdated}                from '../../modules/common';
@@ -71,18 +75,7 @@ const StyledDiv = styled.div`
   padding-bottom: 20px;
 `
 
-const StyledDivider = styled(Divider)`
-  margin-top : 100px;
-  margin-bottom : 100px;
-`
 
-const MarginDivider = () => {
-  return (
-    <div style = {{marginTop : '30px', marginBottom : '30px'}}>
-      <Divider/>
-    </div>
-  )
-}
 // const StyledTableCell = styled(TableCell)`
 //   background-color: ${
 //     props => props.fixMode ? 
@@ -120,6 +113,8 @@ let Notes = props => {
     const [deletedJustNow, setDeletedJustNow] = React.useState(false);
     const [randomNo, setRandomNo]             = React.useState(Math.floor(Math.random() * 10) + 1);
 
+    const [confirmDlgOpen, setConfirmDlgOpen]           = useState(false)
+
     const { update } = useSelector(({ common }) => ({ update : common.update }));
 
     const loadNotes = () => {
@@ -128,6 +123,14 @@ let Notes = props => {
           setExistNotes(res.data)
         })
       }
+    }
+
+    const confirmSubmitDialogAttr = {
+      question : 'only confiremd notes (yellow backgrounded) will be submitted. do you agree?',
+      openState : confirmDlgOpen,
+      setOpenState : setConfirmDlgOpen,
+      // answer : howManyCopiedNew,
+      // setAnswer : setAddCopiedNew
     }
 
     useEffect(() => {
@@ -161,7 +164,7 @@ let Notes = props => {
 
     const handleNewKeyPress = (e, index) => {
       if (e.key =='Enter'){
-        console.log('엔터눌림')
+
         let arrLength     = newNotesArr.length
         let strNowLength  = newNotesArr[index].length
         let strLastLength = newNotesArr[arrLength - 1].length
@@ -169,7 +172,6 @@ let Notes = props => {
         let isVacantLast  = strLastLength > 0 ? false : true
         let isLastNow     = (arrLength -1) == index ? true : false
 
-        console.log(arrLength, isVacantNow, isVacantLast, isLastNow, index)
         setConfirmedNewNotes(
           produce(confirmedNewNotes, draft => {
             draft[index] = e.target.value
@@ -188,16 +190,27 @@ let Notes = props => {
     }
 
     const onSubmit = async () => {
-      let filteredArr = confirmedNewNotes.filter(function (el) {
+      let filteredConfirmedArr = await confirmedNewNotes.filter(function (el) {
         return el !== '$$$'
       })
-      await filteredArr.map(note => {
-        if (note !== null && note !== undefined && note !== [] && note !== '') {
-          dispatch(setAddNotes({type, primaryCode, note, randomNo}))
-        } else {
-          console.log('눌값존재')
-        }
+      let filteredtempArr = await newNotesArr.filter(function (el) {
+        return el !== ''
       })
+
+      if (filteredConfirmedArr.length == filteredtempArr.length) {
+        await filteredConfirmedArr.map(note => {
+          if (note !== null && note !== undefined && note !== [] && note !== '') {
+            dispatch(setAddNotes({type, primaryCode, note, randomNo}))
+          } else {
+            console.log('눌값존재')
+          }
+        })
+      } else {
+        console.log('확정된 값만 제출됩니다')
+        setConfirmDlgOpen(!confirmDlgOpen)
+      }
+
+
     }
 
     useEffect(() => {
@@ -262,10 +275,6 @@ let Notes = props => {
         <Grid container className = {classes.grid} spacing={0}>
           <ExistNotesTable></ExistNotesTable>
 
-          <Divider 
-            variant = {'fullWidth'}
-          />
-
           {newNotesArr.map((val, index) => {
             let isConfirmedVal = isConfirmed(index)
             return (
@@ -296,13 +305,18 @@ let Notes = props => {
         </Grid>
 
         <MarginDivider 
-            variant = {'fullWidth'}
+          marginTop = '10px'
+          marginBottom = '10px'
         />
 
         <Button variant="contained" color="primary" onClick = {onSubmit}>
             Submit
         </Button>
         <Button onClick = {loadNotes}>load</Button>
+
+        <PopQuestionDlg
+          attr = {confirmSubmitDialogAttr}
+        ></PopQuestionDlg>
       </React.Fragment>
     )
   }
