@@ -12,7 +12,8 @@ import InputST          from './common/Input'
 
 import {generateRandom} from '../lib/common';
 import {getIncludingKeys,
-  withoutKeys }  from '../lib/common'
+  withoutKeys,
+  getOnlyFiles }  from '../lib/common'
 
 import axios                from '../lib/api/axios'
 import produce  from 'immer'
@@ -102,6 +103,8 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
       expense : [
         {type : 'primary', newRow : true, size : 5, title: 'expenseCode', style:'regular'},
         {type : 'fixable', newRow : true, size : 7, title: 'description', style:'regular'},
+        {type : 'fixable', newRow : true, size : 12, title: 'memo', style:'regular'},
+
         {type : 'divider', typoGraphy : 'basicInfo'}
       ],
       project : [
@@ -128,6 +131,8 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
   },[queryProps])
 
 console.log(dataType)
+const [filesKeys, 
+  setFilesKeys]                   = useState([]);
 const [attachedFiles, 
   setAttachedFiles]               = useState([]);
   
@@ -143,20 +148,21 @@ const [attachedFiles,
       setLoadedData(res.data.vals)
       setIncludingKeys(res.data.primaryKey)
       setFindingKeys(res.data.findingKeys)
+      if (filesKeys) {
+        setAttachedFiles(getOnlyFiles(res.data.vals))
+      }
     })
   }
   useEffect(() => {
     getRawData()
   },[])
 
-
-
   //업데이트 함수
   const onFixedVal = (fixedArr) => {
     onUpdate()
   }
 
-
+  console.log(tableRawData)
 
   //input값 변경 기능
   const onChangeVal = (key, value) => {
@@ -174,7 +180,9 @@ const [attachedFiles,
   
   return (
     <React.Fragment>
-      {dataType}
+      <Typography variant="h4">
+        {dataType}
+      </Typography>
       <Grid container className = {classes.flex}>
         <Grid item xs = {11}>
           <Typography variant="h4">
@@ -228,7 +236,9 @@ const [attachedFiles,
       <Notes 
         type = {dataType} 
         primaryKey = {primaryKey} 
-        primaryCode = {primaryCode}>
+        primaryCode = {primaryCode}
+        attachedFiles = {attachedFiles}
+      >
       </Notes>
 
       <Button onClick = {onModeChange}>모드 변경</Button>

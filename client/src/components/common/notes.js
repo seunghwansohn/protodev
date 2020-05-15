@@ -73,6 +73,26 @@ const StyledTableContainer = styled(TableContainer)`
   }
 `
 
+const StyledTableHead = styled(TableHead)`
+  background : rgba(255, 255, 204, 0.9);
+  font-size : 20px;
+  .MuiTableCell-root {
+    font-size : 1.2rem;
+    text-align : center;
+    font-weight : bold;
+
+  }
+`
+
+const StyledTableBody = styled(TableBody)`
+  background : rgba(255, 255, 204, 0.3);
+  font-size : 20px;
+  .MuiTableCell-root {
+    font-size : 0.875rem;
+    text-align : left;
+  }
+`
+
 const StyledDiv = styled.div`
   padding : 10px;
   padding-bottom: 20px;
@@ -108,6 +128,7 @@ let Notes = (
     dataType,
     primaryKey,
     fixMode,
+    attachedFiles
   }) => {
 
     //개체 기본 속성
@@ -147,6 +168,7 @@ let Notes = (
       }
     }
 
+    console.log(primaryCode)
     const confirmSubmitDialogAttr = {
       question : 'only confiremd notes (yellow backgrounded) will be submitted. do you agree?',
       openState : confirmDlgOpen,
@@ -260,7 +282,7 @@ let Notes = (
       return(
       <StyledDiv>
           <StyledTableContainer>
-            <TableHead>
+            <StyledTableHead>
               <TableRow>
                 <TableCell>
                   Notes
@@ -269,8 +291,8 @@ let Notes = (
                   Date
                 </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
+            </StyledTableHead>
+            <StyledTableBody>
               {existNotes ? existNotes.map(noteObj => {
                 const yymmdd = convertSeqDateTime(noteObj.createdAt).yymmdd
                   return(
@@ -284,7 +306,7 @@ let Notes = (
                     </TableRow>
                   )
               }) : ''}
-            </TableBody>
+            </StyledTableBody>
           </StyledTableContainer>
 
       </StyledDiv>
@@ -341,7 +363,7 @@ let Notes = (
           primaryCode    = {primaryCode}
             
           fixMode        = {fixMode}
-          // files          = {attachedFiles[idxRow]}
+          files          = {attachedFiles}
         >
         </DropZoneGallery>
 

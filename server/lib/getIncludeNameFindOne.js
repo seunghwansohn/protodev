@@ -14,15 +14,26 @@
 // }
 
 
-module.exports = function (source, primaryKey, where, findingAttr, includingAttr) {
+module.exports = function (source, primaryKey, where, findingAttr, includingAttr, filesAttr) {
   let includingKeys = {}
   let findingKeys = []
+  let filesKeys = []
+
   let afterIncluding = ''
 
   includingAttr.map(obj => {
     includingKeys[obj.as] = (obj.attributes)
   })
 
+  if (filesAttr) {
+    filesAttr.map(obj => {
+      let tempObj = {}
+      tempObj[obj.as] = {}
+      tempObj[obj.as][obj.primaryCode] = obj.attributes[0]
+      filesKeys.push(tempObj)
+    })
+  }
+  
   findingAttr.map(obj => {
     let tempObj = {}
     tempObj[obj.as] = {}
@@ -33,8 +44,11 @@ module.exports = function (source, primaryKey, where, findingAttr, includingAttr
 
   let concatedAttr = includingAttr.concat(findingAttr)
 
-  // console.log(where)
-  return source.findOne({where : where,
+  if (filesAttr) {
+    concatedAttr      = concatedAttr.concat(filesAttr)
+  }
+  return source.findOne({
+    where : where,
     include : concatedAttr
   }).then(async obj => {
     includingAttr.map(attr => {
@@ -47,7 +61,6 @@ module.exports = function (source, primaryKey, where, findingAttr, includingAttr
         }    
       })
     })
-
     findingAttr.map(async attr => {
       let targetCodes = await attr.attributes
       let as = await attr.as
@@ -60,7 +73,7 @@ module.exports = function (source, primaryKey, where, findingAttr, includingAttr
         }    
       })
     })
-    afterIncluding = await {primaryKey : primaryKey, includingKeys : includingKeys, findingKeys : findingKeys, vals :obj}
+    afterIncluding = await {primaryKey : primaryKey, includingKeys : includingKeys, findingKeys : findingKeys, filesKeys : filesKeys, vals :obj}
     return afterIncluding
   })
 }

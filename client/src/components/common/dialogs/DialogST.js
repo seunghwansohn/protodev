@@ -93,7 +93,7 @@ export default function MaxWidthDialog({
         aria-labelledby="max-width-dialog-title"
         scroll = {scroll}
       >
-        <DialogTitle id="max-width-dialog-title">{title}</DialogTitle>
+        {/* <DialogTitle id="max-width-dialog-title">{title}</DialogTitle> */}
         <DialogContent>
             {children} 
 

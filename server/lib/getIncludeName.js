@@ -69,15 +69,8 @@ module.exports = function (source, primaryKey, findingAttr, includingAttr, files
         let targetCodes = await attr.attributes
         let as = await attr.as
         let primaryCode = await attr.primaryCode
-
-        // console.log('타겟코드는 ', targetCodes)
-        // console.log('애즈는 ', as)
-        // console.log('프라이머리코드는 ', primaryCode)
-
         await targetCodes.map(async targetCode => {
-          // console.log(obj.dataValues)
           if (obj.dataValues[as] !== null && obj.dataValues[as] !== undefined) {
-            // console.log('애즈는 낫눌 ', obj.dataValues[as])
             obj.dataValues[targetCode] = await obj.dataValues[as].dataValues[targetCode]
             await delete obj.dataValues[as]
             await delete obj.dataValues[primaryCode]

@@ -46,6 +46,8 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 
 import Badge from '@material-ui/core/Badge';
 
+import Typography       from '@material-ui/core/Typography';
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -111,7 +113,7 @@ const StyledGridListTileBar = styled(GridListTileBar)`
 `
 
 
-const DropZone = ({
+const DropZoneGallery = ({
   fixMode, 
   dataType, 
   primaryKey, 
@@ -131,16 +133,15 @@ const DropZone = ({
   const [attachedFiles, setAttachedFiles] = useState([])
 
 
+  console.log(primaryCode)
   // const pdfBuffer = fs.readFileSync('/SuppliersPage.js')
 
-  console.log(file)
+  console.log(files)
   console.log(attachedFiles)
-
-
 
   useEffect(() => {
     setRequestNo(generateRandom())
-  },[])
+  },[primaryCode])
 
   const handleCloseDialog = () => {
     setOpenedDialog(false)
@@ -174,8 +175,11 @@ const DropZone = ({
     
   useEffect(( )=> {
     const url = '/api/query/files'
+    console.log(requestNo)
+    console.log(primaryCode)
     if (requestNo !== '')
     axios.post(url, {relCode : primaryCode, reqNo : requestNo}).then(res => {
+      console.log(res.data)
       setAttachedFiles(res.data)
     })
   },[requestNo])
@@ -243,15 +247,21 @@ const DropZone = ({
 
   return (
     <React.Fragment>
+      <Typography variant="h5">
+        Attached Files
+      </Typography>
       <StyledGridList cols = {6} cellHeight={250}>
         <StyledGridListTile key="Subheader" cols={1} >
           <div {...getRootProps()}>
             <input {...getInputProps()} />
               {isDragActive ?
                 <p>Drop the files here ...</p> :
-                <p>Drag 'n' drop some files here, or click to select files</p>}
+                <div>
+                  <p>Drag 'n' drop some files here, or click to select files</p>
+                  <AddIcon></AddIcon>
+                </div>
+              }
           </div>
-          <AddIcon></AddIcon>
           
         </StyledGridListTile>
         
@@ -360,4 +370,4 @@ const DropZone = ({
   );
 }
 
-export default DropZone;
+export default DropZoneGallery;

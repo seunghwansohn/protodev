@@ -269,7 +269,6 @@ const STTable = ({
       setIncludingKeys(res.data.includingKeys)
       setFindingKeys(res.data.findingKeys)
       setFilesKeys(res.data.filesKeys)
-
       if (filesKeys) {
         setAttachedFiles(getOnlyFiles(res.data.vals))
       }

@@ -8,7 +8,6 @@ const upload = () => {
   let defaultLocation = 'uploads/'
   let storage = multer.diskStorage({
     destination: function (req, file, cb) {
-      // console.log('레큐크크', req)
       let location = req.body.location
       let type     = req.body.type
       let newDir   = './' + defaultLocation + type

@@ -70,7 +70,7 @@ exports.uploadFile = (req, res) => {
 exports.loadFiles = (req, res) => {
   let where = {relcode : req.body.relCode}
   let reqNo = req.body.reqNo
-  console.log(reqNo)
+  console.log('레큐넘버어어', reqNo)
   const file        = req.files
   let   location    = req.body.location
   let   type        = req.body.type

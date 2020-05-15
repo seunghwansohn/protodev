@@ -38,11 +38,17 @@ export const getIncludingKeys1 = (arr) => {
 }
 
 export const getOnlyFiles = (arr) => {
-    let tempArr = []
+  let tempArr = []
+  if (Array.isArray(arr)) {
     arr.map(obj => {
-        tempArr.push(obj.files)
+      tempArr.push(obj.files)
     })
-    return tempArr
+  } else {
+    console.log(arr)
+    tempArr = arr.files
+  }
+  console.log(tempArr)
+  return tempArr
 }
 
 // export const withoutKeys1 = (arr) => {

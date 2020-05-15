@@ -133,7 +133,7 @@ const DropZone = ({
 
   // const pdfBuffer = fs.readFileSync('/SuppliersPage.js')
 
-  console.log(file)
+  console.log(files)
   console.log(attachedFiles)
 
 
@@ -174,6 +174,7 @@ const DropZone = ({
     
   useEffect(( )=> {
     const url = '/api/query/files'
+    console.log(requestNo)
     if (requestNo !== '')
     axios.post(url, {relCode : primaryCode, reqNo : requestNo}).then(res => {
       setAttachedFiles(res.data)

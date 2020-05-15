@@ -71,7 +71,6 @@ exports.addNew = (req, res) => {
   const {addedNew, primaryKey, includingKeys, findingKeys} = req.body
   const primaryCode   = addedNew[primaryKey]
   
-  console.log(req.body)
   let addedNewRmTime  = rmTimeFromReq(addedNew)
 
   const includings  = {}
@@ -80,8 +79,6 @@ exports.addNew = (req, res) => {
   const createObj     = getCreateObj(addedNewRmTime, primaryKey, primaryCode, includingKeys, findingKeys)
 
   createObj.then(result => {
-    console.log('리절트', result)
-    console.log('인클루딩', includingArr)
     Expense.create(result, {include:includingArr}).then(() => {
       res.status(200).send('Expense Suceessfully Added')
     }).catch((err) => {
@@ -95,9 +92,6 @@ exports.addNew = (req, res) => {
 exports.update = async (req, res) => {
   let data = req.body
   let { ref,vals } = data
-  console.log('데이타', data)
-  console.log(ref)
-  console.log(vals)
 
   setUpdate(vals, ref, relAttr).then(result => {
     res.status(200).send(result)
@@ -121,13 +115,9 @@ exports.delete = async (req, res) => {
 
 
 exports.query = (req, res) => {
-  console.log(req.body)
   let {queryObj} = req.body
-  console.log('쿼리오브젝', queryObj)
   let where = queryObj
-
-  getIncludeNameFindOne(Expense, primaryKey, where, findingAttr, includingAttr).then(expenses => {
-    console.log(expenses)
+  getIncludeNameFindOne(Expense, primaryKey, where, findingAttr, includingAttr, filesAttr).then(expenses => {
     res.status(200).send(expenses)
   })
 };
