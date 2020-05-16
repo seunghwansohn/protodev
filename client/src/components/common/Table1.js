@@ -246,9 +246,8 @@ const STTable = ({
   const currentType = motherType + 'Table'
   const containerNo = currentType + '_' + frameNo
 
-  const debugMode                   = useSelector(state => state.common.debugMode)
-
-  const { user } = useSelector(({ user }) => ({ user: user.user }));
+  const debugMode   = useSelector(state => state.common.debugMode)
+  const { user }    = useSelector(({ user }) => ({ user: user.user }));
 
 
   //api에서 tableRawData 및 key 설정

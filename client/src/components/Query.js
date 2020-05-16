@@ -1,22 +1,28 @@
-import React, { useState, useEffect } from 'react'
-import { connect, useSelector, useDispatch } from 'react-redux';
+import React, { useState, useEffect }           from 'react'
+import { connect, useSelector, useDispatch }    from 'react-redux';
+
+import { makeStyles }   from '@material-ui/core/styles';
 
 import Grid             from '@material-ui/core/Grid';
-import { makeStyles }   from '@material-ui/core/styles';
 import Divider          from '@material-ui/core/Divider';
 import Typography       from '@material-ui/core/Typography';
 import Button           from '@material-ui/core/Button';
 
 import Notes            from './common/notes'
 import InputST          from './common/Input'
+import DropZoneGallery  from './common/DropZoneGallery';
+import MarginDivider    from './common/design/MarginDivider'
 
-import {generateRandom} from '../lib/common';
+import axios              from '../lib/api/axios'
+import {generateRandom}   from '../lib/common';
 import {getIncludingKeys,
   withoutKeys,
-  getOnlyFiles }  from '../lib/common'
+  getOnlyFiles }          from '../lib/common'
 
-import axios                from '../lib/api/axios'
+
+
 import produce  from 'immer'
+import styled   from 'styled-components'
 
 
 const useStyles = makeStyles(theme => ({
@@ -31,44 +37,36 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
+const StyledDiv = styled.div`
+  background : ${props => props.fixMode ? `rgba(255, 230, 255, 0.35)`: `rgb(255, 255, 255)`};
+`
 
 
 //loadedTempData: Query의 정보를 담은 rawData. 값형식 : obj
 //queryProps    : Query의 각 input을 어떻게 표시할건가 정보를 담은 배열 값형식: arr
 //updateData    : 업데이트 함수
-const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
-  const [fixMode, setFixMode]         = useState(false)
-  const [fixedData, setFixedData]     = useState({})
 
-  const [loadedData, setLoadedData]     = useState([])
-  
-  const [primaryKey, setPrimaryKey]   = useState('')
-  const [primaryCode, setPrimaryCode] = useState('')
+const Query = (
+  {
+    motherType,  
+    motherNo, 
+    loadedTempData, 
+    onUpdate, 
+    attr
+  }) => {
 
   const classes = useStyles();
 
-
   //개체 기본 속성
-  const [frameNo, setFrameNo]  = useState(motherNo ? motherNo : generateRandom())
-  const currentType = 'Query'
-  const containerNo = currentType + '_' + frameNo
-  const {dataType} = attr
+  const [frameNo, setFrameNo]       = useState(motherNo ? motherNo : generateRandom())
+  const [currentNo, setCurrentNo]   = useState(generateRandom())
+  const debugMode                   = useSelector(state => state.common.debugMode)
 
-  //테이블 관련
-  const [tableRawData, 
-    setTableRawData]                = useState([])
-  const [includingKeys, 
-      setIncludingKeys]               = useState([]);
-  const [findingKeys, 
-      setFindingKeys]               = useState([]);
+  const currentType   = 'query'
+  const {dataType}    = attr
 
-  //픽스모드 설정
-  const onModeChange = () => {
-    fixMode == false ? setFixMode(true) : setFixMode(false)
-  }
+  // console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
-  //primary키 설정
-  //queryProps조회해서 프라이머리 키 받아서 react state로 설정
 
   //테이블 각열 Attr 
   const queryProps = () => {
@@ -116,7 +114,15 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
     return tempObj
   }
 
-
+  //픽스모드 설정
+  const onModeChange = () => {
+    fixMode == false ? setFixMode(true) : setFixMode(false)
+  }
+  const [fixMode, setFixMode]         = useState(false)
+  
+  //primary키 설정
+  const [primaryKey, setPrimaryKey]   = useState('')
+  const [primaryCode, setPrimaryCode] = useState('')
   //primaryCode와 primaryKey를 설정
   const getPrimaryKey = () => {
     queryProps()[dataType].map(obj => {
@@ -129,14 +135,23 @@ const Query = ({motherType, motherNo, loadedTempData, onUpdate, attr}) => {
   useEffect(() => {
     getPrimaryKey()
   },[queryProps])
+  
 
-console.log(dataType)
-const [filesKeys, 
-  setFilesKeys]                   = useState([]);
-const [attachedFiles, 
-  setAttachedFiles]               = useState([]);
-  
-  
+  //테이블 관련
+  const [tableRawData, 
+    setTableRawData]                = useState([])
+  const [includingKeys, 
+      setIncludingKeys]               = useState([]);
+  const [findingKeys, 
+      setFindingKeys]               = useState([]);
+  const [loadedData, setLoadedData]   = useState([])
+
+  //첨부파일관련
+  const [filesKeys, 
+    setFilesKeys]                   = useState([]);
+  const [attachedFiles, 
+    setAttachedFiles]               = useState([]);
+
   //api값을 받아와 설정
   const getRawData = async () => {
     let queryObj = {}
@@ -162,9 +177,9 @@ const [attachedFiles,
     onUpdate()
   }
 
-  console.log(tableRawData)
 
   //input값 변경 기능
+  const [fixedData, setFixedData]     = useState({})
   const onChangeVal = (key, value) => {
     setLoadedData(
       produce(loadedData, draft => {
@@ -177,9 +192,9 @@ const [attachedFiles,
       })
     )
   }
-  
+
   return (
-    <React.Fragment>
+    <StyledDiv fixMode = {fixMode}>
       <Typography variant="h4">
         {dataType}
       </Typography>
@@ -192,7 +207,6 @@ const [attachedFiles,
         <Grid item xs = {1}>
           <Button className = {classes.right} onClick = {onModeChange}>Fix</Button>
         </Grid>
-        
         <Divider/>
       </Grid>
       <br/>
@@ -238,13 +252,32 @@ const [attachedFiles,
         primaryKey = {primaryKey} 
         primaryCode = {primaryCode}
         attachedFiles = {attachedFiles}
+        fixMode = {fixMode}
       >
       </Notes>
 
-      <Button onClick = {onModeChange}>모드 변경</Button>
+      <MarginDivider 
+        marginTop = '10px'
+        marginBottom = '10px'
+      />
+
+      <DropZoneGallery
+          motherFrameNo = {frameNo}
+          motherNo      = {currentNo}
+          motherType    = {currentType}
+
+          fixMode        = {fixMode}
+
+          dataType       = {dataType}
+          primaryKey     = {primaryKey}
+          primaryCode    = {primaryCode}
+        >
+      </DropZoneGallery>
+
+
       <Button onClick = {onFixedVal}>Update</Button>
 
-    </React.Fragment>
+    </StyledDiv>
   )
 }
 

@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import pdf from 'pdf-thumbnail';
 
-import {useCallback} from 'react'
 import {useDropzone} from 'react-dropzone'
 import produce       from 'immer'
-import ArchiveIcon from '@material-ui/icons/Archive';
+import styled        from 'styled-components'
 
-import FiberNewIcon from '@material-ui/icons/FiberNew';
 
-import styled from 'styled-components'
+import FiberNewIcon       from '@material-ui/icons/FiberNew';
 
 import Dialog             from '@material-ui/core/Dialog';
 import DialogActions      from '@material-ui/core/DialogActions';
@@ -17,56 +14,21 @@ import DialogContent      from '@material-ui/core/DialogContent';
 import DialogContentText  from '@material-ui/core/DialogContentText';
 import DialogTitle        from '@material-ui/core/DialogTitle';
 
-import Paper from '@material-ui/core/Paper';
-
-import Button           from '@material-ui/core/Button';
-
-import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-
-import {generateRandom}     from '../../lib/common';
-
-import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-
-import { makeStyles } from '@material-ui/core/styles';
-
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import ListSubheader from '@material-ui/core/ListSubheader';
+import Button     from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import InfoIcon from '@material-ui/icons/Info';
 
-import AddIcon from '@material-ui/icons/Add';
-
+import InfoIcon   from '@material-ui/icons/Info';
+import AddIcon    from '@material-ui/icons/Add';
 import GetAppIcon from '@material-ui/icons/GetApp';
-
-import Badge from '@material-ui/core/Badge';
 
 import Typography       from '@material-ui/core/Typography';
 
+import GridList         from '@material-ui/core/GridList';
+import GridListTile     from '@material-ui/core/GridListTile';
+import GridListTileBar  from '@material-ui/core/GridListTileBar';
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    maxWidth: 345,
-  },
-  media: {
-    height: '100%',
-    paddingTop: '56.25%', // 16:9
-  },
-  icon: {
-    color: 'white',
-  },
-}));
-// const pdfBuffer = require('fs').readFileSync('/some/path/example.pdf');
-
-const StyledDiv = styled.div`
-  width : 30px;
-`
-
+import { makeStyles }   from '@material-ui/core/styles';
+import {generateRandom} from '../../lib/common';
 
 const StyledGridList = styled(GridList)`
   .MuiIconButton-root {
@@ -93,7 +55,6 @@ const StyledGridListTile = styled(GridListTile)`
     background : rgba(224, 222, 222, 0.4);
   }
 `
-
 const StyledGridListTileBar = styled(GridListTileBar)`
   .MuiGridListTileBar-root {
     height : 28px;
@@ -114,89 +75,27 @@ const StyledGridListTileBar = styled(GridListTileBar)`
 
 
 const DropZoneGallery = ({
+  motherFrameNo,
+  motherNo,
+  motherType,
+
   fixMode, 
   dataType, 
   primaryKey, 
   primaryCode, 
-  files
 }) => {
-  const classes = useStyles();
 
-  const [file, setFile]                   = useState([])
+
   const [requestNo, setRequestNo]         = useState('')
-
-  const [fileName, setFileName]           = useState([])
-  const [openedDialog, setOpenedDialog]   = useState(false)
-  const [openedTileDialog, setOpenedTileDialog]   = useState({})
-
-
-  const [attachedFiles, setAttachedFiles] = useState([])
-
-
-  console.log(primaryCode)
-  // const pdfBuffer = fs.readFileSync('/SuppliersPage.js')
-
-  console.log(files)
-  console.log(attachedFiles)
-
   useEffect(() => {
     setRequestNo(generateRandom())
   },[primaryCode])
 
-  const handleCloseDialog = () => {
-    setOpenedDialog(false)
-  }
+  const [fileName, setFileName]           = useState([])
 
-  const handleFormSubmit = (e) => {
-    e.preventDefault()
-    addFiles()
-    .then((response) => {
-    })
-  }
 
-  const handleFileChange = e => {
-    setFileName(
-      produce(fileName, draft => {
-        draft.push(e.target.value)
-      })
-    )
-    setFile(
-      produce(file, draft => {
-        e.target.files.map(file => {
-          draft.push(file)
-        })
-      })
-    )
-  }
 
-  const onClickArchiveIcon = () => {
-    setOpenedDialog(true)
-  }
-    
-  useEffect(( )=> {
-    const url = '/api/query/files'
-    console.log(requestNo)
-    console.log(primaryCode)
-    if (requestNo !== '')
-    axios.post(url, {relCode : primaryCode, reqNo : requestNo}).then(res => {
-      console.log(res.data)
-      setAttachedFiles(res.data)
-    })
-  },[requestNo])
-
-  useEffect(() => {
-    let tempObj = {}
-
-    attachedFiles.map(file => {
-      let lastSlash = file.lastIndexOf('/')
-      let length = file.length  
-      let originalFileName = file.slice(lastSlash + 1, length-4)
-      tempObj[originalFileName] = false
-
-    })
-    setOpenedTileDialog(tempObj)
-  },[attachedFiles])
-
+  //새 파일들 api에 제출
   const addFiles = () => {
     const url = '/api/addfiles';
     var formData = new FormData();
@@ -205,8 +104,7 @@ const DropZoneGallery = ({
     formData.append('primaryKey', primaryKey)
     formData.append('primaryCode', primaryCode)
     formData.append('requestNo', requestNo)
-
-    file.map(a => {formData.append(`images`, a)})
+    newFiles.map(newFile => {formData.append(`images`, newFile)})
     const config = {
       headers: {
         'content-type': 'multipart/form-data'
@@ -214,8 +112,37 @@ const DropZoneGallery = ({
     }
     axios.post(url, formData, config)
   }
+  const handleFormSubmit = (e) => {
+    e.preventDefault()
+    addFiles()
+    .then((response) => {
+    })
+  }
+
+  //기존 저장된 파일 로드
+  const [attachedFiles, setAttachedFiles] = useState([])
+  useEffect(( )=> {
+    const url = '/api/query/files'
+    if (requestNo !== '')
+    axios.post(url, {relCode : primaryCode, reqNo : requestNo}).then(res => {
+      setAttachedFiles(res.data)
+    })
+  },[requestNo])
+  useEffect(() => {
+    let tempObj = {}
+    attachedFiles.map(file => {
+      let lastSlash = file.lastIndexOf('/')
+      let length = file.length  
+      let originalFileName = file.slice(lastSlash + 1, length-4)
+      tempObj[originalFileName] = false
+    })
+    setOpenedTileDialog(tempObj)
+  },[attachedFiles])
     
-    
+
+  //첨부파일 확대 및 축소 다이얼로그 기능
+  const [openedTileDialog, 
+    setOpenedTileDialog]   = useState({})
   const handleOpenTileDialog = (event, originalFileName) => {
     event.preventDefault()
     setOpenedTileDialog(
@@ -224,7 +151,6 @@ const DropZoneGallery = ({
       })
     )
   }
-
   const handleCloseTileDialog = async (originalFileName) => {
     let tempObj = await {...openedTileDialog}
     tempObj[originalFileName] = await false
@@ -232,26 +158,32 @@ const DropZoneGallery = ({
   }
 
 
-  const onDrop = (acceptedFiles) => {
-    setOpenedDialog(true)
-    setFile(
-      produce(file, draft => {
-        acceptedFiles.map(newFile => {
+  //드롭존 새파일 추가기능
+  const [newFiles, setNewFiles]     = useState([])
+  const onDrop = (droppedFiles) => {
+    setNewFiles(
+      produce(newFiles, draft => {
+        droppedFiles.map(newFile => {
           draft.push(newFile)
         })
       })
     )
   }
-
   const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
+
+
 
   return (
     <React.Fragment>
+
       <Typography variant="h5">
         Attached Files
       </Typography>
+
       <StyledGridList cols = {6} cellHeight={250}>
-        <StyledGridListTile key="Subheader" cols={1} >
+
+        {/* 첫 타일에 새로 추가 드롭존 */}
+        <StyledGridListTile id="Subheader" cols={1} >
           <div {...getRootProps()}>
             <input {...getInputProps()} />
               {isDragActive ?
@@ -262,20 +194,18 @@ const DropZoneGallery = ({
                 </div>
               }
           </div>
-          
         </StyledGridListTile>
         
-        {file.length > 0 ?
+        {/* 둘째 타일부터 새로 추가된 파일들*/}
+        {newFiles.length > 0 ?
           <StyledGridListTile>
-          {file.map((file, idx) => {
+          {newFiles.map((newFile, idx) => {
             return(
-                <img src = {URL.createObjectURL(file)} height = 'auto' width = '300px'></img>
+                <img src = {URL.createObjectURL(newFile)} height = 'auto' width = '300px'></img>
               )
             })
           }
           <StyledGridListTileBar
-            id = 'pahaha'
-            className = 'puhihi'
             titlePosition="top"
             title="Newly Uploaded"
             style={
@@ -293,23 +223,20 @@ const DropZoneGallery = ({
               ></FiberNewIcon>
             }
           ></StyledGridListTileBar>
-
         </StyledGridListTile>
           : ''
         }
 
-
-
+        {/* 새로추가된 파일 타일 이후로 api에서 불러온 파일들 */}
         {attachedFiles.map((file, idx) => {
           let lastSlash = file.lastIndexOf('/')
           let length = file.length  
           let originalFileName = file.slice(lastSlash + 1, length-4)
-          console.log(file)
           return(
             <StyledGridListTile 
               onClick = {event => {handleOpenTileDialog(event, originalFileName)}} 
               cols={1} 
-              key={file}
+              key={'attachedFile' + idx}
             >
               <img src={file} alt={file.title} /> */}
               <StyledGridListTileBar
@@ -319,7 +246,6 @@ const DropZoneGallery = ({
                 style={
                   {
                     background : `rgba( 209, 255, 196, 0.9 )`, 
-                    // color : '#8cbdf5', 
                     height : '45px'
                   }
                 }
@@ -330,10 +256,6 @@ const DropZoneGallery = ({
                     aria-label={`info about ${file.title}`}
                     style = {{padding : '0px'}}
                   >
-                    {/* <InfoIcon fontSize = {'inherit'} onClick = {event => {
-                      event.preventDefault()
-                      console.log('버튼클릭1')
-                      }}/> */}
                     <GetAppIcon 
                       fontSize = {'inherit'} 
                       onClick = {event => {console.log('버튼클릭2')}} 
@@ -346,7 +268,7 @@ const DropZoneGallery = ({
 
               />
               <Dialog
-                key = {'tile' + idx}
+                key = {'enlargedTile' + idx}
                 open = {openedTileDialog[originalFileName]}
                 onClose = {(event) => handleCloseTileDialog(originalFileName)}
                 maxWidth = 'md'

@@ -38,7 +38,6 @@ const ExpenseListContainer = ({
   const debugMode                   = useSelector(state => state.common.debugMode)
 
   const currentType = 'expenseList'
-  // const containerNo = currentType + '_' + frameNo
   const dataType    = 'expense'
 
   console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
