@@ -110,8 +110,14 @@ exports.loadFiles = (req, res) => {
     res.send(fileList)
     })
   });
+};  
 
-
+exports.cleanFolder = (req, res) => {
+  console.log(req.body)
+  const {hashNo} = req.body
+  const tempFolder = '../client/public/temp/'
+  fs.rmdirSync(tempFolder + hashNo, {recursive : true})
+}
 
   // files.map(file => {
   //   Files.create({
@@ -120,5 +126,6 @@ exports.loadFiles = (req, res) => {
   //     addresses : file.path
   //   })
   // })
-};  
+  
+
 

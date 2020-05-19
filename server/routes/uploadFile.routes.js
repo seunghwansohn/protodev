@@ -47,7 +47,8 @@ module.exports = function(app) {
   // app.post("/api/addfiles", controller.uploadFile)
   app.post("/api/addfiles", upload().array('images', 10), controller.uploadFile)
   app.post("/api/query/files", controller.loadFiles)
-
+  app.post("/api/clean/folder", controller.cleanFolder)
 }
     
+
 

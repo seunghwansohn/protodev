@@ -19,8 +19,6 @@ import {getIncludingKeys,
   withoutKeys,
   getOnlyFiles }          from '../lib/common'
 
-
-
 import produce  from 'immer'
 import styled   from 'styled-components'
 
@@ -41,10 +39,6 @@ const StyledDiv = styled.div`
   background : ${props => props.fixMode ? `rgba(255, 230, 255, 0.35)`: `rgb(255, 255, 255)`};
 `
 
-
-//loadedTempData: Query의 정보를 담은 rawData. 값형식 : obj
-//queryProps    : Query의 각 input을 어떻게 표시할건가 정보를 담은 배열 값형식: arr
-//updateData    : 업데이트 함수
 
 const Query = (
   {
@@ -172,6 +166,7 @@ const Query = (
     getRawData()
   },[])
 
+  
   //업데이트 함수
   const onFixedVal = (fixedArr) => {
     onUpdate()
@@ -248,13 +243,17 @@ const Query = (
       </Grid>
 
       <Notes 
+        motherFrameNo = {frameNo}
+        motherNo      = {currentNo}
+        motherType    = {currentType}
+
+        fixMode = {fixMode}
+
         type = {dataType} 
+
         primaryKey = {primaryKey} 
         primaryCode = {primaryCode}
-        attachedFiles = {attachedFiles}
-        fixMode = {fixMode}
-      >
-      </Notes>
+      />
 
       <MarginDivider 
         marginTop = '10px'
@@ -269,11 +268,10 @@ const Query = (
           fixMode        = {fixMode}
 
           dataType       = {dataType}
+
           primaryKey     = {primaryKey}
           primaryCode    = {primaryCode}
-        >
-      </DropZoneGallery>
-
+      />
 
       <Button onClick = {onFixedVal}>Update</Button>
 

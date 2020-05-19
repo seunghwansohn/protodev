@@ -94,12 +94,13 @@ const StyledDiv = styled.div`
 `
 
 
-
 let Notes = (
   {
     motherFrameNo, 
     motherType,
     motherNo,
+
+    fixMode,
 
     dataType,
     type,
@@ -107,8 +108,6 @@ let Notes = (
     primaryCode, 
     primaryKey,
 
-    fixMode,
-    attachedFiles
   }) => {
 
     const classes     = useStyles();
@@ -307,36 +306,33 @@ let Notes = (
           {newNotesArr.map((val, index) => {
             let isConfirmedVal = isConfirmed(index)
             return (
-            <>
-              <Grid item xs = {11}>
-                <FormControl key = {index} className = {classes.fieldItem}>
-                  <InputLabel>{'notes ' + (index)}</InputLabel>
-                  <StyledInput 
-                    type = 'text' 
-                    id={index} 
-                    value={newNotesArr[index]} 
-                    onChange={e => handleArrChange(e, index)}
-                    onKeyDown = {e => handleNewKeyPress(e, index)}
-                    confirmed = {isConfirmedVal}
-                  />
-                </FormControl>
-              </Grid>
-              <Grid item xs = {1}>
-                <Button variant="contained"  id={index} color="primary" onClick = {() => onDeleteNewNote(index)}>
-                  Delete
-                </Button>
-              </Grid>
-            </>
+              <>
+                <Grid item xs = {11}>
+                  <FormControl key = {index} className = {classes.fieldItem}>
+                    <InputLabel>{'notes ' + (index)}</InputLabel>
+                    <StyledInput 
+                      type = 'text' 
+                      id={index} 
+                      value={newNotesArr[index]} 
+                      onChange={e => handleArrChange(e, index)}
+                      onKeyDown = {e => handleNewKeyPress(e, index)}
+                      confirmed = {isConfirmedVal}
+                    />
+                  </FormControl>
+                </Grid>
+                <Grid item xs = {1}>
+                  <Button variant="contained"  id={index} color="primary" onClick = {() => onDeleteNewNote(index)}>
+                    Delete
+                  </Button>
+                </Grid>
+              </>
             )
           })}
         </Grid>
 
-
-
         <Button variant="contained" color="primary" onClick = {onSubmit}>
             Submit
         </Button>
-        <Button onClick = {loadNotes}>load</Button>
 
         <PopQuestionDlg
           attr = {confirmSubmitDialogAttr}

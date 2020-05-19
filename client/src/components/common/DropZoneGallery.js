@@ -27,14 +27,19 @@ import GridList         from '@material-ui/core/GridList';
 import GridListTile     from '@material-ui/core/GridListTile';
 import GridListTileBar  from '@material-ui/core/GridListTileBar';
 
-import { makeStyles }   from '@material-ui/core/styles';
-import {generateRandom} from '../../lib/common';
+import { makeStyles }     from '@material-ui/core/styles';
+import {generateRandom}   from '../../lib/common';
+import {getFolderStr} from '../../lib/generateFileName';
+
+
+import bcryptjs from 'bcryptjs' //해시 형성 및 해시 검증하여 정보를 확실히 검증
 
 const StyledGridList = styled(GridList)`
   .MuiIconButton-root {
     padding : 4px;
   }
 `
+
 const StyledGridListTile = styled(GridListTile)`
   .MuiGridListTile-root {
     background : rgba(224, 222, 222, 0.4);
@@ -86,13 +91,30 @@ const DropZoneGallery = ({
 }) => {
 
 
-  const [requestNo, setRequestNo]         = useState('')
+  
+console.log(getFolderStr())
+
+  const [requestNo, setRequestNo]   = useState('')
+  const [hashNo, setHashNo]         = useState('')
+
+  useEffect(() => {
+    if (primaryCode && requestNo) {
+      setHashNo(getFolderStr())
+    }
+  },[primaryCode])
+
+  //언마운트시 파일 삭제 api에 요청
   useEffect(() => {
     setRequestNo(generateRandom())
-  },[primaryCode])
+    return ( ) => {
+      const url = '/api/clean/folder'
+      axios.post(url, {hashNo : hashNo})
+    }
+  },[hashNo])
 
   const [fileName, setFileName]           = useState([])
 
+  console.log(hashNo)
 
 
   //새 파일들 api에 제출
@@ -123,11 +145,11 @@ const DropZoneGallery = ({
   const [attachedFiles, setAttachedFiles] = useState([])
   useEffect(( )=> {
     const url = '/api/query/files'
-    if (requestNo !== '')
-    axios.post(url, {relCode : primaryCode, reqNo : requestNo}).then(res => {
+    if (hashNo !== '')
+    axios.post(url, {relCode : primaryCode, reqNo : hashNo}).then(res => {
       setAttachedFiles(res.data)
     })
-  },[requestNo])
+  },[hashNo])
   useEffect(() => {
     let tempObj = {}
     attachedFiles.map(file => {
