@@ -1,8 +1,7 @@
 import React, { useState, useEffect }           from 'react'
 import { connect, useSelector, useDispatch }    from 'react-redux';
 
-import { onAlreadyPickedCheck }         from '../modules/quote'
-import {actDialogOpen, actDialogClose}    from '../modules/dialogs'
+import { actDialogOpen, actDialogClose }    from '../modules/dialogs'
 import {
     actUpdate, 
     actUpdateChange, 
@@ -13,15 +12,13 @@ import {
 
 import DialogST     from '../components/common/dialogs/DialogST'
 import Table        from '../components/common/Table1'
+import Query        from '../components/Query'
+
+import Button           from '@material-ui/core/Button';
+import Paper from '@material-ui/core/Paper';
 
 import {generateRandom}               from '../lib/common';
 
-// import ExpenseAdd      from '../components/ExpenseAdd'
-
-import Query        from '../components/Query'
-import Button           from '@material-ui/core/Button';
-
-import Paper from '@material-ui/core/Paper';
 
 
 const ExpenseListContainer = ({
@@ -52,7 +49,6 @@ const ExpenseListContainer = ({
 
   const acts = {
     onDialogOpen : function (argObj) {
-      console.log('온다얼로그')
       let tempObj = argObj
       tempObj.frameNo = frameNo
       tempObj.currentNo = currentNo
@@ -188,15 +184,6 @@ const ExpenseListContainer = ({
           dataType : dataType,
       },
     },
-    // tableButton : [
-    //   {
-    //     title : 'insert',
-    //     func : function(selected){
-    //         dispatch(onAlreadyPickedCheck(selected.value))
-    //     },
-    //     // mother : containerNo
-    //   },
-    // ],
     findingKeys,
     gMotherAttr : {
       gMotherNo : motherNo,
@@ -257,20 +244,9 @@ const ExpenseListContainer = ({
   },[dialogOpened])
 
 
-  const test = () => {
-    // dispatch(loadAccount())
-    // dispatch(onDialogOpen(true, detailQuery, clickedCol))
-    // console.log(checkOpened('expenseName'))
-    checkOpened()
-  }
-
-
-  console.log(dialogOpened)
-
   return(
     <>
       {debugMode ? <Paper style = {{color : 'red'}}> 프레임넘버는 {frameNo}, 현Comp는 {currentType}, {currentNo}, 마더comp는 {motherType}, {motherNo} </Paper>: '디버그모드false'}
-      <Button onClick = {test}>푸하하</Button>
       <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType} attr = {DialogsAttr.expenseAdd}>
           아이템에디디
         {/* <ExpenseAdd 

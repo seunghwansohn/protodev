@@ -63,7 +63,7 @@ import Paper from '@material-ui/core/Paper';
 
 import DropZone            from './DropZone';
 import SingleNote          from './SingleNote';
-
+import STSelect            from './STSelect';
 
 import {actDialogOpen, actDialogClose}    from '../../modules/dialogs'
 import {
@@ -83,7 +83,6 @@ import { actSelect,
 import styled   from "styled-components";
 import produce  from 'immer'
 
-import Select from './Select'
 import { object } from 'joi';
 
 const colors = {
@@ -1331,14 +1330,11 @@ const STTable = ({
 
                           return(
                             <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} style = {{width:'150px'}}>
-                              <Select 
+                              <STSelect
                                 key = {'select' + idxRow}
-                                onChange = {event => handleChangeSelect(event, idxRow, header)}
+                                onChangeVal = {event => handleChangeSelect(event, idxRow, header)}
                                 options={selectOptions.sortName} 
-                                // menuIsOpen = {selectMenuOpened[idxRow]}
-                                // onInputChange = {event => handleClickSelectOpen(event, index)}
-                                // openMenuOnClick = {event => handleClickSelectChoose(index)}
-                                // onKeyDown = {event => handleClickSelectChoose(event, idxRow)}
+                                attr = {colAttr[header]}
                               />
                             </StyledTableCell>
                           )
@@ -1560,13 +1556,12 @@ const STTable = ({
                         } else if (isSelectTypeCol) {
                             return (
                               <StyledTableCell>
-                                <Select 
+                                <STSelect 
                                   key = {'select' + idxRow}
                                   onChange = {event => handleChangeNewAddedSelect(event, idxRow, header)}
                                   options={selectOptions.sortName} 
                                   menuIsOpen = {selectMenuOpened[idxRow]}
                                   onKeyDown = {event => handleClickSelectChoose(event, idxRow)}
-
                                 />
                               </StyledTableCell>
                             )
