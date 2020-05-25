@@ -3,7 +3,7 @@ import MainHeader from './containers/common/MainHeader'
 import LoginPages from './pages/loginPages'
 import ItemListPage from './pages/ItemListPage'
 import ClientPage from './pages/clientPage'
-import TestPage from './pages/TestPage4'
+import TestPage from './pages/TestPage'
 import TestPage3 from './pages/TestPage3'
 
 import SuppliersPage from './pages/SuppliersPage'
