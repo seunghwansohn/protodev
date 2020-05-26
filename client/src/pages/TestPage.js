@@ -1,10 +1,5 @@
-import React from "react";
-import styled, { createGlobalStyle } from "styled-components";
-
-// import timelineData from './timeLine/timeLineData';
-
-import TimelineItem from './timeLine/TimeContainer'
-import './timeLine/timeLine.css'
+import React    from "react";
+import TimeLine from '../components/TimeLine/TimeLine'
 
 const timeLineData = [
   {
@@ -33,21 +28,16 @@ const timeLineData = [
         text: 'Read more'
     }
   },
-  // {
-  //     // Another object with data
-  // }
 ];
-console.log(timeLineData)
-const TimeLine = () => {
+
+const TimeLinePage = () => {
   return(
-    timeLineData.length > 0 && (
-        <div className="timeline-container">
-            {timeLineData.map((data, idx) => (
-                <TimelineItem data={data} key={idx} />
-            ))}
-        </div>
-    )
+    <div className="timeline-container">
+        <TimeLine 
+          timeLineDataArr = {timeLineData}
+        ></TimeLine>
+    </div>
   )
 }
 
-export default TimeLine
+export default TimeLinePage
