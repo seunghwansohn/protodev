@@ -324,7 +324,6 @@ const STTable = ({
   const [fixedVals, setFixedVals]             = useState([]);
   const [updated, setUpdated]                 = useState(false);
   const {update} = useSelector((state => state[dataType].table))
-
   if (update) {
     getRawData()
     onUpdateChange(false)

@@ -1,8 +1,9 @@
 import produce from 'immer'
 import { createAction, handleActions } from 'redux-actions';
-import { takeLatest, takeEvery, call }                           from 'redux-saga/effects';
-import createRequestSaga, {createRequestActionTypes } from '../lib/createRequestSaga';
-import * as common                                    from '../lib/api/common';
+import { takeLatest, takeEvery, call } from 'redux-saga/effects';
+import createRequestSaga, 
+    {createRequestActionTypes }        from '../lib/createRequestSaga';
+import * as common                     from '../lib/api/common';
 
 
 const initialState = {
@@ -15,16 +16,21 @@ const [SET_ADD_NOTES, SET_ADD_NOTES_SUCCESS, SET_ADD_NOTES_FAILURE ]
 = createRequestActionTypes('common/SET_ADD_NOTES');
 const [SET_LOAD_NOTES, SET_LOAD_NOTES_SUCCESS, SET_LOAD_NOTES_FAILURE ] 
 = createRequestActionTypes('common/SET_LOAD_NOTES');
+const [SET_FIX_NOTES, SET_FIX_NOTES_SUCCESS, SET_FIX_NOTES_FAILURE ] 
+= createRequestActionTypes('common/SET_FIX_NOTES');
 
 export const SET_UPDATED    = 'common/SET_UPDATED'
 export const SET_DEBUGMODE  = 'common/SET_DEBUGMODE'
 
-
 const addNotesSaga  = createRequestSaga(SET_ADD_NOTES, common.addNotes);
 const loadNotesSaga = createRequestSaga(SET_LOAD_NOTES, common.loadNotes);
+const fixNotesSaga  = createRequestSaga(SET_FIX_NOTES, common.fixNotes);
+
 
 export const setAddNotes    = createAction(SET_ADD_NOTES, (obj) => (obj))
 export const setLoadNotes   = createAction(SET_LOAD_NOTES, (type) => (type))
+export const setFixNotes    = createAction(SET_FIX_NOTES, (obj) => (obj))
+
 export const setUpdated     = createAction(SET_UPDATED, ({type, ox}) => ({type, ox}))
 export const actDebugMode   = createAction(SET_DEBUGMODE, (ox) => (ox))
 
@@ -32,12 +38,17 @@ export const actDebugMode   = createAction(SET_DEBUGMODE, (ox) => (ox))
 export function* commonSaga() {
     yield takeLatest(SET_ADD_NOTES, addNotesSaga)
     yield takeLatest(SET_LOAD_NOTES, loadNotesSaga)
-
+    yield takeLatest(SET_FIX_NOTES, fixNotesSaga)
 }
 
 function reducer (state = initialState, action) {
   switch (action.type) {
         case SET_ADD_NOTES_SUCCESS:
+            return produce(state, draft => {
+                draft.update[action.payload.type] = true
+            }
+        )        
+        case SET_FIX_NOTES_SUCCESS:
             return produce(state, draft => {
                 draft.update[action.payload.type] = true
             }

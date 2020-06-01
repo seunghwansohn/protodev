@@ -140,6 +140,12 @@ exports.addNotes = (req, res) => {
   }
 };
 
+exports.fixNotes = (req, res) => {
+  const {obj} = req.body
+  console.log('쿠루쿠루', obj)
+};
+
+
 
 exports.loadNotes = (req, res) => {
   console.log('레큐파람은 ', req.params.id)

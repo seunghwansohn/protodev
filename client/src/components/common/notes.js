@@ -1,4 +1,4 @@
-import React, {useEffect, useState}    from 'react'
+import React, {useEffect, useState, useCallback, useMemo}    from 'react'
 import { useSelector, useDispatch }    from 'react-redux';
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -19,11 +19,16 @@ import TableHead        from '@material-ui/core/TableHead';
 import TableRow         from '@material-ui/core/TableRow';
 import TablePagination  from '@material-ui/core/TablePagination';
 
+
+import EditIcon from '@material-ui/icons/Edit';
+
 import DropZoneGallery  from './DropZoneGallery';
 import PopQuestionDlg   from '../common/dialogs/PopQuestionDlg';
 import MarginDivider    from './design/MarginDivider'
 
-import {setAddNotes, setUpdated}                from '../../modules/common';
+import {setAddNotes, 
+  setUpdated, 
+  setFixNotes}          from '../../modules/common';
 
 import {convertSeqDateTime}                     from '../../lib/deSequelize';
 import {generateRandom}                         from '../../lib/common';
@@ -93,7 +98,6 @@ const StyledDiv = styled.div`
   padding-bottom: 20px;
 `
 
-
 let Notes = (
   {
     motherFrameNo, 
@@ -125,6 +129,7 @@ let Notes = (
 
 
     const [randomNo, setRandomNo]         = useState(Math.floor(Math.random() * 10) + 1);
+
     useEffect(() => {
       setRandomNo(generateRandom())
     },[])
@@ -144,6 +149,7 @@ let Notes = (
       loadNotes()
     },[primaryCode])
     
+    console.log(existNotes)
 
     //newNotes 부분 초기화 및 노트 입력시 다음 노트 자동 추가
     const [newNotesArr, setNewNotesArr]   = useState(['']);
@@ -222,6 +228,7 @@ let Notes = (
         );
       }
     }
+    
 
 
 
@@ -259,49 +266,115 @@ let Notes = (
     }
 
 
+    const [fixedVals, setFixedVals]   = useState([]);
+    const [confirmedFixedNotes, 
+      setConfirmedFixedNotes]         = useState([]);
+  
+    useEffect(() => {
+      setFixedVals(existNotes)
+    }, [existNotes])
 
-    const ExistNotesTable = () => {
-      return(
-      <StyledDiv>
-          <StyledTableContainer>
-            <Table>
-              <StyledTableHead>
-                <TableRow>
-                  <TableCell>
-                    Notes
-                  </TableCell>
-                  <TableCell>
-                    Date
-                  </TableCell>
-                </TableRow>
-              </StyledTableHead>
-              <StyledTableBody>
-                {existNotes ? existNotes.map(noteObj => {
-                  const yymmdd = convertSeqDateTime(noteObj.createdAt).yymmdd
-                    return(
-                      <TableRow>
-                        <TableCell style = {{width : '100rem', margin : '0px', padding :'0px'}}>
-                          {noteObj.note}
-                        </TableCell>
-                        <TableCell style = {{width : '0.5rem'}}>
-                          {yymmdd}
-                        </TableCell>
-                      </TableRow>
-                    )
-                }) : ''}
-              </StyledTableBody>
-            </Table>
-          </StyledTableContainer>
+    const handleExistNotesChange = (index, event) => {
+      event.preventDefault()
+      const {value} = event.target
 
-      </StyledDiv>
+      setFixedVals(
+        produce(fixedVals, draft => {
+          draft[index].note = value
+          draft[index].confirmed = false
+        })
       )
     }
+
+    const handleExistNotesKeyPress = (index, event) => {
+      if (event.key =='Enter'){
+        setFixedVals(
+          produce(fixedVals, draft => {
+            draft[index].confirmed = true
+          })
+        )
+      }
+    }
+
+
+    const onFixedSubmit = () => {
+      fixedVals.map(obj => {
+        if (obj.confirmed == true) {
+          const note = obj.note
+          dispatch(setFixNotes({type, primaryCode, note, randomNo}))
+        }
+      })
+    }
+
+    console.log(confirmedFixedNotes)
 
     return (
       <React.Fragment>
         <Grid container className = {classes.grid} spacing={0}>
 
-          <ExistNotesTable></ExistNotesTable>
+          <StyledDiv>
+            <StyledTableContainer>
+              <Table>
+                <StyledTableHead>
+                  <TableRow>
+                    {fixMode ? 
+                      <TableCell>
+                        fix
+                      </TableCell>
+                    :''}
+                    <TableCell>
+                      Notes
+                    </TableCell>
+                    <TableCell>
+                      Date
+                    </TableCell>
+                  </TableRow>
+                </StyledTableHead>
+                <StyledTableBody>
+                  {existNotes ? existNotes.map((noteObj, index) => {
+                    const yymmdd = convertSeqDateTime(noteObj.createdAt).yymmdd
+                      return(
+                        <TableRow>
+                          {fixMode ? 
+                            <TableCell style = {{width : '1rem', margin : '0px', padding :'0px'}}>
+                              <EditIcon
+                              ></EditIcon>
+                            </TableCell>
+                          : ''}
+                          <TableCell style = {{width : '100rem', margin : '0px', padding :'0px'}}>
+                            {fixMode ? 
+                              <FormControl key = {index} className = {classes.fieldItem}>
+                                <InputLabel>{'notes1 ' + (index)}</InputLabel>
+                                <StyledInput 
+                                  type = 'text' 
+                                  id={index} 
+                                  key ={index}
+                                  value={fixedVals[index].note}
+                                  onChange={(event)   => handleExistNotesChange(index, event)}
+                                  onKeyDown = {event  => handleExistNotesKeyPress(index, event)}
+                                  confirmed = {fixedVals[index].confirmed}
+                                />
+                              </FormControl> : noteObj.note
+                            }
+                          </TableCell>
+                          <TableCell style = {{width : '0.5rem'}}>
+                            {yymmdd}
+                          </TableCell>
+                        </TableRow>
+                      )
+                  }) : ''}
+                </StyledTableBody>
+              </Table>
+            </StyledTableContainer>
+            {fixMode ?
+              <Button variant="contained" color="secondary" onClick = {onFixedSubmit}>
+                Fix
+              </Button>
+              :
+              ''
+            }
+         
+          </StyledDiv>
 
           {newNotesArr.map((val, index) => {
             let isConfirmedVal = isConfirmed(index)
@@ -330,9 +403,11 @@ let Notes = (
           })}
         </Grid>
 
+  
         <Button variant="contained" color="primary" onClick = {onSubmit}>
-            Submit
+          Submit
         </Button>
+
 
         <PopQuestionDlg
           attr = {confirmSubmitDialogAttr}
