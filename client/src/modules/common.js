@@ -53,13 +53,11 @@ function reducer (state = initialState, action) {
                 draft.update[action.payload.type] = true
             }
         )
-
         case SET_UPDATED:
             return produce(state, draft => {
                 draft.update[action.payload.type] = action.payload.ox
             }
         )
-
         case SET_DEBUGMODE:
             return produce(state, draft => {
                 if (draft.debugMode == false) {

@@ -12,11 +12,9 @@ const getFindingAttr = require("../lib/getFindingAttr");
 const getFilesAttr   = require("../lib/getFilesAttr");
 
 const getIncludeAttrArr = require("../lib/getIncludeAttrArr");
-const getMatchedAttr = require("../lib/getMatchedAttr");
-const setUpdate = require("../lib/setUpdate");
-
-
-
+const getMatchedAttr    = require("../lib/getMatchedAttr");
+const setUpdate         = require("../lib/setUpdate");
+const setUpdateNotes    = require("../lib/setUpdateNotes");
 
 const getCreateObj = require("../lib/getCreateObj");
 const setNameToCode = require("../lib/setNameToCode");
@@ -54,6 +52,13 @@ const relAttr = {
       asStr : 'sort',
       attributes :['sortName'],
       primaryCode : 'sortCode'
+    },
+    {
+      target: ExpenseNote,
+      relType : 'notes',
+      asStr : 'note',
+      attributes :['note'],
+      primaryCode : 'expenseCode'
     },
   ]
 }
@@ -143,15 +148,26 @@ exports.addNotes = (req, res) => {
 exports.fixNotes = (req, res) => {
   const {obj} = req.body
   console.log('쿠루쿠루', obj)
+  const {ref, vals, randomNo} = obj
+  setUpdateNotes(vals, ref, relAttr).then(result => {
+    res.status(200).send({type: obj.type + obj.randomNo, message: "Exist Notes updated Suc" })
+  })
 };
 
+// exports.update = async (req, res) => {
+//   let data = req.body
+//   let { ref,vals } = data
 
+//   setUpdate(vals, ref, relAttr).then(result => {
+//     res.status(200).send(result)
+//   })
+// };
 
 exports.loadNotes = (req, res) => {
-  console.log('레큐파람은 ', req.params.id)
+  console.log('레큐파람은', req.params.id)
+
   ExpenseNote.findAll({where : {expenseCode : req.params.id}}
   ).then(notes => {
-      console.log('노트는', notes)
       result = notes
   }).then(() => {
       res.status(200).send(result);

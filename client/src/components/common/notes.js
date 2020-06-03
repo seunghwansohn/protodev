@@ -1,3 +1,16 @@
+//notes의 경우 클라이언트의 액션 디스패치 모듈이
+//modules/common.js로 독립 분리 되어 있음. 
+
+//notes는 크게 두 부분으로 이루어짐.
+//1. ExistNotes
+//2. NewNotes
+
+//1. ExistNotes의 load는 리덕스를 통하지 않고 콤포넌트 내에서 axios를 통해 get으로 받아옴.
+//2. NewNotes 콤포넌트를 통해 새 노트를 입력하면 ExistNotes에 바로 업데이트됨. 업데이트에 대해선
+//이후 상술할 것임. NewNotes부분도 
+//3. ExistNotes의 fix는 리덕스 액션을 통해 진행되며, 이후 상술할 업데이트 기능이 적용됨.
+
+
 import React, {useEffect, useState, useCallback, useMemo}    from 'react'
 import { useSelector, useDispatch }    from 'react-redux';
 
@@ -10,6 +23,7 @@ import Input          from '@material-ui/core/Input';
 import InputLabel     from '@material-ui/core/InputLabel';
 
 import Button         from '@material-ui/core/Button';
+import EditIcon         from '@material-ui/icons/Edit';
 
 import Table            from '@material-ui/core/Table';
 import TableBody        from '@material-ui/core/TableBody';
@@ -19,12 +33,8 @@ import TableHead        from '@material-ui/core/TableHead';
 import TableRow         from '@material-ui/core/TableRow';
 import TablePagination  from '@material-ui/core/TablePagination';
 
-
-import EditIcon from '@material-ui/icons/Edit';
-
-import DropZoneGallery  from './DropZoneGallery';
-import PopQuestionDlg   from '../common/dialogs/PopQuestionDlg';
 import MarginDivider    from './design/MarginDivider'
+import PopQuestionDlg   from '../common/dialogs/PopQuestionDlg';
 
 import {setAddNotes, 
   setUpdated, 
@@ -109,8 +119,8 @@ let Notes = (
     dataType,
     type,
 
-    primaryCode, 
-    primaryKey,
+    primaryCode,  //조회의 대상이 되는 ref값의 primaryCode
+    primaryKey,   //조회의 대상이 되는 ref값의 primaryKey
 
   }) => {
 
@@ -127,9 +137,9 @@ let Notes = (
     const debugMode   = useSelector(state => state.common.debugMode)
     const { user }    = useSelector(({ user }) => ({ user: user.user }));
 
-
+    //randomNo는 업데이트를 위해 사용됨. randomNo를 api를 이용할때 전달하고 다시 같은 randomNo를
+    //받아와서 일치하면 업데이트
     const [randomNo, setRandomNo]         = useState(Math.floor(Math.random() * 10) + 1);
-
     useEffect(() => {
       setRandomNo(generateRandom())
     },[])
@@ -148,8 +158,53 @@ let Notes = (
     useEffect(() => {
       loadNotes()
     },[primaryCode])
-    
-    console.log(existNotes)
+
+    //기존 노트 수정위한 매개 state생성
+    const [fixedVals, setFixedVals]   = useState([]);
+    const [confirmedFixedNotes, 
+      setConfirmedFixedNotes]         = useState([]);
+    useEffect(() => {
+      setFixedVals(existNotes)
+    }, [existNotes])
+    //기존 노트 수정 기능
+    const handleExistNotesChange = (index, event) => {
+      event.preventDefault()
+      const {value} = event.target
+      setFixedVals(
+        produce(fixedVals, draft => {
+          draft[index].note = value
+          draft[index].confirmed = false
+        })
+      )
+    }
+    //기존 노트 수정 엔터키로 확정
+    const handleExistNotesKeyPress = (index, event) => {
+      if (event.key =='Enter'){
+        setFixedVals(
+          produce(fixedVals, draft => {
+            draft[index].confirmed = true
+          })
+        )
+      }
+    }
+    //기존 노트 확정된 수정값 제출
+    const onFixedSubmit = () => {
+      fixedVals.map(obj => {
+        if (obj.confirmed == true) {
+          console.log(obj)
+          let temp1 = {}
+          temp1.ref = {}
+          temp1.vals = {}
+          temp1.ref[primaryKey] = obj[primaryKey]
+          temp1.ref.id = obj.id
+          temp1.vals.note = obj.note
+          let ref = temp1.ref
+          let vals = temp1.vals
+          dispatch(setFixNotes({type, primaryCode, randomNo, ref, vals}))
+        }
+      })
+    }
+
 
     //newNotes 부분 초기화 및 노트 입력시 다음 노트 자동 추가
     const [newNotesArr, setNewNotesArr]   = useState(['']);
@@ -187,10 +242,7 @@ let Notes = (
       })
       setNewNotesArr(filteredArr)
     }
-
-
-
-    //업데이트 시 처리 기능
+    //newNotes 업데이트 시 처리 기능
     const { update }  = useSelector(({ common }) => ({ update : common.update }));
     useEffect(() => {
       if (update[type+randomNo]) {
@@ -200,9 +252,6 @@ let Notes = (
         setNewNotesArr([''])
       }
     },[update])
-
-
-
     //입력한 newNotes값 enter쳐서 임시 확정 기능
     const [confirmedNewNotes, 
       setConfirmedNewNotes]               = useState(['$$$']);
@@ -228,10 +277,6 @@ let Notes = (
         );
       }
     }
-    
-
-
-
     //입력된 new노트 api로 제출
     const onSubmit = async () => {
       let filteredConfirmedArr = await confirmedNewNotes.filter(function (el) {
@@ -240,7 +285,6 @@ let Notes = (
       let filteredtempArr = await newNotesArr.filter(function (el) {
         return el !== ''
       })
-
       if (filteredConfirmedArr.length == filteredtempArr.length) {
         await filteredConfirmedArr.map(note => {
           if (note !== null && note !== undefined && note !== [] && note !== '') {
@@ -264,49 +308,6 @@ let Notes = (
       // answer : howManyCopiedNew,
       // setAnswer : setAddCopiedNew
     }
-
-
-    const [fixedVals, setFixedVals]   = useState([]);
-    const [confirmedFixedNotes, 
-      setConfirmedFixedNotes]         = useState([]);
-  
-    useEffect(() => {
-      setFixedVals(existNotes)
-    }, [existNotes])
-
-    const handleExistNotesChange = (index, event) => {
-      event.preventDefault()
-      const {value} = event.target
-
-      setFixedVals(
-        produce(fixedVals, draft => {
-          draft[index].note = value
-          draft[index].confirmed = false
-        })
-      )
-    }
-
-    const handleExistNotesKeyPress = (index, event) => {
-      if (event.key =='Enter'){
-        setFixedVals(
-          produce(fixedVals, draft => {
-            draft[index].confirmed = true
-          })
-        )
-      }
-    }
-
-
-    const onFixedSubmit = () => {
-      fixedVals.map(obj => {
-        if (obj.confirmed == true) {
-          const note = obj.note
-          dispatch(setFixNotes({type, primaryCode, note, randomNo}))
-        }
-      })
-    }
-
-    console.log(confirmedFixedNotes)
 
     return (
       <React.Fragment>

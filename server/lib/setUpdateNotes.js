@@ -1,4 +1,4 @@
-module.exports = setUpdate = (vals, ref, relAttr) => {
+module.exports = setUpdateNotes = (vals, ref, relAttr) => {
     console.log('발스', vals)
 
     const getIncludeUpdate = (key) => {

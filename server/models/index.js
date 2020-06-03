@@ -89,6 +89,11 @@ db.expense.hasMany(db.files,
 db.expense.belongsTo(db.expenseSort, 
     {as : "sort", through: "expense_expenseSort", foreignKey: 'sortCode', targetKey: 'sortCode'})
 
+db.expense.belongsTo(db.expenseNote, 
+    {as : "note", through: "expense_expenseCode", foreignKey: 'expenseCode', targetKey: 'expenseCode'})
+
+    
+    
         
 db.ROLES = ["user", "admin", "moderator"];
 
