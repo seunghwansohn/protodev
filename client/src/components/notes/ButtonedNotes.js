@@ -12,7 +12,7 @@ import Paper                      from '@material-ui/core/Paper';
 
 import {setAddNotes, setUpdated}  from '../../modules/common';
 
-import {convertSeqDateTime}       from '../../lib/deSequelize';
+import {convertSeqDateTime}       from '../../lib/funcs/fSequelize';
 import {generateRandom}           from '../../lib/funcs/fCommon';
 
 import axios                      from '../../lib/api/axios';

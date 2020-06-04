@@ -1,9 +1,9 @@
 import produce from 'immer'
 import { createAction, handleActions }                  from 'redux-actions';
 import { takeEvery, takeLatest, call }                             from 'redux-saga/effects';
-import createRequestSaga, {createRequestActionTypes }   from '../lib/createRequestSaga';
+import createRequestSaga, {createRequestActionTypes }  from '../lib/createRequestSaga';
 import * as query                                      from '../lib/api/query';
-import {unSequelizeKeys, unSequelizify}                 from '../lib/unSequelize';
+import {unSequelizeKeys, unSequelizify}                from '../lib/funcs/fSequelize';
 
 
 const initialState = {

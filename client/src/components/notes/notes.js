@@ -40,7 +40,7 @@ import {setAddNotes,
   setUpdated, 
   setFixNotes}          from '../../modules/common';
 
-import {convertSeqDateTime}                     from '../../lib/deSequelize';
+import {convertSeqDateTime}                     from '../../lib/funcs/fSequelize';
 import {generateRandom}                         from '../../lib/funcs/fCommon';
 import axios                                    from '../../lib/api/axios';
 

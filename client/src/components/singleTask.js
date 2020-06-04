@@ -1,27 +1,20 @@
 import React, { useState, useEffect } from 'react';
 
-import Checkbox                 from '@material-ui/core/Checkbox';
-import Input                    from '@material-ui/core/Input';
-import InputLabel                               from '@material-ui/core/InputLabel';
-import Button                                   from '@material-ui/core/Button';
+import Checkbox       from '@material-ui/core/Checkbox';
 
-import Grid                     from '@material-ui/core/Grid';
-import FormControl              from '@material-ui/core/FormControl';
-
-import DeleteIcon from '@material-ui/icons/Delete';
-
-import { makeStyles }                           from '@material-ui/core/styles';
-
-import TextField from '@material-ui/core/TextField';
+import TextField      from '@material-ui/core/TextField';
 import InputAdornment from '@material-ui/core/InputAdornment';
-import returnSpecialChr       from '../lib/returnSpecialChr'
 
+import Button     from '@material-ui/core/Button';
 
-import AddIcon from '@material-ui/icons/Add';
-
+import DeleteIcon                 from '@material-ui/icons/Delete';
+import AddIcon                    from '@material-ui/icons/Add';
 import SubdirectoryArrowRightIcon from '@material-ui/icons/SubdirectoryArrowRight';
 
-import SubSingleTask from './singleTask'
+import Grid       from '@material-ui/core/Grid';
+
+
+import { makeStyles }                           from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
   root: {

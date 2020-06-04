@@ -10,7 +10,7 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableSortLabel from '@material-ui/core/TableSortLabel';
 import Paper from '@material-ui/core/Paper';
-import searchObjectArray from '../functions/search'
+import {searchObjectArray} from '../lib/funcs/fSearch'
 import { useDispatch } from 'react-redux';
 
 //pagenation 지원하는 material-ui 테이블의 head메뉴들. map으로 자동으로 다 띄워줌.

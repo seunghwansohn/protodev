@@ -43,21 +43,21 @@ import {generateRandom}     from '../../lib/funcs/fCommon';
 import axios                from '../../lib/api/axios'
 import {getIncludingKeys,
     withoutKeys,
-    getOnlyFiles }  from '../../lib/funcs/fCommon'
+    getOnlyFiles }          from '../../lib/funcs/fCommon'
 
 import {spacelize}                      from '../../lib/funcs/fString'
 import {getDate_yyyymmddhhmm}           from '../../lib/funcs/fGetDate'
 
 import {filterArrayBySearchKeyword}     from '../../lib/funcs/fSearch'
 import {selectMultipleStates, 
-  unSelectMultipleStates}               from '../../lib/tableFuncs'
+  unSelectMultipleStates}               from '../../lib/funcs/fTable'
 import {checkDecimal, 
   percent, 
   hasWhiteSpace, 
   maxValue, 
   isPlus,
   required
-}                     from '../../lib/validation';
+}                     from '../../lib/funcs/fValidation';
     
 import Paper               from '@material-ui/core/Paper';
 
