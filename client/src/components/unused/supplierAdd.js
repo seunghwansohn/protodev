@@ -11,7 +11,7 @@ import { connect, useSelector, useDispatch } from 'react-redux';
 
 import axios from 'axios';
 
-import SupplierNotes from '../components/common/notes'
+import SupplierNotes from '../components/common/Notes'
 
 import {setSupplierAdd} from '../modules/supplier'
 

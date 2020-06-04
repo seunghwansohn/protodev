@@ -15,9 +15,6 @@ import {
 
 import DialogST     from '../components/dialogs/DialogST'
 import Table        from '../components/table/Table1'
-import ButtonHeader from '../components/common/ButtonHeader'
-
-
 
 import spacelize                      from '../lib/spacelize'
 import {generateRandom}               from '../lib/common';

@@ -17,7 +17,7 @@ import { actDialogOpen,
 import { actSelect }        from '../../modules/query'
 import {actSetReqNo}        from '../../modules/query'
 
-import InputAdornment from '@material-ui/core/InputAdornment';
+import InputAdornment         from '@material-ui/core/InputAdornment';
 import SmallKeyPopUp          from '../design/SmallKeyPopUp';
 
 import SearchIcon from '@material-ui/icons/Search';

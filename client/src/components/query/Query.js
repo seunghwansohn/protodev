@@ -8,8 +8,8 @@ import Divider          from '@material-ui/core/Divider';
 import Typography       from '@material-ui/core/Typography';
 import Button           from '@material-ui/core/Button';
 
-import Notes            from '../notes/notes'
-import InputST          from '../common/Input'
+import Notes            from '../notes/Notes'
+import InputST          from '../input/Input'
 import DropZoneGallery  from '../file/DropZoneGallery';
 import MarginDivider    from '../design/MarginDivider'
 

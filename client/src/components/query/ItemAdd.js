@@ -4,10 +4,9 @@ import { Field, reduxForm, Fields }           from 'redux-form'
 
 import axios                          from 'axios';
 
-import Table from '@material-ui/core/Table'; //material-ui의 Table ui를 불러와서 프론트엔드에 쓰이는 모든 테이블 스타일을 이 스타일로 함.
-
-import TableBody from '@material-ui/core/TableBody';
-import TableContainer from '@material-ui/core/TableContainer';
+import Table            from '@material-ui/core/Table'; //material-ui의 Table ui를 불러와서 프론트엔드에 쓰이는 모든 테이블 스타일을 이 스타일로 함.
+import TableBody        from '@material-ui/core/TableBody';
+import TableContainer   from '@material-ui/core/TableContainer';
 
 import Typography       from '@material-ui/core/Typography';
 import Slider           from '@material-ui/core/Slider';
@@ -17,7 +16,8 @@ import Grid             from '@material-ui/core/Grid';
 import Button           from '@material-ui/core/Button';
 import Paper            from '@material-ui/core/Paper';
 import Box              from '@material-ui/core/Box';
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer, 
+    toast }             from 'react-toastify';
 
 
 import {
@@ -25,26 +25,27 @@ import {
   actUpdateChange, 
   actClickedTableCol,
   actAdd,
-  actDelete
-}                                       from '../modules/itemList'
+  actDelete,
+  actSubmitAddItem
+}                           from '../../modules/itemList'
 
-import {generateRandom}               from '../lib/common';
+import { getExchangeRate }  from '../../modules/basicInfo'
+import {load, 
+  sliderStKVVar, 
+  sliderStKCVar}            from '../../modules/reduxForm'
 
-import { getExchangeRate } from '../modules/basicInfo'
-
-import {load, sliderStKVVar, sliderStKCVar} from '../modules/reduxForm'
-
-import spacelize  from '../lib/spacelize'
-import * as cal   from '../lib/calSTValues'
-
-import InputST          from './common/Input'
-import QueryInput       from './common/QueryInput';
+import spacelize          from '../../lib/spacelize'
+import * as cal           from '../../lib/calSTValues'
+import {generateRandom}   from '../../lib/common';
 
 
-import {actSubmitAddItem} from '../modules/itemList'
+import InputST            from '../input/Input'
+import QueryInput         from '../input/QueryInput';
 
-import TableWithColon from './common/TableWithColon'
-import produce  from 'immer'
+
+import TableWithColon     from '../design/TableWithColon'
+
+import produce            from 'immer'
 
 
 

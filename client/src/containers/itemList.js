@@ -16,7 +16,7 @@ import Table        from '../components/table/Table1'
 
 import {generateRandom}               from '../lib/common';
 
-import ItemAdd      from '../components/ItemAdd'
+import ItemAdd      from '../components/query/ItemAdd'
 
 import Query        from '../components/query/Query'
 import Button           from '@material-ui/core/Button';

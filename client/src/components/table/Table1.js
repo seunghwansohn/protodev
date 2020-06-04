@@ -30,12 +30,12 @@ import DialogContentText  from '@material-ui/core/DialogContentText';
 import DialogTitle        from '@material-ui/core/DialogTitle';
 import Dialog             from '@material-ui/core/Dialog';
 
-import STInput            from '../common/Input';
+import STInput            from '../input/Input';
 import ChkBoxWithAlert    from '../checkbox/ChkBoxWithAlert';
 
 import InputAdornment     from '@material-ui/core/InputAdornment';
 import TextField          from '@material-ui/core/TextField';
-import QueryInput         from '../common/QueryInput';
+import QueryInput         from '../input/QueryInput';
 
 import SmallKeyPopUp      from '../design/SmallKeyPopUp';
 
@@ -63,7 +63,7 @@ import Paper               from '@material-ui/core/Paper';
 
 import DropZone            from '../file/DropZone';
 import SingleNote          from '../notes/SingleNote';
-import STSelect            from '../common/STSelect';
+import STSelect            from '../input/STSelect';
 
 import {actDialogOpen, actDialogClose}    from '../../modules/dialogs'
 import {

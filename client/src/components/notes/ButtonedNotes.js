@@ -2,24 +2,24 @@ import React, {useEffect}             from 'react'
 
 import { useSelector, useDispatch }    from 'react-redux';
 
-import { makeStyles }                           from '@material-ui/core/styles';
-import Grid                                     from '@material-ui/core/Grid';
-import FormControl                              from '@material-ui/core/FormControl';
-import Input                                    from '@material-ui/core/Input';
-import InputLabel                               from '@material-ui/core/InputLabel';
-import Button                                   from '@material-ui/core/Button';
-import Paper                                    from '@material-ui/core/Paper';
+import { makeStyles }             from '@material-ui/core/styles';
+import Grid                       from '@material-ui/core/Grid';
+import FormControl                from '@material-ui/core/FormControl';
+import Input                      from '@material-ui/core/Input';
+import InputLabel                 from '@material-ui/core/InputLabel';
+import Button                     from '@material-ui/core/Button';
+import Paper                      from '@material-ui/core/Paper';
 
-import {setAddNotes, setUpdated}                from '../../modules/common';
+import {setAddNotes, setUpdated}  from '../../modules/common';
 
-import {convertSeqDateTime}                     from '../../lib/deSequelize';
-import {generateRandom}                         from '../../lib/common';
+import {convertSeqDateTime}       from '../../lib/deSequelize';
+import {generateRandom}           from '../../lib/common';
 
-import axios                                    from '../../lib/api/axios';
-import produce                                  from 'immer'
+import axios                      from '../../lib/api/axios';
+import produce                    from 'immer'
 
-import Dialog                                   from '@material-ui/core/Dialog';
-import NotesIcon from '@material-ui/icons/Notes';
+import Dialog                     from '@material-ui/core/Dialog';
+import NotesIcon                  from '@material-ui/icons/Notes';
 
 
 const useStyles = makeStyles(theme => ({

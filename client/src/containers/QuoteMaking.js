@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { connect, useSelector, useDispatch } from 'react-redux';
 
 import Table                from '../components/table/Table1'
-import QueryHeader          from '../components/query/queryHeader'
+import QueryHeader          from '../components/query/QueryHeader'
 import DialogST             from '../components/dialogs/DialogST'
 
 import Client from '../containers/ClientList'
