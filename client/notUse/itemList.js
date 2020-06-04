@@ -1,17 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types';
-import Table from '@material-ui/core/Table'; //material-ui의 Table ui를 불러와서 프론트엔드에 쓰이는 모든 테이블 스타일을 이 스타일로 함.
-import TableRow from '@material-ui/core/TableRow';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
-import { makeStyles, lighten } from '@material-ui/core/styles';
-import TableContainer from '@material-ui/core/TableContainer';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
-import Paper from '@material-ui/core/Paper';
-import {searchObjectArray} from '../lib/funcs/fSearch'
-import { useDispatch } from 'react-redux';
+
+import Table      from '@material-ui/core/Table'; //material-ui의 Table ui를 불러와서 프론트엔드에 쓰이는 모든 테이블 스타일을 이 스타일로 함.
+import TableRow   from '@material-ui/core/TableRow';
+import TableCell  from '@material-ui/core/TableCell';
+
+import Paper      from '@material-ui/core/Paper';
+
+import {searchObjectArray}  from '../lib/funcs/fSearch'
+import { useDispatch }      from 'react-redux';
 
 //pagenation 지원하는 material-ui 테이블의 head메뉴들. map으로 자동으로 다 띄워줌.
 const headCells = [
