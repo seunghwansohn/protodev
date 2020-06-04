@@ -19,7 +19,7 @@ import EditIcon         from '@material-ui/icons/Edit';
 
 import { ToastContainer, toast } from 'react-toastify';
 
-import * as calST   from '../lib/calSTValues'
+import * as calST   from '../lib/fCalSTValues'
 import axios        from 'axios';
 
 import {setSubmitAddItem}   from '../modules/itemList'

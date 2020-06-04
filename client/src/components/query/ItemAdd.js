@@ -35,7 +35,7 @@ import {load,
   sliderStKCVar}            from '../../modules/reduxForm'
 
 import {spacelize}        from '../../lib/funcs/fString'
-import * as cal           from '../../lib/funcs/calSTValues'
+import * as cal           from '../../lib/funcs/fCalSTValues'
 import {generateRandom}   from '../../lib/funcs/fCommon';
 
 

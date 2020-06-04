@@ -1,5 +1,4 @@
-
-const filterArrayBySearchKeyword = (searchKeyword, originalArr, primaryKey) => {
+export const filterArrayBySearchKeyword = (searchKeyword, originalArr, primaryKey) => {
     var result = [];
     var matchedArr = [];
     originalArr.map ((obj) => {
@@ -31,4 +30,3 @@ const filterArrayBySearchKeyword = (searchKeyword, originalArr, primaryKey) => {
     })
     return matchedArr;
 }
-export default filterArrayBySearchKeyword

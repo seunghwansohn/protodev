@@ -28,7 +28,7 @@ import {load as loadAccount} from '../modules/reduxForm'
 
 
 import {spacelize}  from '../lib/funcs/fString'
-import * as cal   from '../lib/funcs/calSTValues'
+import * as cal   from '../lib/funcs/fCalSTValues'
 
 import {actSubmitAddItem} from '../modules/itemList'
 

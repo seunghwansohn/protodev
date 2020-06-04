@@ -45,10 +45,10 @@ import {getIncludingKeys,
     withoutKeys,
     getOnlyFiles }  from '../../lib/funcs/fCommon'
 
-import {spacelize}                        from '../../lib/funcs/fString'
-import {getDate_yyyymmddhhmm}             from '../../lib/funcs/fGetDate'
+import {spacelize}                      from '../../lib/funcs/fString'
+import {getDate_yyyymmddhhmm}           from '../../lib/funcs/fGetDate'
 
-import filterArrayBySearchKeyword       from '../../lib/filterArrayBySearchKeyword'
+import {filterArrayBySearchKeyword}     from '../../lib/funcs/fSearch'
 import {selectMultipleStates, 
   unSelectMultipleStates}               from '../../lib/tableFuncs'
 import {checkDecimal, 

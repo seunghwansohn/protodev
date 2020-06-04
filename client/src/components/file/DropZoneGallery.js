@@ -29,7 +29,7 @@ import GridListTileBar  from '@material-ui/core/GridListTileBar';
 
 import { makeStyles }     from '@material-ui/core/styles';
 import {generateRandom}   from '../../lib/funcs/fCommon';
-import {getFolderStr} from '../../lib/generateFileName';
+import {getFolderStr} from '../../lib/funcs/fFilesNFolders';
 
 
 import bcryptjs from 'bcryptjs' //해시 형성 및 해시 검증하여 정보를 확실히 검증

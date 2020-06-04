@@ -13,7 +13,7 @@ import DialogST             from '../dialogs/DialogST'
 import {generateRandom}     from '../../lib/funcs/fCommon';
 
 import { actDialogOpen, 
-  actDialogClose }           from '../../modules/dialogs'
+  actDialogClose }          from '../../modules/dialogs'
 import { actSelect }        from '../../modules/query'
 import {actSetReqNo}        from '../../modules/query'
 

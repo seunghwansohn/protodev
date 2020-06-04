@@ -26,7 +26,7 @@ import ListSubheader    from '@material-ui/core/ListSubheader';
 
 
 import {spacelize}                  from '../../lib/funcs/fString'
-import filterArrayBySearchKeyword   from '../../lib/filterArrayBySearchKeyword'
+import {filterArrayBySearchKeyword} from '../../lib/funcs/fSearch'
 import {selectMultipleStates, 
   unSelectMultipleStates}           from '../../lib/tableFuncs'
 
