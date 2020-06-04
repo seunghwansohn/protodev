@@ -17,7 +17,7 @@ import Query        from '../components/query/Query'
 import Button           from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';
 
-import {generateRandom}               from '../lib/common';
+import {generateRandom}               from '../lib/funcs/fCommon';
 
 
 

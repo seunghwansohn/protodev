@@ -14,7 +14,7 @@ import {
 import DialogST     from '../components/dialogs/DialogST'
 import Table        from '../components/table/Table1'
 
-import {generateRandom}               from '../lib/common';
+import {generateRandom}               from '../lib/funcs/fCommon';
 
 import ItemAdd      from '../components/query/ItemAdd'
 

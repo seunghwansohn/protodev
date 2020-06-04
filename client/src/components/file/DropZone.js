@@ -23,7 +23,7 @@ import Button           from '@material-ui/core/Button';
 
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
-import {generateRandom}     from '../../lib/common';
+import {generateRandom}     from '../../lib/funcs/fCommon';
 
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';

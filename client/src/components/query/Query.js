@@ -14,10 +14,10 @@ import DropZoneGallery  from '../file/DropZoneGallery';
 import MarginDivider    from '../design/MarginDivider'
 
 import axios              from '../../lib/api/axios'
-import {generateRandom}   from '../../lib/common';
+import {generateRandom}   from '../../lib/funcs/fCommon';
 import {getIncludingKeys,
   withoutKeys,
-  getOnlyFiles }          from '../../lib/common'
+  getOnlyFiles }          from '../../lib/funcs/fCommon'
 
 import produce  from 'immer'
 import styled   from 'styled-components'

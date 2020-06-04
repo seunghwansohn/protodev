@@ -35,8 +35,8 @@ import {
  import { actSetFilter } from '../modules/client'
 
 
-import {generateRandom}     from '../lib/common';
-import {getDateNow}     from '../lib/basicInfo';
+import {generateRandom}     from '../lib/funcs/fCommon';
+import {getDateNow}     from '../lib/funcs/basicInfo';
 
 
 import TableContainer from '@material-ui/core/TableContainer';

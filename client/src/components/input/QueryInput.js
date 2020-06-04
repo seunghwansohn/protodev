@@ -10,7 +10,7 @@ import ProjectList  from '../../containers/ProjectList'
 
 import DialogST             from '../dialogs/DialogST'
 
-import {generateRandom}     from '../../lib/common';
+import {generateRandom}     from '../../lib/funcs/fCommon';
 
 import { actDialogOpen, 
   actDialogClose }           from '../../modules/dialogs'

@@ -28,7 +28,7 @@ import GridListTile     from '@material-ui/core/GridListTile';
 import GridListTileBar  from '@material-ui/core/GridListTileBar';
 
 import { makeStyles }     from '@material-ui/core/styles';
-import {generateRandom}   from '../../lib/common';
+import {generateRandom}   from '../../lib/funcs/fCommon';
 import {getFolderStr} from '../../lib/generateFileName';
 
 

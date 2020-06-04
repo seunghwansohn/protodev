@@ -9,7 +9,7 @@ import Box from '@material-ui/core/Box';
 
 import styled   from "styled-components";
 
-import {generateRandom}                         from '../../lib/common';
+import {generateRandom}                         from '../../lib/funcs/fCommon';
 
 const useStyles = makeStyles(theme => ({
     root: {

@@ -15,7 +15,7 @@ import {
 import DialogST     from '../components/dialogs/DialogST'
 import Table        from '../components/table/Table1'
 
-import {generateRandom}                         from '../lib/common';
+import {generateRandom}                         from '../lib/funcs/fCommon';
 
 
 import Query        from '../components/query/Query'
@@ -24,7 +24,7 @@ import Button           from '@material-ui/core/Button';
 
 import axios                from '../lib/api/axios'
 import {getIncludingKeys,
-    withoutKeys }  from '../lib/common'
+    withoutKeys }  from '../lib/funcs/fCommon'
 
 
 

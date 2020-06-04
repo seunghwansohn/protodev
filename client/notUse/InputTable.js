@@ -24,19 +24,11 @@ import List             from '@material-ui/core/List';
 import ListItemText     from '@material-ui/core/ListItemText';
 import ListSubheader    from '@material-ui/core/ListSubheader';
 
-import { ExpandLess, 
-  ExpandMore, 
-  FilterDrama}          from '@material-ui/icons';
 
-import PopQuestionDlg      from '../dialogs/PopQuestionDlg';
-
-import TextField from '@material-ui/core/TextField';
-
-
-import spacelize                               from '../../lib/spacelize'
-import filterArrayBySearchKeyword              from '../../lib/filterArrayBySearchKeyword'
+import {spacelize}                  from '../../lib/funcs/fString'
+import filterArrayBySearchKeyword   from '../../lib/filterArrayBySearchKeyword'
 import {selectMultipleStates, 
-  unSelectMultipleStates}                      from '../../lib/tableFuncs'
+  unSelectMultipleStates}           from '../../lib/tableFuncs'
 
 import styled   from "styled-components";
 import produce  from 'immer'

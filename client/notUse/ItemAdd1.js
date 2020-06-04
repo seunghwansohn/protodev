@@ -27,8 +27,8 @@ import {sliderStKVVar, sliderStKCVar} from '../modules/reduxForm'
 import {load as loadAccount} from '../modules/reduxForm'
 
 
-import spacelize  from '../lib/spacelize'
-import * as cal   from '../lib/calSTValues'
+import {spacelize}  from '../lib/funcs/fString'
+import * as cal   from '../lib/funcs/calSTValues'
 
 import {actSubmitAddItem} from '../modules/itemList'
 

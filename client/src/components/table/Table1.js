@@ -39,14 +39,14 @@ import QueryInput         from '../input/QueryInput';
 
 import SmallKeyPopUp      from '../design/SmallKeyPopUp';
 
-import {generateRandom}     from '../../lib/common';
+import {generateRandom}     from '../../lib/funcs/fCommon';
 import axios                from '../../lib/api/axios'
 import {getIncludingKeys,
     withoutKeys,
-    getOnlyFiles }  from '../../lib/common'
+    getOnlyFiles }  from '../../lib/funcs/fCommon'
 
-import spacelize                        from '../../lib/spacelize'
-import {getDate_yyyymmddhhmm}             from '../../lib/getDate'
+import {spacelize}                        from '../../lib/funcs/fString'
+import {getDate_yyyymmddhhmm}             from '../../lib/funcs/fGetDate'
 
 import filterArrayBySearchKeyword       from '../../lib/filterArrayBySearchKeyword'
 import {selectMultipleStates, 

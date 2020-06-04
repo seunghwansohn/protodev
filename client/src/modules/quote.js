@@ -3,7 +3,7 @@ import { createAction, handleActions } from 'redux-actions';
 import createRequestSaga, {createRequestActionTypes } from '../lib/createRequestSaga';
 import * as quote                                      from '../lib/api/quote';
 import { takeLatest, call }                           from 'redux-saga/effects';
-import {getDate_yyyymmdd} from '../lib/getDate'
+import {getDate_yyyymmdd} from '../lib/funcs/fGetDate'
 
 export const quoteSELECTCUSTOMER = 'quoteList/quoteSELECTCUSTOMER'
 export const INPUTQTY = 'quoteList/INPUTQTY'

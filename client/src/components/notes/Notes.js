@@ -41,7 +41,7 @@ import {setAddNotes,
   setFixNotes}          from '../../modules/common';
 
 import {convertSeqDateTime}                     from '../../lib/deSequelize';
-import {generateRandom}                         from '../../lib/common';
+import {generateRandom}                         from '../../lib/funcs/fCommon';
 import axios                                    from '../../lib/api/axios';
 
 import produce                                  from 'immer'

@@ -18,15 +18,15 @@ import {load as loadAccount} from '../modules/reduxForm'
 import DialogST     from '../components/dialogs/DialogST'
 import Table        from '../components/table/Table1'
 
-import spacelize                      from '../lib/spacelize'
-import {generateRandom}               from '../lib/common';
+import {spacelize}                    from '../lib/funcs/fString'
+import {generateRandom}               from '../lib/funcs/fCommon';
 
 import Button           from '@material-ui/core/Button';
 
 
 import axios                from '../lib/api/axios'
 import {getIncludingKeys,
-    withoutKeys }  from '../lib/common'
+    withoutKeys }  from '../lib/funcs/fCommon'
 
 
 

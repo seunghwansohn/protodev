@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from '../button/Button'
-import camelize from '../../lib/camelize'
+import {camelize} from '../../lib/funcs/fString'
 
 export default function ButtonHeader ({type, onHeaderButton, isThereSelected}) {
     const buttons = []

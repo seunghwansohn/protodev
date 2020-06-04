@@ -1,4 +1,4 @@
-import {getDate_yyyymmddhhmm}   from './getDate'
+import {getDate_yyyymmddhhmm}   from './funcs/fGetDate'
 import bcrypt                   from 'bcryptjs' //해시 형성 및 해시 검증하여 정보를 확실히 검증
 
 

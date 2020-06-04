@@ -7,8 +7,8 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-import camelize         from '../../lib/camelize'
-import {generateRandom} from '../../lib/common';
+import {camelize}       from '../../lib/funcs/fString'
+import {generateRandom} from '../../lib/funcs/fCommon';
 
 import { useDispatch } from 'react-redux';
 import { actDialogClose, actDialogOpen } from '../../modules/dialogs'

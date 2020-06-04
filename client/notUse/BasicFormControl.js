@@ -25,7 +25,7 @@ import SupplierList from '../../containers/SupplierList'
 
 import DialogST             from './dialogs/DialogST'
 
-import {generateRandom}     from '../../lib/common';
+import {generateRandom}     from '../../lib/funcs/fCommon';
 
 import axios                from '../../lib/api/axios'
 

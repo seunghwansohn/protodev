@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Query                          from '../components/query/Query';
 import axios                          from 'axios';
 
-import {generateRandom}               from '../lib/common';
+import {generateRandom}               from '../lib/funcs/fCommon';
 import {actUpdate}                    from '../modules/itemList'
 
 const ItemQuery = ({motherType, motherNo, reqKey, reqCode, attr}) => {

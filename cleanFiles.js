@@ -1,5 +1,5 @@
 const dirFuncs = require('./lib/dirFuncs')
-const getDate = require('./lib/getDate')
+const getDate = require('./lib/funcs/FgetDate')
 const fs = require("fs");
 
 
