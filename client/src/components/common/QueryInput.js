@@ -8,7 +8,7 @@ import MakerList    from '../../containers/MakerList'
 import ProjectList  from '../../containers/ProjectList'
 
 
-import DialogST             from './dialogs/DialogST'
+import DialogST             from '../dialogs/DialogST'
 
 import {generateRandom}     from '../../lib/common';
 
@@ -18,7 +18,7 @@ import { actSelect }        from '../../modules/query'
 import {actSetReqNo}        from '../../modules/query'
 
 import InputAdornment from '@material-ui/core/InputAdornment';
-import SmallKeyPopUp          from './SmallKeyPopUp';
+import SmallKeyPopUp          from '../design/SmallKeyPopUp';
 
 import SearchIcon from '@material-ui/icons/Search';
 

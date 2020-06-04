@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { connect, useSelector, useDispatch } from 'react-redux';
 
-import Table                from '../components/common/Table1'
-import QueryHeader          from '../components/common/queryHeader'
-import DialogST             from '../components/common/dialogs/DialogST'
+import Table                from '../components/table/Table1'
+import QueryHeader          from '../components/query/queryHeader'
+import DialogST             from '../components/dialogs/DialogST'
 
 import Client from '../containers/ClientList'
 

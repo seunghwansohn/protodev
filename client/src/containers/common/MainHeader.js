@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import Button from '../../components/common/Button';
+import Button from '../../components/button/Button';
 import { logout } from '../../modules/user'
 import { useDispatch, useSelector } from 'react-redux';
 import { signIn } from '../../modules/auth'

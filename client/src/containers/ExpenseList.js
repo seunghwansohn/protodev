@@ -10,9 +10,9 @@ import {
     actDelete
 }                                       from '../modules/expense'
 
-import DialogST     from '../components/common/dialogs/DialogST'
-import Table        from '../components/common/Table1'
-import Query        from '../components/Query'
+import DialogST     from '../components/dialogs/DialogST'
+import Table        from '../components/table/Table1'
+import Query        from '../components/query/Query'
 
 import Button           from '@material-ui/core/Button';
 import Paper from '@material-ui/core/Paper';

@@ -33,8 +33,8 @@ import TableHead        from '@material-ui/core/TableHead';
 import TableRow         from '@material-ui/core/TableRow';
 import TablePagination  from '@material-ui/core/TablePagination';
 
-import MarginDivider    from './design/MarginDivider'
-import PopQuestionDlg   from '../common/dialogs/PopQuestionDlg';
+import MarginDivider    from '../design/MarginDivider'
+import PopQuestionDlg   from '../dialogs/PopQuestionDlg';
 
 import {setAddNotes, 
   setUpdated, 

@@ -8,16 +8,16 @@ import Divider          from '@material-ui/core/Divider';
 import Typography       from '@material-ui/core/Typography';
 import Button           from '@material-ui/core/Button';
 
-import Notes            from './common/notes'
-import InputST          from './common/Input'
-import DropZoneGallery  from './common/DropZoneGallery';
-import MarginDivider    from './common/design/MarginDivider'
+import Notes            from '../notes/notes'
+import InputST          from '../common/Input'
+import DropZoneGallery  from '../file/DropZoneGallery';
+import MarginDivider    from '../design/MarginDivider'
 
-import axios              from '../lib/api/axios'
-import {generateRandom}   from '../lib/common';
+import axios              from '../../lib/api/axios'
+import {generateRandom}   from '../../lib/common';
 import {getIncludingKeys,
   withoutKeys,
-  getOnlyFiles }          from '../lib/common'
+  getOnlyFiles }          from '../../lib/common'
 
 import produce  from 'immer'
 import styled   from 'styled-components'

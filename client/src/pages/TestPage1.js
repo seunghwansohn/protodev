@@ -38,8 +38,8 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 
 import SingleTask             from '../components/singleTask';
-import STTable                from '../components/common/Table1';
-import CommentDialog          from '../components/common/dialogs/CommentDialog';
+import STTable                from '../components/table/Table1';
+import CommentDialog          from '../components/dialogs/CommentDialog';
 
 import { setAddNotes }        from '../modules/common';
 import { setFinishTask }      from '../modules/task';

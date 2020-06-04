@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import { connect, useSelector, useDispatch } from 'react-redux';
 
-import Table    from '../components/common/Table1'
-import DialogST from '../components/common/dialogs/DialogST'
+import Table    from '../components/table/Table1'
+import DialogST from '../components/dialogs/DialogST'
 import SupplierQuery from '../containers/SupplierQuery'
 
 

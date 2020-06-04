@@ -23,7 +23,7 @@ import List             from '@material-ui/core/List';
 import ListItemText     from '@material-ui/core/ListItemText';
 import ListSubheader    from '@material-ui/core/ListSubheader';
 
-import PopQuestionDlg     from '../common/dialogs/PopQuestionDlg';
+import PopQuestionDlg     from '../dialogs/PopQuestionDlg';
 import DialogActions      from '@material-ui/core/DialogActions';
 import DialogContent      from '@material-ui/core/DialogContent';
 import DialogContentText  from '@material-ui/core/DialogContentText';
@@ -31,13 +31,13 @@ import DialogTitle        from '@material-ui/core/DialogTitle';
 import Dialog             from '@material-ui/core/Dialog';
 
 import STInput            from '../common/Input';
-import ChkBoxWithAlert    from '../common/ChkBoxWithAlert';
+import ChkBoxWithAlert    from '../checkbox/ChkBoxWithAlert';
 
 import InputAdornment     from '@material-ui/core/InputAdornment';
-import QueryInput         from './QueryInput';
 import TextField          from '@material-ui/core/TextField';
+import QueryInput         from '../common/QueryInput';
 
-import SmallKeyPopUp      from './SmallKeyPopUp';
+import SmallKeyPopUp      from '../design/SmallKeyPopUp';
 
 import {generateRandom}     from '../../lib/common';
 import axios                from '../../lib/api/axios'
@@ -59,11 +59,11 @@ import {checkDecimal,
   required
 }                     from '../../lib/validation';
     
-import Paper from '@material-ui/core/Paper';
+import Paper               from '@material-ui/core/Paper';
 
-import DropZone            from './DropZone';
-import SingleNote          from './SingleNote';
-import STSelect            from './STSelect';
+import DropZone            from '../file/DropZone';
+import SingleNote          from '../notes/SingleNote';
+import STSelect            from '../common/STSelect';
 
 import {actDialogOpen, actDialogClose}    from '../../modules/dialogs'
 import {

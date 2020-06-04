@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Query                          from '../components/Query';
+import Query                          from '../components/query/Query';
 import axios                          from 'axios';
 
 import {generateRandom}               from '../lib/common';

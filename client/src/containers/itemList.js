@@ -11,14 +11,14 @@ import {
     actDelete
 }                                       from '../modules/itemList'
 
-import DialogST     from '../components/common/dialogs/DialogST'
-import Table        from '../components/common/Table1'
+import DialogST     from '../components/dialogs/DialogST'
+import Table        from '../components/table/Table1'
 
 import {generateRandom}               from '../lib/common';
 
 import ItemAdd      from '../components/ItemAdd'
 
-import Query        from '../components/Query'
+import Query        from '../components/query/Query'
 import Button           from '@material-ui/core/Button';
 
 import Paper from '@material-ui/core/Paper';

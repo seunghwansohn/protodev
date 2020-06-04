@@ -28,7 +28,7 @@ import { ExpandLess,
   ExpandMore, 
   FilterDrama}          from '@material-ui/icons';
 
-import PopQuestionDlg      from '../common/dialogs/PopQuestionDlg';
+import PopQuestionDlg      from '../dialogs/PopQuestionDlg';
 
 import TextField from '@material-ui/core/TextField';
 

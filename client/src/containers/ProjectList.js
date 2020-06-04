@@ -15,8 +15,8 @@ import {
 import {load as loadAccount} from '../modules/reduxForm'
 
 
-import DialogST     from '../components/common/dialogs/DialogST'
-import Table        from '../components/common/Table1'
+import DialogST     from '../components/dialogs/DialogST'
+import Table        from '../components/table/Table1'
 import ButtonHeader from '../components/common/ButtonHeader'
 
 import spacelize                      from '../lib/spacelize'
