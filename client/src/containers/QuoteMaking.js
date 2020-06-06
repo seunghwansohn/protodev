@@ -36,7 +36,7 @@ import {
 
 
 import {generateRandom}     from '../lib/funcs/fCommon';
-import {getDateNow}     from '../lib/funcs/basicInfo';
+import {getDateNow}     from '../lib/funcs/fBasicInfo';
 
 
 import TableContainer from '@material-ui/core/TableContainer';
@@ -328,7 +328,7 @@ const MakingQuote = ({motherType, motherNo, subTableAttr}) => {
 
     const tableAttr = {
         flagAble : true,
-        fixModeAble : false,
+        fixModable : false,
         colAttr :   {
             itemCode : {
                 type : true,

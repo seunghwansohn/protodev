@@ -78,7 +78,7 @@ const ItemListContainer = ({
 
   let tableAttr = {
     flagAble : true,
-    fixModeAble : true,
+    fixModable : true,
     colAttr : {
       itemCode : {
           primary : true,

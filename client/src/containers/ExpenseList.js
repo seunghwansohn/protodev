@@ -77,7 +77,7 @@ const ExpenseListContainer = ({
 
   let tableAttr = {
     flagAble : true,
-    fixModeAble : true,
+    fixModable : true,
     colAttr : {
       expenseCode : {
         primary : true,

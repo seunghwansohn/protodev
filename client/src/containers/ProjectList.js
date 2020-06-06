@@ -246,7 +246,7 @@ const ProjectList = ({motherType, motherNo, subTableAttr}) => {
     }
     let tableAttr = {
         flagAble : true,
-        fixModeAble : true,
+        fixModable : true,
         colAttr : {
             projectCode : {
                 primary : true,

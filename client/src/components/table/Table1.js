@@ -11,8 +11,18 @@ import TableHead        from '@material-ui/core/TableHead';
 import TableRow         from '@material-ui/core/TableRow';
 import TablePagination  from '@material-ui/core/TablePagination';
 
-import Checkbox         from '@material-ui/core/Checkbox';
+import TextField        from '@material-ui/core/TextField';
 import Input            from '@material-ui/core/Input';
+import STInput          from '../input/Input';
+import InputAdornment   from '@material-ui/core/InputAdornment';
+
+import Checkbox         from '@material-ui/core/Checkbox';
+
+import QueryInput         from '../input/QueryInput';
+import ChkBoxWithAlert    from '../checkbox/ChkBoxWithAlert';
+import STSelect           from '../input/STSelect';
+
+import DropZone            from '../file/DropZone';
 
 import Menu             from '@material-ui/core/Menu';
 import MenuItem         from '@material-ui/core/MenuItem';
@@ -30,12 +40,8 @@ import DialogContentText  from '@material-ui/core/DialogContentText';
 import DialogTitle        from '@material-ui/core/DialogTitle';
 import Dialog             from '@material-ui/core/Dialog';
 
-import STInput            from '../input/Input';
-import ChkBoxWithAlert    from '../checkbox/ChkBoxWithAlert';
-
-import InputAdornment     from '@material-ui/core/InputAdornment';
-import TextField          from '@material-ui/core/TextField';
-import QueryInput         from '../input/QueryInput';
+import Paper               from '@material-ui/core/Paper';
+import SingleNote          from '../notes/SingleNote';
 
 import SmallKeyPopUp      from '../design/SmallKeyPopUp';
 
@@ -57,33 +63,23 @@ import {checkDecimal,
   maxValue, 
   isPlus,
   required
-}                     from '../../lib/funcs/fValidation';
+}                                       from '../../lib/funcs/fValidation';
     
-import Paper               from '@material-ui/core/Paper';
 
-import DropZone            from '../file/DropZone';
-import SingleNote          from '../notes/SingleNote';
-import STSelect            from '../input/STSelect';
-
-import {actDialogOpen, actDialogClose}    from '../../modules/dialogs'
+import {actDialogOpen, 
+  actDialogClose}       from '../../modules/dialogs'
 import {
-    actUpdate, 
-    actUpdateChange, 
-    actClickedTableCol,
-    actAdd,
-    actDelete
-}                                       from '../../modules/expense'
-
-
+  actUpdate, 
+  actUpdateChange, 
+  actClickedTableCol,
+  actAdd,
+  actDelete}            from '../../modules/expense'
 import { actSelect, 
   actSetFrame, 
-  actAddNewBlankQuery}    from '../../modules/query'
-
+  actAddNewBlankQuery}  from '../../modules/query'
 
 import styled   from "styled-components";
 import produce  from 'immer'
-
-import { object } from 'joi';
 
 const colors = {
   fixable : '#fff4e2',
@@ -187,7 +183,6 @@ const STTable = ({
   
   const acts = {
     onDialogOpen : function (argObj) {
-      console.log('온다열로')
       let tempObj = argObj
       tempObj.frameNo = frameNo
       tempObj.currentNo = motherNo
@@ -223,15 +218,13 @@ const STTable = ({
   }                   = acts
 
   const {
-    flagAble,
-    fixModeAble,
-    queryColSelect,
+    flagAble, //행마다 체크박스 표시할 건지 말건지
+    fixModable,
     colAttr, 
     tableButton, 
     setFindOneResult, 
     initialFilter,
     directQuery,
-    reqNo,
     gMotherAttr
   }                   = attr
 
@@ -239,15 +232,13 @@ const STTable = ({
 
 
   //개체 기본 속성
-  const [frameNo, setFrameNo]  = useState(motherFrameNo ? motherFrameNo : generateRandom())
+  const [frameNo, setFrameNo]      = useState(motherFrameNo ? motherFrameNo : generateRandom())
   const [currentNo, setCurrentNo]  = useState(generateRandom())
 
   const currentType = motherType + 'Table'
-  const containerNo = currentType + '_' + frameNo
 
   const debugMode   = useSelector(state => state.common.debugMode)
   const { user }    = useSelector(({ user }) => ({ user: user.user }));
-
 
   //api에서 tableRawData 및 key 설정
   const [rawData, 
@@ -260,7 +251,6 @@ const STTable = ({
     setFindingKeys]                 = useState([]);
   const [attachedFiles, 
     setAttachedFiles]               = useState([]);
-
   const getRawData = async () => {
     await axios.get('/api/' + dataType + '/load').then(res => {
       setPrimaryKey(res.data.primaryKey)
@@ -287,10 +277,8 @@ const STTable = ({
   },[rawData])
   useEffect(() => {
     if (filteredData.length == 1 && initialFilter == filterKeyword) { 
-      console.log('검색결과 하나임')
       if (directQuery && setFindOneResult && typeof setFindOneResult == "function") {
         setFindOneResult(filteredData[0])
-        console.log('검색결과하나입력')
         dispatch(onDialogOpen(false, 'client_' + frameNo))
       }
     }
@@ -329,8 +317,6 @@ const STTable = ({
     onUpdateChange(false)
     setUpdated(true)
   }
-
-
 
 
   //초기 헤더 설정 기능
@@ -459,12 +445,11 @@ const STTable = ({
     return ox
   }
 
-
-
   //selectType 관련
   const [selectOptions, setSelectOptions] = useState({})
   const [selectedVal, setSelectedVal]     = useState({})
-  const [selectMenuOpened, setSelectMenuOpened]     = useState([])
+  const [selectMenuOpened, 
+    setSelectMenuOpened]                  = useState([])
   useEffect(() => {
     let colAttrKeys = Object.keys(colAttr)
     colAttrKeys.map(async key => {
@@ -594,7 +579,7 @@ const STTable = ({
   const [fixMode, setFixMode]                 = useState(false);
   const [fixableCells, setFixableCells]       = useState({});
   const onSetfixMode = () => {
-    if (fixModeAble) {
+    if (fixModable) {
       if (fixMode) {
         setFixMode(false)
         if (colAttr[primaryKey].defaultHided) {
@@ -612,7 +597,7 @@ const STTable = ({
         setHided(newHided)
       }
     }
-    else if (!fixModeAble) {
+    else if (!fixModable) {
       setFixMode(false)
     }
   }
@@ -1189,14 +1174,14 @@ const STTable = ({
         value    = {filterKeyword}
       ></Input>
 
-      {fixModeAble ? <button onClick = { onSetfixMode }>fixmode</button> :''}
+      {fixModable ? <button onClick = { onSetfixMode }>fixmode</button> :''}
 
       <StyledTableContainer size = {tableSize}>
         <StyledTable >
 
           <StyledTableHeader>
             <TableRow>
-              {tableHeaderVals && attr.flagAble ? 
+              {tableHeaderVals && flagAble ? 
                 <StyledTableCell size = '10px'></StyledTableCell>:''
               }
               {tableHeaderVals !== [] ? <StyledTableCell size = '10px'>No</StyledTableCell> : ''}  
@@ -1251,7 +1236,7 @@ const STTable = ({
                   key = {tableHeaderVals[idxRow]}
                   // style = {{height : '200px'}}
                 >
-                  {attr.flagAble ? 
+                  {flagAble ? 
                     <StyledTableCell style = {{padding : '0px', margin : '0px'}}>
                       <StyledCheckBox
                         inputProps={{ 'aria-labelledby': labelId }}

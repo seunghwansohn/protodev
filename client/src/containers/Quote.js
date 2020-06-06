@@ -238,7 +238,7 @@ const QuoteList = ({motherType, motherNo, subTableAttr}) => {
     }
     const tableAttr = {
         flagAble : true,
-        fixModeAble : true,
+        fixModable : true,
         colAttr : {
             itemCode : {
                 primary : true,

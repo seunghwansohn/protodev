@@ -166,7 +166,7 @@ const ClientContainer = ({
     }
     let tableAttr = {
         flagAble : true,
-        fixModeAble : true,
+        fixModable : true,
         colAttr : {
             clientCode : {
                 primary : true,

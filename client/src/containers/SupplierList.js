@@ -166,7 +166,7 @@ const SupplierContainer = ({
     }
     let tableAttr = {
         flagAble : true,
-        fixModeAble : true,
+        fixModable : true,
         colAttr : {
             supplierCode : {
                 primary : true,
