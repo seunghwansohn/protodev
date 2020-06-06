@@ -240,6 +240,7 @@ const STTable = ({
   const debugMode   = useSelector(state => state.common.debugMode)
   const { user }    = useSelector(({ user }) => ({ user: user.user }));
 
+  console.log(user)
   //api에서 tableRawData 및 key 설정
   const [rawData, 
     setRawData]                     = useState([])
@@ -371,7 +372,7 @@ const STTable = ({
       if(colAttr[key].defaultHided){
         tmpDefaultHided.push(key)
       }
-      if(colAttr[key].fixable){
+      if(colAttr[key].fixableUser == user){
         tempFixableCols.push(key)
       }
       if(colAttr[key].primary){

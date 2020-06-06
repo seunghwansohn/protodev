@@ -1,41 +1,30 @@
-import React    from "react";
-import TimeLine from '../components/TimeLine/TimeLine'
+import React, {
+  useEffect, 
+  useSelect, 
+  useState
+}               from "react";
+import Button           from '@material-ui/core/Button';
 
-const timeLineData = [
-  {
-      text: 'Wrote my first blog post ever on Medium',
-      date: 'March 03 2017',
-      category: {
-          tag: 'medium',
-          color: '#018f69'
-      },
-      link: {
-          url:
-              'https://medium.com/@popflorin1705/javascript-coding-challenge-1-6d9c712963d2',
-          text: 'Read more'
-      }
-  },
-  {
-    text: 'Wrote my first blog post ever on Medium',
-    date: 'March 03 2017',
-    category: {
-        tag: 'medium',
-        color: '#018f69'
-    },
-    link: {
-        url:
-            'https://medium.com/@popflorin1705/javascript-coding-challenge-1-6d9c712963d2',
-        text: 'Read more'
-    }
-  },
-];
+import axios    from 'axios';
+
 
 const TimeLinePage = () => {
+  const onClickCheck = () => {
+    console.log('버튼투름')
+    const config = {
+      headers: {
+        'x-access-token' : document.cookie
+      }
+    }
+    axios.post('/api/test/user', 'fefef', config)
+  }
   return(
-    <div className="timeline-container">
-        <TimeLine 
-          timeLineDataArr = {timeLineData}
-        ></TimeLine>
+    <div className="test">
+      <Button
+       onClick = {onClickCheck}
+      >
+        확인
+      </Button>
     </div>
   )
 }

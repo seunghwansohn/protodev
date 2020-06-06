@@ -32,6 +32,7 @@ function loadUser() {
   }
 }
 
+console.log(document.cookie)
 sagaMiddleware.run(rootSaga);
 loadUser();
 

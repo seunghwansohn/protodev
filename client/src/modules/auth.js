@@ -80,6 +80,7 @@ const auth = handleActions(
 
     [SIGNIN_SUCCESS]: (state, { payload: auth }) => 
         produce(state, draft => {
+          console.log(auth)
           document.cookie = `access_token=${auth.accessToken}`
           draft.authError = null;
           draft.auth      = auth;

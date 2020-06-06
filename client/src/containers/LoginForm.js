@@ -53,7 +53,7 @@ const LoginForm = ({history}) => { //여기서 history는 react-router-dom의 wi
   }, [auth, authError, dispatch]);
   useEffect(() => {
     if (user) {
-      history.push('/');
+      // history.push('/');     //나중에 로그인 null 반환 문제 해결하면 다시 복구
       try {
         localStorage.setItem('user', user.username);
       } catch (e) {

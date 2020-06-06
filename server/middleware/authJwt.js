@@ -6,6 +6,7 @@ const User = db.user;
 
 
 verifyToken = (req, res, next) => {
+  console.log('레스헤더쿠키스', req.cookies)
   let token = req.headers["x-access-token"];
   token = req.cookies.access_token
   if (!token) {

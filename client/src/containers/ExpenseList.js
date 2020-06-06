@@ -81,7 +81,7 @@ const ExpenseListContainer = ({
     colAttr : {
       expenseCode : {
         primary : true,
-        fixable : false,
+        fixableUser : ['brian'],
         defaultHided : true,
         validate : ['string'],
         dataType : dataType,
@@ -91,7 +91,7 @@ const ExpenseListContainer = ({
         size : '180px'
       },
       description : {
-        fixable : true,
+        fixableUser : ['brian'],
         defaultHided : false,
         validate : ['string'],
         dataType : dataType,
