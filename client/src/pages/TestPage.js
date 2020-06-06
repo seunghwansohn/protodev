@@ -16,7 +16,9 @@ const TimeLinePage = () => {
         'x-access-token' : document.cookie
       }
     }
-    axios.post('/api/test/user', 'fefef', config)
+    axios.post('/api/test/user', 'fefef', config).then(res => {
+      console.log(res)
+    })
   }
   return(
     <div className="test">

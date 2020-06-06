@@ -6,9 +6,11 @@ const User = db.user;
 
 
 verifyToken = (req, res, next) => {
-  console.log('레스헤더쿠키스', req.cookies)
+  console.log('레스헤더쿠키스', req.cookies) 
+  //상위에서 app.use(cookie-parser)가 선행되어야 함.
   let token = req.headers["x-access-token"];
   token = req.cookies.access_token
+  console.log('쌩토큰은', token)
   if (!token) {
     return res.status(403).send({
       message: "No token provided!"
