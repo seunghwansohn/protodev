@@ -3,7 +3,7 @@ module.exports = (sequelize, Sequelize) => {
       groupName: {
         type: Sequelize.STRING
       },
-      groupCode: {
+      groupId: {
         type: Sequelize.STRING
       },
     });

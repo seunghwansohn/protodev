@@ -54,7 +54,8 @@ isAdmin = (req, res, next) => {
 isModerator = (req, res, next) => {
   User.findByPk(req.userId).then(user => {   
     console.log(user)
-    user.getRoles().then(roles => {   
+    user.getRoles().then(roles => {
+      console.log(roles)   
       //user_roles가 연결되어있다면 자연스럽게 getRoles() 메소드가 생김
       for (let i = 0; i < roles.length; i++) {
         if (roles[i].name === "moderator") {

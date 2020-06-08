@@ -19,7 +19,6 @@ import axios    from 'axios';
 
 
 const TimeLinePage = () => {
-  const [rowData, setRowData] = useState([])
   const onClickCheck = () => {
     console.log('버튼투름')
     const config = {
@@ -31,12 +30,10 @@ const TimeLinePage = () => {
       user : 'brian',
       expenseCode : '202004261055549',
     }
-    axios.post('/api/test/group/load', data, config).then(res => {
+    axios.post('/api/test/mod', data, config).then(res => {
       console.log(res)
-      setRowData(res.data)
     })
   }
-  console.log(rowData)
   return(
     <div className="test">
       <Button
@@ -59,21 +56,17 @@ const TimeLinePage = () => {
             </TableRow>
           </TableHead>
           <TableBody> 
-              {rowData.map(obj => {
-                return (
-                  <TableRow>
-                    {Object.keys(obj).map(key => {
-                      return (
-                        <TableCell>
-                          {obj[key]}
-                        </TableCell>
-                      )
-                    })}
-
-                  </TableRow>
-
-                )
-              })}
+            <TableRow>
+              <TableCell>
+                id
+              </TableCell>
+              <TableCell>
+                Group Code
+              </TableCell>
+              <TableCell>
+                Group Name
+              </TableCell>
+            </TableRow>
           </TableBody>
 
 

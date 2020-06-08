@@ -2,6 +2,8 @@ const { authJwt } = require("../middleware");
 const authExpense = require("../middleware/authExpense");
 
 const controller = require("../controllers/user.controller");
+const groupController = require("../controllers/group.controller");
+
 let cookie = require('cookie-parser');
 
 
@@ -34,5 +36,11 @@ module.exports = function(app) {
     "/api/test/user",
     [authJwt.verifyToken],
     controller.userBoard
+  );
+
+  app.post(
+    "/api/test/group/load",
+    [authJwt.verifyToken, authJwt.isAdmin],
+    groupController.test
   );
 };

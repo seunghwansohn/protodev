@@ -55,16 +55,16 @@ db.user.belongsToMany(db.role, {
     foreignKey: "userId",
     otherKey: "roleId"
 });
-db.user.belongsToMany(db.groups, {
-    through: "user_groups", 
-    foreignKey: "userId",
-    otherKey: "groupId"
-});
-db.groups.belongsToMany(db.user, {
-    through: "user_groups", 
-    foreignKey: "groupId",
-    otherKey: "usdrId"
-});
+// db.user.belongsToMany(db.groups, {
+//     through: "user_groups", 
+//     foreignKey: "userId",
+//     otherKey: "groupId"
+// });
+// db.groups.belongsToMany(db.user, {
+//     through: "user_groups", 
+//     foreignKey: "groupId",
+//     otherKey: "usdrId"
+// });
 
 db.itemPRice.belongsTo(db.item, 
     {as : "specs", through: "item_Price", foreignKey: 'itemCode', targetKey: 'itemCode'})
