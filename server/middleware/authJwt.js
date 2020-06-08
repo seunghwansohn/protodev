@@ -7,6 +7,7 @@ const User = db.user;
 
 verifyToken = (req, res, next) => {
   //상위에서 app.use(cookie-parser)가 선행되어야 함.
+  console.log('키릭키릭')
   let tokenWithKey = req.headers["x-access-token"];
   let token = req.cookies.access_token
   if (!token) {

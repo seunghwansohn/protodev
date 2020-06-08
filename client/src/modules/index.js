@@ -16,7 +16,7 @@ import query, { querySaga }     from './query';
 import project, { projectSaga } from './project';
 import task, { taskSaga }       from './task';
 import expense, {expenseSaga}   from './expense';
-
+import role, {roleSaga}         from './role';
 
 
 import common, { commonSaga}                   from './common';
@@ -47,7 +47,8 @@ const rootReducer = combineReducers({
     project,
     task,
     basicInfo,
-    expense
+    expense,
+    role
 });
 
 export function* rootSaga () {
@@ -66,7 +67,8 @@ export function* rootSaga () {
         makerSaga(),
         projectSaga(),
         taskSaga(),
-        expenseSaga()
+        expenseSaga(),
+        roleSaga()
     ])
 }
 

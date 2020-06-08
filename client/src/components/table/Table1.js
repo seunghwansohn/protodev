@@ -208,6 +208,7 @@ const STTable = ({
     }
   }
 
+  console.log(dataType)
   const {
     onDialogOpen,
     onSubmitNewAdded,
@@ -253,12 +254,19 @@ const STTable = ({
   const [attachedFiles, 
     setAttachedFiles]               = useState([]);
   const getRawData = async () => {
-    await axios.get('/api/' + dataType + '/load').then(res => {
+    const config = {
+      headers: {
+        'x-access-token' : document.cookie
+      },
+    }
+    await axios.get('/api/' + dataType + '/load', config).then(res => {
+      console.log(res)
       setPrimaryKey(res.data.primaryKey)
       setIncludingKeys(res.data.includingKeys)
       setFindingKeys(res.data.findingKeys)
       setFilesKeys(res.data.filesKeys)
-      if (filesKeys) {
+      console.log(filesKeys)
+      if (filesKeys.length > 0) {
         setAttachedFiles(getOnlyFiles(res.data.vals))
       }
       setRawData(withoutKeys(res.data.vals))
