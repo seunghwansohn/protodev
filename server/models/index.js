@@ -41,6 +41,7 @@ db.expense      = require("../models/expense.model.js")(sequelize, Sequelize);
 db.expenseSort  = require("../models/expenseSort.model.js")(sequelize, Sequelize);
 db.expenseNote  = require("../models/expense.notes.model.js")(sequelize, Sequelize);
 db.files        = require("../models/files.model.js")(sequelize, Sequelize);
+db.groups       = require("../models/group.model.js")(sequelize, Sequelize);
 
 
 
@@ -53,6 +54,16 @@ db.user.belongsToMany(db.role, {
     through: "user_roles", 
     foreignKey: "userId",
     otherKey: "roleId"
+});
+db.user.belongsToMany(db.groups, {
+    through: "user_groups", 
+    foreignKey: "userId",
+    otherKey: "groupId"
+});
+db.groups.belongsToMany(db.user, {
+    through: "user_groups", 
+    foreignKey: "groupId",
+    otherKey: "usdrId"
 });
 
 db.itemPRice.belongsTo(db.item, 

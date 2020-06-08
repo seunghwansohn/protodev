@@ -130,6 +130,7 @@ exports.query = (req, res) => {
 
 exports.addNotes = (req, res) => {
   const {obj} = req.body
+  // console.log(req)
   // console.log(obj)
   try {
     ExpenseNote.create({

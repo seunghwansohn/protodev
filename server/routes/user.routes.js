@@ -1,4 +1,6 @@
 const { authJwt } = require("../middleware");
+const authExpense = require("../middleware/authExpense");
+
 const controller = require("../controllers/user.controller");
 let cookie = require('cookie-parser');
 
@@ -16,17 +18,9 @@ module.exports = function(app) {
 
   app.get("/api/test/all", controller.allAccess);
 
-  // app.get(
-  //   "/api/test/user",
-  //   [authJwt.verifyToken],
-  //   controller.userBoard
-  // );
-
-  app.get(
+  app.post(
     "/api/test/mod",
-    [authJwt.verifyToken, authJwt.isModerator], 
-    //isModerator는 성공시 next()를, 실패시 에러메시지를 반환하여
-    //성공시에만 controller로 들어가도록 해줌.
+    [authJwt.verifyToken, authExpense.isModerator], 
     controller.moderatorBoard
   );
 

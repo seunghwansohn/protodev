@@ -14,9 +14,13 @@ const TimeLinePage = () => {
     const config = {
       headers: {
         'x-access-token' : document.cookie
-      }
+      },
     }
-    axios.post('/api/test/user', 'fefef', config).then(res => {
+    const data = {
+      user : 'brian',
+      expenseCode : '202004261055549',
+    }
+    axios.post('/api/test/mod', data, config).then(res => {
       console.log(res)
     })
   }

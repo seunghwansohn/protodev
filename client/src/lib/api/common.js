@@ -1,6 +1,16 @@
 import axios from './axios';
 
-export const addNotes = (obj) => axios.post('/api/' + obj.type + '/notes/add', {obj : obj});
+const config = {
+  headers: {
+    'x-access-token' : document.cookie
+  }
+}
+
+export const addNotes = (obj) => axios.post(
+  '/api/' + obj.type + '/notes/add',
+  {obj : obj},
+  config
+);
 
 export const loadNotes = () => axios.get('/api/notes/load');
 
