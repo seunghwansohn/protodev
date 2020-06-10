@@ -21,78 +21,6 @@ import TablePagination  from '@material-ui/core/TablePagination';
 import axios    from 'axios';
 
 
-// const TimeLinePage = () => {
-//   const dispatch = useDispatch()
-
-//   const [rowData, setRowData] = useState([])
-//   const onClickCheck = () => {
-//     console.log('버튼투름')
-//     const config = {
-//       headers: {
-//         'x-access-token' : document.cookie
-//       },
-//     }
-//     const data = {
-//       user : 'brian',
-//       expenseCode : '202004261055549',
-//     }
-//     axios.get('/api/role/load', config).then(res => {
-//       console.log(res)
-//       setRowData(res.data)
-//     })
-//   }
-  
-
-//   console.log(rowData)
-//   return(
-//     <div className="test">
-//       <Button
-//        onClick = {onClickCheck}
-//       >
-//         확인
-//       </Button>
-//       <Table>
-//           <TableHead>
-//             <TableRow>
-//               <TableCell>
-//                 id
-//               </TableCell>
-//               <TableCell>
-//                 Group Code
-//               </TableCell>
-//               <TableCell>
-//                 Group Name
-//               </TableCell>
-//             </TableRow>
-//           </TableHead>
-//           <TableBody> 
-//               {rowData.map(obj => {
-//                 return (
-//                   <TableRow>
-//                     {Object.keys(obj).map(key => {
-//                       return (
-//                         <TableCell>
-//                           {obj[key]}
-//                         </TableCell>
-//                       )
-//                     })}
-
-//                   </TableRow>
-
-//                 )
-//               })}
-//           </TableBody>
-
-
-//       </Table>
-//     </div>
-//   )
-// }
-
-// export default TimeLinePage
-
-
-
 import { actDialogOpen, actDialogClose }    from '../modules/dialogs'
 import {
     actUpdate, 
@@ -169,7 +97,7 @@ const RoleContainer = ({
     flagAble : true,
     fixModable : true,
     colAttr : {
-      groupId : {
+      id : {
         primary : true,
         fixableUser : ['brian'],
         defaultHided : true,
@@ -180,98 +108,26 @@ const RoleContainer = ({
         queryType : 'simpleQuery',
         size : '180px'
       },
-      description : {
+      name : {
         fixableUser : ['brian'],
         defaultHided : false,
         validate : ['string'],
         dataType : dataType,
         clickType : 'expenseQuery',
         queryType : 'simpleQuery',
-        size : '300px',
+        size : '100px',
         validate : ['required'],
 
       },
-      sortName : {
+      users : {
         fixable : true,
         defaultHided : false,
         validate : ['string'],
-        type     : 'select',
-        code      : 'sortCode',
-        name      : 'sortName',
-        dataType : 'expenseSort',
+        type     : 'includingMany',
+        code     : 'sortCode',
+        name     : 'sortName',
+        dataType : 'user',
         size : '150px'
-      },
-      unitCost : {
-        fixable : true,
-        defaultHided : false,
-        validate : ['number', 'max15', 'required'],
-        dataType : 'maker',
-        clickType : 'makerQuery',
-        queryType : 'simpleQuery',
-        size : '80px',
-      },
-      qty : {
-        fixable : true,
-        defaultHided : false,
-        validate : ['string'],
-        dataType : 'maker',
-        clickType : 'makerQuery',
-        queryType : 'simpleQuery',
-        size : '40px',
-        validate : ['number', 'maxValue5', 'required'],
-      },
-      fileAddr : {
-        fixable : true,
-        defaultHided : false,
-        validate : ['string'],
-        type     : 'file',
-        dataType : 'maker',
-        clickType : 'makerQuery',
-        queryType : 'simpleQuery',
-        size      : '60px'
-      },
-      memo : {
-        fixable : true,
-        defaultHided : false,
-        validate : ['string'],
-        type     : 'singleNote',
-        dataType : 'maker',
-        clickType : 'makerQuery',
-        queryType : 'simpleQuery',
-        size      : '60px'
-      },
-      approved : {
-        fixable       : true,
-        defaultHided  : false,
-        validate      : ['string'],
-        type          : 'approveCheckBox',
-        checkCode     : 'approved',
-        byCode        : 'approvedBy',
-        memoCode      : 'approvedMemo',
-        dataType      : 'maker',
-        clickType     : 'makerQuery',
-        queryType     : 'simpleQuery',
-        size          : '60px'
-      },
-      projectName : {
-        fixable : true,
-        defaultHided : false,
-        validate : ['string'],
-        query    : true,
-        dataType : 'project', 
-        clickType : 'makerQuery',
-        queryType : 'simpleQuery',
-        size      : '100px'
-      },
-      createdAt : {
-          fixable : false,
-          defaultHided : true,
-          dataType : dataType,
-      },
-      updatedAt : {
-          fixable : false,
-          defaultHided : true,
-          dataType : dataType,
       },
     },
     findingKeys,

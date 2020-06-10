@@ -29,6 +29,7 @@ const Role = db.role;
 const Supplier = db.supplier;
 
 const relAttr = {
+  primaryKey : 'itemCode',
   source : Item,
   rels : [
     {
@@ -55,8 +56,6 @@ const relAttr = {
 }
 
 const Op = db.Sequelize.Op;
-const primaryKey   = 'itemCode'
-
 
 const includingAttr = getIncludingAttr(relAttr)
 const findingAttr   = getFindingAttr(relAttr)
@@ -93,9 +92,7 @@ exports.update = async (req, res) => {
 };
 
 exports.load = (req, res) => {
-  const includingAttr = getIncludingAttr(relAttr)
-  const findingAttr   = getFindingAttr(relAttr)
-  getIncludeName(Item, primaryKey, findingAttr, includingAttr).then(items => {
+  getIncludeName(relAttr).then(items => {
     res.status(200).send(items)
   })
 };

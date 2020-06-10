@@ -10,7 +10,8 @@ const initialState = {
         header      : [],
         contents    : [],
         update      : false,
-        clicked     : {}
+        clicked     : {},
+        clickedChip : {}
     }
 }
 
@@ -18,6 +19,8 @@ export const SET_HEADER             = 'expense/SET_HEADER'
 export const SET_INPUT_CHANGE       = 'expense/SET_INPUT_CHANGE'
 export const SET_UPDATE_CHANGE      = 'expense/SET_UPDATE_CHANGE'
 export const SET_CLICKED_TABLE_COL  = 'expense/SET_CLICKED_TABLE_COL'
+export const SET_CLICKED_TABLE_CHIP = 'expense/SET_CLICKED_TABLE_CHIP'
+
 
 const [SET_ADD, SET_ADD_SUCCESS, SET_ADD_FAILURE ] 
 = createRequestActionTypes('expense/SET_ADD');
@@ -42,6 +45,7 @@ export const actLoad            = createAction(SET_LOAD)
 export const actUpdate          = createAction(SET_UPDATE, obj => obj)
 export const actUpdateChange    = createAction(SET_UPDATE_CHANGE, ox => ox)
 export const actClickedTableCol = createAction(SET_CLICKED_TABLE_COL, obj => obj)
+export const actClickedTableChip= createAction(SET_CLICKED_TABLE_CHIP, obj => obj)
 export const actDelete          = createAction(SET_DELETE, (type, code) => ({type, code}))
 export const actSubmitAddExpense   = createAction(SET_SUBMIT_ADD_ITEM, expense => expense)
 
@@ -83,6 +87,10 @@ function reducer (state = initialState, action) {
         case SET_CLICKED_TABLE_COL:
             return produce(state, draft => {
                 draft.table.clicked = action.payload
+            })
+        case SET_CLICKED_TABLE_CHIP:
+            return produce(state, draft => {
+                draft.table.clickedChip = action.payload
             })
         case SET_DELETE:
             return produce(state, draft => {

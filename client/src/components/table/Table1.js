@@ -28,10 +28,13 @@ import Menu             from '@material-ui/core/Menu';
 import MenuItem         from '@material-ui/core/MenuItem';
 
 import Button           from '@material-ui/core/Button';
+import Chip             from '@material-ui/core/Chip';
+
 
 import List             from '@material-ui/core/List';
 import ListItemText     from '@material-ui/core/ListItemText';
 import ListSubheader    from '@material-ui/core/ListSubheader';
+
 
 import PopQuestionDlg     from '../dialogs/PopQuestionDlg';
 import DialogActions      from '@material-ui/core/DialogActions';
@@ -72,6 +75,7 @@ import {
   actUpdate, 
   actUpdateChange, 
   actClickedTableCol,
+  actClickedTableChip,
   actAdd,
   actDelete}            from '../../modules/expense'
 import { actSelect, 
@@ -203,6 +207,9 @@ const STTable = ({
     onTableCol : function(clickedCol) {
       dispatch(actClickedTableCol(clickedCol))
     },
+    onTableChip : function(clickedChip) {
+      dispatch(actClickedTableChip(clickedChip))
+    },
     onUpdateChange : function(clickedCol) {
       dispatch(actUpdateChange(false))
     }
@@ -215,6 +222,7 @@ const STTable = ({
     onSubmitUpdatedVals,
     onDelete,
     onTableCol,
+    onTableChip,
     onUpdateChange
   }                   = acts
 
@@ -241,7 +249,6 @@ const STTable = ({
   const debugMode   = useSelector(state => state.common.debugMode)
   const { user }    = useSelector(({ user }) => ({ user: user.user }));
 
-  console.log(user)
   //api에서 tableRawData 및 key 설정
   const [rawData, 
     setRawData]                     = useState([])
@@ -253,6 +260,8 @@ const STTable = ({
     setFindingKeys]                 = useState([]);
   const [attachedFiles, 
     setAttachedFiles]               = useState([]);
+  const [includingManyKeys, 
+    setIncludingManyKeys]           = useState([]);
   const getRawData = async () => {
     const config = {
       headers: {
@@ -265,10 +274,13 @@ const STTable = ({
       setIncludingKeys(res.data.includingKeys)
       setFindingKeys(res.data.findingKeys)
       setFilesKeys(res.data.filesKeys)
+      setIncludingManyKeys(res.data.includingManyKeys)
+
       console.log(filesKeys)
       if (filesKeys.length > 0) {
         setAttachedFiles(getOnlyFiles(res.data.vals))
       }
+      console.log(res.data.vals)
       setRawData(withoutKeys(res.data.vals))
     })
   }
@@ -449,6 +461,14 @@ const STTable = ({
     let ox = false
     let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
     if (type == 'approveCheckBox') {
+      ox = true
+    }
+    return ox
+  }
+  const isInclType  = header => {
+    let ox = false
+    let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
+    if (type == 'includingMany') {
       ox = true
     }
     return ox
@@ -715,6 +735,38 @@ const STTable = ({
     else {
       setClickedCol(tempObj2)
     }
+  }
+
+  const [clickedChip, 
+    setClickedChip]     = useState({});
+  useEffect(() => {
+    if (Object.keys(clickedChip).length > 0) {
+      onTableChip(clickedChip)
+    } 
+  },[clickedChip])
+  const handleClickChip = (idxRow, index, header) => {
+    const value = filteredData[idxRow][header][index][includingManyKeys[header][0]]
+    let tempObj2 = {}
+    tempObj2.value  = value
+    tempObj2.row    = idxRow
+    tempObj2.header = header
+    tempObj2.index  = index
+    tempObj2.dataType = colAttr[header].dataType
+    tempObj2.clickType = colAttr[header].clickType
+    tempObj2.queryType = colAttr[header].queryType
+    tempObj2.primaryCode = getPrimaryCode(idxRow)
+    // if (fixMode){
+    //   const temp = {row : row, header : header}
+    //   setFixableCells(temp)
+    //   if (tempFixedVal.location && tempFixedVal.vals !== {} && !checkNoValidationErrorAtAll()) {
+    //     if (tempObj2.row !== tempFixedVal.location.index || tempObj2.header !== tempFixedVal.location.header) {
+    //       setOpenConfirmDialog(true)
+    //     }
+    //   }
+    // }
+    // else {
+      setClickedChip(tempObj2)
+    // }
   }
 
 
@@ -1129,6 +1181,9 @@ const STTable = ({
   useEffect(() => {
   },[selected])
 
+
+
+
   return (
     <React.Fragment>
       {debugMode ? <Paper style = {{color : 'red'}}> 프레임넘버는 {frameNo}, 현Comp는 {currentType}, {currentNo}, 마더comp는 {motherType}, {motherNo} </Paper>: '디버그모드false'}
@@ -1258,18 +1313,20 @@ const STTable = ({
                     {idxRow+1}
                   </StyledTableCell>
                   {tableHeaderVals.map((header) => {
-                    let fixable             = checkColFixable(idxRow, header)
-                    let fixed               = checkCellFixed(idxRow, header)
-                    let isfixableCol        = isFixable(header)
-                    let isInputCol          = isInput(header)
-                    let isCalValueCol       = isCalValue(header)
-                    let isQueryCol          = isQuery(header)
-                    let isColumnHided       = isHidedCulumn(header)
-                    let isSelectTypeCol     = isSelectType(header)
-                    let isFileTypeCol       = isFileType(header)
-                    let isSingleNoteTypeCol = isSingleNoteType(header)
-                    let isApproveChkBoxTypeCol     = isApproveChkBoxType(header)
+                    let fixable                   = checkColFixable(idxRow, header)
+                    let fixed                     = checkCellFixed(idxRow, header)
+                    let isfixableCol              = isFixable(header)
+                    let isInputCol                = isInput(header)
+                    let isCalValueCol             = isCalValue(header)
+                    let isQueryCol                = isQuery(header)
+                    let isColumnHided             = isHidedCulumn(header)
+                    let isSelectTypeCol           = isSelectType(header)
+                    let isFileTypeCol             = isFileType(header)
+                    let isInclManyCol             = isInclType(header)
+                    let isSingleNoteTypeCol       = isSingleNoteType(header)
+                    let isApproveChkBoxTypeCol    = isApproveChkBoxType(header)
 
+                    // console.log(isInclManyCol)
                     let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
 
                     let queryColType  = 'fixSelect'
@@ -1442,8 +1499,30 @@ const STTable = ({
                             />
                           </StyledTableCell>
                         )
-                      }
-                      else if (true) {
+                      }else if (isInclManyCol) {
+                        console.log(includingManyKeys)
+                        const arrToStr = (arr) => {
+                          let tempStr = ''
+                          arr.map(obj => {
+                            tempStr = tempStr + obj[includingManyKeys[header][0]] + ','
+                          })
+                          return tempStr
+                        }
+                        return (
+                          <StyledTableCell fixable = {isfixableCol}>
+                            {
+                              filteredData[idxRow][header].map((obj, index) => {
+                                return(
+                                  <Chip 
+                                    label = {obj[includingManyKeys[header][0]]}
+                                    onClick = {(e) => {handleClickChip(idxRow, index, header)}}
+                                  />
+                                )
+                              })
+                            }
+                          </StyledTableCell>
+                        )
+                      }else if (true) {
                         return(
                           <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} onClick = {() => {onClickCols(row[header], idxRow, header)}}>
                             {row[header]}
