@@ -21,21 +21,22 @@ import TablePagination  from '@material-ui/core/TablePagination';
 import axios    from 'axios';
 
 
-import { actDialogOpen, actDialogClose }    from '../modules/dialogs'
+import { actDialogOpen, 
+  actDialogClose }      from '../modules/dialogs'
 import {
     actUpdate, 
     actUpdateChange, 
     actClickedTableCol,
     actAdd,
     actDelete
-}                                       from '../modules/expense'
+}                       from '../modules/expense'
 
 import DialogST     from '../components/dialogs/DialogST'
 import Query        from '../components/query/Query'
 
 import Paper from '@material-ui/core/Paper';
 
-import {generateRandom}               from '../lib/funcs/fCommon';
+import {generateRandom} from '../lib/funcs/fCommon';
 
 
 
@@ -127,6 +128,8 @@ const RoleContainer = ({
         code     : 'sortCode',
         name     : 'sortName',
         dataType : 'user',
+        clickType : 'userQuery',
+        queryType : 'simpleQuery',
         size : '150px'
       },
     },

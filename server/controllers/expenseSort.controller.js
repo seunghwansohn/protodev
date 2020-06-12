@@ -79,9 +79,7 @@ exports.update = async (req, res) => {
 };
 
 exports.load = (req, res) => {
-  const includingAttr = getIncludingAttr(relAttr)
-  const findingAttr   = getFindingAttr(relAttr)
-  getIncludeName(relAttr.source, primaryKey, findingAttr, includingAttr).then(expenseSort => {
+  getIncludeName(relAttr).then(expenseSort => {
     res.status(200).send(expenseSort)
   })
 };

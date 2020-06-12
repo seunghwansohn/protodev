@@ -104,6 +104,11 @@ const Query = (
         {type : 'fixable', newRow : true, size : 7, title: 'projectName', style:'regular'},
         {type : 'divider', typoGraphy : 'basicInfo'}
       ],
+      user : [
+        {type : 'primary', newRow : true, size : 5, title: 'projectCode', style:'regular'},
+        {type : 'fixable', newRow : true, size : 7, title: 'projectName', style:'regular'},
+        {type : 'divider', typoGraphy : 'basicInfo'}
+      ],
     }
     return tempObj
   }

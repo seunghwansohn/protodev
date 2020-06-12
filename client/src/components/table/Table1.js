@@ -668,7 +668,29 @@ const STTable = ({
       onTableCol(clickedCol)
     } 
   },[clickedCol])
-  //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 나눔
+  const onClickCols = (value, row, header) => {
+    let tempObj2 = {}
+    tempObj2.value  = value
+    tempObj2.row    = row
+    tempObj2.header = header
+    tempObj2.dataType = colAttr[header].dataType
+    tempObj2.clickType = colAttr[header].clickType
+    tempObj2.queryType = colAttr[header].queryType
+    tempObj2.primaryCode = getPrimaryCode(row)
+    if (fixMode){
+      const temp = {row : row, header : header}
+      setFixableCells(temp)
+      if (tempFixedVal.location && tempFixedVal.vals !== {} && !checkNoValidationErrorAtAll()) {
+        if (tempObj2.row !== tempFixedVal.location.index || tempObj2.header !== tempFixedVal.location.header) {
+          setOpenConfirmDialog(true)
+        }
+      }
+    }
+    else {
+      setClickedCol(tempObj2)
+    }
+  }
+  //      테이블 클릭시 가격 클릭이랑 나머지 클릭이랑 따로 
   useEffect(() => {
     let keys = Object.keys(clickedCol)
     const {colAttr} = attr
@@ -709,34 +731,16 @@ const STTable = ({
     })
   },[clickedCol])
 
+
   //  --값 update 후 다른 컬럼 클릭했을 때
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false)
   const handleCloseConfirmDialog = () => {
     setOpenConfirmDialog(false)
   }
-  const onClickCols = (value, row, header) => {
-    let tempObj2 = {}
-    tempObj2.value  = value
-    tempObj2.row    = row
-    tempObj2.header = header
-    tempObj2.dataType = colAttr[header].dataType
-    tempObj2.clickType = colAttr[header].clickType
-    tempObj2.queryType = colAttr[header].queryType
-    tempObj2.primaryCode = getPrimaryCode(row)
-    if (fixMode){
-      const temp = {row : row, header : header}
-      setFixableCells(temp)
-      if (tempFixedVal.location && tempFixedVal.vals !== {} && !checkNoValidationErrorAtAll()) {
-        if (tempObj2.row !== tempFixedVal.location.index || tempObj2.header !== tempFixedVal.location.header) {
-          setOpenConfirmDialog(true)
-        }
-      }
-    }
-    else {
-      setClickedCol(tempObj2)
-    }
-  }
 
+
+
+  //clickedChip
   const [clickedChip, 
     setClickedChip]     = useState({});
   useEffect(() => {
@@ -744,7 +748,8 @@ const STTable = ({
       onTableChip(clickedChip)
     } 
   },[clickedChip])
-  const handleClickChip = (idxRow, index, header) => {
+
+  const onClickChip = (idxRow, index, header) => {
     const value = filteredData[idxRow][header][index][includingManyKeys[header][0]]
     let tempObj2 = {}
     tempObj2.value  = value
@@ -765,11 +770,55 @@ const STTable = ({
     //   }
     // }
     // else {
-      setClickedChip(tempObj2)
+    setClickedChip(tempObj2)
     // }
   }
+  useEffect(() => {
+    let keys = Object.keys(clickedChip)
+    const {colAttr} = attr
+    const colAttrKeys = Object.keys(colAttr)
+    const {header, row, value, dataType, primaryCode, queryType} = clickedChip
+    const {clickType} = attr.colAttr[header] ? attr.colAttr[header] : ''
+    if (keys.length > 0) {
+      let aColAttr = attr.colAttr[clickedChip.header]
+      console.log('에콜에티티', aColAttr)
+      let {clickType, dataType} = aColAttr
+      console.log(clickType, dataType)
+      let queryType = ''
+      colAttrKeys.map(key => {
+        if (key == header) {
+          queryType = colAttr[key].queryType
+        }
+      })
+      let tempObj = {
+        frameNo     : frameNo,
+        currentNo   : currentNo,
+        currentType : currentType, 
+        motherNo    : motherNo, 
+        motherType  : motherType,
+
+        clickedHeader       : header,
+        clickedIndex        : row,
+        clickedVal          : value,
+        clickedType         : queryType,
+        clickedPrimaryCode  : primaryCode,
+
+        dataType      : dataType, 
+        initialFilter : '',
+      }
+      onDialogOpen(tempObj)
+    }
+    dialogOpened.map(obj => {
+      if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
+        setDialogInfo(obj)
+      }
+    })
+  },[clickedChip])
 
 
+
+  console.log(clickedChip)
+  console.log(clickedCol)
   console.log(dialogOpened)
   //Validation기능
   const checkValid = (index, header, value) => {
@@ -1500,7 +1549,6 @@ const STTable = ({
                           </StyledTableCell>
                         )
                       }else if (isInclManyCol) {
-                        console.log(includingManyKeys)
                         const arrToStr = (arr) => {
                           let tempStr = ''
                           arr.map(obj => {
@@ -1515,7 +1563,7 @@ const STTable = ({
                                 return(
                                   <Chip 
                                     label = {obj[includingManyKeys[header][0]]}
-                                    onClick = {(e) => {handleClickChip(idxRow, index, header)}}
+                                    onClick = {(e) => {onClickChip(idxRow, index, header)}}
                                   />
                                 )
                               })

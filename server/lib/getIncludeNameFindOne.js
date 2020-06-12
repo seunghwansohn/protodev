@@ -14,7 +14,14 @@
 // }
 
 
-module.exports = function (source, primaryKey, where, findingAttr, includingAttr, filesAttr) {
+module.exports = function (relAttr, where) {
+
+  const {source, primaryKey} = relAttr
+  const includingAttr     = getIncludingAttr(relAttr)
+  const findingAttr       = getFindingAttr(relAttr)
+  const filesAttr         = getFilesAttr(relAttr)
+  const includingManyAttr = getIncludingManyAttr(relAttr)
+
   let includingKeys = {}
   let findingKeys = []
   let filesKeys = []

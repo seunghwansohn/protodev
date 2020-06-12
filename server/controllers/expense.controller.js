@@ -30,6 +30,7 @@ const Project = db.project;
 const Files = db.files;
 
 const relAttr = {
+  primaryKey : 'expenseCode',
   source : Expense,
   rels : [
     {
@@ -67,11 +68,6 @@ const Op = db.Sequelize.Op;
 const primaryKey   = 'expenseCode'
 
 
-const includingAttr = getIncludingAttr(relAttr)
-const findingAttr   = getFindingAttr(relAttr)
-const filesAttr     = getFilesAttr(relAttr)
-
-
 exports.addNew = (req, res) => {
   const {addedNew, primaryKey, includingKeys, findingKeys} = req.body
   const primaryCode   = addedNew[primaryKey]
@@ -104,9 +100,10 @@ exports.update = async (req, res) => {
 };
 
 exports.load = (req, res) => {
-  const includingAttr = getIncludingAttr(relAttr)
-  const findingAttr   = getFindingAttr(relAttr)
-  getIncludeName(Expense, primaryKey, findingAttr, includingAttr, filesAttr).then(expenses => {
+  console.log('로드됨', relAttr)
+  // const includingAttr = getIncludingAttr(relAttr)
+  // const findingAttr   = getFindingAttr(relAttr)
+  getIncludeName(relAttr).then(expenses => {
     res.status(200).send(expenses)
   })
 };
@@ -122,7 +119,7 @@ exports.delete = async (req, res) => {
 exports.query = (req, res) => {
   let {queryObj} = req.body
   let where = queryObj
-  getIncludeNameFindOne(Expense, primaryKey, where, findingAttr, includingAttr, filesAttr).then(expenses => {
+  getIncludeNameFindOne(relAttr, where).then(expenses => {
     res.status(200).send(expenses)
   })
 };
