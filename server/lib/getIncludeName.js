@@ -62,7 +62,7 @@ module.exports = function (relAttr) {
   concatedAttr  = concatedAttr.concat(findingAttr)
 
   
-  if (filesAttr) {
+  if (includingManyAttr) {
     concatedAttr      = concatedAttr.concat(includingManyAttr)
   }
 

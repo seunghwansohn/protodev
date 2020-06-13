@@ -8,6 +8,13 @@ import Divider          from '@material-ui/core/Divider';
 import Typography       from '@material-ui/core/Typography';
 import Button           from '@material-ui/core/Button';
 
+import Table            from '@material-ui/core/Table';
+import TableBody        from '@material-ui/core/TableBody';
+import TableCell        from '@material-ui/core/TableCell';
+import TableContainer   from '@material-ui/core/TableContainer';
+import TableHead        from '@material-ui/core/TableHead';
+import TableRow         from '@material-ui/core/TableRow';
+
 import Notes            from '../notes/Notes'
 import InputST          from '../input/Input'
 import DropZoneGallery  from '../file/DropZoneGallery';
@@ -18,6 +25,9 @@ import {generateRandom}   from '../../lib/funcs/fCommon';
 import {getIncludingKeys,
   withoutKeys,
   getOnlyFiles }          from '../../lib/funcs/fCommon'
+
+import {monolizeObj}   from '../../lib/funcs/fSequelize';
+
 
 import produce  from 'immer'
 import styled   from 'styled-components'
@@ -113,6 +123,39 @@ const Query = (
     return tempObj
   }
 
+  const tableProps = () => {
+    let tempObj = {
+      maker : [
+
+      ],
+      supplier : [
+
+      ],
+      item : [
+
+      ],
+      client : [
+
+      ],
+      expense : [
+
+      ],
+      project : [
+
+      ],
+      user : [
+        {
+          type : 'primary', 
+          rowName : 'roles',
+          cols : [
+            'name', ''
+          ] 
+        },
+      ],
+    }
+    return tempObj
+  }
+
   console.log(attr)
   //픽스모드 설정
   const onModeChange = () => {
@@ -137,6 +180,8 @@ const Query = (
   },[queryProps])
   
 
+
+
   //테이블 관련
   const [tableRawData, 
     setTableRawData]                = useState([])
@@ -144,6 +189,8 @@ const Query = (
       setIncludingKeys]               = useState([]);
   const [findingKeys, 
       setFindingKeys]               = useState([]);
+  const [includingManyKeys, 
+    setIncludingManyKeys]           = useState([]);
   const [loadedData, setLoadedData]   = useState([])
 
   //첨부파일관련
@@ -159,10 +206,12 @@ const Query = (
     let request = {queryObj : queryObj, findingKeys, includingKeys}
     await axios.post('/api/' + dataType + '/query', request).then(res => {
       console.log(res.data)
-      setTableRawData(res.data.vals)
-      setLoadedData(res.data.vals)
+      setPrimaryKey(res.data.primaryKey)
       setIncludingKeys(res.data.primaryKey)
       setFindingKeys(res.data.findingKeys)
+      setIncludingManyKeys(res.data.includingManyKeys)
+      setTableRawData(res.data.vals)
+      setLoadedData((res.data.vals))
       if (filesKeys) {
         setAttachedFiles(getOnlyFiles(res.data.vals))
       }
@@ -172,7 +221,9 @@ const Query = (
     getRawData()
   },[])
 
+  console.log(includingManyKeys)
   
+  console.log(loadedData)
   //업데이트 함수
   const onFixedVal = (fixedArr) => {
     onUpdate()
@@ -247,6 +298,41 @@ const Query = (
           }
         })}
       </Grid>
+      
+      <Table>
+        {tableProps()[dataType].map((obj,index) => {
+          const {rowName, cols} = obj
+          const listData = loadedData[rowName]
+          return cols.map((header, idx) => {
+            return (
+              <TableHead>
+                <TableCell>
+                  {header}
+                </TableCell>
+              </TableHead>
+            )
+          })
+        })}
+        <TableBody>
+          {tableProps()[dataType].map((obj,index) => {
+            const {rowName, cols} = obj
+            const listData = loadedData[rowName] && loadedData[rowName].length > 0 ? loadedData[rowName] : []
+            return listData.map((obj, idx) => {
+              return (
+                <TableRow>
+                  {cols.map(header => {
+                    return(
+                      <TableCell>
+                        {obj[header]}
+                      </TableCell>
+                    )
+                  })}
+                </TableRow>
+              )
+            })
+          })}
+        </TableBody>
+      </Table>
 
       <Notes 
         motherFrameNo = {frameNo}

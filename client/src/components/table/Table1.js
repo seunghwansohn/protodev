@@ -789,9 +789,7 @@ const STTable = ({
     const {clickType, primaryKey} = attr.colAttr[header] ? attr.colAttr[header] : ''
     if (keys.length > 0) {
       let aColAttr = attr.colAttr[clickedChip.header]
-      console.log('에콜에티티', aColAttr)
       let {clickType, dataType} = aColAttr
-      console.log(clickType, dataType)
       let queryType = ''
       colAttrKeys.map(key => {
         if (key == header) {
@@ -825,10 +823,6 @@ const STTable = ({
   },[clickedChip])
 
 
-
-  console.log(clickedChip)
-  console.log(clickedCol)
-  console.log(dialogOpened)
   //Validation기능
   const checkValid = (index, header, value) => {
     let tempArr = []
@@ -983,8 +977,6 @@ const STTable = ({
       })
     )
   }
-
-  console.log(filteredData)
 
   //값 update시 인풋 처리 기능
   const [tempFixedVal, setTempFixedVal]     = useState({});
@@ -1558,13 +1550,6 @@ const STTable = ({
                           </StyledTableCell>
                         )
                       }else if (isInclManyCol) {
-                        const arrToStr = (arr) => {
-                          let tempStr = ''
-                          arr.map(obj => {
-                            tempStr = tempStr + obj[includingManyKeys[header][0]] + ','
-                          })
-                          return tempStr
-                        }
                         return (
                           <StyledTableCell fixable = {isfixableCol}>
                             {
