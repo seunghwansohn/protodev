@@ -125,7 +125,6 @@ const RoleContainer = ({
         defaultHided : false,
         validate : ['string'],
         type     : 'includingMany',
-        code     : 'sortCode',
         name     : 'username',
         dataType : 'user',
         clickType : 'userQuery',

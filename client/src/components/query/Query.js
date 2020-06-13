@@ -15,10 +15,14 @@ import TableContainer   from '@material-ui/core/TableContainer';
 import TableHead        from '@material-ui/core/TableHead';
 import TableRow         from '@material-ui/core/TableRow';
 
+
 import Notes            from '../notes/Notes'
 import InputST          from '../input/Input'
 import DropZoneGallery  from '../file/DropZoneGallery';
 import MarginDivider    from '../design/MarginDivider'
+
+import InclManyTable       from '../table/InclManyTable'
+
 
 import axios              from '../../lib/api/axios'
 import {generateRandom}   from '../../lib/funcs/fCommon';
@@ -68,6 +72,8 @@ const Query = (
 
   const currentType   = 'query'
   const {dataType}    = attr
+
+  console.log(attr)
 
   // console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
@@ -123,37 +129,28 @@ const Query = (
     return tempObj
   }
 
-  const tableProps = () => {
-    let tempObj = {
-      maker : [
+  const inclManyProps = {
+    maker : [
 
-      ],
-      supplier : [
+    ],
+    supplier : [
 
-      ],
-      item : [
+    ],
+    item : [
 
-      ],
-      client : [
+    ],
+    client : [
 
-      ],
-      expense : [
+    ],
+    expense : [
 
-      ],
-      project : [
+    ],
+    project : [
 
-      ],
-      user : [
-        {
-          type : 'primary', 
-          rowName : 'roles',
-          cols : [
-            'name', ''
-          ] 
-        },
-      ],
-    }
-    return tempObj
+    ],
+    user : {
+      tableName : 'role', type : 'primary', refName : 'roles', cols : ['name', 'description']
+    },
   }
 
   console.log(attr)
@@ -247,9 +244,13 @@ const Query = (
 
   return (
     <StyledDiv fixMode = {fixMode}>
+
+      {/* 제목 */}
       <Typography variant="h4">
         {dataType}
       </Typography>
+
+      {/* 픽스버튼 */}
       <Grid container className = {classes.flex}>
         <Grid item xs = {11}>
           <Typography variant="h4">
@@ -262,6 +263,8 @@ const Query = (
         <Divider/>
       </Grid>
       <br/>
+
+      {/* 기본 정보 인풋 */}
       <Grid container>
         {queryProps()[dataType].map(obj => {
           if(obj.type !== 'divider') {
@@ -299,41 +302,18 @@ const Query = (
         })}
       </Grid>
       
-      <Table>
-        {tableProps()[dataType].map((obj,index) => {
-          const {rowName, cols} = obj
-          const listData = loadedData[rowName]
-          return cols.map((header, idx) => {
-            return (
-              <TableHead>
-                <TableCell>
-                  {header}
-                </TableCell>
-              </TableHead>
-            )
-          })
-        })}
-        <TableBody>
-          {tableProps()[dataType].map((obj,index) => {
-            const {rowName, cols} = obj
-            const listData = loadedData[rowName] && loadedData[rowName].length > 0 ? loadedData[rowName] : []
-            return listData.map((obj, idx) => {
-              return (
-                <TableRow>
-                  {cols.map(header => {
-                    return(
-                      <TableCell>
-                        {obj[header]}
-                      </TableCell>
-                    )
-                  })}
-                </TableRow>
-              )
-            })
-          })}
-        </TableBody>
-      </Table>
+      {/* inclMany 테이블 */}
+      {Object.keys(inclManyProps[dataType]).length > 0 
+        ?
+          <InclManyTable
+            tableProps = {inclManyProps[dataType]}
+            loadedData = {loadedData}
+          >
+          </InclManyTable>
+        : ''
+      }
 
+      {/* 노트 */}
       <Notes 
         motherFrameNo = {frameNo}
         motherNo      = {currentNo}

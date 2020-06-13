@@ -26,7 +26,7 @@ const relAttr = {
     {
         target: Role,
         relType : 'includingMany',
-        attributes :['name'],
+        attributes :['name', 'description'],
         asStr : 'roles'
     }
   ]
