@@ -105,14 +105,15 @@ const Query = (
         {type : 'divider', typoGraphy : 'basicInfo'}
       ],
       user : [
-        {type : 'primary', newRow : true, size : 5, title: 'projectCode', style:'regular'},
-        {type : 'fixable', newRow : true, size : 7, title: 'projectName', style:'regular'},
+        {type : 'primary', newRow : true, size : 5, title: 'username', style:'regular'},
+        {type : 'fixable', newRow : true, size : 7, title: 'email', style:'regular'},
         {type : 'divider', typoGraphy : 'basicInfo'}
       ],
     }
     return tempObj
   }
 
+  console.log(attr)
   //픽스모드 설정
   const onModeChange = () => {
     fixMode == false ? setFixMode(true) : setFixMode(false)

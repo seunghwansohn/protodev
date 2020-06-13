@@ -20,6 +20,7 @@ module.exports = function (relAttr) {
     primaryKey, 
   } = relAttr
 
+  console.log('렐에탸턀', relAttr)
   const includingAttr     = getIncludingAttr(relAttr)
   const findingAttr       = getFindingAttr(relAttr)
   const filesAttr         = getFilesAttr(relAttr)
@@ -65,12 +66,10 @@ module.exports = function (relAttr) {
     concatedAttr      = concatedAttr.concat(includingManyAttr)
   }
 
-  console.log('콘케티드는', concatedAttr)
   return source.findAll({
     include : concatedAttr
   }).then(async arr => {
     arr.map(obj => {
-    console.log('오브젝은 ', obj)
 
       includingAttr.map(attr => {
         let targetCodes = attr.attributes

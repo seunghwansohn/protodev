@@ -59,13 +59,13 @@ const RoleContainer = ({
   console.log('프레임넘버는 ', frameNo, ' 현Comp는 (', currentType, ', ', currentNo, ')', ', 마더comp는 ', motherType, ', ', motherNo, ')')
 
 
-  const [primaryKey, setPrimaryKey]   = useState('');
+  const [primaryKey, setPrimaryKey]   = useState('id');
   const [includingKeys, 
       setIncludingKeys]               = useState([]);
   const [findingKeys, 
       setFindingKeys]                 = useState([]);
   
-
+  
   const acts = {
     onDialogOpen : function (argObj) {
       let tempObj = argObj
@@ -126,11 +126,12 @@ const RoleContainer = ({
         validate : ['string'],
         type     : 'includingMany',
         code     : 'sortCode',
-        name     : 'sortName',
+        name     : 'username',
         dataType : 'user',
         clickType : 'userQuery',
         queryType : 'simpleQuery',
-        size : '150px'
+        size : '150px',
+        primaryKey : 'userId'
       },
     },
     findingKeys,
@@ -192,6 +193,7 @@ const RoleContainer = ({
     })
   },[dialogOpened])
 
+  console.log(dialogInfo)
 
   return(
     <>

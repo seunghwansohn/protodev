@@ -243,6 +243,8 @@ const ExpenseListContainer = ({
     })
   },[dialogOpened])
 
+  console.log(dialogInfo)
+
 
   return(
     <>

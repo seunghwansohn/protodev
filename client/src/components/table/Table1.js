@@ -60,6 +60,7 @@ import {getDate_yyyymmddhhmm}           from '../../lib/funcs/fGetDate'
 import {filterArrayBySearchKeyword}     from '../../lib/funcs/fSearch'
 import {selectMultipleStates, 
   unSelectMultipleStates}               from '../../lib/funcs/fTable'
+import {monolizeObj}               from '../../lib/funcs/fSequelize'
 import {checkDecimal, 
   percent, 
   hasWhiteSpace, 
@@ -269,7 +270,7 @@ const STTable = ({
       },
     }
     await axios.get('/api/' + dataType + '/load', config).then(res => {
-      console.log(res)
+      console.log(res.data)
       setPrimaryKey(res.data.primaryKey)
       setIncludingKeys(res.data.includingKeys)
       setFindingKeys(res.data.findingKeys)
@@ -749,8 +750,14 @@ const STTable = ({
     } 
   },[clickedChip])
 
+  console.log(filteredData)
   const onClickChip = (idxRow, index, header) => {
     const value = filteredData[idxRow][header][index][includingManyKeys[header][0]]
+    const originalObj = filteredData[idxRow][header][index]
+    const monolizedObj = monolizeObj(originalObj)
+    console.log(value)
+    console.log(originalObj)
+    console.log(monolizedObj)
     let tempObj2 = {}
     tempObj2.value  = value
     tempObj2.row    = idxRow
@@ -759,7 +766,8 @@ const STTable = ({
     tempObj2.dataType = colAttr[header].dataType
     tempObj2.clickType = colAttr[header].clickType
     tempObj2.queryType = colAttr[header].queryType
-    tempObj2.primaryCode = getPrimaryCode(idxRow)
+    tempObj2.primaryKey = colAttr[header].primaryKey
+    tempObj2.primaryCode = monolizedObj[colAttr[header].primaryKey]
     // if (fixMode){
     //   const temp = {row : row, header : header}
     //   setFixableCells(temp)
@@ -778,7 +786,7 @@ const STTable = ({
     const {colAttr} = attr
     const colAttrKeys = Object.keys(colAttr)
     const {header, row, value, dataType, primaryCode, queryType} = clickedChip
-    const {clickType} = attr.colAttr[header] ? attr.colAttr[header] : ''
+    const {clickType, primaryKey} = attr.colAttr[header] ? attr.colAttr[header] : ''
     if (keys.length > 0) {
       let aColAttr = attr.colAttr[clickedChip.header]
       console.log('에콜에티티', aColAttr)
@@ -797,11 +805,12 @@ const STTable = ({
         motherNo    : motherNo, 
         motherType  : motherType,
 
-        clickedHeader       : header,
+        clickedHeader       : colAttr[header].name,
         clickedIndex        : row,
         clickedVal          : value,
         clickedType         : queryType,
         clickedPrimaryCode  : primaryCode,
+        primaryKey : primaryKey,
 
         dataType      : dataType, 
         initialFilter : '',
@@ -975,7 +984,7 @@ const STTable = ({
     )
   }
 
-
+  console.log(filteredData)
 
   //값 update시 인풋 처리 기능
   const [tempFixedVal, setTempFixedVal]     = useState({});
