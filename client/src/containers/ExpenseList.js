@@ -183,11 +183,11 @@ const ExpenseListContainer = ({
   const tableActs = {
     onDialogOpen : function (argObj) {
       let tempObj = argObj
-      tempObj.frameNo = frameNo
-      tempObj.currentNo = motherNo
-      tempObj.currentType = motherType
-      tempObj.motherNo = gMotherAttr.gMotherNo
-      tempObj.motherType = gMotherAttr.gMotherType
+      tempObj.frameNo = argObj.frameNo
+      tempObj.currentNo = argObj.motherNo
+      tempObj.currentType = argObj.motherType
+      tempObj.motherNo = argObj.gMotherAttr.gMotherNo
+      tempObj.motherType = argObj.gMotherAttr.gMotherType
       dispatch(actDialogOpen(tempObj))
     },
     onSubmitNewAdded : function (obj, primaryKey, includingKeys, findingKeys) {

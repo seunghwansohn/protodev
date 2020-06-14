@@ -70,15 +70,6 @@ import {checkDecimal,
 }                                       from '../../lib/funcs/fValidation';
     
 
-import {actDialogOpen, 
-  actDialogClose}       from '../../modules/dialogs'
-import {
-  actUpdate, 
-  actUpdateChange, 
-  actClickedTableCol,
-  actClickedTableChip,
-  actAdd,
-  actDelete}            from '../../modules/expense'
 import { actSelect, 
   actSetFrame, 
   actAddNewBlankQuery}  from '../../modules/query'
@@ -180,43 +171,11 @@ const STTable = ({
   motherNo,
 
   dataType,
-  states, 
-  setStates, 
 
-  attr, 
+  attr,
+  acts 
 }) => {
-  
-  const acts = {
-    onDialogOpen : function (argObj) {
-      let tempObj = argObj
-      tempObj.frameNo = frameNo
-      tempObj.currentNo = motherNo
-      tempObj.currentType = motherType
-      tempObj.motherNo = gMotherAttr.gMotherNo
-      tempObj.motherType = gMotherAttr.gMotherType
-      dispatch(actDialogOpen(tempObj))
-    },
-    onSubmitNewAdded : function (obj, primaryKey, includingKeys, findingKeys) {
-      dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
-    },
-    onSubmitUpdatedVals : function (arr) {
-      dispatch(actUpdate(arr))
-    },
-    onDelete : function(dataType, primaryCode) {
-      dispatch(actDelete(dataType, primaryCode))
-    },
-    onTableCol : function(clickedCol) {
-      dispatch(actClickedTableCol(clickedCol))
-    },
-    onTableChip : function(clickedChip) {
-      dispatch(actClickedTableChip(clickedChip))
-    },
-    onUpdateChange : function(clickedCol) {
-      dispatch(actUpdateChange(false))
-    }
-  }
 
-  console.log(dataType)
   const {
     onDialogOpen,
     onSubmitNewAdded,
@@ -276,12 +235,9 @@ const STTable = ({
       setFindingKeys(res.data.findingKeys)
       setFilesKeys(res.data.filesKeys)
       setIncludingManyKeys(res.data.includingManyKeys)
-
-      console.log(filesKeys)
       if (filesKeys.length > 0) {
         setAttachedFiles(getOnlyFiles(res.data.vals))
       }
-      console.log(res.data.vals)
       setRawData(withoutKeys(res.data.vals))
     })
   }
@@ -340,7 +296,6 @@ const STTable = ({
     setUpdated(true)
   }
 
-
   //초기 헤더 설정 기능
   let headers = colAttr && Object.keys(colAttr).length > 0 ? Object.keys(colAttr) : []
   const [tableHeaderVals, setTableHeaderVals] = useState([]);
@@ -397,10 +352,10 @@ const STTable = ({
         tempFixableCols.push(key)
       }
       if(colAttr[key].primary){
-        tmpPrimaryKey = key
+        setPrimaryKey(key)
       }
       if(colAttr[key].nameKey){
-        tmpNameKey = key
+        setNameKey(key)
       }
       if(colAttr[key].defaultInput){
         tmpDefaultInput.push(key)
@@ -420,11 +375,19 @@ const STTable = ({
     setCalValueCols(tmpCalValueCols)
     setQueryCols(tmpQueryCols)
   },[])
+
   const isHidedCulumn = name => hided.indexOf(name)       !== -1;
   const isFixable     = name => fixableCols.indexOf(name) !== -1;
   const isInput       = name => inputCols.indexOf(name) !== -1;
   const isCalValue    = name => calValueCols.indexOf(name) !== -1;
   const isQuery       = name => queryCols.indexOf(name) !== -1;
+  const isMatchedType = (header) => {
+    let ox = false
+    let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
+    return type
+  }
+
+  //체크박스 체크됏는지 여부
   const isSelected    = code => {
     let ox = false
     selected.map(obj => {
@@ -434,46 +397,7 @@ const STTable = ({
     })
     return ox
   }
-  const isSelectType  = header => {
-    let ox = false
-    let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
-    if (type == 'select') {
-      ox = true
-    }
-    return ox
-  }
-  const isFileType  = header => {
-    let ox = false
-    let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
-    if (type == 'file') {
-      ox = true
-    }
-    return ox
-  }
-  const isSingleNoteType  = header => {
-    let ox = false
-    let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
-    if (type == 'singleNote') {
-      ox = true
-    }
-    return ox
-  }
-  const isApproveChkBoxType  = header => {
-    let ox = false
-    let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
-    if (type == 'approveCheckBox') {
-      ox = true
-    }
-    return ox
-  }
-  const isInclType  = header => {
-    let ox = false
-    let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
-    if (type == 'includingMany') {
-      ox = true
-    }
-    return ox
-  }
+
 
   //selectType 관련
   const [selectOptions, setSelectOptions] = useState({})
@@ -713,6 +637,7 @@ const STTable = ({
         currentType : currentType, 
         motherNo    : motherNo, 
         motherType  : motherType,
+        gMotherAttr,
 
         clickedHeader       : header,
         clickedIndex        : row,
@@ -749,8 +674,6 @@ const STTable = ({
       onTableChip(clickedChip)
     } 
   },[clickedChip])
-
-  console.log(filteredData)
   const onClickChip = (idxRow, index, header) => {
     const value = filteredData[idxRow][header][index][includingManyKeys[header][0]]
     const originalObj = filteredData[idxRow][header][index]
@@ -1096,9 +1019,6 @@ const STTable = ({
     }
   }
 
-  console.log(fixedVals)
-  console.log(primaryKey)
-
   
   //쿼리인풋 기능
   const querySelected     = useSelector(state => state.query[frameNo])
@@ -1217,8 +1137,6 @@ const STTable = ({
     setAnswer : setAddCopiedNew
   }
 
-
-
   const [tableSize, setTableSize] = useState(null)
 
 
@@ -1230,8 +1148,6 @@ const STTable = ({
 
   useEffect(() => {
   },[selected])
-
-
 
 
   return (
@@ -1365,16 +1281,14 @@ const STTable = ({
                   {tableHeaderVals.map((header) => {
                     let fixable                   = checkColFixable(idxRow, header)
                     let fixed                     = checkCellFixed(idxRow, header)
+
                     let isfixableCol              = isFixable(header)
                     let isInputCol                = isInput(header)
+                    
                     let isCalValueCol             = isCalValue(header)
                     let isQueryCol                = isQuery(header)
                     let isColumnHided             = isHidedCulumn(header)
-                    let isSelectTypeCol           = isSelectType(header)
-                    let isFileTypeCol             = isFileType(header)
-                    let isInclManyCol             = isInclType(header)
-                    let isSingleNoteTypeCol       = isSingleNoteType(header)
-                    let isApproveChkBoxTypeCol    = isApproveChkBoxType(header)
+                    let matchedType               = isMatchedType(header)
 
                     // console.log(isInclManyCol)
                     let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
@@ -1426,7 +1340,7 @@ const STTable = ({
                             />
                           </StyledTableCell>
                         )
-                      } else if (isSelectTypeCol && fixMode){
+                      } else if (matchedType == 'select' && fixMode){
 
                           return(
                             <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} style = {{width:'150px'}}>
@@ -1438,14 +1352,14 @@ const STTable = ({
                               />
                             </StyledTableCell>
                           )
-                      } else if (isSelectTypeCol && !fixMode){
+                      } else if (matchedType == 'select' && !fixMode){
 
                         return(
                           <StyledTableCell fixable = {isfixableCol} size = {size}>
                             {filteredData[idxRow][header]}
                           </StyledTableCell>
                         )
-                      } else if (isFileTypeCol){
+                      } else if (matchedType == 'file'){
                           return(
                             <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} size = {size}>
 
@@ -1463,7 +1377,7 @@ const STTable = ({
                               />
                             </StyledTableCell>
                         )
-                      } else if (isSingleNoteTypeCol){
+                      } else if (matchedType == 'singleNote'){
                         return(
                           <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} size = {size}>
 
@@ -1501,7 +1415,7 @@ const STTable = ({
                             />
                           </StyledTableCell>
                         )
-                      } else if (isApproveChkBoxTypeCol) { 
+                      } else if (matchedType == 'approveCheckBox') { 
                           let dataType      =  colAttr[header].dataType
                           return (
                             <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} style = {{width:'150px'}}>
@@ -1549,7 +1463,7 @@ const STTable = ({
                             />
                           </StyledTableCell>
                         )
-                      }else if (isInclManyCol) {
+                      }else if (matchedType == 'includingMany') {
                         return (
                           <StyledTableCell fixable = {isfixableCol}>
                             {
@@ -1608,10 +1522,8 @@ const STTable = ({
                       const isColumnHided = isHidedCulumn(header)
                       let   isQueryCol    = isQuery(header)
                       let   valid         = getValid(header)
-                      let   isSelectTypeCol = isSelectType(header)
-                      let isFileTypeCol       = isFileType(header)
-                      let isSingleNoteTypeCol = isSingleNoteType(header)
-                      let isApproveChkBoxTypeCol     = isApproveChkBoxType(header)
+                      let   matchedType     = isMatchedType(header)
+
                       let fixed               = checkCellFixed(idxRow, header)
                       let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
 
@@ -1667,7 +1579,7 @@ const STTable = ({
                               />
                             </StyledTableCell>
                           )
-                        } else if (isSelectTypeCol) {
+                        } else if (matchedType == 'select') {
                             return (
                               <StyledTableCell>
                                 <STSelect 
@@ -1675,11 +1587,12 @@ const STTable = ({
                                   onChange = {event => handleChangeNewAddedSelect(event, idxRow, header)}
                                   options={selectOptions.sortName} 
                                   menuIsOpen = {selectMenuOpened[idxRow]}
+                                  attr = {colAttr[header]}
                                   onKeyDown = {event => handleClickSelectChoose(event, idxRow)}
                                 />
                               </StyledTableCell>
                             )
-                        } else if (isSingleNoteTypeCol) {
+                        } else if (matchedType == 'singleNote') {
                             return (
                               <StyledTableCell>
                                 <SingleNote
@@ -1689,7 +1602,7 @@ const STTable = ({
                                 />
                               </StyledTableCell>
                             )
-                        } else if (isFileTypeCol) {
+                        } else if (matchedType == 'file') {
                             return (
                               <StyledTableCell>
 
@@ -1700,7 +1613,7 @@ const STTable = ({
                                 />
                               </StyledTableCell>
                             )
-                        } else if (isApproveChkBoxTypeCol) { 
+                        } else if (matchedType == 'approveCheckBox') { 
                           let dataType      =  colAttr[header].dataType
                           console.log(idxRow)
                           return (
