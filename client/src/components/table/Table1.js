@@ -28,6 +28,7 @@ import ChkBoxWithAlertCell    from './tableCell/ChkBoxWithAlertCell';
 import QueryInputCell         from './tableCell/QueryInputCell';
 import DropZoneCell           from './tableCell/DropZoneCell';
 import IncludingManyCell      from './tableCell/IncludingManyCell';
+import CalValueCell           from './tableCell/CalValueCell';
 
 
 
@@ -237,7 +238,6 @@ const STTable = ({
       },
     }
     await axios.get('/api/' + dataType + '/load', config).then(res => {
-      console.log(res.data)
       setPrimaryKey(res.data.primaryKey)
       setIncludingKeys(res.data.includingKeys)
       setFindingKeys(res.data.findingKeys)
@@ -253,14 +253,35 @@ const STTable = ({
     getRawData()
   },[])
 
+  //초기 헤더 설정 기능
+  let headers = colAttr && Object.keys(colAttr).length > 0 ? Object.keys(colAttr) : []
+  const [tableHeaderVals, setTableHeaderVals] = useState([]);
+  // -- 아예 삭제할 컬럼 설정
+  useEffect(() => {
+    const deleteKey = 'id'
+    headers = headers.filter(function (el) {
+      return el !== deleteKey
+    })
+    setTableHeaderVals(headers)
+  },[rawData])
 
   //테이블 필터
   const [filterKeyword, setFilterKeyword]     = useState('');
   const [filteredData, setFilteredData]       = useState(rawData);
-  //검색어 필터 기능
+    //검색어 필터 기능
   useEffect(() => {
     setFilteredData(rawData)
   },[rawData])
+    //검색어 인풋 기능
+  const onInputFilterKeyword = (e) => {
+    e.preventDefault(); 
+    setFilterKeyword(e.target.value)
+  }
+    //initial 필터 기능
+  useEffect(() => {
+    setFilterKeyword(initialFilter)
+  },[initialFilter])
+    //검색결과 하나일때
   useEffect(() => {
     if (filteredData.length == 1 && initialFilter == filterKeyword) { 
       if (directQuery && setFindOneResult && typeof setFindOneResult == "function") {
@@ -269,13 +290,6 @@ const STTable = ({
       }
     }
   },[filteredData])
-  const onInputFilterKeyword = (e) => {
-    e.preventDefault(); 
-    setFilterKeyword(e.target.value)
-  }
-  useEffect(() => {
-    setFilterKeyword(initialFilter)
-  },[initialFilter])
   useEffect(() => {
     if (filterKeyword !== null && filterKeyword !== undefined && filterKeyword !== ''){
       setFilteredData(filterArrayBySearchKeyword(filterKeyword, rawData, primaryKey))
@@ -304,17 +318,6 @@ const STTable = ({
     setUpdated(true)
   }
 
-  //초기 헤더 설정 기능
-  let headers = colAttr && Object.keys(colAttr).length > 0 ? Object.keys(colAttr) : []
-  const [tableHeaderVals, setTableHeaderVals] = useState([]);
-  // -- 아예 삭제할 컬럼 설정
-  useEffect(() => {
-    const deleteKey = 'id'
-    headers = headers.filter(function (el) {
-      return el !== deleteKey
-    })
-    setTableHeaderVals(headers)
-  },[rawData])
 
 
   //테이블값 수정
@@ -337,21 +340,16 @@ const STTable = ({
   }
 
   //각 컬럼 성격 설정 기능
-  const [hided, setHided]                     = useState([]);
-  const [fixableCols, setFixableCols]         = useState([]);
   const [primaryKey, setPrimaryKey]           = useState('');
   const [nameKey, setNameKey]                 = useState('');
-  const [inputCols, setInputCols]             = useState([]);
-  const [calValueCols, setCalValueCols]       = useState([]);
-  const [queryCols, setQueryCols]             = useState([]);
+
+  const [hided, setHided]                     = useState([]);
+  const [fixableCols, setFixableCols]         = useState([]);
   useEffect(() => {
     let tmpPrimaryKey = ''
     let tmpNameKey = ''
     let tmpDefaultHided = []
     let tempFixableCols = []
-    let tmpDefaultInput = []
-    let tmpCalValueCols = []
-    let tmpQueryCols    = []
     Object.keys(colAttr).map(key => {
       if(colAttr[key].defaultHided){
         tmpDefaultHided.push(key)
@@ -365,30 +363,14 @@ const STTable = ({
       if(colAttr[key].nameKey){
         setNameKey(key)
       }
-      if(colAttr[key].defaultInput){
-        tmpDefaultInput.push(key)
-      }
-      if(colAttr[key].calValue){
-        tmpCalValueCols.push(key)
-      }
-      if(colAttr[key].query){
-        tmpQueryCols.push(key)
-      }
     })
     setHided(tmpDefaultHided)
     setFixableCols(tempFixableCols)
     setPrimaryKey(tmpPrimaryKey)
     setNameKey(tmpNameKey)
-    setInputCols(tmpDefaultInput)
-    setCalValueCols(tmpCalValueCols)
-    setQueryCols(tmpQueryCols)
   },[])
-
   const isHidedCulumn = name => hided.indexOf(name)       !== -1;
   const isFixable     = name => fixableCols.indexOf(name) !== -1;
-  const isInput       = name => inputCols.indexOf(name) !== -1;
-  const isCalValue    = name => calValueCols.indexOf(name) !== -1;
-  const isQuery       = name => queryCols.indexOf(name) !== -1;
   const isMatchedType = (header) => {
     let ox = false
     let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
@@ -405,7 +387,6 @@ const STTable = ({
     })
     return ox
   }
-
 
   //selectType 관련
   const [selectOptions, setSelectOptions] = useState({})
@@ -686,9 +667,6 @@ const STTable = ({
     const value = filteredData[idxRow][header][index][includingManyKeys[header][0]]
     const originalObj = filteredData[idxRow][header][index]
     const monolizedObj = monolizeObj(originalObj)
-    console.log(value)
-    console.log(originalObj)
-    console.log(monolizedObj)
     let tempObj2 = {}
     tempObj2.value  = value
     tempObj2.row    = idxRow
@@ -699,19 +677,9 @@ const STTable = ({
     tempObj2.queryType = colAttr[header].queryType
     tempObj2.primaryKey = colAttr[header].primaryKey
     tempObj2.primaryCode = monolizedObj[colAttr[header].primaryKey]
-    // if (fixMode){
-    //   const temp = {row : row, header : header}
-    //   setFixableCells(temp)
-    //   if (tempFixedVal.location && tempFixedVal.vals !== {} && !checkNoValidationErrorAtAll()) {
-    //     if (tempObj2.row !== tempFixedVal.location.index || tempObj2.header !== tempFixedVal.location.header) {
-    //       setOpenConfirmDialog(true)
-    //     }
-    //   }
-    // }
-    // else {
     setClickedChip(tempObj2)
-    // }
   }
+
   useEffect(() => {
     let keys = Object.keys(clickedChip)
     const {colAttr} = attr
@@ -1197,6 +1165,7 @@ const STTable = ({
         attr = {addCopiedNewNoDialogAttr}
       ></PopQuestionDlg>
 
+      {/* 숨긴 열 표시 부분 */}
       <div>
         {hided.map((columns, idx) => {
           return(
@@ -1204,7 +1173,8 @@ const STTable = ({
           )
         })}
       </div>
-
+      
+      {/* 검색필터창 */}
       <Input 
         id = 'sea'
         label  = 'dfe'
@@ -1212,11 +1182,11 @@ const STTable = ({
         value    = {filterKeyword}
       ></Input>
 
+      {/* 픽스모드 버튼 */}
       {fixModable ? <button onClick = { onSetfixMode }>fixmode</button> :''}
 
       <StyledTableContainer size = {tableSize}>
         <StyledTable >
-
           <StyledTableHeader>
             <TableRow>
               {tableHeaderVals && flagAble ? 
@@ -1224,7 +1194,7 @@ const STTable = ({
               }
               {tableHeaderVals !== [] ? <StyledTableCell size = '10px'>No</StyledTableCell> : ''}  
               {tableHeaderVals ? tableHeaderVals.map((header, index) => {
-                const isColumnHided = isHidedCulumn(header)
+                let isColumnHided = isHidedCulumn(header)
                 if (!isColumnHided) {
                   return (
                     <StyledTableCell key = {index} style = {{textAlign : 'center'}}>
@@ -1291,10 +1261,9 @@ const STTable = ({
                     let fixed                     = checkCellFixed(idxRow, header)
 
                     let isfixableCol              = isFixable(header)
-                    let isInputCol                = isInput(header)
-                    
-                    let isCalValueCol             = isCalValue(header)
-                    let isQueryCol                = isQuery(header)
+                    let isInputCol                = colAttr[header].defaultInput
+                    let isCalValueCol             = colAttr[header].calValue
+                    let isQueryCol                = colAttr[header].query
                     let isColumnHided             = isHidedCulumn(header)
 
                     let matchedType               = isMatchedType(header)
@@ -1329,6 +1298,7 @@ const STTable = ({
 
                     const selectedValue = getSelectedValue()
                     let name = selectedValue && selectedValue.value ? selectedValue.value[header] :''
+                      
                     const compAttr = {
                       motherFrameNo : frameNo,
                       motherNo      : currentNo,
@@ -1385,33 +1355,14 @@ const STTable = ({
                         return(<ChkBoxWithAlertCell attr = {compAttr}/>)
                       } 
                       else if (matchedType == 'includingMany') {
-                        return (
-                          // <StyledTableCell fixable = {isfixableCol}>
-                          //   {
-                          //     filteredData[idxRow][header].map((obj, index) => {
-                          //       return(
-                          //         <Chip 
-                          //           label = {obj[includingManyKeys[header][0]]}
-                          //           onClick = {(e) => {onClickChip(idxRow, index, header)}}
-                          //         />
-                          //       )
-                          //     })
-                          //   }
-                          // </StyledTableCell>
-                          <IncludingManyCell
-                            attr = {compAttr}
-                          >
-                          </IncludingManyCell>
-                        )
+                        return (<IncludingManyCell attr = {compAttr}/>)
                       }
                       else if (fixMode && isQueryCol) { 
-                        return (
-                          <QueryInputCell
-                            attr = {compAttr}
-                          />
-                        )
+                        return (<QueryInputCell attr = {compAttr}/>)
                       } 
-
+                      else if (isCalValueCol) { 
+                        return (<CalValueCell attr = {compAttr}/>)
+                      }
                       else if (isInputCol) { 
                         return (
                           <StyledTableCell fixable = {isfixableCol}>
@@ -1423,19 +1374,6 @@ const STTable = ({
                               value = {filteredData[idxRow][header]} 
                               onKeyPress = {(event) => onKeyPressOnInput(event, idxRow, header)}
                             />fdf
-                          </StyledTableCell>
-                        )
-                      }
-                      else if (isCalValueCol) { 
-                        return (
-                          <StyledTableCell fixable = {isfixableCol}>
-                            <StyledInput
-                              disable 
-                              onChange = {(event) => handleChangeInput(event, idxRow, header)} 
-                              key = {header }
-                              value = {colAttr[header].value(idxRow)} 
-                              onKeyPress = {(event) => onKeyPressOnInput(event, idxRow, header)}
-                            />
                           </StyledTableCell>
                         )
                       }
@@ -1482,7 +1420,7 @@ const STTable = ({
                   <StyledTableCell>{idxRow + 1}</StyledTableCell>
                     {headers.map((header, idx6) => {
                       const isColumnHided = isHidedCulumn(header)
-                      let   isQueryCol    = isQuery(header)
+                      let   isQueryCol    = colAttr[header].query
                       let   valid         = getValid(header)
                       let   matchedType     = isMatchedType(header)
 
