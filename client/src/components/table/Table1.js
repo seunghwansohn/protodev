@@ -18,9 +18,18 @@ import InputAdornment   from '@material-ui/core/InputAdornment';
 
 import Checkbox         from '@material-ui/core/Checkbox';
 
-import QueryInput         from '../input/QueryInput';
-import ChkBoxWithAlert    from '../checkbox/ChkBoxWithAlert';
-import STSelect           from '../input/STSelect';
+import QueryInput             from '../input/QueryInput';
+import ChkBoxWithAlert        from '../checkbox/ChkBoxWithAlert';
+import STSelect               from '../input/STSelect';
+import InputMiniHelperCell    from './tableCell/InputMiniHelperCell';
+import SelectCell             from './tableCell/SelectCell';
+import SingleNoteCell         from './tableCell/SingleNoteCell';
+import ChkBoxWithAlertCell    from './tableCell/ChkBoxWithAlertCell';
+import QueryInputCell         from './tableCell/QueryInputCell';
+import DropZoneCell           from './tableCell/DropZoneCell';
+import IncludingManyCell      from './tableCell/IncludingManyCell';
+
+
 
 import DropZone            from '../file/DropZone';
 
@@ -133,7 +142,6 @@ const StyledTableCell = styled(TableCell)`
       : colors.unFixable 
     : '#ffffff'
   };
-
   border-style : ${props => props.updated ? 'ridge':'none'};
   &:hover {
     font-weight: bold;
@@ -1288,9 +1296,9 @@ const STTable = ({
                     let isCalValueCol             = isCalValue(header)
                     let isQueryCol                = isQuery(header)
                     let isColumnHided             = isHidedCulumn(header)
+
                     let matchedType               = isMatchedType(header)
 
-                    // console.log(isInclManyCol)
                     let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
 
                     let queryColType  = 'fixSelect'
@@ -1321,124 +1329,90 @@ const STTable = ({
 
                     const selectedValue = getSelectedValue()
                     let name = selectedValue && selectedValue.value ? selectedValue.value[header] :''
+                    const compAttr = {
+                      motherFrameNo : frameNo,
+                      motherNo      : currentNo,
+                      motherType    : currentType,
 
+                      colAttr : colAttr,
+                      fixMode : fixMode,
+                      fixed   : fixed,
+                      size    : size,
+                      fixable : isfixableCol,
+                      header : header,
+                      data   : filteredData,
+                      index  : idxRow,
+                      helperText : updateHelperTexts,
+                      primaryCode : primaryCode,
+                      options : selectOptions.sortName,
+                      user : user,
+
+                      attachedFiles,
+                      onClickChip,
+                      includingManyKeys,
+                      
+                      primaryKey :primaryKey,
+                      codeNName : getMatchedFinding(colAttr[header].dataType),
+                      reqType : queryColType,
+                      dataType : colAttr[header].dataType,
+                      label : colAttr[header].dataType,
+
+                      matchedData : filteredData[idxRow],
+                      matchedColAttr : colAttr[header],
+
+                      fixedVals,
+                      setFixedVals,
+
+                      confirmInputFixedVal : confirmInputFixedVal,
+                      handleChangeSelect : handleChangeSelect,
+                      handleChangeInput : handleChangeInput,
+                      onKeyPressOnInput : onKeyPressOnInput,
+                    }
                     if (!isColumnHided) {
                       if (fixable && isfixableCol) {
+                        return (<InputMiniHelperCell attr = {compAttr}/>)
+                      }
+                      else if (matchedType == 'select' && fixMode){
+                        return(<SelectCell  key = {'select' + idxRow} attr = {compAttr}/>)
+                      } 
+                      else if (matchedType == 'file'){
+                        return(<DropZoneCell attr = {compAttr}/>)
+                      } 
+                      else if (matchedType == 'singleNote'){
+                        return(<SingleNoteCell attr = {compAttr}/>)
+                      } 
+                      else if (matchedType == 'approveCheckBox') { 
+                        return(<ChkBoxWithAlertCell attr = {compAttr}/>)
+                      } 
+                      else if (matchedType == 'includingMany') {
                         return (
-                          <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol}>
-                            <MiniHelperText 
-                              key = {header }
-                              size       = 'small'
-                              style = {{width : '100%'}}
-                              value = {filteredData[idxRow][header]} 
-                              onChange = {(event) => handleChangeInput(event, idxRow, header)} 
-                              onKeyPress = {(event) => onKeyPressOnInput(event, idxRow, header)}
-                              helperText = {updateHelperTexts[primaryCode] ? updateHelperTexts[primaryCode][header] : ''}
-                              InputProps = {{
-                                endAdornment : <InputAdornment position="end"><SmallKeyPopUp>Enter</SmallKeyPopUp><SmallKeyPopUp>Tab</SmallKeyPopUp></InputAdornment>
-                              }}
-                            />
-                          </StyledTableCell>
+                          // <StyledTableCell fixable = {isfixableCol}>
+                          //   {
+                          //     filteredData[idxRow][header].map((obj, index) => {
+                          //       return(
+                          //         <Chip 
+                          //           label = {obj[includingManyKeys[header][0]]}
+                          //           onClick = {(e) => {onClickChip(idxRow, index, header)}}
+                          //         />
+                          //       )
+                          //     })
+                          //   }
+                          // </StyledTableCell>
+                          <IncludingManyCell
+                            attr = {compAttr}
+                          >
+                          </IncludingManyCell>
                         )
-                      } else if (matchedType == 'select' && fixMode){
-
-                          return(
-                            <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} style = {{width:'150px'}}>
-                              <STSelect
-                                key = {'select' + idxRow}
-                                onChangeVal = {event => handleChangeSelect(event, idxRow, header)}
-                                options={selectOptions.sortName} 
-                                attr = {colAttr[header]}
-                              />
-                            </StyledTableCell>
-                          )
-                      } else if (matchedType == 'select' && !fixMode){
-
-                        return(
-                          <StyledTableCell fixable = {isfixableCol} size = {size}>
-                            {filteredData[idxRow][header]}
-                          </StyledTableCell>
-                        )
-                      } else if (matchedType == 'file'){
-                          return(
-                            <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} size = {size}>
-
-                              <DropZone 
-                                motherFrameNo = {frameNo}
-                                motherNo      = {currentNo}
-                                motherType    = {currentType}
-
-                                dataType       = {dataType}
-                                primaryKey     = {primaryKey}
-                                primaryCode    = {primaryCode}
-                                 
-                                fixMode        = {fixMode}
-                                files          = {attachedFiles[idxRow]}
-                              />
-                            </StyledTableCell>
-                        )
-                      } else if (matchedType == 'singleNote'){
-                        return(
-                          <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} size = {size}>
-
-                            <SingleNote 
-                              value = {filteredData[idxRow][header]}
-                              onChange = {(event) => handleChangeInput(event, idxRow, header)}
-                              onSubmit = {confirmInputFixedVal}
-                              fixMode = {fixMode}
-
-                            />
-                          </StyledTableCell>
-                        ) 
-                      } else if (fixMode && isQueryCol) { 
-                        let dataType      =  colAttr[header].dataType
-
+                      }
+                      else if (fixMode && isQueryCol) { 
                         return (
-                          <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} style = {{width:'150px'}}>
-                            <QueryInput
-                              motherFrameNo = {frameNo}
-                              motherNo      = {currentNo}
-                              motherType    = {currentType}
-
-                              reqType       = {queryColType}
-                              dataType      = {dataType}
-                              codeNName     = {getMatchedFinding(dataType)}
-                              primaryKey    = {primaryKey}
-
-                              addedNo       = {idxRow}
-                              label         = {colAttr[header].dataType}
-                              initialValue  = {filteredData[idxRow][header]}
-                              filteredData  = {filteredData}
-
-                              fixedVals     = {fixedVals}
-                              setFixedVals  = {setFixedVals}
-                            />
-                          </StyledTableCell>
+                          <QueryInputCell
+                            attr = {compAttr}
+                          />
                         )
-                      } else if (matchedType == 'approveCheckBox') { 
-                          let dataType      =  colAttr[header].dataType
-                          return (
-                            <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} style = {{width:'150px'}}>
-                              <ChkBoxWithAlert
-                                motherFrameNo = {frameNo}
-                                motherNo      = {currentNo}
-                                motherType    = {currentType}
-                                
-                                fixMode       = {fixMode}
+                      } 
 
-                                onChange      = {(event) => handleChangeInput(event, idxRow, header)}
-                                onChangeMemo  = {(event) => handleChangeInput(event, idxRow, header, true)}
-                                onSubmit      = {confirmInputFixedVal}
-                                
-                                user          = {user}
-                                val           = {filteredData[idxRow]}
-                                attr          = {colAttr[header]}
-                              >
-
-                              </ChkBoxWithAlert>
-                            </StyledTableCell>
-                          )
-                      } else if (isInputCol) { 
+                      else if (isInputCol) { 
                         return (
                           <StyledTableCell fixable = {isfixableCol}>
                             <StyledInput 
@@ -1451,7 +1425,8 @@ const STTable = ({
                             />fdf
                           </StyledTableCell>
                         )
-                      }else if (isCalValueCol) { 
+                      }
+                      else if (isCalValueCol) { 
                         return (
                           <StyledTableCell fixable = {isfixableCol}>
                             <StyledInput
@@ -1463,22 +1438,9 @@ const STTable = ({
                             />
                           </StyledTableCell>
                         )
-                      }else if (matchedType == 'includingMany') {
-                        return (
-                          <StyledTableCell fixable = {isfixableCol}>
-                            {
-                              filteredData[idxRow][header].map((obj, index) => {
-                                return(
-                                  <Chip 
-                                    label = {obj[includingManyKeys[header][0]]}
-                                    onClick = {(e) => {onClickChip(idxRow, index, header)}}
-                                  />
-                                )
-                              })
-                            }
-                          </StyledTableCell>
-                        )
-                      }else if (true) {
+                      }
+
+                      else if (true) {
                         return(
                           <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} fixable = {isfixableCol} onClick = {() => {onClickCols(row[header], idxRow, header)}}>
                             {row[header]}
@@ -1613,7 +1575,8 @@ const STTable = ({
                                 />
                               </StyledTableCell>
                             )
-                        } else if (matchedType == 'approveCheckBox') { 
+                        } 
+                        else if (matchedType == 'approveCheckBox') { 
                           let dataType      =  colAttr[header].dataType
                           console.log(idxRow)
                           return (
@@ -1638,7 +1601,8 @@ const STTable = ({
                               </ChkBoxWithAlert>
                             </StyledTableCell>
                           )
-                        } else {
+                        } 
+                        else {
                           return(
                             <StyledTableCell>
                               <MiniHelperText

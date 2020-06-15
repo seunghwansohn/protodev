@@ -27,6 +27,7 @@ import {
     actUpdate, 
     actUpdateChange, 
     actClickedTableCol,
+    actClickedTableChip,
     actAdd,
     actDelete
 }                       from '../modules/expense'
@@ -87,6 +88,9 @@ const RoleContainer = ({
     },
     onTableCol : function(clickedCol) {
       dispatch(actClickedTableCol(clickedCol))
+    },
+    onTableChip : function(clickedChip) {
+      dispatch(actClickedTableChip(clickedChip))
     },
     onUpdateChange : function(clickedCol) {
       dispatch(actUpdateChange(false))
