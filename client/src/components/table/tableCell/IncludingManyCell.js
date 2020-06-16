@@ -9,6 +9,9 @@ import TableCell        from '@material-ui/core/TableCell';
 
 import Chip             from '@material-ui/core/Chip';
 
+import {monolizeObj}    from '../../../lib/funcs/fSequelize'
+
+
 const MiniHelperText = styled(TextField)`
   .MuiInput-root	 {
     font-size : 13px;
@@ -48,18 +51,90 @@ const SingleNoteCell = ({
   attr,
 }) => {
   const {
-    fixMode,
-    fixed,
-    size,
+    motherNo,
+    motherType,
+    frameNo,
+    currentNo,
+    currentType,
     fixable,
     header,
     data,
     index,
     handleChangeInput,
     confirmInputFixedVal,
-    onClickChip,
     includingManyKeys,
+    onDialogOpen,
+    onTableChip,
+    dialogOpened,
+    setDialogInfo,
+    colAttr
   } = attr
+
+    //clickedChip
+    const [clickedChip, 
+      setClickedChip]     = useState({});
+    useEffect(() => {
+      if (Object.keys(clickedChip).length > 0) {
+        onTableChip(clickedChip)
+      } 
+    },[clickedChip])
+    const onClickChip = (idxRow, index, header) => {
+      const value = data[idxRow][header][index][includingManyKeys[header][0]]
+      const originalObj = data[idxRow][header][index]
+      const monolizedObj = monolizeObj(originalObj)
+      let tempObj2 = {}
+      tempObj2.value  = value
+      tempObj2.row    = idxRow
+      tempObj2.header = header
+      tempObj2.index  = index
+      tempObj2.dataType = colAttr[header].dataType
+      tempObj2.clickType = colAttr[header].clickType
+      tempObj2.queryType = colAttr[header].queryType
+      tempObj2.primaryKey = colAttr[header].primaryKey
+      tempObj2.primaryCode = monolizedObj[colAttr[header].primaryKey]
+      setClickedChip(tempObj2)
+    }
+    useEffect(() => {
+      let keys = Object.keys(clickedChip)
+      const {colAttr} = attr
+      const colAttrKeys = Object.keys(colAttr)
+      const {header, row, value, dataType, primaryCode, queryType} = clickedChip
+      const {clickType, primaryKey} = attr.colAttr[header] ? attr.colAttr[header] : ''
+      if (keys.length > 0) {
+        let aColAttr = attr.colAttr[clickedChip.header]
+        let {clickType, dataType} = aColAttr
+        let queryType = ''
+        colAttrKeys.map(key => {
+          if (key == header) {
+            queryType = colAttr[key].queryType
+          }
+        })
+        let tempObj = {
+          frameNo     : frameNo,
+          currentNo   : currentNo,
+          currentType : currentType, 
+          motherNo    : motherNo, 
+          motherType  : motherType,
+  
+          clickedHeader       : colAttr[header].name,
+          clickedIndex        : row,
+          clickedVal          : value,
+          clickedType         : queryType,
+          clickedPrimaryCode  : primaryCode,
+          primaryKey : primaryKey,
+  
+          dataType      : dataType, 
+          initialFilter : '',
+        }
+        onDialogOpen(tempObj)
+      }
+      dialogOpened.map(obj => {
+        if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
+          setDialogInfo(obj)
+        }
+      })
+    },[clickedChip])
+
   return (
     <StyledTableCell fixable = {fixable}>
       {

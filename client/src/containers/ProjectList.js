@@ -329,6 +329,36 @@ const ProjectList = ({motherType, motherNo, subTableAttr}) => {
         ],
     }
 
+    const tableActs = {
+        onDialogOpen : function (argObj) {
+          let tempObj = argObj
+          tempObj.frameNo = argObj.frameNo
+          tempObj.currentNo = argObj.motherNo
+          tempObj.currentType = argObj.motherType
+          tempObj.motherNo = argObj.gMotherAttr.gMotherNo
+          tempObj.motherType = argObj.gMotherAttr.gMotherType
+          dispatch(actDialogOpen(tempObj))
+        },
+        onSubmitNewAdded : function (obj, primaryKey, includingKeys, findingKeys) {
+          dispatch(actAdd(obj, primaryKey, includingKeys, findingKeys))
+        },
+        onSubmitUpdatedVals : function (arr) {
+          dispatch(actUpdate(arr))
+        },
+        onDelete : function(dataType, primaryCode) {
+          dispatch(actDelete(dataType, primaryCode))
+        },
+        onTableCol : function(clickedCol) {
+          dispatch(actClickedTableCol(clickedCol))
+        },
+        // onTableChip : function(clickedChip) {
+        //   dispatch(actClickedTableChip(clickedChip))
+        // },
+        onUpdateChange : function(clickedCol) {
+          dispatch(actUpdateChange(false))
+        }
+    }
+
     tableAttr = Object.assign(tableAttr, subTableAttr)
 
     console.log(dataType)
@@ -362,15 +392,15 @@ const ProjectList = ({motherType, motherNo, subTableAttr}) => {
             ></ItemAdd>
           </DialogST> */}
 
-          <Table 
-              motherType  = {type}
-              motherNo    = {frameNo}
-              dataType    = {dataType}
-              states      = {tableStates}
-              setStates   = {setTableStates}
-              attr        = {tableAttr}
-              funcs       = {funcs}
-          ></Table>
+            <Table 
+                motherType    = {currentType}
+                motherFrameNo = {frameNo} 
+                motherNo      = {currentNo}
+
+                dataType      = {dataType}
+                attr          = {tableAttr}
+                acts          = {tableActs}
+            ></Table>
 {/* 
           <DialogST attr = {DialogsAttr.itemQuery}>
             <ItemQuery 

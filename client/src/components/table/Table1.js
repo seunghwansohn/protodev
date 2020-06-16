@@ -13,14 +13,12 @@ import TablePagination  from '@material-ui/core/TablePagination';
 
 import TextField        from '@material-ui/core/TextField';
 import Input            from '@material-ui/core/Input';
-import STInput          from '../input/Input';
 import InputAdornment   from '@material-ui/core/InputAdornment';
 
 import Checkbox         from '@material-ui/core/Checkbox';
 
 import QueryInput             from '../input/QueryInput';
 import ChkBoxWithAlert        from '../checkbox/ChkBoxWithAlert';
-import STSelect               from '../input/STSelect';
 import InputMiniHelperCell    from './tableCell/InputMiniHelperCell';
 import SelectCell             from './tableCell/SelectCell';
 import SingleNoteCell         from './tableCell/SingleNoteCell';
@@ -38,7 +36,6 @@ import Menu             from '@material-ui/core/Menu';
 import MenuItem         from '@material-ui/core/MenuItem';
 
 import Button           from '@material-ui/core/Button';
-import Chip             from '@material-ui/core/Chip';
 
 
 import List             from '@material-ui/core/List';
@@ -56,8 +53,6 @@ import Dialog             from '@material-ui/core/Dialog';
 import Paper               from '@material-ui/core/Paper';
 import SingleNote          from '../notes/SingleNote';
 
-import SmallKeyPopUp      from '../design/SmallKeyPopUp';
-
 import {generateRandom}     from '../../lib/funcs/fCommon';
 import axios                from '../../lib/api/axios'
 import {getIncludingKeys,
@@ -70,13 +65,9 @@ import {getDate_yyyymmddhhmm}           from '../../lib/funcs/fGetDate'
 import {filterArrayBySearchKeyword}     from '../../lib/funcs/fSearch'
 import {selectMultipleStates, 
   unSelectMultipleStates}               from '../../lib/funcs/fTable'
-import {monolizeObj}               from '../../lib/funcs/fSequelize'
-import {checkDecimal, 
-  percent, 
-  hasWhiteSpace, 
-  maxValue, 
-  isPlus,
-  required
+import {monolizeObj}                    from '../../lib/funcs/fSequelize'
+import {
+  checkValid
 }                                       from '../../lib/funcs/fValidation';
     
 
@@ -333,7 +324,7 @@ const STTable = ({
     await codes.map(code => {
         onDelete(dataType, code[primaryKey])
     })
-    setSelected([])
+    setChecked([])
     await setUpdated(true)
   }
 
@@ -375,10 +366,12 @@ const STTable = ({
     return type
   }
 
-  //체크박스 체크됏는지 여부
+  //테이블 셀렉트
+  const [checked, setChecked]         = useState([]);
+    //체크박스 체크됏는지 여부
   const isSelected    = code => {
     let ox = false
-    selected.map(obj => {
+    checked.map(obj => {
       if (obj[primaryKey] == code) {
         ox = true
       }
@@ -392,7 +385,7 @@ const STTable = ({
     return filteredData[index][primaryKey]
   }
 
-  //업데이트 기능
+  //업데이트 잠시동안 표시 기능
   const [showUpdatedSign, setShowUpdatedSign] = useState(false);
   useEffect(() => {
     if (updated) {
@@ -536,115 +529,10 @@ const STTable = ({
   },[clickedCol])
 
 
-  //  --값 update 후 다른 컬럼 클릭했을 때
+  //  --값 update 후 미확정 상태로 다른 컬럼 클릭했을 때 다이얼로그
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false)
   const handleCloseConfirmDialog = () => {
     setOpenConfirmDialog(false)
-  }
-
-
-
-  //clickedChip
-  const [clickedChip, 
-    setClickedChip]     = useState({});
-  useEffect(() => {
-    if (Object.keys(clickedChip).length > 0) {
-      onTableChip(clickedChip)
-    } 
-  },[clickedChip])
-  const onClickChip = (idxRow, index, header) => {
-    const value = filteredData[idxRow][header][index][includingManyKeys[header][0]]
-    const originalObj = filteredData[idxRow][header][index]
-    const monolizedObj = monolizeObj(originalObj)
-    let tempObj2 = {}
-    tempObj2.value  = value
-    tempObj2.row    = idxRow
-    tempObj2.header = header
-    tempObj2.index  = index
-    tempObj2.dataType = colAttr[header].dataType
-    tempObj2.clickType = colAttr[header].clickType
-    tempObj2.queryType = colAttr[header].queryType
-    tempObj2.primaryKey = colAttr[header].primaryKey
-    tempObj2.primaryCode = monolizedObj[colAttr[header].primaryKey]
-    setClickedChip(tempObj2)
-  }
-  useEffect(() => {
-    let keys = Object.keys(clickedChip)
-    const {colAttr} = attr
-    const colAttrKeys = Object.keys(colAttr)
-    const {header, row, value, dataType, primaryCode, queryType} = clickedChip
-    const {clickType, primaryKey} = attr.colAttr[header] ? attr.colAttr[header] : ''
-    if (keys.length > 0) {
-      let aColAttr = attr.colAttr[clickedChip.header]
-      let {clickType, dataType} = aColAttr
-      let queryType = ''
-      colAttrKeys.map(key => {
-        if (key == header) {
-          queryType = colAttr[key].queryType
-        }
-      })
-      let tempObj = {
-        frameNo     : frameNo,
-        currentNo   : currentNo,
-        currentType : currentType, 
-        motherNo    : motherNo, 
-        motherType  : motherType,
-
-        clickedHeader       : colAttr[header].name,
-        clickedIndex        : row,
-        clickedVal          : value,
-        clickedType         : queryType,
-        clickedPrimaryCode  : primaryCode,
-        primaryKey : primaryKey,
-
-        dataType      : dataType, 
-        initialFilter : '',
-      }
-      onDialogOpen(tempObj)
-    }
-    dialogOpened.map(obj => {
-      if(obj.frameNo == frameNo && obj.currentNo == currentNo) {
-        setDialogInfo(obj)
-      }
-    })
-  },[clickedChip])
-
-
-  //Validation기능
-  const checkValid = (index, header, value) => {
-    let tempArr = []
-    let funcs = {    
-      number : val => val && isNaN(Number(val)) ? 'Only Number' : undefined,
-      code   : val => val && hasWhiteSpace(val) ? 'Space(x)' : undefined,
-      string   : val => undefined,
-      percent   : val => val && percent(val) ? 'Space(x)' : undefined,
-      decimal : val => val && hasWhiteSpace(val) ? 'Space(x)' : undefined,
-      plus : val => val && isPlus(val) ? 'only Plus or 0' : undefined,
-      minValue15 : val => val && maxValue(val, 15) ? 'Value is exceed maximum' : undefined,
-      maxValue5 : val => val && maxValue(val, 5) ? 'Value is exceed maximum' : undefined,
-      max1 : val => val && maxValue(val, 1) ? 'Value is exceed maximum' : undefined,
-      max15 : val => val && maxValue(val, 15) ? 'Value is exceed maximum' : undefined,
-      decimal2 : val => val && checkDecimal(val, 2) == true ? '1.xx (o), 1.xxx (x)' : undefined,
-      required : val => (val !== undefined || val !== null) && required(val) == true ? 'required' : undefined
-    }
-    if (colAttr[header].validate) {
-      colAttr[header].validate.map(str => {
-        if (funcs[str] && funcs[str](value) !== undefined) {
-          tempArr.push(funcs[str](value))
-        }
-      })
-    }
-    return tempArr
-  }
-  //    -- QueryInput error props 반환용 함수
-  const getValid = (header) => {
-    let valid = ''
-    Object.keys(colAttr).map(key => {
-      if(header == key) {
-        valid = colAttr[key].validate
-      }
-    })
-    return valid
   }
 
 
@@ -666,7 +554,7 @@ const STTable = ({
       } else {
         tempObj[header] = ''
       }
-      const validArr = checkValid('', header, '')
+      const validArr = checkValid(colAttr, '', header, '')
       let joinedValidStr = validArr.join(', ')
       tempObjH[header] = joinedValidStr
       setNewAddedHelperTexts(    
@@ -721,7 +609,7 @@ const STTable = ({
         draft[index] = Object.assign(draft[index], tempValObj)
       })
     )
-    const validArr = checkValid(index, header, val)
+    const validArr = checkValid(colAttr, index, header, val)
     let joinedValidStr = validArr.join(', ')
     setNewAddedHelperTexts(    
       produce(newAddedhelperTexts, draft => {
@@ -851,7 +739,7 @@ const STTable = ({
       temp1.vals[header + 'By'] = user.username
     }
     setTempFixedVal(temp1)
-    const validArr = checkValid(index, header, e.target.value)
+    const validArr = checkValid(colAttr, index, header, e.target.value)
     let joinedValidStr = validArr.join(', ')
 
     const primaryCode = getPrimaryCode(index)
@@ -976,8 +864,8 @@ const STTable = ({
   const setAddCopiedNew = (qty) => {
     setHowManyCopiedNew(qty)
     let tempObj = {}
-    Object.keys(selected[0]).map(header => {
-      tempObj[header] = selected[0][header]
+    Object.keys(checked[0]).map(header => {
+      tempObj[header] = checked[0][header]
     })
 
     let tempArr = []
@@ -1000,14 +888,9 @@ const STTable = ({
   const [tableSize, setTableSize] = useState(null)
 
 
-  //테이블 셀렉트
-  const [selected, setSelected]         = useState([]);
 
-  const check = () => {
-  }
 
-  useEffect(() => {
-  },[selected])
+
 
 
   return (
@@ -1132,7 +1015,7 @@ const STTable = ({
                     <StyledTableCell style = {{padding : '0px', margin : '0px'}}>
                       <StyledCheckBox
                         inputProps={{ 'aria-labelledby': labelId }}
-                        onClick={event => handleClickFlag(row, null, selected, setSelected)}
+                        onClick={event => handleClickFlag(row, null, checked, setChecked)}
                         checked= {isSelectedRow}
                       />
                     </StyledTableCell>:''
@@ -1201,11 +1084,10 @@ const STTable = ({
 
                       filteredData,
                       setFilteredData,
-                      // options : selectOptions.sortName,
                       user : user,
 
                       attachedFiles,
-                      onClickChip,
+                      onTableChip,
                       includingManyKeys,
                       
                       primaryKey :primaryKey,
@@ -1220,6 +1102,8 @@ const STTable = ({
                       fixedVals,
                       setFixedVals,
 
+                      dialogOpened,
+                      onDialogOpen,
                       confirmInputFixedVal : confirmInputFixedVal,
                       handleChangeInput : handleChangeInput,
                       onKeyPressOnInput : onKeyPressOnInput,
@@ -1307,12 +1191,71 @@ const STTable = ({
                     {headers.map((header, idx6) => {
                       const isColumnHided = isHidedCulumn(header)
                       let   isQueryCol    = colAttr[header].query
-                      let   valid         = getValid(header)
-                      let   matchedType     = isMatchedType(header)
+                      let   matchedType   = isMatchedType(header)
 
                       let fixed               = checkCellFixed(idxRow, header)
                       let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
 
+                      let isfixableCol              = isFixable(header)
+
+                      let primaryCode = getPrimaryCode(idxRow)
+
+                      const getMatchedFinding = (type) => {
+                        let tempMatched = ''
+                        findingKeys.map(obj => {
+                          Object.keys(obj).map(key => {
+                            if (type == key) {
+                              tempMatched = obj
+                            }
+                          })
+                        })
+                        return tempMatched[type]
+                      }
+  
+                      const compAttr = {
+                        motherFrameNo : frameNo,
+                        motherNo      : currentNo,
+                        motherType    : currentType,
+  
+                        colAttr : colAttr,
+                        fixMode : fixMode,
+                        fixed   : fixed,
+                        size    : size,
+                        fixable : isfixableCol,
+                        header : header,
+                        data   : filteredData,
+                        index  : idxRow,
+                        helperText : updateHelperTexts,
+                        primaryCode : primaryCode,
+  
+                        filteredData,
+                        setFilteredData,
+                        user : user,
+  
+                        attachedFiles,
+                        onTableChip,
+                        includingManyKeys,
+                        
+                        primaryKey :primaryKey,
+                        codeNName : getMatchedFinding(colAttr[header].dataType),
+                        dataType : colAttr[header].dataType,
+                        label : colAttr[header].dataType,
+  
+                        matchedData : filteredData[idxRow],
+                        matchedColAttr : colAttr[header],
+  
+                        fixedVals,
+                        setFixedVals,
+  
+                        dialogOpened,
+                        onDialogOpen,
+                        confirmInputFixedVal : confirmInputFixedVal,
+                        handleChangeInput : handleChangeInput,
+                        onKeyPressOnInput : onKeyPressOnInput,
+
+                        addedNew,
+                        setAddedNew
+                      }
 
                       if (!isColumnHided && header !== 'id') {
                         if (isQueryCol) {
@@ -1344,104 +1287,22 @@ const STTable = ({
 
                           const selectedValue = getSelectedValue()
                           let name = selectedValue && selectedValue.value ? selectedValue.value[header] :''
-                          return(
-                            <StyledTableCell>
-                              <QueryInput
-                                motherFrameNo = {frameNo}
-                                motherNo      = {currentNo}
-                                motherType    = {currentType}
-
-                                reqType       = {queryColType}
-                                dataType      = {dataType}
-                                codeNName     = {getMatchedFinding(dataType)}
-                                primaryKey    = {primaryKey}
-
-                                addedNo       = {idxRow}
-                                label         = {colAttr[header].dataType}
-                                initialValue  = {filteredData[idxRow][header]}
-                                filteredData  = {filteredData}
-                                addedNew      = {addedNew}
-                                setAddedNew   = {setAddedNew}
-                              />
-                            </StyledTableCell>
-                          )
-                        } else if (matchedType == 'select') {
-                            return (
-                              <StyledTableCell>
-                                {/* <STSelect 
-                                  key = {'select' + idxRow}
-                                  onChange = {event => handleChangeNewAddedSelect(event, idxRow, header)}
-                                  options={selectOptions.sortName} 
-                                  menuIsOpen = {selectMenuOpened[idxRow]}
-                                  attr = {colAttr[header]}
-                                  onKeyDown = {event => handleClickSelectChoose(event, idxRow)}
-                                /> */}
-                              </StyledTableCell>
-                            )
-                        } else if (matchedType == 'singleNote') {
-                            return (
-                              <StyledTableCell>
-                                <SingleNote
-                                  newMode   =  {true} 
-                                  onChange  =  {event => handleChangeNewAddedInput(event, idxRow, header)}
-                                  onSubmit  =  {event => handleChangeNewAddedInput(event, idxRow, header)}
-                                />
-                              </StyledTableCell>
-                            )
-                        } else if (matchedType == 'file') {
-                            return (
-                              <StyledTableCell>
-
-                                <DropZone
-                                  fixMode = {true} 
-                                  // onChange = {event => handleChangeSelect(event, idxRow)}
-                                  // options={selectOptions.sort} 
-                                />
-                              </StyledTableCell>
-                            )
+                          return (<QueryInputCell isNew = {true} attr = {compAttr}/>)
+                        } 
+                        else if (matchedType == 'select') {
+                          return (<SelectCell isNew = {true} key = {'select' + idxRow} attr = {compAttr}/>)
+                        } 
+                        else if (matchedType == 'singleNote') {
+                          return(<SingleNoteCell isNew = {true} attr = {compAttr}/>)
                         } 
                         else if (matchedType == 'approveCheckBox') { 
-                          let dataType      =  colAttr[header].dataType
-                          console.log(idxRow)
-                          return (
-                            <StyledTableCell fixMode = {fixMode} fixed = {fixed} size = {size} style = {{width:'150px'}}>
-                              <ChkBoxWithAlert
-                                motherFrameNo = {frameNo}
-                                motherNo      = {currentNo}
-                                motherType    = {currentType}
-                                
-                                fixMode       = {fixMode}
-                                newMode       = {true}
-
-                                onChange      = {(event) => handleChangeNewAddedInput(event, idxRow, header)}
-                                onChangeMemo  = {(event) => handleChangeNewAddedInput(event, idxRow, header, true)}
-                                onSubmit      = {confirmInputFixedVal}
-                                
-                                user          = {user}
-                                val           = {filteredData[idxRow]}
-                                attr          = {colAttr[header]}
-                              >
-
-                              </ChkBoxWithAlert>
-                            </StyledTableCell>
-                          )
+                          return(<ChkBoxWithAlertCell isNew = {true} attr = {compAttr}/>)
+                        } 
+                        else if (matchedType == 'file') {
+                          return(<DropZoneCell isNew = {true} attr = {compAttr}/>)
                         } 
                         else {
-                          return(
-                            <StyledTableCell>
-                              <MiniHelperText
-                                key        = {header }
-                                value      = {row[header]}
-                                style      = {{width: '100%'}}
-                                size       = 'small'
-                                error      = {newAddedError[idxRow][header]} 
-                                style      = {{width : '100%', fontSize : '7px'}}
-                                onChange   = {(event) => handleChangeNewAddedInput(event, idxRow, header)} 
-                                onKeyPress = {(event) => onKeyPressOnNewAddedInput(event, idxRow, header)}
-                                helperText = {newAddedhelperTexts[idxRow][header]}
-                              />
-                            </StyledTableCell>
-                          )
+                          return (<InputMiniHelperCell isNew = {true} attr = {compAttr}/>)
                         }
                       }
                   })}
@@ -1467,8 +1328,8 @@ const STTable = ({
       <Button onClick = {onAddNewBlank}>add New</Button>
       <Button onClick = {() => onClickSubmitNewAdded(addedNew)}>     Submit New </Button>
       <Button onClick = {() => onClickSubmitUpdatedVals(fixedVals)}> Submit     </Button>
-      {selected && selected.length !== 0 ? <Button onClick = {() => {onClickDelete(selected)}}>Delete</Button> :''}
-      {selected && selected.length !== 0 ? <Button onClick = {() => {onClickCopiedNew(selected)}}>Copied New</Button> :''}
+      {checked && checked.length !== 0 ? <Button onClick = {() => {onClickDelete(checked)}}>Delete</Button> :''}
+      {checked && checked.length !== 0 ? <Button onClick = {() => {onClickCopiedNew(checked)}}>Copied New</Button> :''}
 
     </React.Fragment>
   )

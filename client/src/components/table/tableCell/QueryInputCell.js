@@ -45,6 +45,7 @@ const StyledTableCell = styled(TableCell)`
 
 const QueryInputCell = ({
   key,
+  isNew,
   attr,
 }) => {
   const {
@@ -62,15 +63,15 @@ const QueryInputCell = ({
     header,
     data,
     index,
-    handleChangeInput,
-    confirmInputFixedVal,
-    colAttr,
     reqType,
     primaryKey,
     dataType,
     codeNName,
     fixedVals,
-    setFixedVals
+    setFixedVals,
+
+    addedNew,
+    setAddedNew
   } = attr
   return (
     <>
@@ -92,11 +93,14 @@ const QueryInputCell = ({
 
           addedNo       = {index}
           label         = {dataType}
-          initialValue  = {data[index][header]}
-          filteredData  = {data}
+          initialValue  = {isNew ? addedNew[index][header] : data[index][header]}
+          filteredData  = {isNew ? addedNew : data}
 
           fixedVals     = {fixedVals}
           setFixedVals  = {setFixedVals}
+
+          addedNew      = {addedNew}
+          setAddedNew   = {setAddedNew}
         />
 
       </StyledTableCell>

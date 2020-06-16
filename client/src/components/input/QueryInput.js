@@ -14,8 +14,7 @@ import {generateRandom}     from '../../lib/funcs/fCommon';
 
 import { actDialogOpen, 
   actDialogClose }          from '../../modules/dialogs'
-import { actSelect }        from '../../modules/query'
-import {actSetReqNo}        from '../../modules/query'
+import { actSelect, actSetReqNo}        from '../../modules/query'
 
 import InputAdornment         from '@material-ui/core/InputAdornment';
 import SmallKeyPopUp          from '../design/SmallKeyPopUp';
@@ -77,8 +76,7 @@ const QueryInput = ({
   filteredData,
   fixedVals,
   setFixedVals,
-  addedNew,
-  setAddedNew
+
 }) => {
   const dispatch = useDispatch()
 
