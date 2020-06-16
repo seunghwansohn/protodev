@@ -318,8 +318,6 @@ const STTable = ({
     setUpdated(true)
   }
 
-
-
   //테이블값 수정
   const onClickSubmitUpdatedVals = async (fixedVals) => {
     await fixedVals.map(arr => {
@@ -387,115 +385,6 @@ const STTable = ({
     })
     return ox
   }
-
-  //selectType 관련
-  const [selectOptions, setSelectOptions] = useState({})
-  const [selectedVal, setSelectedVal]     = useState({})
-  const [selectMenuOpened, 
-    setSelectMenuOpened]                  = useState([])
-  useEffect(() => {
-    let colAttrKeys = Object.keys(colAttr)
-    colAttrKeys.map(async key => {
-      let type = await colAttr[key].type ? colAttr[key].type : ''
-      if (type == 'select') {
-        // console.log(type)
-        let dataType = await colAttr[key].dataType
-        await axios.get('/api/' + dataType + '/load').then(res => {
-          let tempOptionsArr = []
-          let tempNamesArr = []
-          let vals = res.data.vals
-          let code = colAttr[key].code
-          let name = colAttr[key].name
-          vals.map(obj => {
-            let tempObj = {}
-            tempObj.value = obj[code]
-            tempObj.label = obj[name]
-            tempOptionsArr.push(tempObj)
-          })
-          setSelectOptions(
-            produce(selectOptions, draft => {
-              draft[key] = tempOptionsArr
-            })
-          )
-        })
-      }
-    })
-  },[])
-  const handleChangeSelect = (event, index, header) => {
-    const attrs = Object.keys(colAttr)
-    const attr  = attrs[header]
-
-    const {value, label} = event
-    setSelectedVal(
-      produce(selectedVal, draft => {
-        draft[index] = value
-      })
-    )
-    setFilteredData(
-      produce(filteredData, draft => {
-        draft[index][header] = label
-      })
-    )
-    let temp1 = {}
-    temp1.ref = {}
-    temp1.vals = {}
-    temp1.location = {index : index, header, header}
-    temp1.ref[primaryKey] = filteredData[index][primaryKey]
-    temp1.vals[colAttr[header].code] = value
-    setTempFixedVal(temp1)
-    setFixedVals(
-      produce(fixedVals, draft => {
-        draft.push(temp1)
-      })
-    )
-    const validArr = checkValid(index, header, value)
-    let joinedValidStr = validArr.join(', ')
-    const primaryCode = getPrimaryCode(index)
-    setUpdateHelperTexts(    
-      produce(updateHelperTexts, draft => {
-        draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
-        draft[primaryCode][header] = joinedValidStr
-      })
-    )
-    if (validArr.length > 0) {
-      setUpdateValidationError(    
-        produce(updateValidationError, draft => {
-          draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
-          draft[primaryCode][header] = true
-        })
-      )
-    } else {
-      setUpdateValidationError(    
-        produce(updateValidationError, draft => {
-          draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
-          draft[primaryCode][header] = false
-        })
-      )
-    }
-  }
-  const handleClickSelectChoose = (event, idx) => {
-    if (event.key !== 'Enter') {
-      setSelectMenuOpened(
-        produce(selectMenuOpened, draft => {
-          draft[idx] = true
-        })
-      )
-    } else if (event.key == 'Enter') {
-      setSelectMenuOpened(
-        produce(selectMenuOpened, draft => {
-          draft[idx] = false
-        })
-      )
-      confirmInputFixedVal()
-    }
-  }
-  useEffect(() => {
-    let tempArr = []
-    filteredData.map((data, index) => {
-      tempArr.push(false)
-    })
-    setSelectMenuOpened(tempArr)
-  },[filteredData])
 
 
   //인덱스값만 넣어서 primaryCode를 얻는 기능
@@ -679,7 +568,6 @@ const STTable = ({
     tempObj2.primaryCode = monolizedObj[colAttr[header].primaryKey]
     setClickedChip(tempObj2)
   }
-
   useEffect(() => {
     let keys = Object.keys(clickedChip)
     const {colAttr} = attr
@@ -770,7 +658,6 @@ const STTable = ({
     const lengthNow    = lengthBefore + 1
     let tempObj = {}
     let tempObjH     = {}
-    let colAttrKeys = Object.keys(colAttr)
     headers.map(header => {
       if (colAttr[header] && colAttr[header].defaultCodeType && colAttr[header].defaultCodeType ==  'yymmddhhminRandom') {
         let dateTime = getDate_yyyymmddhhmm()
@@ -781,9 +668,7 @@ const STTable = ({
       }
       const validArr = checkValid('', header, '')
       let joinedValidStr = validArr.join(', ')
-
       tempObjH[header] = joinedValidStr
-
       setNewAddedHelperTexts(    
         produce(newAddedhelperTexts, draft => {
           draft.push(tempObjH)
@@ -805,7 +690,6 @@ const STTable = ({
         draft.push(tempObj)
       }) 
     )
-    // dispatch(actAddNewBlankQuery(frameNo))
   }
   //newAdded 값 변경 기능
   const handleChangeNewAddedInput = (event, index, header, memo) => {
@@ -1314,7 +1198,10 @@ const STTable = ({
                       index  : idxRow,
                       helperText : updateHelperTexts,
                       primaryCode : primaryCode,
-                      options : selectOptions.sortName,
+
+                      filteredData,
+                      setFilteredData,
+                      // options : selectOptions.sortName,
                       user : user,
 
                       attachedFiles,
@@ -1334,7 +1221,6 @@ const STTable = ({
                       setFixedVals,
 
                       confirmInputFixedVal : confirmInputFixedVal,
-                      handleChangeSelect : handleChangeSelect,
                       handleChangeInput : handleChangeInput,
                       onKeyPressOnInput : onKeyPressOnInput,
                     }
@@ -1482,14 +1368,14 @@ const STTable = ({
                         } else if (matchedType == 'select') {
                             return (
                               <StyledTableCell>
-                                <STSelect 
+                                {/* <STSelect 
                                   key = {'select' + idxRow}
                                   onChange = {event => handleChangeNewAddedSelect(event, idxRow, header)}
                                   options={selectOptions.sortName} 
                                   menuIsOpen = {selectMenuOpened[idxRow]}
                                   attr = {colAttr[header]}
                                   onKeyDown = {event => handleClickSelectChoose(event, idxRow)}
-                                />
+                                /> */}
                               </StyledTableCell>
                             )
                         } else if (matchedType == 'singleNote') {
