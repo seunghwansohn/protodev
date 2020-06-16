@@ -17,8 +17,6 @@ import InputAdornment   from '@material-ui/core/InputAdornment';
 
 import Checkbox         from '@material-ui/core/Checkbox';
 
-import QueryInput             from '../input/QueryInput';
-import ChkBoxWithAlert        from '../checkbox/ChkBoxWithAlert';
 import InputMiniHelperCell    from './tableCell/InputMiniHelperCell';
 import SelectCell             from './tableCell/SelectCell';
 import SingleNoteCell         from './tableCell/SingleNoteCell';
@@ -28,20 +26,14 @@ import DropZoneCell           from './tableCell/DropZoneCell';
 import IncludingManyCell      from './tableCell/IncludingManyCell';
 import CalValueCell           from './tableCell/CalValueCell';
 
-
-
-import DropZone            from '../file/DropZone';
-
 import Menu             from '@material-ui/core/Menu';
 import MenuItem         from '@material-ui/core/MenuItem';
 
 import Button           from '@material-ui/core/Button';
 
-
 import List             from '@material-ui/core/List';
 import ListItemText     from '@material-ui/core/ListItemText';
 import ListSubheader    from '@material-ui/core/ListSubheader';
-
 
 import PopQuestionDlg     from '../dialogs/PopQuestionDlg';
 import DialogActions      from '@material-ui/core/DialogActions';
@@ -364,6 +356,76 @@ const STTable = ({
     let ox = false
     let type = colAttr[header] ? colAttr[header].type ? colAttr[header].type : '' : ''
     return type
+  }
+
+  const getCompAttr = (idxRow, header) => {
+    let fixed         = checkCellFixed(idxRow, header)
+    let isfixableCol  = isFixable(header)
+    let size          = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
+    let primaryCode   = getPrimaryCode(idxRow)
+
+    const getMatchedFinding = (type) => {
+      let tempMatched = ''
+      findingKeys.map(obj => {
+        Object.keys(obj).map(key => {
+          if (type == key) {
+            tempMatched = obj
+          }
+        })
+      })
+      return tempMatched[type]
+    }
+
+    let compAttrObj = {
+      motherFrameNo : frameNo,
+      motherNo      : currentNo,
+      motherType    : currentType,
+  
+      colAttr,
+  
+      fixMode,
+      fixed,
+      fixable : isfixableCol,
+  
+      size    : size,
+      
+      primaryCode : primaryCode,
+      primaryKey  : primaryKey,
+      data        : filteredData,
+      setData     : setFilteredData,
+      dataType    : colAttr[header].dataType,
+  
+      matchedData : filteredData[idxRow],
+      matchedColAttr : colAttr[header],
+  
+      header      : header,
+      index       : idxRow,
+  
+      helperText  : updateHelperTexts,
+  
+      user : user,
+  
+      attachedFiles,
+      onTableChip,
+      includingManyKeys,
+      
+      codeNName : getMatchedFinding(colAttr[header].dataType),
+      label : colAttr[header].dataType,
+  
+      fixedVals,
+      setFixedVals,
+  
+      dialogOpened,
+      onDialogOpen,
+
+      confirmInputFixedVal : confirmInputFixedVal,
+      handleChangeInput : handleChangeInput,
+      onKeyPressOnInput : onKeyPressOnInput,
+  
+      addedNew,
+      setAddedNew
+    }
+    return compAttrObj
   }
 
   //테이블 셀렉트
@@ -714,8 +776,6 @@ const STTable = ({
       })
     )
     const {type} = e.target
-
-
     let temp1 = {}
     temp1.ref = {}
     temp1.vals = {}
@@ -887,12 +947,6 @@ const STTable = ({
 
   const [tableSize, setTableSize] = useState(null)
 
-
-
-
-
-
-
   return (
     <React.Fragment>
       {debugMode ? <Paper style = {{color : 'red'}}> 프레임넘버는 {frameNo}, 현Comp는 {currentType}, {currentNo}, 마더comp는 {motherType}, {motherNo} </Paper>: '디버그모드false'}
@@ -1023,6 +1077,7 @@ const STTable = ({
                   <StyledTableCell>
                     {idxRow+1}
                   </StyledTableCell>
+
                   {tableHeaderVals.map((header) => {
                     let fixable                   = checkColFixable(idxRow, header)
                     let fixed                     = checkCellFixed(idxRow, header)
@@ -1037,77 +1092,8 @@ const STTable = ({
 
                     let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
 
-                    let queryColType  = 'fixSelect'
+                    const compAttr = getCompAttr(idxRow, header)
 
-                    let primaryCode = getPrimaryCode(idxRow)
-
-                    const getMatchedFinding = (type) => {
-                      let tempMatched = ''
-                      findingKeys.map(obj => {
-                        Object.keys(obj).map(key => {
-                          if (type == key) {
-                            tempMatched = obj
-                          }
-                        })
-                      })
-                      return tempMatched[type]
-                    }
-
-                    const getSelectedValue = (key) => {
-                      let values = null
-                      querySelected.map(obj => {
-                        if (obj.reqType == queryColType && obj.key == idxRow) {
-                          values = obj.selected
-                        }
-                      })
-                      return values                        
-                    }
-
-                    const selectedValue = getSelectedValue()
-                    let name = selectedValue && selectedValue.value ? selectedValue.value[header] :''
-                      
-                    const compAttr = {
-                      motherFrameNo : frameNo,
-                      motherNo      : currentNo,
-                      motherType    : currentType,
-
-                      colAttr : colAttr,
-                      fixMode : fixMode,
-                      fixed   : fixed,
-                      size    : size,
-                      fixable : isfixableCol,
-                      header : header,
-                      data   : filteredData,
-                      index  : idxRow,
-                      helperText : updateHelperTexts,
-                      primaryCode : primaryCode,
-
-                      filteredData,
-                      setFilteredData,
-                      user : user,
-
-                      attachedFiles,
-                      onTableChip,
-                      includingManyKeys,
-                      
-                      primaryKey :primaryKey,
-                      codeNName : getMatchedFinding(colAttr[header].dataType),
-                      reqType : queryColType,
-                      dataType : colAttr[header].dataType,
-                      label : colAttr[header].dataType,
-
-                      matchedData : filteredData[idxRow],
-                      matchedColAttr : colAttr[header],
-
-                      fixedVals,
-                      setFixedVals,
-
-                      dialogOpened,
-                      onDialogOpen,
-                      confirmInputFixedVal : confirmInputFixedVal,
-                      handleChangeInput : handleChangeInput,
-                      onKeyPressOnInput : onKeyPressOnInput,
-                    }
                     if (!isColumnHided) {
                       if (fixable && isfixableCol) {
                         return (<InputMiniHelperCell attr = {compAttr}/>)
@@ -1192,101 +1178,11 @@ const STTable = ({
                       const isColumnHided = isHidedCulumn(header)
                       let   isQueryCol    = colAttr[header].query
                       let   matchedType   = isMatchedType(header)
-
-                      let fixed               = checkCellFixed(idxRow, header)
-                      let size = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
-
-                      let isfixableCol              = isFixable(header)
-
-                      let primaryCode = getPrimaryCode(idxRow)
-
-                      const getMatchedFinding = (type) => {
-                        let tempMatched = ''
-                        findingKeys.map(obj => {
-                          Object.keys(obj).map(key => {
-                            if (type == key) {
-                              tempMatched = obj
-                            }
-                          })
-                        })
-                        return tempMatched[type]
-                      }
-  
-                      const compAttr = {
-                        motherFrameNo : frameNo,
-                        motherNo      : currentNo,
-                        motherType    : currentType,
-  
-                        colAttr : colAttr,
-                        fixMode : fixMode,
-                        fixed   : fixed,
-                        size    : size,
-                        fixable : isfixableCol,
-                        header : header,
-                        data   : filteredData,
-                        index  : idxRow,
-                        helperText : updateHelperTexts,
-                        primaryCode : primaryCode,
-  
-                        filteredData,
-                        setFilteredData,
-                        user : user,
-  
-                        attachedFiles,
-                        onTableChip,
-                        includingManyKeys,
-                        
-                        primaryKey :primaryKey,
-                        codeNName : getMatchedFinding(colAttr[header].dataType),
-                        dataType : colAttr[header].dataType,
-                        label : colAttr[header].dataType,
-  
-                        matchedData : filteredData[idxRow],
-                        matchedColAttr : colAttr[header],
-  
-                        fixedVals,
-                        setFixedVals,
-  
-                        dialogOpened,
-                        onDialogOpen,
-                        confirmInputFixedVal : confirmInputFixedVal,
-                        handleChangeInput : handleChangeInput,
-                        onKeyPressOnInput : onKeyPressOnInput,
-
-                        addedNew,
-                        setAddedNew
-                      }
+                      const compAttr      = getCompAttr(idxRow, header)
 
                       if (!isColumnHided && header !== 'id') {
                         if (isQueryCol) {
                           let queryColType  = 'newAdded'
-                          let findingKey    = header
-                          let dataType      =  colAttr[header].dataType
-
-                          const getMatchedFinding = (type) => {
-                            let tempMatched = ''
-                            findingKeys.map(obj => {
-                              Object.keys(obj).map(key => {
-                                if (type == key) {
-                                  tempMatched = obj
-                                }
-                              })
-                            })
-                            return tempMatched[type]
-                          }
-
-                          const getSelectedValue = (key) => {
-                            let values = null
-                            querySelected.map(obj => {
-                              if (obj.reqType == queryColType && obj.key == idxRow) {
-                                values = obj.selected
-                              }
-                            })
-                            return values                        
-                          }
-
-                          const selectedValue = getSelectedValue()
-                          let name = selectedValue && selectedValue.value ? selectedValue.value[header] :''
                           return (<QueryInputCell isNew = {true} attr = {compAttr}/>)
                         } 
                         else if (matchedType == 'select') {

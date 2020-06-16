@@ -60,7 +60,7 @@ const SelectCell = ({
     index,
     options,
     colAttr,
-    filteredData,
+    data,
     setFilteredData,
     primaryKey,
     checkValid,
@@ -124,7 +124,7 @@ const SelectCell = ({
       })
     )
     setFilteredData(
-      produce(filteredData, draft => {
+      produce(data, draft => {
         draft[index][header] = label
       })
     )
@@ -132,7 +132,7 @@ const SelectCell = ({
     temp1.ref = {}
     temp1.vals = {}
     temp1.location = {index : index, header, header}
-    temp1.ref[primaryKey] = filteredData[index][primaryKey]
+    temp1.ref[primaryKey] = data[index][primaryKey]
     temp1.vals[colAttr[header].code] = value
     setTempFixedVal(temp1)
     setFixedVals(
@@ -183,11 +183,11 @@ const SelectCell = ({
   }
   useEffect(() => {
     let tempArr = []
-    filteredData.map((data, index) => {
+    data.map((data, index) => {
       tempArr.push(false)
     })
     setSelectMenuOpened(tempArr)
-  },[filteredData])
+  },[data])
 
 
   return (
