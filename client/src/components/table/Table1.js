@@ -11,7 +11,6 @@ import TableHead        from '@material-ui/core/TableHead';
 import TableRow         from '@material-ui/core/TableRow';
 import TablePagination  from '@material-ui/core/TablePagination';
 
-import TextField        from '@material-ui/core/TextField';
 import Input            from '@material-ui/core/Input';
 import InputAdornment   from '@material-ui/core/InputAdornment';
 
@@ -43,7 +42,6 @@ import DialogTitle        from '@material-ui/core/DialogTitle';
 import Dialog             from '@material-ui/core/Dialog';
 
 import Paper               from '@material-ui/core/Paper';
-import SingleNote          from '../notes/SingleNote';
 
 import {generateRandom}     from '../../lib/funcs/fCommon';
 import axios                from '../../lib/api/axios'
@@ -75,21 +73,6 @@ const colors = {
   unFixable : '#D3D3D3',
   fixed : '#FF7F50'
 }
-const useStyles = makeStyles({
-  root: {
-    width: '100%',
-    flexShrink: 0,
-  },
-  container: {
-    maxHeight: 800,
-    color: 'red',
-    fontSize :24
-  },
-  tableHeader: {
-    backgroundColor: '#5F9EA0',
-    fontSize :18
-  }
-});
 
 const StyledTable = styled(Table)`
   background-color: #6772e5;
@@ -140,16 +123,6 @@ const StyledInput = styled(Input)`
   &:hover {
     background-color : #eef534;
     font-weight: bold;
-  }
-`
-const MiniHelperText = styled(TextField)`
-  .MuiInput-root	 {
-    font-size : 13px;
-  }
-  .MuiFormHelperText-root {
-    font-size : 7px;
-    color : red;
-    width : 100%;
   }
 `
 
@@ -310,7 +283,6 @@ const STTable = ({
     await setFixedVals([])
   }
 
-    
   //테이블값 삭제
   const onClickDelete = async (codes) =>{
     await codes.map(code => {
@@ -358,8 +330,9 @@ const STTable = ({
     return type
   }
 
+  //각 셀 콤포넌트의 attr 모두 집합한 get함수
   const getCompAttr = (idxRow, header) => {
-    let fixed         = checkCellFixed(idxRow, header)
+    let fixed         = onFix.checkCellFixed(idxRow, header)
     let isfixableCol  = isFixable(header)
     let size          = colAttr[header] ? colAttr[header].size ? colAttr[header].size : '10px' :'10px'
     let primaryCode   = getPrimaryCode(idxRow)
@@ -380,48 +353,34 @@ const STTable = ({
       motherFrameNo : frameNo,
       motherNo      : currentNo,
       motherType    : currentType,
-  
       colAttr,
-  
       fixMode,
       fixed,
       fixable : isfixableCol,
-  
-      size    : size,
-      
+      size : size,
       primaryCode : primaryCode,
       primaryKey  : primaryKey,
       data        : filteredData,
       setData     : setFilteredData,
       dataType    : colAttr[header].dataType,
-  
-      matchedData : filteredData[idxRow],
-      matchedColAttr : colAttr[header],
-  
+      matchedData     : filteredData[idxRow],
+      matchedColAttr  : colAttr[header],
       header      : header,
       index       : idxRow,
-  
-      helperText  : updateHelperTexts,
-  
+      helperText      : updateHelperTexts,
       user : user,
-  
       attachedFiles,
       onTableChip,
       includingManyKeys,
-      
       codeNName : getMatchedFinding(colAttr[header].dataType),
-      label : colAttr[header].dataType,
-  
+      label     : colAttr[header].dataType,
       fixedVals,
       setFixedVals,
-  
       dialogOpened,
       onDialogOpen,
-
-      confirmInputFixedVal : confirmInputFixedVal,
-      handleChangeInput : handleChangeInput,
-      onKeyPressOnInput : onKeyPressOnInput,
-  
+      confirmInputFixedVal  : confirmInputFixedVal,
+      handleChangeInput     : handleChangeInput,
+      onKeyPressOnInput     : onKeyPressOnInput,
       addedNew,
       setAddedNew
     }
@@ -465,49 +424,51 @@ const STTable = ({
   //픽스모드 관련기능
   const [fixMode, setFixMode]                 = useState(false);
   const [fixableCells, setFixableCells]       = useState({});
-  const onSetfixMode = () => {
-    if (fixModable) {
-      if (fixMode) {
-        setFixMode(false)
-        if (colAttr[primaryKey].defaultHided) {
-          setHided(
-            produce(hided, draft => {
-              hided.push(primaryKey)
-            })
-          )
+  const onFix = {
+    onSetfixMode : () => {
+      if (fixModable) {
+        if (fixMode) {
+          setFixMode(false)
+          if (colAttr[primaryKey].defaultHided) {
+            setHided(
+              produce(hided, draft => {
+                hided.push(primaryKey)
+              }) 
+            )
+          }
+        } else {
+          setFixMode(true)
+          let newHided = hided.filter(function(str) { //픽스모드 on시 primaryKey 컬럼이 숨겨져있을 경우 unhide.
+            return str !== primaryKey
+          })
+          setHided(newHided)
         }
-      } else {
-        setFixMode(true)
-        let newHided = hided.filter(function(str) { //픽스모드 on시 primaryKey 컬럼이 숨겨져있을 경우 unhide.
-          return str !== primaryKey
-        })
-        setHided(newHided)
       }
-    }
-    else if (!fixModable) {
-      setFixMode(false)
-    }
-  }
-  const checkColFixable = (index, header) => {
-    let ox = false
-    if (fixableCells.row == index){
-      if(fixableCells.header == header){
-        ox = true
+      else if (!fixModable) {
+        setFixMode(false)
       }
-    }
-    else {
-      ox = false
-    }
-    return ox
-  }
-  const checkCellFixed = (index, header) => {
-    let ox = false
-    fixedVals.map(obj => {
-      if (Object.keys(obj).length > 0 && obj.location.index == index && Object.keys(obj.vals).includes(header)) {
-        ox = true
+    },
+    checkColFixable : (index, header) => {
+      let ox = false
+      if (fixableCells.row == index){
+        if(fixableCells.header == header){
+          ox = true
+        }
       }
-    })
-    return ox
+      else {
+        ox = false
+      }
+      return ox
+    },
+    checkCellFixed : (index, header) => {
+      let ox = false
+      fixedVals.map(obj => {
+        if (Object.keys(obj).length > 0 && obj.location.index == index && Object.keys(obj.vals).includes(header)) {
+          ox = true
+        }
+      })
+      return ox
+    }
   }
 
 
@@ -606,7 +567,7 @@ const STTable = ({
   const onAddNewBlank = () => {
     const lengthBefore = addedNew.length
     const lengthNow    = lengthBefore + 1
-    let tempObj = {}
+    let tempObj      = {}
     let tempObjH     = {}
     headers.map(header => {
       if (colAttr[header] && colAttr[header].defaultCodeType && colAttr[header].defaultCodeType ==  'yymmddhhminRandom') {
@@ -1004,7 +965,7 @@ const STTable = ({
       ></Input>
 
       {/* 픽스모드 버튼 */}
-      {fixModable ? <button onClick = { onSetfixMode }>fixmode</button> :''}
+      {fixModable ? <button onClick = { onFix.onSetfixMode }>fixmode</button> :''}
 
       <StyledTableContainer size = {tableSize}>
         <StyledTable >
@@ -1079,8 +1040,8 @@ const STTable = ({
                   </StyledTableCell>
 
                   {tableHeaderVals.map((header) => {
-                    let fixable                   = checkColFixable(idxRow, header)
-                    let fixed                     = checkCellFixed(idxRow, header)
+                    let fixable                   = onFix.checkColFixable(idxRow, header)
+                    let fixed                     = onFix.checkCellFixed(idxRow, header)
 
                     let isfixableCol              = isFixable(header)
                     let isInputCol                = colAttr[header].defaultInput
