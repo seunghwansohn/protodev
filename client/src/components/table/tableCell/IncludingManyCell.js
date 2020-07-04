@@ -56,18 +56,22 @@ const SingleNoteCell = ({
     frameNo,
     currentNo,
     currentType,
+
+    colAttr,
+
     fixable,
+
     header,
-    data,
     index,
-    handleChangeInput,
-    confirmInputFixedVal,
-    includingManyKeys,
-    onDialogOpen,
-    onTableChip,
+    data,
+
     dialogOpened,
     setDialogInfo,
-    colAttr
+    onDialogOpen,
+
+    onTableChip,
+    includingManyKeys,
+
   } = attr
 
     //clickedChip
