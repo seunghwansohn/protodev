@@ -57,9 +57,8 @@ const StyledDiv = styled.div`
 const Query = (
   {
     motherType,  
-    motherNo, 
-    loadedTempData, 
-    onUpdate, 
+    motherFrameNo,
+    motherNo,
     attr
   }) => {
 
@@ -223,7 +222,6 @@ const Query = (
   console.log(loadedData)
   //업데이트 함수
   const onFixedVal = (fixedArr) => {
-    onUpdate()
   }
 
 

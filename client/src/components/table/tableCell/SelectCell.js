@@ -61,12 +61,13 @@ const SelectCell = ({
     options,
     colAttr,
     data,
-    setFilteredData,
+    setData,
     primaryKey,
     checkValid,
     getPrimaryCode,
     fixedVals,
     setFixedVals,
+    tempFixedVal,
     setTempFixedVal,
     setUpdateHelperTexts,
     updateHelperTexts,
@@ -109,21 +110,24 @@ const SelectCell = ({
 
 
   //selectType 관련
-  const [selectedVal, setSelectedVal]     = useState({})
+  const [selectedVal, setSelectedVal]     = useState('')
+  const [selectedLabel, setSelectedLabel]     = useState('')
+
   const [selectMenuOpened, 
     setSelectMenuOpened]                  = useState([])
 
-  const handleChangeSelect = (event, index, header) => {
+  const handleClickSelect = (event, index, header) => {
     const attrs = Object.keys(colAttr)
     const attr  = attrs[header]
 
+    console.log(event, index, header)
+
     const {value, label} = event
-    setSelectedVal(
-      produce(selectedVal, draft => {
-        draft[index] = value
-      })
-    )
-    setFilteredData(
+
+    setSelectedVal(value)
+    setSelectedLabel(label)
+
+    setData(
       produce(data, draft => {
         draft[index][header] = label
       })
@@ -133,62 +137,16 @@ const SelectCell = ({
     temp1.vals = {}
     temp1.location = {index : index, header, header}
     temp1.ref[primaryKey] = data[index][primaryKey]
+    console.log(colAttr)
     temp1.vals[colAttr[header].code] = value
+    console.log(temp1)
     setTempFixedVal(temp1)
     setFixedVals(
       produce(fixedVals, draft => {
         draft.push(temp1)
       })
     )
-    const validArr = checkValid(index, header, value)
-    let joinedValidStr = validArr.join(', ')
-    const primaryCode = getPrimaryCode(index)
-    setUpdateHelperTexts(    
-      produce(updateHelperTexts, draft => {
-        draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
-        draft[primaryCode][header] = joinedValidStr
-      })
-    )
-    if (validArr.length > 0) {
-      setUpdateValidationError(    
-        produce(updateValidationError, draft => {
-          draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
-          draft[primaryCode][header] = true
-        })
-      )
-    } else {
-      setUpdateValidationError(    
-        produce(updateValidationError, draft => {
-          draft[primaryCode] = draft[primaryCode] ? draft[primaryCode] : {}
-          draft[primaryCode][header] = false
-        })
-      )
-    }
   }
-  const handleClickSelectChoose = (event, idx) => {
-    if (event.key !== 'Enter') {
-      setSelectMenuOpened(
-        produce(selectMenuOpened, draft => {
-          draft[idx] = true
-        })
-      )
-    } else if (event.key == 'Enter') {
-      setSelectMenuOpened(
-        produce(selectMenuOpened, draft => {
-          draft[idx] = false
-        })
-      )
-      confirmInputFixedVal()
-    }
-  }
-  useEffect(() => {
-    let tempArr = []
-    data.map((data, index) => {
-      tempArr.push(false)
-    })
-    setSelectMenuOpened(tempArr)
-  },[data])
-
 
   return (
     <>
@@ -200,7 +158,7 @@ const SelectCell = ({
       >
         <STSelect
           key = {'select' + index}
-          onChangeVal = {event => handleChangeSelect(event, index, header)}
+          onChangeVal = {(obj) => {handleClickSelect(obj, index, header)}}
           options={selectOptions.sortName}
           attr = {colAttr[header]}
         />

@@ -59,17 +59,6 @@ const ExpenseListContainer = ({
         queryType : 'simpleQuery',
         size : '180px'
       },
-      description : {
-        fixableUser : ['brian'],
-        defaultHided : false,
-        validate : ['string'],
-        dataType : dataType,
-        clickType : 'expenseQuery',
-        queryType : 'simpleQuery',
-        size : '300px',
-        validate : ['required'],
-
-      },
       sortName : {
         type     : 'select',
 
@@ -84,6 +73,18 @@ const ExpenseListContainer = ({
 
         size : '150px'
       },
+      description : {
+        fixableUser : ['brian'],
+        defaultHided : false,
+        validate : ['string'],
+        dataType : dataType,
+        clickType : 'expenseQuery',
+        queryType : 'simpleQuery',
+        size : '300px',
+        validate : ['required'],
+
+      },
+
       unitCost : {
         fixable : true,
         defaultHided : false,
@@ -245,6 +246,7 @@ const ExpenseListContainer = ({
       }
     })
   },[dialogOpened])
+  
   const DialogsAttr = {
     expenseAdd : {
       title : detailQuery,
@@ -279,13 +281,17 @@ const ExpenseListContainer = ({
         acts          = {tableActs}
       ></Table>
 
-      <DialogST motherFrameNo = {frameNo} motherNo = {currentNo} motherType = {currentType} attr = {DialogsAttr.expenseQuery}>
+      <DialogST 
+        motherFrameNo = {frameNo} 
+        motherNo = {currentNo} 
+        motherType = {currentType} 
+        attr = {DialogsAttr.expenseQuery}
+      >
         <Query 
           motherType    = {currentType}
           motherFrameNo = {frameNo} 
           motherNo      = {currentNo}
-
-          attr        = {dialogInfo}
+          attr          = {dialogInfo}
         ></Query>
       </DialogST>
     </>

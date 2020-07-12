@@ -40,6 +40,7 @@ const SelectComp = ({
 
   console.log(dataType)
   const onChange = value => {
+    console.log(value)
     setSelected(value);
   };
 
@@ -59,21 +60,29 @@ const SelectComp = ({
   },[dataType])
 
   useEffect(() => {
+    console.log(selected)
     if (selected.value == 'addNewSort') {
       setDialogOpen(true);
+    } else if (Object.keys(selected).length > 0){
+      console.log(selected)
+      onChangeVal(selected)
     }
   }, [selected]);
 
 
   const filterOption = (option, inputValue) => {
+    let lowerCaseInputVal = inputValue.toLowerCase()
     if (option.label === "Add New Sort") {
       console.log("결과없음");
-      const result = options.filter(opt => opt.label.includes(inputValue));
+      const result = options.filter(opt => {
+        opt.label.toLowerCase().includes(lowerCaseInputVal)
+      });
       setHasExtraValue(!result.length);
       setNoResult(true);
       return !result.length;
     }
-    return option.label.includes(inputValue);
+    console.log(typeof option.label)
+    return option.label.toLowerCase().includes(lowerCaseInputVal);
   };
 
   const onClickAdd = () => {
@@ -117,6 +126,7 @@ const SelectComp = ({
         filterOption={filterOption}
       />
 
+      {/* addNew 선택시 띄우는 다이얼로그 */}
       <Dialog open={dialogOpen} maxWidth={"xs"} fullWidth="xs">
         add new Sort
         <Grid container>

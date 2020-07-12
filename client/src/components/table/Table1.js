@@ -376,13 +376,14 @@ const STTable = ({
       label     : colAttr[header].dataType,
       fixedVals,
       setFixedVals,
+      setTempFixedVal,
       dialogOpened,
       onDialogOpen,
       confirmInputFixedVal  : confirmInputFixedVal,
       handleChangeInput     : handleChangeInput,
       onKeyPressOnInput     : onKeyPressOnInput,
       addedNew,
-      setAddedNew
+      setAddedNew,
     }
     return compAttrObj
   }
@@ -730,6 +731,18 @@ const STTable = ({
       confirmInputFixedVal()
     }
   }
+
+  useEffect(() => {
+    let type = ''
+    if (tempFixedVal.location && tempFixedVal.location.header) {
+      console.log(colAttr[tempFixedVal.location.header].type)
+      type = colAttr[tempFixedVal.location.header].type
+    }
+    if (type == 'select') {
+      confirmInputFixedVal()
+    }
+  }, [tempFixedVal])
+
   const handleChangeInput = (e, index, header, memo) => {
     setFilteredData(
       produce(filteredData, draft => {
@@ -788,6 +801,7 @@ const STTable = ({
     }
   }
 
+  console.log(fixedVals)
   
   //쿼리인풋 기능
   const querySelected     = useSelector(state => state.query[frameNo])
@@ -865,6 +879,8 @@ const STTable = ({
     }
     return 0;
   }
+
+
 
   //페이지 기능
   const [page, setPage]                       = useState(0);

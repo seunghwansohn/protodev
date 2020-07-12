@@ -10,9 +10,10 @@ const StyledPaper = styled(Paper)`
 `;
 
 export default function SimplePaper({ children }) {
+  const popUpKeyName = children
   return (
     <>
-      <StyledPaper elevation={1}>{children}</StyledPaper>
+      <StyledPaper elevation={1}>{popUpKeyName}</StyledPaper>
     </>
   );
 }
