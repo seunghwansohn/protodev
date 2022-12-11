@@ -23,7 +23,7 @@
 		"cors": "^2.8.5",
 		"dotenv": "^8.2.0",
 		"esm": "^3.2.25",
-		"express": "^4.16.4",
+		"express": "^4.17.3",
 		"formidable": "^1.2.1",
 		"fs": "^0.0.1-security",
 		"immer": "^5.0.2",
